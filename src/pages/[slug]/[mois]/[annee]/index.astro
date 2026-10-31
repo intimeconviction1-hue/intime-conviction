@@ -1,0 +1,44 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import ListeArticles from '../../../../components/ListeArticles.astro';
+import { rubrique } from '../../../../lib/rubriques.mjs';
+import { tousLesArticles, dateLongue, minutesDeLecture } from '../../../../lib/articles.mjs';
+
+// L'adresse est celle de l'ancien WordPress, /titre/mois/année/, pour que les
+// liens partagés depuis 2009 mènent toujours au bon article.
+export async function getStaticPaths() {
+  const articles = await tousLesArticles();
+  return articles.map((article) => {
+    const [, slug, mois, annee] = article.data.chemin.split('/');
+    const memeRubrique = articles.filter((a) => a.data.rubrique === article.data.rubrique);
+    const i = memeRubrique.indexOf(article);
+    // Les voisins dans la rubrique : le plus récent et les deux plus anciens
+    // qui l'entourent, pour continuer la lecture sans revenir à l'accueil.
+    const voisins = [...memeRubrique.slice(Math.max(0, i - 1), i), ...memeRubrique.slice(i + 1, i + 3)];
+    return { params: { slug, mois, annee }, props: { article, voisins } };
+  });
+}
+
+const { article, voisins } = Astro.props;
+const { data } = article;
+const r = rubrique(data.rubrique);
+---
+<Base titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique}>
+  <article class="article">
+    <p class="meta"><a class="rouge etiquette" href={`/rubrique/${r.slug}/`}>{r.nom}</a></p>
+    <h1>{data.titre}</h1>
+    <p class="meta chapeau-meta">
+      <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
+      {data.auteur && <> · {data.auteur}</>}
+      · {minutesDeLecture(data.mots)} min de lecture
+    </p>
+    <div class="corps" set:html={data.html} />
+  </article>
+
+  {voisins.length > 0 && (
+    <aside class="voisins" aria-labelledby="voisins">
+      <div class="titre-section"><h2 id="voisins">Dans {r.nom}</h2></div>
+      <ListeArticles articles={voisins} rubriqueVisible={false} extraits={false} />
+    </aside>
+  )}
+</Base>

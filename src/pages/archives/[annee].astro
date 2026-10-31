@@ -1,0 +1,48 @@
+---
+import Base from '../../layouts/Base.astro';
+import { rubrique } from '../../lib/rubriques.mjs';
+import { tousLesArticles, nomDuMois } from '../../lib/articles.mjs';
+
+export async function getStaticPaths() {
+  const articles = await tousLesArticles();
+  const annees = [...new Set(articles.map((a) => a.data.date.getFullYear()))];
+  return annees.map((annee) => ({
+    params: { annee: String(annee) },
+    props: { articles: articles.filter((a) => a.data.date.getFullYear() === annee) },
+  }));
+}
+
+const { articles } = Astro.props;
+const { annee } = Astro.params;
+// Une seule liste de titres par mois, sans extrait : 2009 compte plus de deux
+// mille articles, une page d'extraits ne se parcourrait pas.
+const parMois = new Map();
+for (const a of articles) {
+  const m = nomDuMois(a.data.date);
+  if (!parMois.has(m)) parMois.set(m, []);
+  parMois.get(m).push(a);
+}
+---
+<Base titre={`Archives ${annee}`} rubriqueActive="archives">
+  <div class="titre-section">
+    <h2>{annee}<small>{articles.length.toLocaleString('fr-FR')} article{articles.length > 1 ? 's' : ''}</small></h2>
+    <a class="etiquette" href="/archives/">Toutes les années</a>
+  </div>
+  {[...parMois].map(([mois, liste]) => (
+    <section>
+      <h3 class="mois etiquette">{mois} · {liste.length}</h3>
+      <ul class="titres">
+        {liste.map(({ data }) => (
+          <li><a href={data.chemin}>{data.titre}</a> <span class="meta">{rubrique(data.rubrique).nom}</span></li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .mois { margin: 2.5rem 0 0.5rem; color: var(--rouge); }
+  .titres { list-style: none; padding: 0; margin: 0; columns: 22rem; column-gap: 2.5rem; }
+  .titres li { break-inside: avoid; padding: 0.35rem 0; border-top: 1px solid var(--filet); line-height: 1.35; }
+  .titres a { text-decoration: none; }
+</style>

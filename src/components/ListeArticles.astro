@@ -1,0 +1,18 @@
+---
+import { rubrique } from '../lib/rubriques.mjs';
+import { dateLongue } from '../lib/articles.mjs';
+
+const { articles, rubriqueVisible = true, extraits = true } = Astro.props;
+---
+<ul class="liste">
+  {articles.map(({ data }) => (
+    <li>
+      <p class="meta">
+        {rubriqueVisible && <><span class="rouge etiquette">{rubrique(data.rubrique).nom}</span> · </>}
+        <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
+      </p>
+      <h3><a href={data.chemin}>{data.titre}</a></h3>
+      {extraits && <p>{data.extrait}</p>}
+    </li>
+  ))}
+</ul>

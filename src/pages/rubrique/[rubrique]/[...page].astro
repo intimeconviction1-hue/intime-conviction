@@ -1,0 +1,28 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ListeArticles from '../../../components/ListeArticles.astro';
+import { RUBRIQUES, rubrique } from '../../../lib/rubriques.mjs';
+import { tousLesArticles } from '../../../lib/articles.mjs';
+
+export async function getStaticPaths({ paginate }) {
+  const articles = await tousLesArticles();
+  return RUBRIQUES.flatMap((r) =>
+    paginate(articles.filter((a) => a.data.rubrique === r.slug), { params: { rubrique: r.slug }, pageSize: 30 }),
+  );
+}
+
+const { page } = Astro.props;
+const r = rubrique(Astro.params.rubrique);
+const titre = page.currentPage > 1 ? `${r.nom}, page ${page.currentPage}` : r.nom;
+---
+<Base titre={titre} description={`${r.nom} — ${r.sousTitre}. ${page.total} articles d'Intime Conviction.`} rubriqueActive={r.slug}>
+  <div class="titre-section">
+    <h2>{r.nom}<small>{r.sousTitre}</small></h2>
+    <span class="meta">{page.total.toLocaleString('fr-FR')} articles · page {page.currentPage} sur {page.lastPage}</span>
+  </div>
+  <ListeArticles articles={page.data} rubriqueVisible={false} />
+  <nav class="pagination" aria-label="Pages">
+    {page.url.prev ? <a href={page.url.prev}>← Plus récents</a> : <span />}
+    {page.url.next ? <a href={page.url.next}>Plus anciens →</a> : <span />}
+  </nav>
+</Base>

@@ -21,10 +21,41 @@ décision éditoriale.
 
 ## Où on en est
 
-- Le site tourne sous WordPress, avec environ 3 500 articles en archive.
-- Le classement des anciens articles dans les six rubriques est en cours.
+- L'ancien site WordPress est suspendu chez o2switch depuis au moins le
+  31 octobre 2026. Ce dépôt le remplace par un site statique (Astro) : une page
+  HTML par article, sans base de données.
+- 3 436 articles importés de l'export du 29 juillet 2026 (70 écartés faute de
+  texte). Ils gardent leur ancienne adresse, `/titre/mois/année/`.
+- **La correspondance entre les 23 anciennes catégories et les six rubriques est
+  une proposition**, pas encore validée par la rédaction :
+  `src/lib/rubriques.mjs`.
 - Une veille des affaires d'assises alimente le compte X. Rien ne part sans qu'un
   humain ait validé le commentaire.
+
+## Faire tourner
+
+Les articles sont dans le dépôt **privé** `intime-conviction-articles`, cloné à
+côté de celui-ci :
+
+```
+C:\dev\intime-conviction            ← ce dépôt (le code)
+C:\dev\intime-conviction-articles   ← les articles
+```
+
+```
+npm install
+npm run build      # fabrique le site dans dist/
+npm run preview    # le sert sur http://localhost:4321
+```
+
+Pour réimporter depuis un nouvel export WordPress (réécrit tout le dossier
+`articles/` du dépôt privé) :
+
+```
+npm run import -- "<chemin de l'export>.xml"
+```
+
+`IC_ARTICLES` permet de lire les articles ailleurs qu'à côté.
 
 ## Ce que ce dépôt ne contiendra jamais
 

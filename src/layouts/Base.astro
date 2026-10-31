@@ -1,0 +1,64 @@
+---
+// L'axe optique de Newsreader dessine les titres plus serrés et le texte plus
+// ouvert : c'est ce qui permet une seule famille pour les deux.
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import { RUBRIQUES } from '../lib/rubriques.mjs';
+
+const { titre, description = "Intime Conviction, le média des cours d'assises : suivi d'audience, règles du procès, chroniques et culture criminelle.", rubriqueActive } = Astro.props;
+const titreComplet = titre ? `${titre} · Intime Conviction` : "Intime Conviction · Le média des cours d'assises";
+const canonique = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titreComplet}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonique} />
+    <meta property="og:title" content={titreComplet} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonique} />
+    <meta property="og:locale" content="fr_FR" />
+    <meta name="theme-color" content="#f7f3ea" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#161411" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="evitement" href="#contenu">Aller au contenu</a>
+    <header class="bandeau">
+      <div class="cadre">
+        <a class="titre-du-journal" href="/">
+          <strong>Intime Conviction</strong>
+          <span class="etiquette">Le média des cours d'assises</span>
+        </a>
+      </div>
+      <nav class="rubriques-nav" aria-label="Rubriques">
+        <div class="cadre">
+          <ul>
+            {RUBRIQUES.map((r) => (
+              <li>
+                <a class="etiquette" href={`/rubrique/${r.slug}/`} aria-current={rubriqueActive === r.slug ? 'page' : undefined}>{r.nom}</a>
+              </li>
+            ))}
+            <li><a class="etiquette" href="/archives/" aria-current={rubriqueActive === 'archives' ? 'page' : undefined}>Archives</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <main id="contenu" class="cadre">
+      <slot />
+    </main>
+
+    <footer class="pied">
+      <div class="cadre">
+        <p><strong>Intime Conviction</strong> — le média des cours d'assises.</p>
+        <p><a href="https://x.com/IntimeConv" rel="noopener">@IntimeConv sur X</a></p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -25,5 +25,12 @@ backup_*.zip
 
 # Outils
 node_modules/
+dist/
+.astro/
+
+# Les articles vivent dans le dépôt privé intime-conviction-articles. Une
+# copie ici partirait au premier `git add` — et resterait dans l'historique.
+articles/
+contenu/
 .DS_Store
 Thumbs.db
