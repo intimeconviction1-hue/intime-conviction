@@ -1,0 +1,63 @@
+# Construit le site et le publie sur GitHub Pages.
+#
+# Les articles vivent dans le dépôt PRIVÉ intime-conviction-articles. Ils sont
+# lus ici avec une clé de déploiement en LECTURE SEULE (secret
+# ARTICLES_DEPLOY_KEY) et ne sont jamais committés dans ce dépôt public : le
+# site publié est un artefact Pages, conservé un jour, pas un historique git.
+# Retirer un article = le supprimer du dépôt privé, puis relancer ce workflow.
+
+name: Publier le site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  construire:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Lire les articles (dépôt privé)
+        uses: actions/checkout@v7
+        with:
+          repository: intimeconviction1-hue/intime-conviction-articles
+          ssh-key: ${{ secrets.ARTICLES_DEPLOY_KEY }}
+          path: articles-prives
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Construire
+        run: npm run build
+        env:
+          IC_ARTICLES: articles-prives/articles
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+          retention-days: 1
+
+  publier:
+    needs: construire
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - id: deploiement
+        uses: actions/deploy-pages@v5
