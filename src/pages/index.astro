@@ -13,7 +13,7 @@ const parRubrique = RUBRIQUES.map((r) => {
 }).filter((r) => r.total > 0);
 const total = articles.length.toLocaleString('fr-FR');
 ---
-<Base>
+<Base accueil>
   <section class="une" aria-labelledby="titre-une">
     <p class="greffe rouge">À la une · <time datetime={une.data.date.toISOString()}>{dateGreffe(une.data.date)}</time></p>
     <h2 id="titre-une"><a href={une.data.chemin}>{une.data.titre}</a></h2>

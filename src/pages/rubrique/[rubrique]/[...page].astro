@@ -18,10 +18,10 @@ const titre = page.currentPage > 1 ? `${r.nom}, page ${page.currentPage}` : r.no
 ---
 <Base titre={titre} description={`${r.nom} — ${r.sousTitre}. ${page.total} articles d'Intime Conviction.`} rubriqueActive={r.slug}>
   <div class="titre-section">
-    <h2><Mouche /><span>{r.nom}<small>{r.sousTitre}</small></span></h2>
+    <h1><Mouche /><span>{r.nom}<small>{r.sousTitre}</small></span></h1>
     <span class="greffe">{page.total.toLocaleString('fr-FR')} articles · page {page.currentPage} sur {page.lastPage}</span>
   </div>
-  <ListeArticles articles={page.data} rubriqueVisible={false} />
+  <ListeArticles articles={page.data} rubriqueVisible={false} niveau={2} />
   <nav class="pagination" aria-label="Pages">
     {page.url.prev ? <a href={page.url.prev}>← Plus récents</a> : <span />}
     {page.url.next ? <a href={page.url.next}>Plus anciens →</a> : <span />}

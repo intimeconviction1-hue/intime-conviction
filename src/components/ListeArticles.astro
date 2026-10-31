@@ -4,7 +4,10 @@ import { dateGreffe } from '../lib/articles.mjs';
 
 // Un « rôle » : la date tapée à la machine dans la marge, comme sur la liste
 // des affaires affichée à la porte d'une salle d'audience.
-const { articles, rubriqueVisible = true, extraits = true } = Astro.props;
+// `niveau` : 3 sous une section titrée en h2 (accueil), 2 directement sous le
+// h1 d'une page (rubrique) — un saut de niveau égare les lecteurs d'écran.
+const { articles, rubriqueVisible = true, extraits = true, niveau = 3 } = Astro.props;
+const Titre = `h${niveau}`;
 ---
 <ul class:list={['role', { serre: !extraits }]}>
   {articles.map(({ data }) => (
@@ -14,7 +17,7 @@ const { articles, rubriqueVisible = true, extraits = true } = Astro.props;
         {rubriqueVisible && <><br /><span class="rouge">{rubrique(data.rubrique).nom}</span></>}
       </p>
       <div>
-        <h3><a href={data.chemin}>{data.titre}</a></h3>
+        <Titre><a href={data.chemin}>{data.titre}</a></Titre>
         {extraits && <p class="extrait">{data.extrait}</p>}
       </div>
     </li>

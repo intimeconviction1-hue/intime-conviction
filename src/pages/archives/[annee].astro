@@ -25,12 +25,12 @@ for (const a of articles) {
 ---
 <Base titre={`Archives ${annee}`} rubriqueActive="archives">
   <div class="titre-section">
-    <h2><span>{annee}<small>{articles.length.toLocaleString('fr-FR')} article{articles.length > 1 ? 's' : ''}</small></span></h2>
+    <h1><span>{annee}<small>{articles.length.toLocaleString('fr-FR')} article{articles.length > 1 ? 's' : ''}</small></span></h1>
     <a class="greffe" href="/archives/">Toutes les années</a>
   </div>
   {[...parMois].map(([mois, liste]) => (
     <section>
-      <h3 class="mois greffe">{mois} · {liste.length}</h3>
+      <h2 class="mois greffe">{mois} · {liste.length}</h2>
       <ul class="titres">
         {liste.map(({ data }) => (
           <li><a href={data.chemin}>{data.titre}</a> <span class="greffe rub">{rubrique(data.rubrique).nom}</span></li>

@@ -76,7 +76,10 @@ a:hover { color: var(--rouge-texte); text-decoration-color: currentColor; }
 .robe a:hover { color: var(--hermine); text-decoration: underline; text-decoration-thickness: 1px; }
 .robe :focus-visible { outline-color: var(--hermine); }
 
-.titre-du-journal { display: block; text-align: center; padding: 2rem 0 0.75rem; }
+/* Le nom du journal est le titre principal (h1) de la seule page d'accueil ;
+   ailleurs c'est un paragraphe, le h1 revenant au titre de la page. */
+.titre-du-journal { display: block; margin: 0; font-size: inherit; text-align: center; padding: 2rem 0 0.75rem; }
+.titre-du-journal > a { display: block; }
 .titre-du-journal strong {
   display: block;
   font-family: var(--affiche);
@@ -112,14 +115,15 @@ a:hover { color: var(--rouge-texte); text-decoration-color: currentColor; }
 .pied { margin-top: 5rem; }
 .pied .cadre { padding-top: 2rem; padding-bottom: 2.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; justify-content: space-between; align-items: baseline; }
 .pied strong { font-family: var(--affiche); font-weight: 400; font-size: 1.5rem; }
+.pied p { margin: 0; }
 
 /* ——— Le rôle : listes d'articles ——— */
 
 .role { list-style: none; margin: 0; padding: 0; }
 .role > li { padding: 1.1rem 0; border-top: 1px solid var(--pierre); }
 .role .date { margin: 0; color: var(--encre-2); }
-.role h3 { font-family: var(--texte); font-weight: 600; font-size: 1.3rem; line-height: 1.25; margin: 0.25rem 0 0; }
-.role h3 a { text-decoration: none; }
+.role :is(h2, h3) { font-family: var(--texte); font-weight: 600; font-size: 1.3rem; line-height: 1.25; margin: 0.25rem 0 0; }
+.role :is(h2, h3) a { text-decoration: none; }
 .role p.extrait { margin: 0.35rem 0 0; color: var(--encre-2); font-size: 1.0625rem; }
 @media (min-width: 48rem) {
   .role > li { display: grid; grid-template-columns: 9.5rem 1fr; gap: 0 1.5rem; }
@@ -128,8 +132,8 @@ a:hover { color: var(--rouge-texte); text-decoration-color: currentColor; }
 .role.serre > li { display: block; }
 
 .titre-section { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; flex-wrap: wrap; margin: 4rem 0 0.5rem; }
-.titre-section h2 { display: flex; align-items: center; gap: 0.6rem; margin: 0; font-size: clamp(1.75rem, 4vw, 2.25rem); line-height: 1.1; }
-.titre-section h2 small { display: block; font-family: var(--texte); font-style: italic; font-size: 1.0625rem; color: var(--encre-2); }
+.titre-section :is(h1, h2) { display: flex; align-items: center; gap: 0.6rem; margin: 0; font-size: clamp(1.75rem, 4vw, 2.25rem); line-height: 1.1; }
+.titre-section :is(h1, h2) small { display: block; font-family: var(--texte); font-style: italic; font-size: 1.0625rem; color: var(--encre-2); }
 .mouche { width: 0.62em; height: 0.9em; flex: none; color: var(--rouge-texte); }
 
 .pagination { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2rem; }
