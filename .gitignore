@@ -1,0 +1,29 @@
+# Secrets
+.env
+.env.*
+!.env.example
+*SECRETS*
+*recoverycodes*
+*.pem
+*.key
+
+# Exports WordPress et sauvegardes (données personnelles des commentateurs)
+*.WordPress.*.xml
+backup_*.zip
+*.sql
+*.sql.gz
+
+# Fichiers serveur
+.htaccess
+.user.ini
+*htaccess_Backup*
+*user.ini_Backup*
+
+# Téléchargements inachevés et journaux
+*.crdownload
+*.log
+
+# Outils
+node_modules/
+.DS_Store
+Thumbs.db
