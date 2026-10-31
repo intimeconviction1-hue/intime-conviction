@@ -1,18 +1,22 @@
 ---
 import { rubrique } from '../lib/rubriques.mjs';
-import { dateLongue } from '../lib/articles.mjs';
+import { dateGreffe } from '../lib/articles.mjs';
 
+// Un « rôle » : la date tapée à la machine dans la marge, comme sur la liste
+// des affaires affichée à la porte d'une salle d'audience.
 const { articles, rubriqueVisible = true, extraits = true } = Astro.props;
 ---
-<ul class="liste">
+<ul class:list={['role', { serre: !extraits }]}>
   {articles.map(({ data }) => (
     <li>
-      <p class="meta">
-        {rubriqueVisible && <><span class="rouge etiquette">{rubrique(data.rubrique).nom}</span> · </>}
-        <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
+      <p class="date greffe">
+        <time datetime={data.date.toISOString()}>{dateGreffe(data.date)}</time>
+        {rubriqueVisible && <><br /><span class="rouge">{rubrique(data.rubrique).nom}</span></>}
       </p>
-      <h3><a href={data.chemin}>{data.titre}</a></h3>
-      {extraits && <p>{data.extrait}</p>}
+      <div>
+        <h3><a href={data.chemin}>{data.titre}</a></h3>
+        {extraits && <p class="extrait">{data.extrait}</p>}
+      </div>
     </li>
   ))}
 </ul>

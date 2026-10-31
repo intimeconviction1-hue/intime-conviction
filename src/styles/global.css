@@ -1,162 +1,162 @@
-/* Intime Conviction — « le papier du greffe ».
-   Ivoire et encre, un seul accent : le rouge des robes de la cour d'assises.
+/* Intime Conviction — « la robe et l'hermine ».
+   Le rouge des robes de la cour d'assises est un FOND (en-tête, pied), pas un
+   accent ; le blanc moucheté de noir de l'hermine en borde le col. La page est
+   de la pierre froide de palais de justice, et tout ce que la machine date ou
+   classe s'écrit à la machine du greffe (Courier).
    Les couleurs passent toutes par ces jetons ; aucune valeur en dur ailleurs. */
 
 :root {
-  --papier: #f7f3ea;
-  --papier-2: #efe8d9;
-  --encre: #1b1916;
-  --encre-2: #4a453d;
-  --filet: #d8cfbd;
-  --rouge: #9b1c1c;
-  --rouge-fond: #9b1c1c;
-  --sur-rouge: #fbf7ef;
+  --robe: #6e0f1a;
+  --robe-fonce: #500a13;
+  --hermine: #fbfaf7;
+  --fond: #f3f3f0;
+  --pierre: #e4e2dc;
+  --encre: #151515;
+  --encre-2: #4b4843;
+  --rouge-texte: #8c1622;
+  --mouche: #151515;
 
-  --titre: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
-  --texte: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
-  --etiquette: 'Inter Variable', system-ui, sans-serif;
+  --affiche: 'Gloock', 'Times New Roman', serif;
+  --texte: 'Newsreader Variable', Georgia, serif;
+  --greffe: 'Courier Prime', 'Courier New', monospace;
 
-  --mesure: 68ch;
+  --mesure: 66ch;
   --large: 76rem;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --papier: #161411;
-    --papier-2: #1f1c18;
-    --encre: #ede6d8;
-    --encre-2: #b8ae9c;
-    --filet: #3a352d;
-    --rouge: #e27d70;
-    --rouge-fond: #8f1d1d;
-    --sur-rouge: #fbf7ef;
+    --fond: #131314;
+    --pierre: #1f1f21;
+    --encre: #eeece7;
+    --encre-2: #b6b2aa;
+    --rouge-texte: #ef8f94;
     color-scheme: dark;
   }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-
 html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  background: var(--papier);
+  background: var(--fond);
   color: var(--encre);
   font-family: var(--texte);
   font-size: 1.125rem;
   line-height: 1.6;
   font-optical-sizing: auto;
-  text-rendering: optimizeLegibility;
 }
 
-a { color: inherit; text-decoration-color: var(--filet); text-underline-offset: 0.2em; }
-a:hover { color: var(--rouge); text-decoration-color: currentColor; }
-:focus-visible { outline: 2px solid var(--rouge); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--affiche); font-weight: 400; letter-spacing: -0.005em; }
 
-.evitement {
-  position: absolute; left: -9999px; top: 0;
-  background: var(--rouge-fond); color: var(--sur-rouge); padding: 0.75rem 1rem;
-}
+a { color: inherit; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 0.2em; }
+a:hover { color: var(--rouge-texte); text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid var(--rouge-texte); outline-offset: 3px; }
+
+.evitement { position: absolute; left: -9999px; top: 0; background: var(--hermine); color: var(--robe); padding: 0.75rem 1rem; z-index: 10; }
 .evitement:focus { left: 1rem; }
 
 .cadre { max-width: var(--large); margin: 0 auto; padding: 0 1rem; }
 @media (min-width: 48rem) { .cadre { padding: 0 2rem; } }
 
-.etiquette {
-  font-family: var(--etiquette);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+.greffe {
+  font-family: var(--greffe);
+  font-size: 0.875rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
+.rouge { color: var(--rouge-texte); }
 
-/* ——— En-tête ——— */
+/* ——— La robe : en-tête et pied ——— */
 
-.bandeau { border-bottom: 1px solid var(--filet); }
+.robe { background: var(--robe); color: var(--hermine); }
+.robe a { color: var(--hermine); text-decoration: none; }
+.robe a:hover { color: var(--hermine); text-decoration: underline; text-decoration-thickness: 1px; }
+.robe :focus-visible { outline-color: var(--hermine); }
 
-.titre-du-journal {
-  display: block;
-  text-align: center;
-  padding: 1.5rem 0 0.75rem;
-  text-decoration: none;
-}
+.titre-du-journal { display: block; text-align: center; padding: 2rem 0 0.75rem; }
 .titre-du-journal strong {
   display: block;
-  font-family: var(--titre);
-  font-weight: 700;
-  font-size: clamp(2.25rem, 8vw, 4.75rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
+  font-family: var(--affiche);
+  font-weight: 400;
+  font-size: clamp(2.5rem, 9vw, 5.5rem);
+  line-height: 0.95;
 }
-.titre-du-journal span { display: block; margin-top: 0.5rem; color: var(--encre-2); }
+.titre-du-journal span { display: block; margin-top: 0.75rem; opacity: 0.85; }
 
-.rubriques-nav { border-top: 1px solid var(--encre); border-bottom: 3px double var(--encre); }
 .rubriques-nav ul {
-  list-style: none; margin: 0; padding: 0;
-  display: flex; gap: 0.25rem 1.5rem; flex-wrap: wrap; justify-content: center;
+  list-style: none; margin: 0; padding: 0.25rem 0 0.5rem;
+  display: flex; gap: 0 1.25rem; flex-wrap: wrap; justify-content: center;
 }
-.rubriques-nav a {
-  display: inline-flex; align-items: center; min-height: 44px;
-  text-decoration: none; white-space: nowrap;
-}
-/* Au téléphone, sept entrées sur trois rangées repoussaient l'article de
-   290 px : une seule rangée qui défile, la page elle-même ne déborde pas. */
+.rubriques-nav a { font-size: 0.8125rem; display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; }
+.rubriques-nav a[aria-current='page'] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.35em; }
+/* Au téléphone : une seule rangée qui défile, l'article n'est pas repoussé. */
 @media (max-width: 47.99rem) {
   .rubriques-nav .cadre { padding: 0; }
-  .rubriques-nav ul {
-    flex-wrap: nowrap; justify-content: flex-start; gap: 1.25rem;
-    overflow-x: auto; padding: 0 1rem; scrollbar-width: none;
-  }
+  .rubriques-nav ul { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; padding: 0.25rem 1rem 0.5rem; scrollbar-width: none; }
   .rubriques-nav ul::-webkit-scrollbar { display: none; }
 }
-.rubriques-nav a[aria-current='page'] { color: var(--rouge); }
 
-/* ——— Pied ——— */
-
-.pied { margin-top: 5rem; border-top: 3px double var(--encre); padding: 2rem 0 3rem; color: var(--encre-2); font-size: 1rem; }
-.pied p { margin: 0.25rem 0; }
-
-/* ——— Listes d'articles ——— */
-
-.liste { list-style: none; margin: 0; padding: 0; }
-.liste > li { border-top: 1px solid var(--filet); padding: 1.25rem 0; }
-.liste h3 { font-size: 1.375rem; line-height: 1.25; margin: 0.35rem 0; font-weight: 600; }
-.liste h3 a { text-decoration: none; }
-.liste p { margin: 0.35rem 0 0; color: var(--encre-2); font-size: 1.0625rem; }
-.meta { color: var(--encre-2); font-family: var(--etiquette); font-size: 0.8125rem; }
-.meta .rouge { color: var(--rouge); }
-
-.titre-section {
-  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
-  border-bottom: 1px solid var(--encre); padding-bottom: 0.5rem; margin: 3.5rem 0 0;
+/* L'épitoge : le col d'hermine, blanc moucheté de queues noires. C'est la
+   seule ornementation du site — elle borde la robe en haut et en bas. */
+.epitoge {
+  height: 30px;
+  background-color: var(--hermine);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='30' viewBox='0 0 44 30'%3E%3Cg fill='%23151515' transform='translate(16 3) scale(.6 .86)'%3E%3Ccircle cx='10' cy='3.2' r='2.8'/%3E%3Ccircle cx='4.2' cy='7.6' r='2.6'/%3E%3Ccircle cx='15.8' cy='7.6' r='2.6'/%3E%3Cpath d='M10 10C9.2 15.5 6.6 20.5 4 27l3-2.7 3 3.2 3-3.2 3 2.7c-2.6-6.5-5.2-11.5-6-17z'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: center;
 }
-.titre-section h2 { margin: 0; font-size: 1.75rem; line-height: 1.2; }
-.titre-section h2 small { display: block; font-size: 1rem; font-weight: 400; font-style: italic; color: var(--encre-2); }
 
-.pagination { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2rem; font-family: var(--etiquette); font-size: 0.9375rem; }
+.pied { margin-top: 5rem; }
+.pied .cadre { padding-top: 2rem; padding-bottom: 2.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; justify-content: space-between; align-items: baseline; }
+.pied strong { font-family: var(--affiche); font-weight: 400; font-size: 1.5rem; }
+
+/* ——— Le rôle : listes d'articles ——— */
+
+.role { list-style: none; margin: 0; padding: 0; }
+.role > li { padding: 1.1rem 0; border-top: 1px solid var(--pierre); }
+.role .date { margin: 0; color: var(--encre-2); }
+.role h3 { font-family: var(--texte); font-weight: 600; font-size: 1.3rem; line-height: 1.25; margin: 0.25rem 0 0; }
+.role h3 a { text-decoration: none; }
+.role p.extrait { margin: 0.35rem 0 0; color: var(--encre-2); font-size: 1.0625rem; }
+@media (min-width: 48rem) {
+  .role > li { display: grid; grid-template-columns: 9.5rem 1fr; gap: 0 1.5rem; }
+  .role .date { padding-top: 0.3rem; }
+}
+.role.serre > li { display: block; }
+
+.titre-section { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; flex-wrap: wrap; margin: 4rem 0 0.5rem; }
+.titre-section h2 { display: flex; align-items: center; gap: 0.6rem; margin: 0; font-size: clamp(1.75rem, 4vw, 2.25rem); line-height: 1.1; }
+.titre-section h2 small { display: block; font-family: var(--texte); font-style: italic; font-size: 1.0625rem; color: var(--encre-2); }
+.mouche { width: 0.62em; height: 0.9em; flex: none; color: var(--rouge-texte); }
+
+.pagination { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2rem; }
 .pagination a { display: inline-flex; align-items: center; min-height: 44px; }
 
 /* ——— Article ——— */
 
 .article { max-width: var(--mesure); margin: 3rem auto 0; }
-.article h1 {
-  font-size: clamp(2rem, 5.5vw, 3.25rem);
-  line-height: 1.1; letter-spacing: -0.015em; margin: 0.75rem 0 1rem; font-weight: 700;
-}
-.article .chapeau-meta { border-top: 1px solid var(--filet); border-bottom: 1px solid var(--filet); padding: 0.75rem 0; }
+.article h1 { font-size: clamp(2.1rem, 6vw, 3.6rem); line-height: 1.05; margin: 0.75rem 0 1.25rem; }
+.article .meta-article { margin: 0; color: var(--encre-2); }
 
-.corps { margin-top: 2rem; overflow-wrap: anywhere; }
+.corps { margin-top: 2.25rem; overflow-wrap: anywhere; }
 .corps p { margin: 0 0 1.1em; }
-.corps h2, .corps h3, .corps h4 { line-height: 1.25; margin: 2em 0 0.6em; }
-.corps h2 { font-size: 1.5rem; }
-.corps h3 { font-size: 1.3rem; }
-.corps blockquote { margin: 1.5em 0; padding-left: 1.25rem; border-left: 3px solid var(--rouge); font-style: italic; }
+.corps h2, .corps h3, .corps h4 { line-height: 1.2; margin: 2em 0 0.6em; }
+.corps h2 { font-size: 1.6rem; }
+.corps h3 { font-size: 1.35rem; }
+.corps h4 { font-family: var(--texte); font-weight: 600; }
+.corps blockquote { margin: 1.5em 0; padding: 0.25rem 0 0.25rem 1.25rem; border-left: 4px solid var(--robe); font-style: italic; }
 .corps ul, .corps ol { padding-left: 1.25rem; }
 .corps li { margin: 0.3em 0; }
-.corps a { text-decoration-color: var(--rouge); }
+.corps a { text-decoration-color: var(--rouge-texte); }
 .corps table { display: block; overflow-x: auto; border-collapse: collapse; font-size: 1rem; }
-.corps td, .corps th { border: 1px solid var(--filet); padding: 0.4rem 0.6rem; vertical-align: top; }
-.corps hr { border: 0; border-top: 1px solid var(--filet); margin: 2em 0; }
+.corps td, .corps th { border: 1px solid var(--pierre); padding: 0.4rem 0.6rem; vertical-align: top; }
+.corps hr { border: 0; border-top: 1px solid var(--pierre); margin: 2em 0; }
 
 .voisins { max-width: var(--mesure); margin: 4rem auto 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  a { transition: color 0.15s ease; }
+}

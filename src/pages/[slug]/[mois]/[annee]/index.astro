@@ -25,9 +25,9 @@ const r = rubrique(data.rubrique);
 ---
 <Base titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique}>
   <article class="article">
-    <p class="meta"><a class="rouge etiquette" href={`/rubrique/${r.slug}/`}>{r.nom}</a></p>
+    <p class="greffe"><a class="rouge" href={`/rubrique/${r.slug}/`}>{r.nom}</a></p>
     <h1>{data.titre}</h1>
-    <p class="meta chapeau-meta">
+    <p class="greffe meta-article">
       <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
       {data.auteur && <> · {data.auteur}</>}
       · {minutesDeLecture(data.mots)} min de lecture

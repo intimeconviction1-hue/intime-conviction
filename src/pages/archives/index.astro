@@ -11,18 +11,19 @@ for (const a of articles) {
 ---
 <Base titre="Archives" rubriqueActive="archives">
   <div class="titre-section">
-    <h2>Archives<small>{articles.length.toLocaleString('fr-FR')} articles, année par année</small></h2>
+    <h2><span>Archives<small>{articles.length.toLocaleString('fr-FR')} articles, année par année</small></span></h2>
   </div>
   <ul class="annees">
     {[...parAnnee].map(([an, n]) => (
-      <li><a href={`/archives/${an}/`}><strong>{an}</strong><span class="meta">{n.toLocaleString('fr-FR')} article{n > 1 ? 's' : ''}</span></a></li>
+      <li><a href={`/archives/${an}/`}><strong>{an}</strong><span class="greffe">{n.toLocaleString('fr-FR')} article{n > 1 ? 's' : ''}</span></a></li>
     ))}
   </ul>
 </Base>
 
 <style>
   .annees { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); gap: 0.75rem; }
-  .annees a { display: flex; flex-direction: column; padding: 1rem; border: 1px solid var(--filet); text-decoration: none; min-height: 44px; }
-  .annees a:hover { border-color: var(--rouge); }
-  .annees strong { font-size: 1.75rem; line-height: 1; }
+  .annees a { display: flex; flex-direction: column; padding: 1rem; border: 1px solid var(--pierre); text-decoration: none; min-height: 44px; }
+  .annees a:hover { border-color: var(--rouge-texte); }
+  .annees strong { font-family: var(--affiche); font-weight: 400; font-size: 2rem; line-height: 1; }
+  .annees span { color: var(--encre-2); margin-top: 0.35rem; font-size: 0.8rem; }
 </style>

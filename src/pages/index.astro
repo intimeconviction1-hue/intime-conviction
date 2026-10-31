@@ -1,8 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import ListeArticles from '../components/ListeArticles.astro';
+import Mouche from '../components/Mouche.astro';
 import { RUBRIQUES } from '../lib/rubriques.mjs';
-import { tousLesArticles, dateLongue, minutesDeLecture } from '../lib/articles.mjs';
+import { tousLesArticles, dateGreffe, minutesDeLecture } from '../lib/articles.mjs';
 
 const articles = await tousLesArticles();
 const [une, ...suite] = articles;
@@ -14,32 +15,33 @@ const total = articles.length.toLocaleString('fr-FR');
 ---
 <Base>
   <section class="une" aria-labelledby="titre-une">
-    <p class="meta"><span class="rouge etiquette">À la une</span> · <time datetime={une.data.date.toISOString()}>{dateLongue(une.data.date)}</time></p>
+    <p class="greffe rouge">À la une · <time datetime={une.data.date.toISOString()}>{dateGreffe(une.data.date)}</time></p>
     <h2 id="titre-une"><a href={une.data.chemin}>{une.data.titre}</a></h2>
     <p class="chapeau">{une.data.extrait}</p>
-    <p class="meta">{minutesDeLecture(une.data.mots)} min de lecture</p>
+    <p class="greffe lecture">{minutesDeLecture(une.data.mots)} min de lecture</p>
   </section>
 
-  <div class="titre-section"><h2>Derniers articles</h2></div>
+  <div class="titre-section"><h2><Mouche />Derniers articles</h2></div>
   <ListeArticles articles={suite.slice(0, 5)} />
 
   {parRubrique.map((r) => (
     <section aria-labelledby={`r-${r.slug}`}>
       <div class="titre-section">
-        <h2 id={`r-${r.slug}`}>{r.nom}<small>{r.sousTitre}</small></h2>
-        <a class="etiquette" href={`/rubrique/${r.slug}/`}>Les {r.total.toLocaleString('fr-FR')} articles</a>
+        <h2 id={`r-${r.slug}`}><Mouche /><span>{r.nom}<small>{r.sousTitre}</small></span></h2>
+        <a class="greffe" href={`/rubrique/${r.slug}/`}>Les {r.total.toLocaleString('fr-FR')} articles</a>
       </div>
       <ListeArticles articles={r.derniers} rubriqueVisible={false} extraits={false} />
     </section>
   ))}
 
-  <p class="fonds">{total} articles depuis 2009 · <a href="/archives/">Parcourir les archives par année</a></p>
+  <p class="fonds greffe">{total} articles depuis 2009 · <a href="/archives/">Parcourir les archives</a></p>
 </Base>
 
 <style>
-  .une { max-width: 52rem; margin: 3rem auto 0; text-align: center; }
-  .une h2 { font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1.08; letter-spacing: -0.015em; margin: 0.75rem 0; }
+  .une { margin: 3rem 0 0; padding-bottom: 2.5rem; border-bottom: 1px solid var(--pierre); }
+  .une h2 { font-size: clamp(2.4rem, 7.5vw, 5rem); line-height: 1; margin: 0.75rem 0 1rem; max-width: 18ch; }
   .une h2 a { text-decoration: none; }
-  .chapeau { font-size: 1.25rem; color: var(--encre-2); font-style: italic; margin: 0 auto; max-width: 42rem; }
-  .fonds { margin-top: 3rem; text-align: center; font-family: var(--etiquette); font-size: 0.9375rem; color: var(--encre-2); }
+  .chapeau { font-size: 1.25rem; line-height: 1.5; color: var(--encre-2); margin: 0; max-width: 46rem; }
+  .lecture { color: var(--encre-2); margin: 1rem 0 0; }
+  .fonds { margin-top: 3.5rem; text-align: center; color: var(--encre-2); }
 </style>

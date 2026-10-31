@@ -13,6 +13,10 @@ export async function tousLesArticles() {
 const FORMAT_DATE = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris' });
 export const dateLongue = (d) => FORMAT_DATE.format(d);
 
+// « 17.01.2025 » : la date comme le greffe la tape en tête d'un procès-verbal.
+const FORMAT_GREFFE = new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Paris' });
+export const dateGreffe = (d) => FORMAT_GREFFE.format(d).replaceAll('/', '.');
+
 const FORMAT_MOIS = new Intl.DateTimeFormat('fr-FR', { month: 'long', timeZone: 'Europe/Paris' });
 export const nomDuMois = (d) => FORMAT_MOIS.format(d);
 

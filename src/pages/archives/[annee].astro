@@ -25,15 +25,15 @@ for (const a of articles) {
 ---
 <Base titre={`Archives ${annee}`} rubriqueActive="archives">
   <div class="titre-section">
-    <h2>{annee}<small>{articles.length.toLocaleString('fr-FR')} article{articles.length > 1 ? 's' : ''}</small></h2>
-    <a class="etiquette" href="/archives/">Toutes les années</a>
+    <h2><span>{annee}<small>{articles.length.toLocaleString('fr-FR')} article{articles.length > 1 ? 's' : ''}</small></span></h2>
+    <a class="greffe" href="/archives/">Toutes les années</a>
   </div>
   {[...parMois].map(([mois, liste]) => (
     <section>
-      <h3 class="mois etiquette">{mois} · {liste.length}</h3>
+      <h3 class="mois greffe">{mois} · {liste.length}</h3>
       <ul class="titres">
         {liste.map(({ data }) => (
-          <li><a href={data.chemin}>{data.titre}</a> <span class="meta">{rubrique(data.rubrique).nom}</span></li>
+          <li><a href={data.chemin}>{data.titre}</a> <span class="greffe rub">{rubrique(data.rubrique).nom}</span></li>
         ))}
       </ul>
     </section>
@@ -41,8 +41,9 @@ for (const a of articles) {
 </Base>
 
 <style>
-  .mois { margin: 2.5rem 0 0.5rem; color: var(--rouge); }
+  .mois { margin: 2.5rem 0 0.5rem; color: var(--rouge-texte); }
   .titres { list-style: none; padding: 0; margin: 0; columns: 22rem; column-gap: 2.5rem; }
-  .titres li { break-inside: avoid; padding: 0.35rem 0; border-top: 1px solid var(--filet); line-height: 1.35; }
+  .titres li { break-inside: avoid; padding: 0.35rem 0; border-top: 1px solid var(--pierre); line-height: 1.35; }
   .titres a { text-decoration: none; }
+  .rub { color: var(--encre-2); font-size: 0.75rem; }
 </style>
