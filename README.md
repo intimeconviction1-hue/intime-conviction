@@ -26,9 +26,8 @@ décision éditoriale.
   HTML par article, sans base de données.
 - 3 436 articles importés de l'export du 29 juillet 2026 (70 écartés faute de
   texte). Ils gardent leur ancienne adresse, `/titre/mois/année/`.
-- **La correspondance entre les 23 anciennes catégories et les six rubriques est
-  une proposition**, pas encore validée par la rédaction :
-  `src/lib/rubriques.mjs`.
+- La correspondance entre les 23 anciennes catégories et les six rubriques est
+  validée par la rédaction depuis le 31 octobre 2026 : `src/lib/rubriques.mjs`.
 - Une veille des affaires d'assises alimente le compte X. Rien ne part sans qu'un
   humain ait validé le commentaire.
 

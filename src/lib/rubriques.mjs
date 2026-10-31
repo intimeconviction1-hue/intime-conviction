@@ -2,16 +2,17 @@
 // 23 catégories de l'ancien WordPress.
 //
 // Les six NOMS sont une décision éditoriale prise (brief du 29/07/2026) : ils ne
-// se renomment pas ici. La CORRESPONDANCE, elle, est une PROPOSITION écrite le
-// 31/10/2026 en lisant des titres au hasard dans chaque catégorie — aucun
-// document du dossier ne la donnait. Elle reste marquée comme telle tant que
-// la rédaction ne l'a pas validée, et c'est elle qui décide où tombent
-// 3 506 articles : la changer ici, puis relancer `npm run import`.
+// se renomment pas ici. La CORRESPONDANCE a été proposée le 31/10/2026 en
+// lisant des titres au hasard dans chaque catégorie — aucun document du
+// dossier ne la donnait — et VALIDÉE par la rédaction le même jour, y compris
+// les trois lignes qui étaient incertaines. C'est elle qui décide où tombent
+// les articles : la changer ici est une décision éditoriale, puis relancer
+// `npm run import`.
 //
 // Ce module est importé par le script d'import ET par le site, pour qu'il n'y
 // ait jamais deux listes des rubriques qui divergent.
 
-export const CORRESPONDANCE_VALIDEE = false;
+export const CORRESPONDANCE_VALIDEE = true;
 
 export const RUBRIQUES = [
   { slug: 'cours-du-jour', nom: 'Cours du Jour', sousTitre: "Suivi d'audience" },
@@ -22,8 +23,9 @@ export const RUBRIQUES = [
   { slug: 'le-greffe', nom: 'Le Greffe', sousTitre: 'Culture criminelle' },
 ];
 
-// Ancienne catégorie → rubrique. Les trois lignes marquées « INCERTAIN » pèsent
-// à elles seules 1 814 articles et sont celles qu'il faut trancher d'abord.
+// Ancienne catégorie → rubrique. Les trois lignes marquées « TRANCHÉ » pèsent à
+// elles seules 1 814 articles : elles étaient incertaines et ont été validées
+// telles quelles le 31/10/2026.
 export const ANCIENNES_CATEGORIES = {
   'Cours du Jour': 'cours-du-jour',
   'Assises du jour': 'cours-du-jour',
@@ -35,7 +37,7 @@ export const ANCIENNES_CATEGORIES = {
   'Terrorisme': 'cours-du-jour',
   'Assises spéciales': 'cours-du-jour',
   'Non classé': 'cours-du-jour',
-  'Crimes étrangers': 'cours-du-jour', // INCERTAIN — 972 articles, surtout des procès à l'étranger
+  'Crimes étrangers': 'cours-du-jour', // TRANCHÉ — 972 articles, surtout des procès à l'étranger
 
   'Les Rouages de la Cour': 'le-banc-des-jures',
   'Procédure': 'le-banc-des-jures',
@@ -44,9 +46,9 @@ export const ANCIENNES_CATEGORIES = {
 
   'Chronique': 'la-cour-se-leve',
 
-  'Acteurs': 'delibere', // INCERTAIN — 286 articles sur les gardes des Sceaux, avocats, magistrats
+  'Acteurs': 'delibere', // TRANCHÉ — 286 articles sur les gardes des Sceaux, avocats, magistrats
 
-  "104 Cours d'assises": 'l-expose', // INCERTAIN — 556 articles, revues de la semaine et dossiers de société
+  "104 Cours d'assises": 'l-expose', // TRANCHÉ — 556 articles, revues de la semaine et dossiers de société
   'Focus médiatique': 'l-expose',
   'Procès attendus': 'l-expose',
 
