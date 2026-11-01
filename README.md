@@ -66,3 +66,11 @@ Le dépôt est public. Donc jamais :
 
 Le `.gitignore` couvre ces cas. Une règle se pose **avant** d'ajouter le fichier,
 et se vérifie avec `git check-ignore -v <chemin>` — sans barre `/` à la fin.
+
+## Recherche et lecture
+
+Recherche dans les titres et résumés avec filtres par rubrique et année.
+Les articles proposent un texte agrandissable, une progression de lecture et
+la copie du lien. Les six rubriques et les adresses existantes sont conservées.
+
+Le fonds reste dans le dépôt privé d’articles et est chargé par IC_ARTICLES.

@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import { RUBRIQUES } from '../lib/rubriques.mjs';
+import { tousLesArticles } from '../lib/articles.mjs';
+const articles = await tousLesArticles();
+const index = articles.map(({data:d})=>({titre:d.titre,chemin:d.chemin,rubrique:d.rubrique,annee:d.date.getFullYear(),extrait:d.extrait}));
+const annees = [...new Set(index.map(a=>a.annee))].sort((a,b)=>b-a);
+---
+<Base titre="Rechercher">
+  <header class="titre-page"><p class="etiquette">Explorer le fonds</p><h1>À la recherche d’un article</h1><p>Un nom, une affaire, une question de justice.</p></header>
+  <form id="recherche" class="recherche-form" role="search">
+    <label>Votre recherche<input type="search" name="q" id="requete" placeholder="Rechercher dans les titres et résumés…" /></label>
+    <label>Rubrique<select id="rubrique" name="rubrique"><option value="">Toutes les rubriques</option>{RUBRIQUES.map(r=><option value={r.slug}>{r.nom}</option>)}</select></label>
+    <label>Année<select id="annee" name="annee"><option value="">Toutes les années</option>{annees.map(a=><option value={a}>{a}</option>)}</select></label>
+    <button type="submit">Rechercher</button>
+  </form>
+  <p id="compteur" class="meta" role="status" aria-live="polite"></p>
+  <ul id="resultats" class="role"></ul>
+  <button id="suite" type="button" hidden>Afficher davantage</button>
+  <noscript>Activez JavaScript pour la recherche, ou consultez <a href="/archives/">les archives par année</a>.</noscript>
+  <script id="index-recherche" type="application/json" set:html={JSON.stringify(index).replaceAll('<','\\u003c')} />
+</Base>
+<script>
+const index=JSON.parse(document.querySelector('#index-recherche')!.textContent!);
+const form=document.querySelector<HTMLFormElement>('#recherche')!;
+const q=document.querySelector<HTMLInputElement>('#requete')!;
+const rubrique=document.querySelector<HTMLSelectElement>('#rubrique')!;
+const annee=document.querySelector<HTMLSelectElement>('#annee')!;
+const liste=document.querySelector('#resultats')!;
+const suite=document.querySelector<HTMLButtonElement>('#suite')!;
+const normalise=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+let matches:any[]=[],limite=30;
+function affiche(){
+ liste.replaceChildren();
+ for(const a of matches.slice(0,limite)){
+  const li=document.createElement('li'),h=document.createElement('h2'),link=document.createElement('a'),p=document.createElement('p'),meta=document.createElement('p');
+  link.href=a.chemin;link.textContent=a.titre;h.append(link);p.className='extrait';p.textContent=a.extrait;meta.className='meta';meta.textContent=String(a.annee);li.append(meta,h,p);liste.append(li);
+ }
+ document.querySelector('#compteur')!.textContent=matches.length?`${matches.length.toLocaleString('fr-FR')} article${matches.length>1?'s':''} · ${Math.min(limite,matches.length)} affiché${matches.length>1?'s':''}`:'Aucun article trouvé. Essayez un autre mot ou élargissez les filtres.';
+ suite.hidden=matches.length<=limite;
+}
+function recherche(){const mots=normalise(q.value).trim().split(/\s+/).filter(Boolean);matches=index.filter((a:any)=>(!rubrique.value||a.rubrique===rubrique.value)&&(!annee.value||String(a.annee)===annee.value)&&mots.every(m=>normalise(a.titre+' '+a.extrait).includes(m)));limite=30;const params=new URLSearchParams(new FormData(form) as any);history.replaceState(null,'','?'+params.toString());affiche();}
+const params=new URLSearchParams(location.search);q.value=params.get('q')||'';rubrique.value=params.get('rubrique')||'';annee.value=params.get('annee')||'';
+form.addEventListener('submit',e=>{e.preventDefault();recherche()});rubrique.addEventListener('change',recherche);annee.addEventListener('change',recherche);suite.addEventListener('click',()=>{limite+=30;affiche()});recherche();
+</script>

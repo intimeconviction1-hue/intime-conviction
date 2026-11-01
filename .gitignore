@@ -34,3 +34,6 @@ articles/
 contenu/
 .DS_Store
 Thumbs.db
+
+# Copie privée du fonds pour Sites : jamais dans ce dépôt public
+.site-content/
