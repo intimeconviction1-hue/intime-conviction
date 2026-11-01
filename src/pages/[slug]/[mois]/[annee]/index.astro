@@ -25,9 +25,9 @@ const r = rubrique(data.rubrique);
 ---
 <Base titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique}>
   <article class="article">
-    <p class="greffe"><a class="rouge" href={`/rubrique/${r.slug}/`}>{r.nom}</a></p>
+    <p class="etiquette"><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></p>
     <h1>{data.titre}</h1>
-    <p class="greffe meta-article">
+    <p class="meta">
       <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
       {data.auteur && <> · {data.auteur}</>}
       · {minutesDeLecture(data.mots)} min de lecture
@@ -37,7 +37,7 @@ const r = rubrique(data.rubrique);
 
   {voisins.length > 0 && (
     <aside class="voisins" aria-labelledby="voisins">
-      <div class="titre-section"><h2 id="voisins">Dans {r.nom}</h2></div>
+      <div class="titre-section"><h2 id="voisins">À lire aussi dans {r.nom}</h2></div>
       <ListeArticles articles={voisins} rubriqueVisible={false} extraits={false} />
     </aside>
   )}

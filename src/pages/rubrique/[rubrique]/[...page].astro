@@ -1,7 +1,6 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import ListeArticles from '../../../components/ListeArticles.astro';
-import Mouche from '../../../components/Mouche.astro';
 import { RUBRIQUES, rubrique } from '../../../lib/rubriques.mjs';
 import { tousLesArticles } from '../../../lib/articles.mjs';
 
@@ -17,10 +16,12 @@ const r = rubrique(Astro.params.rubrique);
 const titre = page.currentPage > 1 ? `${r.nom}, page ${page.currentPage}` : r.nom;
 ---
 <Base titre={titre} description={`${r.nom} — ${r.sousTitre}. ${page.total} articles d'Intime Conviction.`} rubriqueActive={r.slug}>
-  <div class="titre-section">
-    <h1><Mouche /><span>{r.nom}<small>{r.sousTitre}</small></span></h1>
-    <span class="greffe">{page.total.toLocaleString('fr-FR')} articles · page {page.currentPage} sur {page.lastPage}</span>
-  </div>
+  <header class="titre-page">
+    <p class="etiquette">Rubrique</p>
+    <h1>{r.nom}</h1>
+    <p class="sous-titre">{r.sousTitre}</p>
+    <p class="meta">{page.total.toLocaleString('fr-FR')} articles · page {page.currentPage} sur {page.lastPage}</p>
+  </header>
   <ListeArticles articles={page.data} rubriqueVisible={false} niveau={2} />
   <nav class="pagination" aria-label="Pages">
     {page.url.prev ? <a href={page.url.prev}>← Plus récents</a> : <span />}

@@ -1,27 +1,23 @@
 ---
-// Newsreader en graisse variable seule : la version à axe optique pesait
-// 279 Ko (romain + italique) pour 122 ici, sans écart visible au corps de
-// lecture. L'italique ne sert qu'aux sous-titres de rubrique et aux citations.
+// Newsreader en graisse variable seule (122 Ko romain + italique, contre 279
+// pour la version à axe optique) et Libre Franklin pour la voix « journal ».
 import '@fontsource-variable/newsreader/wght.css';
 import '@fontsource-variable/newsreader/wght-italic.css';
-import '@fontsource/gloock/latin.css';
-import '@fontsource/courier-prime/latin-400.css';
+import '@fontsource-variable/libre-franklin/wght.css';
 import '../styles/global.css';
-// Les trois fichiers du premier écran, préchargés : sans ça, les titres
+// Les deux fichiers du premier écran, préchargés : sans ça, les titres
 // s'affichent d'abord dans la police de secours puis « sautent ».
-import policeTitre from '@fontsource/gloock/files/gloock-latin-400-normal.woff2?url';
 import policeTexte from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
-import policeGreffe from '@fontsource/courier-prime/files/courier-prime-latin-400-normal.woff2?url';
-import { Image } from 'astro:assets';
+import policeSans from '@fontsource-variable/libre-franklin/files/libre-franklin-latin-wght-normal.woff2?url';
 import { RUBRIQUES } from '../lib/rubriques.mjs';
-// Photo prise le 14/10/2009 (Panasonic DMC-TZ4). Astro la convertit en WebP
-// et en retire les métadonnées (appareil, date, lieu) à la construction.
-import fronton from '../assets/fronton-cour-dassises.jpg';
 
 const { titre, description = "Intime Conviction, le média des cours d'assises : suivi d'audience, règles du procès, chroniques et culture criminelle.", rubriqueActive, accueil = false } = Astro.props;
-const EnTete = accueil ? 'h1' : 'p';
+// Le nom du journal est le titre principal (h1) de la seule page d'accueil ;
+// ailleurs c'est un paragraphe, le h1 revenant au titre de la page.
+const Marque = accueil ? 'h1' : 'p';
 const titreComplet = titre ? `${titre} · Intime Conviction` : "Intime Conviction · Le média des cours d'assises";
 const canonique = new URL(Astro.url.pathname, Astro.site);
+const annee = new Date().getFullYear();
 ---
 <!doctype html>
 <html lang="fr">
@@ -35,63 +31,43 @@ const canonique = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonique} />
     <meta property="og:locale" content="fr_FR" />
-    <meta name="theme-color" content="#6e0f1a" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#101010" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap.xml" />
-    {[policeTitre, policeTexte, policeGreffe].map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
+    {[policeTexte, policeSans].map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
   </head>
   <body>
     <a class="evitement" href="#contenu">Aller au contenu</a>
-    <header class="robe">
-      <div class:list={['cadre', { 'entete-accueil': accueil }]}>
-        <EnTete class="titre-du-journal">
-          <a href="/">
-            <strong>Intime Conviction</strong>
-            <span class="greffe">Le média des cours d'assises</span>
-          </a>
-        </EnTete>
-        {accueil && (
-          <figure class="fronton">
-            {/* Bichromie : les ombres en rouge sombre de la robe, les lumières en
-                rose pâle — la photo garde ses détails et prend la teinte du site.
-                Un simple « multiply » sur le rouge l'assombrissait au point de
-                rendre l'inscription illisible. */}
-            <svg width="0" height="0" aria-hidden="true" style="position:absolute">
-              <filter id="bichromie-robe" color-interpolation-filters="sRGB">
-                <feColorMatrix type="saturate" values="0" />
-                <feComponentTransfer>
-                  <feFuncR type="table" tableValues="0.20 0.96" />
-                  <feFuncG type="table" tableValues="0.03 0.88" />
-                  <feFuncB type="table" tableValues="0.05 0.86" />
-                </feComponentTransfer>
-              </filter>
-            </svg>
-            <Image src={fronton} alt="Fronton sculpté d'un palais de justice, au-dessus de l'inscription « Cour d'assises » en lettres dorées" widths={[375, 500]} sizes="(min-width: 60rem) 500px, 100vw" loading="eager" fetchpriority="high" />
-          </figure>
-        )}
-      </div>
-      <nav class="rubriques-nav" aria-label="Rubriques">
-        <div class="cadre">
+    <header class="entete">
+      <div class="cadre">
+        <Marque class="marque"><a href="/">Intime Conviction</a></Marque>
+        <nav class="rubriques-nav" aria-label="Rubriques">
           <ul>
             {RUBRIQUES.map((r) => (
-              <li><a class="greffe" href={`/rubrique/${r.slug}/`} aria-current={rubriqueActive === r.slug ? 'page' : undefined}>{r.nom}</a></li>
+              <li><a href={`/rubrique/${r.slug}/`} aria-current={rubriqueActive === r.slug ? 'page' : undefined}>{r.nom}</a></li>
             ))}
-            <li><a class="greffe" href="/archives/" aria-current={rubriqueActive === 'archives' ? 'page' : undefined}>Archives</a></li>
+            <li><a href="/archives/" aria-current={rubriqueActive === 'archives' ? 'page' : undefined}>Archives</a></li>
           </ul>
-        </div>
-      </nav>
-      <div class="epitoge" aria-hidden="true"></div>
+        </nav>
+      </div>
     </header>
 
     <main id="contenu" class="cadre">
       <slot />
     </main>
 
-    <footer class="pied robe">
-      <div class="epitoge" aria-hidden="true"></div>
+    <footer class="pied">
       <div class="cadre">
-        <strong>Intime Conviction</strong>
-        <p class="greffe"><a href="https://x.com/IntimeConv" rel="noopener">@IntimeConv sur X</a></p>
+        <div>
+          <p class="marque"><a href="/">Intime Conviction</a></p>
+          <p>Le média des cours d'assises : suivi d'audience, règles du procès, chroniques et culture criminelle.</p>
+        </div>
+        <ul>
+          {RUBRIQUES.map((r) => <li><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></li>)}
+          <li><a href="/archives/">Archives</a></li>
+          <li><a href="https://x.com/IntimeConv" rel="noopener">@IntimeConv sur X</a></li>
+        </ul>
       </div>
     </footer>
   </body>

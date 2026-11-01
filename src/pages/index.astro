@@ -1,22 +1,21 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import Mouche from '../components/Mouche.astro';
-import { RUBRIQUES } from '../lib/rubriques.mjs';
-import { tousLesArticles, dateGreffe, minutesDeLecture } from '../lib/articles.mjs';
-
-// Une page de une sans photo : le site n'a aucune image dont il possède les
-// droits. La hiérarchie se fait donc par la typographie et la grille — la une
-// en grand, le fil à côté, les six rubriques en tableau, le fonds par année.
+import { RUBRIQUES, rubrique } from '../lib/rubriques.mjs';
+import { tousLesArticles, dateLongue, minutesDeLecture } from '../lib/articles.mjs';
+// Photo prise le 14/10/2009 (Panasonic DMC-TZ4). Astro la convertit en WebP
+// et en retire les métadonnées (appareil, date, lieu) à la construction.
+import fronton from '../assets/fronton-cour-dassises.jpg';
 
 const articles = await tousLesArticles();
 const [une, ...suite] = articles;
-const fil = suite.slice(0, 5);
-const dejaVus = new Set([une, ...fil].map((a) => a.data.slug));
+const derniers = suite.slice(0, 6);
+const dejaVus = new Set([une, ...derniers].map((a) => a.data.slug));
 
 const rubriques = RUBRIQUES.map((r) => {
   const liste = articles.filter((a) => a.data.rubrique === r.slug);
-  // Les titres d'une rubrique ne répètent pas ceux de la une et du fil.
-  return { ...r, total: liste.length, derniers: liste.filter((a) => !dejaVus.has(a.data.slug)).slice(0, 3) };
+  // Les titres d'une rubrique ne répètent pas ceux de la une et des derniers.
+  return { ...r, total: liste.length, titres: liste.filter((a) => !dejaVus.has(a.data.slug)).slice(0, 3) };
 }).filter((r) => r.total > 0);
 
 const parAnnee = new Map();
@@ -24,99 +23,96 @@ for (const a of articles) {
   const an = a.data.date.getFullYear();
   if (an >= 2009) parAnnee.set(an, (parAnnee.get(an) ?? 0) + 1);
 }
-const annees = [...parAnnee].sort((a, b) => a[0] - b[0]);
+const annees = [...parAnnee].sort((a, b) => b[0] - a[0]);
 const total = articles.length.toLocaleString('fr-FR');
 ---
 <Base accueil>
-  <div class="tete">
-    <article class="une" aria-labelledby="titre-une">
-      <p class="greffe rouge">À la une · <time datetime={une.data.date.toISOString()}>{dateGreffe(une.data.date)}</time></p>
+  <section class="une" aria-labelledby="titre-une">
+    <div class="une-texte">
+      <p class="meta"><span class="etiquette">{rubrique(une.data.rubrique).nom}</span>&ensp;<time datetime={une.data.date.toISOString()}>{dateLongue(une.data.date)}</time></p>
       <h2 id="titre-une"><a href={une.data.chemin}>{une.data.titre}</a></h2>
       <p class="chapeau">{une.data.extrait}</p>
-      <p class="greffe lecture"><a href={une.data.chemin}>Lire · {minutesDeLecture(une.data.mots)} min</a></p>
-    </article>
+      <p class="meta">{minutesDeLecture(une.data.mots)} min de lecture</p>
+    </div>
+    {/* La photo est celle de la maison, pas l'illustration de l'article :
+        la légende le dit, sinon on croirait voir le tribunal de l'affaire.
+        Elle fait 500 px de large et ne s'affiche jamais plus grande. */}
+    <figure class="fronton">
+      <Image src={fronton} alt="Fronton sculpté d'un palais de justice, au-dessus de l'inscription « Cour d'assises » en lettres dorées" widths={[375, 500]} sizes="(min-width: 64rem) 500px, 100vw" loading="eager" fetchpriority="high" />
+      <figcaption class="meta">Fronton d'une cour d'assises · photo Intime Conviction, 2009</figcaption>
+    </figure>
+  </section>
 
-    <section class="fil" aria-labelledby="titre-fil">
-      <h2 id="titre-fil" class="greffe">Derniers articles</h2>
-      <ol>
-        {fil.map(({ data }) => (
-          <li>
-            <p class="greffe"><time datetime={data.date.toISOString()}>{dateGreffe(data.date)}</time></p>
-            <h3><a href={data.chemin}>{data.titre}</a></h3>
-          </li>
-        ))}
-      </ol>
-    </section>
-  </div>
-
-  <section class="rubriques" aria-labelledby="titre-rubriques">
-    <div class="titre-section"><h2 id="titre-rubriques"><Mouche />Les six rubriques</h2></div>
-    <ul class="grille">
-      {rubriques.map((r) => (
-        <li class="carte">
-          <h3><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></h3>
-          <p class="sous-titre">{r.sousTitre}</p>
-          {r.derniers.length > 0 && (
-            <ul class="titres">
-              {r.derniers.map(({ data }) => <li><a href={data.chemin}>{data.titre}</a></li>)}
-            </ul>
-          )}
-          <p class="greffe compte"><a href={`/rubrique/${r.slug}/`}>{r.total.toLocaleString('fr-FR')} article{r.total > 1 ? 's' : ''} →</a></p>
+  <section aria-labelledby="titre-derniers">
+    <div class="titre-section"><h2 id="titre-derniers">Derniers articles</h2></div>
+    <ul class="colonnes">
+      {derniers.map(({ data }) => (
+        <li>
+          <p class="meta"><span class="etiquette">{rubrique(data.rubrique).nom}</span>&ensp;<time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time></p>
+          <h3><a href={data.chemin}>{data.titre}</a></h3>
         </li>
       ))}
     </ul>
   </section>
 
-  <section class="fonds" aria-labelledby="titre-fonds">
+  <section aria-labelledby="titre-rubriques">
+    <div class="titre-section"><h2 id="titre-rubriques">Les rubriques</h2></div>
+    <ul class="colonnes rubriques">
+      {rubriques.map((r) => (
+        <li>
+          <h3><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></h3>
+          <p class="sous-titre">{r.sousTitre}</p>
+          {r.titres.length > 0 && (
+            <ul class="titres">
+              {r.titres.map(({ data }) => <li><a href={data.chemin}>{data.titre}</a></li>)}
+            </ul>
+          )}
+          <p class="tout"><a href={`/rubrique/${r.slug}/`}>Les {r.total.toLocaleString('fr-FR')} articles</a></p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section aria-labelledby="titre-fonds">
     <div class="titre-section">
-      <h2 id="titre-fonds"><Mouche /><span>Le fonds<small>{total} articles, année par année</small></span></h2>
-      <a class="greffe" href="/archives/">Toutes les archives</a>
+      <h2 id="titre-fonds">Le fonds<small>{total} articles, année par année</small></h2>
+      <a href="/archives/">Toutes les archives</a>
     </div>
     <ul class="annees">
       {annees.map(([an, n]) => (
-        <li><a href={`/archives/${an}/`}><span class="an">{an}</span><span class="greffe n">{n.toLocaleString('fr-FR')}</span></a></li>
+        <li><a href={`/archives/${an}/`}><span class="an">{an}</span><span class="meta">{n.toLocaleString('fr-FR')}</span></a></li>
       ))}
     </ul>
   </section>
 </Base>
 
 <style>
-  /* ——— La tête : une + fil ——— */
-  .tete { display: grid; gap: 2.5rem; margin-top: 3rem; padding-bottom: 3rem; border-bottom: 1px solid var(--pierre); }
-  @media (min-width: 60rem) {
-    .tete { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 3.5rem; }
-    .fil { border-left: 1px solid var(--pierre); padding-left: 2.5rem; }
+  /* ——— La une ——— */
+  .une { display: grid; gap: 1.5rem; margin-top: 2rem; grid-template-areas: 'photo' 'texte'; }
+  .une-texte { grid-area: texte; }
+  .fronton { grid-area: photo; margin: 0; max-width: 500px; }
+  @media (min-width: 64rem) {
+    .une { grid-template-columns: minmax(0, 1fr) 500px; grid-template-areas: 'texte photo'; gap: 4rem; align-items: center; margin-top: 3.5rem; }
   }
-  .une h2 { font-size: clamp(2.4rem, 6.5vw, 4.75rem); line-height: 1; margin: 0.75rem 0 1.25rem; }
-  .une h2 a { text-decoration: none; }
-  .chapeau { font-size: 1.25rem; line-height: 1.55; color: var(--encre-2); margin: 0; max-width: 42rem; }
-  .lecture { margin: 1.25rem 0 0; }
-  .lecture a { display: inline-flex; align-items: center; min-height: 44px; color: var(--rouge-texte); }
+  .une h2 { font-size: clamp(2.5rem, 6.5vw, 4.75rem); line-height: 1; letter-spacing: -0.025em; margin: 0.9rem 0 1.25rem; }
+  .chapeau { font-size: 1.3rem; line-height: 1.5; color: var(--encre-2); margin: 0 0 1rem; max-width: 40rem; }
+  .fronton img { display: block; width: 100%; height: auto; filter: grayscale(1) contrast(1.12); }
+  .fronton figcaption { margin-top: 0.5rem; }
 
-  .fil h2 { margin: 0 0 0.5rem; color: var(--rouge-texte); }
-  .fil ol { list-style: none; margin: 0; padding: 0; }
-  .fil li { padding: 0.9rem 0; border-top: 1px solid var(--pierre); }
-  .fil li:first-child { border-top: 0; padding-top: 0.25rem; }
-  .fil p { margin: 0; color: var(--encre-2); font-size: 0.8rem; }
-  .fil h3 { font-family: var(--texte); font-weight: 600; font-size: 1.125rem; line-height: 1.3; margin: 0.25rem 0 0; }
-  .fil h3 a { text-decoration: none; }
+  /* ——— Colonnes séparées par des filets ——— */
+  .colonnes { list-style: none; margin: 0; padding: 0; display: grid; gap: 0 2.5rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
+  .colonnes > li { padding: 1.25rem 0 1.5rem; border-bottom: 1px solid var(--filet); }
+  .colonnes h3 { font-size: 1.3rem; line-height: 1.22; margin: 0.4rem 0 0; }
 
-  /* ——— Les six rubriques ——— */
-  .grille { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr)); }
-  .carte { display: flex; flex-direction: column; background: var(--pierre); padding: 1.5rem; border-top: 4px solid var(--robe); }
-  .carte h3 { margin: 0; font-size: 1.75rem; line-height: 1.1; }
-  .carte h3 a { text-decoration: none; }
-  .sous-titre { margin: 0.25rem 0 0; font-style: italic; color: var(--encre-2); }
-  .titres { list-style: none; margin: 1.25rem 0 0; padding: 0; }
-  .titres li { padding: 0.5rem 0; border-top: 1px solid color-mix(in srgb, var(--encre) 12%, transparent); line-height: 1.35; font-size: 1.0625rem; }
-  .titres a { text-decoration: none; }
-  .compte { margin: auto 0 0; padding-top: 1rem; }
-  .compte a { display: inline-flex; align-items: center; min-height: 44px; color: var(--rouge-texte); }
+  .rubriques h3 { font-size: 1.75rem; margin: 0; }
+  .sous-titre { margin: 0.2rem 0 0; font-style: italic; color: var(--encre-2); }
+  .titres { list-style: none; margin: 1rem 0 0; padding: 0; }
+  .titres li { padding: 0.45rem 0; border-top: 1px solid var(--filet); line-height: 1.35; font-size: 1.0625rem; }
+  .tout { margin: 0.75rem 0 0; font-family: var(--sans); font-size: 0.875rem; font-weight: 600; }
+  .tout a { display: inline-flex; align-items: center; min-height: 44px; color: var(--rouge); }
 
   /* ——— Le fonds ——— */
-  .annees { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.5rem; grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr)); }
-  .annees a { display: flex; flex-direction: column; padding: 0.75rem 0.9rem; min-height: 44px; border: 1px solid var(--pierre); text-decoration: none; }
-  .annees a:hover { border-color: var(--rouge-texte); }
-  .an { font-family: var(--affiche); font-size: 1.6rem; line-height: 1; }
-  .n { margin-top: 0.3rem; color: var(--encre-2); font-size: 0.75rem; }
+  .annees { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: 0.5rem; grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr)); }
+  .annees a { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; padding: 0.75rem 0; min-height: 44px; border-bottom: 1px solid var(--filet); }
+  .an { font-weight: 700; font-size: 1.25rem; }
 </style>

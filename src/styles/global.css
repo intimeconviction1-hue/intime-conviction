@@ -1,37 +1,42 @@
-/* Intime Conviction — « la robe et l'hermine ».
-   Le rouge des robes de la cour d'assises est un FOND (en-tête, pied), pas un
-   accent ; le blanc moucheté de noir de l'hermine en borde le col. La page est
-   de la pierre froide de palais de justice, et tout ce que la machine date ou
-   classe s'écrit à la machine du greffe (Courier).
+/* Intime Conviction — « le magazine ».
+   Blanc, noir, un seul rouge : celui des robes de la cour d'assises, réservé
+   aux étiquettes de rubrique et aux liens au survol. La hiérarchie tient à la
+   typographie et aux filets noirs, pas à des boîtes ni à des motifs.
+   Deux familles : Newsreader (titres et texte), Libre Franklin (le titre du
+   journal, le menu, les étiquettes) — le couple serif / grotesque de la presse.
    Les couleurs passent toutes par ces jetons ; aucune valeur en dur ailleurs. */
 
 :root {
-  --robe: #6e0f1a;
-  --robe-fonce: #500a13;
-  --hermine: #fbfaf7;
-  --fond: #f3f3f0;
-  --pierre: #e4e2dc;
-  --encre: #151515;
-  --encre-2: #4b4843;
-  --rouge-texte: #8c1622;
-  --mouche: #151515;
+  --papier: #ffffff;
+  --papier-2: #f4f4f2;
+  --encre: #111111;
+  --encre-2: #595959;
+  --filet: #e3e3e3;
+  --filet-fort: #111111;
+  --rouge: #c8102e;
+  /* Le pied reste noir dans les deux thèmes : il ne suit pas le papier. */
+  --pied: #111111;
+  --pied-texte: #f1f1ef;
+  --pied-2: #b5b5b0;
+  --pied-survol: #ff8a8a;
 
-  --affiche: 'Gloock', 'Times New Roman', serif;
-  --texte: 'Newsreader Variable', Georgia, serif;
-  --greffe: 'Courier Prime', 'Courier New', monospace;
+  --serif: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
+  --sans: 'Libre Franklin Variable', 'Helvetica Neue', Arial, sans-serif;
 
-  --mesure: 66ch;
-  --large: 76rem;
+  --mesure: 40rem;
+  --large: 78rem;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --fond: #131314;
-    --pierre: #1f1f21;
-    --encre: #eeece7;
-    --encre-2: #b6b2aa;
-    --rouge-texte: #ef8f94;
+    --papier: #101010;
+    --papier-2: #1a1a1a;
+    --encre: #f1f1ef;
+    --encre-2: #a8a8a4;
+    --filet: #2c2c2c;
+    --filet-fort: #f1f1ef;
+    --rouge: #ff6b6b;
     color-scheme: dark;
   }
 }
@@ -41,138 +46,118 @@ html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  background: var(--fond);
+  background: var(--papier);
   color: var(--encre);
-  font-family: var(--texte);
+  font-family: var(--serif);
   font-size: 1.125rem;
   line-height: 1.6;
-  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3 { font-family: var(--affiche); font-weight: 400; letter-spacing: -0.005em; }
+h1, h2, h3 { font-family: var(--serif); font-weight: 700; letter-spacing: -0.015em; line-height: 1.12; }
 
-a { color: inherit; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 0.2em; }
-a:hover { color: var(--rouge-texte); text-decoration-color: currentColor; }
-:focus-visible { outline: 2px solid var(--rouge-texte); outline-offset: 3px; }
+a { color: inherit; text-decoration: none; }
+a:hover { color: var(--rouge); }
+:focus-visible { outline: 2px solid var(--rouge); outline-offset: 3px; }
 
-.evitement { position: absolute; left: -9999px; top: 0; background: var(--hermine); color: var(--robe); padding: 0.75rem 1rem; z-index: 10; }
+.evitement { position: absolute; left: -9999px; top: 0; background: var(--encre); color: var(--papier); padding: 0.75rem 1rem; z-index: 10; font-family: var(--sans); }
 .evitement:focus { left: 1rem; }
 
-.cadre { max-width: var(--large); margin: 0 auto; padding: 0 1rem; }
-@media (min-width: 48rem) { .cadre { padding: 0 2rem; } }
+.cadre { max-width: var(--large); margin: 0 auto; padding: 0 1.25rem; }
+@media (min-width: 48rem) { .cadre { padding: 0 2.5rem; } }
 
-.greffe {
-  font-family: var(--greffe);
-  font-size: 0.875rem;
-  letter-spacing: 0.06em;
+/* L'étiquette : petite capitale grasse, interlettrée — la seule voix rouge. */
+.etiquette {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--rouge);
 }
-.rouge { color: var(--rouge-texte); }
+.meta { font-family: var(--sans); font-size: 0.8125rem; color: var(--encre-2); }
 
-/* ——— La robe : en-tête et pied ——— */
+/* ——— En-tête : une barre fine, blanche ——— */
 
-.robe { background: var(--robe); color: var(--hermine); }
-.robe a { color: var(--hermine); text-decoration: none; }
-.robe a:hover { color: var(--hermine); text-decoration: underline; text-decoration-thickness: 1px; }
-.robe :focus-visible { outline-color: var(--hermine); }
-
-/* Le nom du journal est le titre principal (h1) de la seule page d'accueil ;
-   ailleurs c'est un paragraphe, le h1 revenant au titre de la page. */
-.titre-du-journal { display: block; margin: 0; font-size: inherit; text-align: center; padding: 2rem 0 0.75rem; }
-.titre-du-journal > a { display: block; }
-.titre-du-journal strong {
-  display: block;
-  font-family: var(--affiche);
-  font-weight: 400;
-  font-size: clamp(2.5rem, 9vw, 5.5rem);
-  line-height: 0.95;
+.entete { border-bottom: 1px solid var(--filet-fort); }
+.entete .cadre { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 2rem; }
+.marque { margin: 0; font-size: inherit; letter-spacing: 0; line-height: 1; }
+.marque a {
+  display: inline-flex; align-items: center; gap: 0.6rem; min-height: 64px;
+  font-family: var(--sans); font-weight: 800; font-size: 1.25rem; letter-spacing: 0.04em; text-transform: uppercase;
 }
-.titre-du-journal span { display: block; margin-top: 0.75rem; opacity: 0.85; }
+.marque a:hover { color: var(--encre); }
+.marque a::before { content: ''; width: 0.7rem; height: 0.7rem; background: var(--rouge); }
 
-/* Le fronton, sur la seule page d'accueil, en bichromie rouge (filtre SVG
-   `#bichromie-robe` dans Base.astro). Le cadrage garde l'inscription « Cour
-   d'assises », qui dit le sujet du site mieux que la sculpture. La photo fait
-   500 px de large : elle ne s'affiche jamais plus grande. */
-.fronton { margin: 0 auto 1.25rem; max-width: 500px; }
-.fronton img {
-  display: block; width: 100%; height: auto; aspect-ratio: 500 / 300; object-fit: cover; object-position: center 100%;
-  filter: url(#bichromie-robe) contrast(1.18);
+.rubriques-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 0 1.5rem; }
+.rubriques-nav a {
+  display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap;
+  font-family: var(--sans); font-size: 0.875rem; font-weight: 500;
 }
-@media (min-width: 60rem) {
-  .entete-accueil { display: grid; grid-template-columns: minmax(0, 1fr) 500px; gap: 3rem; align-items: center; padding-top: 1.5rem; padding-bottom: 1.5rem; }
-  .entete-accueil .titre-du-journal { text-align: left; padding: 0; }
-  .entete-accueil .fronton { margin: 0; }
-}
+.rubriques-nav a[aria-current='page'] { color: var(--rouge); box-shadow: inset 0 -2px 0 var(--rouge); }
 
-.rubriques-nav ul {
-  list-style: none; margin: 0; padding: 0.25rem 0 0.5rem;
-  display: flex; gap: 0 1.25rem; flex-wrap: wrap; justify-content: center;
-}
-.rubriques-nav a { font-size: 0.8125rem; display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; }
-.rubriques-nav a[aria-current='page'] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.35em; }
-/* Au téléphone : une seule rangée qui défile, l'article n'est pas repoussé. */
-@media (max-width: 47.99rem) {
-  .rubriques-nav .cadre { padding: 0; }
-  .rubriques-nav ul { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; padding: 0.25rem 1rem 0.5rem; scrollbar-width: none; }
+/* Au téléphone, le menu passe sous la marque et défile sur une rangée. */
+@media (max-width: 63.99rem) {
+  .rubriques-nav { width: 100%; border-top: 1px solid var(--filet); margin: 0 -1.25rem; width: calc(100% + 2.5rem); }
+  .rubriques-nav ul { overflow-x: auto; padding: 0 1.25rem; scrollbar-width: none; }
   .rubriques-nav ul::-webkit-scrollbar { display: none; }
 }
-
-/* L'épitoge : le col d'hermine, blanc moucheté de queues noires. C'est la
-   seule ornementation du site — elle borde la robe en haut et en bas. */
-.epitoge {
-  height: 30px;
-  background-color: var(--hermine);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='30' viewBox='0 0 44 30'%3E%3Cg fill='%23151515' transform='translate(16 3) scale(.6 .86)'%3E%3Ccircle cx='10' cy='3.2' r='2.8'/%3E%3Ccircle cx='4.2' cy='7.6' r='2.6'/%3E%3Ccircle cx='15.8' cy='7.6' r='2.6'/%3E%3Cpath d='M10 10C9.2 15.5 6.6 20.5 4 27l3-2.7 3 3.2 3-3.2 3 2.7c-2.6-6.5-5.2-11.5-6-17z'/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat: repeat-x;
-  background-position: center;
+@media (min-width: 48rem) and (max-width: 63.99rem) {
+  .rubriques-nav { margin: 0 -2.5rem; width: calc(100% + 5rem); }
+  .rubriques-nav ul { padding: 0 2.5rem; }
 }
 
-.pied { margin-top: 5rem; }
-.pied .cadre { padding-top: 2rem; padding-bottom: 2.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; justify-content: space-between; align-items: baseline; }
-.pied strong { font-family: var(--affiche); font-weight: 400; font-size: 1.5rem; }
-.pied p { margin: 0; }
+/* ——— Pied : noir, pour ancrer la page ——— */
 
-/* ——— Le rôle : listes d'articles ——— */
+.pied { margin-top: 6rem; background: var(--pied); color: var(--pied-texte); }
+.pied .cadre { padding-top: 3rem; padding-bottom: 3rem; display: flex; flex-wrap: wrap; gap: 1.5rem 3rem; justify-content: space-between; align-items: flex-start; }
+.pied .marque a { color: var(--pied-texte); }
+.pied p { margin: 0.5rem 0 0; font-family: var(--sans); font-size: 0.875rem; color: var(--pied-2); max-width: 28rem; }
+.pied ul { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 2.5rem; font-family: var(--sans); font-size: 0.875rem; }
+.pied li a { display: inline-flex; align-items: center; min-height: 36px; color: var(--pied-texte); }
+.pied li a:hover { color: var(--pied-survol); }
+
+/* ——— Sections et listes ——— */
+
+.titre-section { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem 1rem; flex-wrap: wrap; margin: 4.5rem 0 0; padding-top: 0.75rem; border-top: 3px solid var(--filet-fort); }
+.titre-section :is(h1, h2) { margin: 0; font-family: var(--sans); font-weight: 800; font-size: 1rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.titre-section :is(h1, h2) small { display: block; margin-top: 0.2rem; font-family: var(--serif); font-weight: 400; font-style: italic; font-size: 1rem; letter-spacing: 0; text-transform: none; color: var(--encre-2); }
+.titre-section > a { font-family: var(--sans); font-size: 0.875rem; font-weight: 600; display: inline-flex; align-items: center; min-height: 44px; }
+.titre-section > a:hover { color: var(--rouge); }
+
+/* Une page de rubrique ou d'archives : le titre est le sujet, en grand. */
+.titre-page { margin: 3rem 0 0; padding-bottom: 1.5rem; border-bottom: 3px solid var(--filet-fort); }
+.titre-page h1 { margin: 0.5rem 0 0; font-size: clamp(2.5rem, 7vw, 4.5rem); line-height: 1; }
+.titre-page p { margin: 0.75rem 0 0; }
+.titre-page .sous-titre { font-style: italic; font-size: 1.25rem; color: var(--encre-2); }
 
 .role { list-style: none; margin: 0; padding: 0; }
-.role > li { padding: 1.1rem 0; border-top: 1px solid var(--pierre); }
-.role .date { margin: 0; color: var(--encre-2); }
-.role :is(h2, h3) { font-family: var(--texte); font-weight: 600; font-size: 1.3rem; line-height: 1.25; margin: 0.25rem 0 0; }
-.role :is(h2, h3) a { text-decoration: none; }
-.role p.extrait { margin: 0.35rem 0 0; color: var(--encre-2); font-size: 1.0625rem; }
-@media (min-width: 48rem) {
-  .role > li { display: grid; grid-template-columns: 9.5rem 1fr; gap: 0 1.5rem; }
-  .role .date { padding-top: 0.3rem; }
-}
-.role.serre > li { display: block; }
+.role > li { padding: 1.4rem 0; border-bottom: 1px solid var(--filet); }
+.role :is(h2, h3) { font-size: 1.375rem; margin: 0.35rem 0 0; }
+.role p.extrait { margin: 0.5rem 0 0; color: var(--encre-2); font-size: 1.0625rem; line-height: 1.55; max-width: 46rem; }
+.role .meta { margin: 0; }
 
-.titre-section { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; flex-wrap: wrap; margin: 4rem 0 0.5rem; }
-.titre-section :is(h1, h2) { display: flex; align-items: center; gap: 0.6rem; margin: 0; font-size: clamp(1.75rem, 4vw, 2.25rem); line-height: 1.1; }
-.titre-section :is(h1, h2) small { display: block; font-family: var(--texte); font-style: italic; font-size: 1.0625rem; color: var(--encre-2); }
-.mouche { width: 0.62em; height: 0.9em; flex: none; color: var(--rouge-texte); }
-
-.pagination { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2rem; }
+.pagination { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2rem; font-family: var(--sans); font-weight: 600; font-size: 0.9375rem; }
 .pagination a { display: inline-flex; align-items: center; min-height: 44px; }
 
 /* ——— Article ——— */
 
-.article { max-width: var(--mesure); margin: 3rem auto 0; }
-.article h1 { font-size: clamp(2.1rem, 6vw, 3.6rem); line-height: 1.05; margin: 0.75rem 0 1.25rem; }
-.article .meta-article { margin: 0; color: var(--encre-2); }
+.article { max-width: var(--mesure); margin: 3.5rem auto 0; }
+.article h1 { font-size: clamp(2.25rem, 6vw, 3.75rem); line-height: 1.04; margin: 0.75rem 0 1.25rem; }
+.article .meta { padding-bottom: 1.25rem; border-bottom: 1px solid var(--filet); margin: 0; }
 
-.corps { margin-top: 2.25rem; overflow-wrap: anywhere; }
-.corps p { margin: 0 0 1.1em; }
+.corps { margin-top: 2rem; font-size: 1.1875rem; line-height: 1.7; overflow-wrap: anywhere; }
+.corps p { margin: 0 0 1.15em; }
 .corps h2, .corps h3, .corps h4 { line-height: 1.2; margin: 2em 0 0.6em; }
 .corps h2 { font-size: 1.6rem; }
 .corps h3 { font-size: 1.35rem; }
-.corps h4 { font-family: var(--texte); font-weight: 600; }
-.corps blockquote { margin: 1.5em 0; padding: 0.25rem 0 0.25rem 1.25rem; border-left: 4px solid var(--robe); font-style: italic; }
+.corps blockquote { margin: 1.75em 0; padding-left: 1.25rem; border-left: 3px solid var(--rouge); font-style: italic; font-size: 1.25rem; }
 .corps ul, .corps ol { padding-left: 1.25rem; }
 .corps li { margin: 0.3em 0; }
-.corps a { text-decoration-color: var(--rouge-texte); }
+.corps a { text-decoration: underline; text-decoration-color: var(--rouge); text-underline-offset: 0.18em; }
 .corps table { display: block; overflow-x: auto; border-collapse: collapse; font-size: 1rem; }
-.corps td, .corps th { border: 1px solid var(--pierre); padding: 0.4rem 0.6rem; vertical-align: top; }
-.corps hr { border: 0; border-top: 1px solid var(--pierre); margin: 2em 0; }
+.corps td, .corps th { border: 1px solid var(--filet); padding: 0.4rem 0.6rem; vertical-align: top; }
+.corps hr { border: 0; border-top: 1px solid var(--filet); margin: 2em 0; }
 
 .voisins { max-width: var(--mesure); margin: 4rem auto 0; }
 
