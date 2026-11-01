@@ -1,4 +1,5 @@
 import { XMLParser, XMLValidator } from 'fast-xml-parser';
+import { classerNouvelle } from './classer-nouvelles.mjs';
 import { readFile, writeFile, mkdir, rename } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 
@@ -38,7 +39,7 @@ export function analyserFlux(xml, maintenant = new Date()) {
     const cle = `${source}|${titre}`.normalize('NFKC').toLocaleLowerCase('fr');
     if (vus.has(cle)) continue;
     vus.add(cle);
-    articles.push({ titre, source, date:date.toISOString(), lien });
+    articles.push({ titre, source, date:date.toISOString(), lien, rubrique:classerNouvelle(titre) });
   }
   articles.sort((a,b) => b.date.localeCompare(a.date));
   if (!articles.length) throw new Error('Aucune nouvelle récente et valide.');
@@ -50,7 +51,9 @@ export async function lireFil(chemin = CACHE) {
     const d = JSON.parse(await readFile(chemin,'utf8'));
     if (!Number.isFinite(new Date(d.releveLe).getTime()) || !Array.isArray(d.articles)) return null;
     const articles = d.articles.filter(a => typeof a.titre === 'string' && a.titre && typeof a.source === 'string' && a.source && lienValide(a.lien) && Number.isFinite(new Date(a.date).getTime()));
-    return articles.length ? { releveLe:d.releveLe, articles:articles.slice(0,24) } : null;
+    // Reclasse aussi les anciens caches à chaque lecture : le repli sur panne
+    // bénéficie immédiatement d'une correction des règles, sans réseau.
+    return articles.length ? { releveLe:d.releveLe, articles:articles.slice(0,24).map(a=>({...a,rubrique:classerNouvelle(a.titre)})) } : null;
   } catch { return null; }
 }
 

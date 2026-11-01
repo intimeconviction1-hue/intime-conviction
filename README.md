@@ -78,7 +78,7 @@ Le fonds reste dans le dépôt privé d’articles et est chargé par IC_ARTICLE
 
 ### Actualités automatiques
 
-L’accueil affiche les huit titres les plus récents de la recherche Google
+L’accueil affiche les huit titres de suivi d’audience les plus récents de la recherche Google
 Actualités « cour d’assises », avec média, date et lien. Aucun article intégral,
 image, résumé ou commentaire éditorial n’est recopié ou généré. Le fil est séparé
 du fonds d’articles d’Intime Conviction et identifié comme revue de presse automatique.
@@ -92,3 +92,20 @@ les trois heures, à la minute 17 UTC (l’horaire réel dépend de sa file d’
 Le dernier relevé est conservé dans le cache GitHub pour les pannes de Google.
 Sa date reste affichée ; au-delà de six heures, un message signale le retard.
 Sans aucun relevé utilisable, la construction échoue et laisse le site publié en place.
+
+
+### Classement des nouvelles de presse
+
+Le fil de l’accueil porte le nom de la rubrique **Cours du Jour** et n’affiche
+que les procès et verdicts. Les nouvelles Google sont classées par genre dans
+les six rubriques existantes, puis affichées dans la première page de chacune,
+au-dessus des articles d’archives. Elles restent attribuées à leur média.
+Le lien historique `/#actualites` est conservé, sans rubrique « Actualités » en plus.
+
+Le classement est déterministe, d’après les indices explicites du titre
+(`src/lib/classer-nouvelles.mjs`) : règles et jurés → Le Banc des Jurés ;
+chroniques d’audience → La Cour se Lève ; tribunes et éditoriaux → Délibéré ;
+analyses et décryptages → L’Exposé ; œuvres et critiques → Le Greffe.
+Sans indice de genre suffisamment explicite, la nouvelle reste dans Cours du Jour.
+Les caches existants sont reclassés à la lecture. Ce mécanisme ne modifie
+aucun des anciens articles du dépôt privé.

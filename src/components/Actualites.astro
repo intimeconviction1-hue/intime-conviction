@@ -1,17 +1,22 @@
 ---
 import { lireFil, RECHERCHE } from '../lib/fil-actualites.mjs';
+import { rubrique } from '../lib/rubriques.mjs';
+const { rubriqueSlug = 'cours-du-jour', limite = 8, titre, lienRubrique = true } = Astro.props;
+const r = rubrique(rubriqueSlug);
+const titreAffiche = titre ?? r.nom;
 const fil = await lireFil();
-const nouvelles = (fil?.articles ?? []).slice(0,8);
+const nouvelles = (fil?.articles ?? []).filter(n=>n.rubrique === rubriqueSlug).slice(0,limite);
+const afficher = nouvelles.length > 0 || rubriqueSlug === 'cours-du-jour';
 const formatDate = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'});
 const formatReleve = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Paris'});
 const ancien = fil && Date.now()-new Date(fil.releveLe).getTime() > 6*3_600_000;
 ---
-<section id="actualites" class="actualites" aria-labelledby="titre-actualites">
+{afficher && <section id="actualites" class="actualites" aria-labelledby="titre-actualites">
   <div class="titre-section">
-    <h2 id="titre-actualites">L’actualité des assises</h2>
-    <a href={RECHERCHE} target="_blank" rel="noopener noreferrer">Tout voir sur Google Actualités <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" /></svg><span class="sr-only"> (nouvel onglet)</span></a>
+    <h2 id="titre-actualites">{titreAffiche}</h2>
+    {lienRubrique ? <a href={`/rubrique/${r.slug}/`}>Toute la rubrique <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg></a> : <a href={RECHERCHE} target="_blank" rel="noopener noreferrer">Voir la recherche Google <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" /></svg><span class="sr-only"> (nouvel onglet)</span></a>}
   </div>
-  <p class="provenance">Revue de presse automatique via Google Actualités. Les titres sont ceux des médias cités.</p>
+  <p class="provenance">Revue de presse · {r.sousTitre}. Les titres sont ceux des médias cités.</p>
   {fil && <p class="meta releve">Relevé du <time datetime={fil.releveLe}>{formatReleve.format(new Date(fil.releveLe))}</time>, heure de Paris · actualisation prévue toutes les 3 heures</p>}
   {ancien && <p class="indisponible">L’actualisation tarde. Le dernier relevé disponible reste affiché.</p>}
   {nouvelles.length ? <ul class="nouvelles">
@@ -20,7 +25,7 @@ const ancien = fil && Date.now()-new Date(fil.releveLe).getTime() > 6*3_600_000;
       <h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> — {n.source} (nouvel onglet)</span></a></h3>
     </li>)}
   </ul> : <p>Le fil est momentanément indisponible. <a class="secours" href={RECHERCHE}>Consulter les nouvelles sur Google Actualités.</a></p>}
-</section>
+</section>}
 <style>
   .actualites { scroll-margin-top:2rem; }
   .provenance { margin:1rem 0 0; font-size:1.0625rem; color:var(--encre-2); }

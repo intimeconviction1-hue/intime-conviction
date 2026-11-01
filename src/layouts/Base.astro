@@ -44,7 +44,6 @@ const annee = new Date().getFullYear();
         <div class="journal-identite"><p class="signature">Le média des cours d’assises</p><Marque class="marque"><a href="/">Intime Conviction</a></Marque></div><a class="recherche-lien" href="/recherche/">Rechercher <span aria-hidden="true">↗</span></a>
         <nav class="rubriques-nav" aria-label="Rubriques">
           <ul>
-            <li><a href="/#actualites">Actualités</a></li>
             {RUBRIQUES.map((r) => (
               <li><a href={`/rubrique/${r.slug}/`} aria-current={rubriqueActive === r.slug ? 'page' : undefined}>{r.nom}</a></li>
             ))}
@@ -65,7 +64,6 @@ const annee = new Date().getFullYear();
           <p>Le média des cours d'assises : suivi d'audience, règles du procès, chroniques et culture criminelle.</p>
         </div>
         <ul>
-          <li><a href="/#actualites">Actualités</a></li>
           {RUBRIQUES.map((r) => <li><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></li>)}
           <li><a href="/archives/">Archives</a></li>
           <li><a href="https://x.com/IntimeConv" rel="noopener">@IntimeConv sur X</a></li>
