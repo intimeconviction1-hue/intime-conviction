@@ -12,7 +12,11 @@ import '../styles/global.css';
 import policeTitre from '@fontsource/gloock/files/gloock-latin-400-normal.woff2?url';
 import policeTexte from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
 import policeGreffe from '@fontsource/courier-prime/files/courier-prime-latin-400-normal.woff2?url';
+import { Image } from 'astro:assets';
 import { RUBRIQUES } from '../lib/rubriques.mjs';
+// Photo prise le 14/10/2009 (Panasonic DMC-TZ4). Astro la convertit en WebP
+// et en retire les métadonnées (appareil, date, lieu) à la construction.
+import fronton from '../assets/fronton-cour-dassises.jpg';
 
 const { titre, description = "Intime Conviction, le média des cours d'assises : suivi d'audience, règles du procès, chroniques et culture criminelle.", rubriqueActive, accueil = false } = Astro.props;
 const EnTete = accueil ? 'h1' : 'p';
@@ -39,13 +43,32 @@ const canonique = new URL(Astro.url.pathname, Astro.site);
   <body>
     <a class="evitement" href="#contenu">Aller au contenu</a>
     <header class="robe">
-      <div class="cadre">
+      <div class:list={['cadre', { 'entete-accueil': accueil }]}>
         <EnTete class="titre-du-journal">
           <a href="/">
             <strong>Intime Conviction</strong>
             <span class="greffe">Le média des cours d'assises</span>
           </a>
         </EnTete>
+        {accueil && (
+          <figure class="fronton">
+            {/* Bichromie : les ombres en rouge sombre de la robe, les lumières en
+                rose pâle — la photo garde ses détails et prend la teinte du site.
+                Un simple « multiply » sur le rouge l'assombrissait au point de
+                rendre l'inscription illisible. */}
+            <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+              <filter id="bichromie-robe" color-interpolation-filters="sRGB">
+                <feColorMatrix type="saturate" values="0" />
+                <feComponentTransfer>
+                  <feFuncR type="table" tableValues="0.20 0.96" />
+                  <feFuncG type="table" tableValues="0.03 0.88" />
+                  <feFuncB type="table" tableValues="0.05 0.86" />
+                </feComponentTransfer>
+              </filter>
+            </svg>
+            <Image src={fronton} alt="Fronton sculpté d'un palais de justice, au-dessus de l'inscription « Cour d'assises » en lettres dorées" widths={[375, 500]} sizes="(min-width: 60rem) 500px, 100vw" loading="eager" fetchpriority="high" />
+          </figure>
+        )}
       </div>
       <nav class="rubriques-nav" aria-label="Rubriques">
         <div class="cadre">

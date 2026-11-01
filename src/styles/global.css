@@ -89,6 +89,21 @@ a:hover { color: var(--rouge-texte); text-decoration-color: currentColor; }
 }
 .titre-du-journal span { display: block; margin-top: 0.75rem; opacity: 0.85; }
 
+/* Le fronton, sur la seule page d'accueil, en bichromie rouge (filtre SVG
+   `#bichromie-robe` dans Base.astro). Le cadrage garde l'inscription « Cour
+   d'assises », qui dit le sujet du site mieux que la sculpture. La photo fait
+   500 px de large : elle ne s'affiche jamais plus grande. */
+.fronton { margin: 0 auto 1.25rem; max-width: 500px; }
+.fronton img {
+  display: block; width: 100%; height: auto; aspect-ratio: 500 / 300; object-fit: cover; object-position: center 100%;
+  filter: url(#bichromie-robe) contrast(1.18);
+}
+@media (min-width: 60rem) {
+  .entete-accueil { display: grid; grid-template-columns: minmax(0, 1fr) 500px; gap: 3rem; align-items: center; padding-top: 1.5rem; padding-bottom: 1.5rem; }
+  .entete-accueil .titre-du-journal { text-align: left; padding: 0; }
+  .entete-accueil .fronton { margin: 0; }
+}
+
 .rubriques-nav ul {
   list-style: none; margin: 0; padding: 0.25rem 0 0.5rem;
   display: flex; gap: 0 1.25rem; flex-wrap: wrap; justify-content: center;
