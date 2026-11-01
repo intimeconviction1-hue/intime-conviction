@@ -1,0 +1,38 @@
+---
+// Recherche fournie par la rédaction, débarrassée des paramètres de session
+// et de l'ancien identifiant de résultat. Google trie les nouvelles par date.
+// Le RSS Google réserve sa lecture à un usage personnel : on ouvre les
+// résultats chez Google, sans recopier leurs titres ni leurs descriptions.
+const recherche = new URL('https://www.google.fr/search');
+for (const [nom, valeur] of Object.entries({q: "cour d'assises", hl:'fr', gl:'fr', tbm:'nws', tbs:'sbd:1'})) {
+  recherche.searchParams.set(nom, valeur);
+}
+---
+<section id="actualites" class="actualites" aria-labelledby="titre-actualites">
+  <div>
+    <h2 id="titre-actualites">L’actualité des assises</h2>
+    <p>Suivre les procès et les verdicts dans la presse.</p>
+  </div>
+  <div class="actualites-acces">
+    <a href={recherche.href} target="_blank" rel="noopener noreferrer">
+      Consulter les dernières nouvelles
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" /></svg>
+      <span class="sr-only"> sur Google Actualités (nouvel onglet)</span>
+    </a>
+    <p>Google Actualités · recherche « cour d’assises » · tri par date</p>
+  </div>
+</section>
+<style>
+  .actualites { margin-top:3rem; padding:1.75rem 0; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:center; gap:1.25rem 2rem; border-block:1px solid var(--filet-fort); scroll-margin-top:2rem; }
+  h2 { margin:0; font-size:clamp(1.75rem,3vw,2.25rem); line-height:1.1; }
+  p { margin:0.5rem 0 0; color:var(--encre-2); font-size:1.0625rem; }
+  .actualites-acces { justify-self:end; }
+  .actualites-acces a { display:inline-flex; align-items:center; gap:1rem; min-height:44px; font-family:var(--sans); font-size:0.875rem; font-weight:700; text-decoration:underline; text-underline-offset:0.3em; }
+  .actualites-acces svg { flex-shrink:0; }
+  .actualites-acces p { font-family:var(--sans); font-size:0.6875rem; line-height:1.6; }
+  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+  @media(max-width:47.99rem) {
+    .actualites { grid-template-columns:minmax(0,1fr); margin-top:2rem; padding:1.5rem 0; }
+    .actualites-acces { justify-self:start; }
+  }
+</style>

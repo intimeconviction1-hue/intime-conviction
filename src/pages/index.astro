@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import Actualites from '../components/Actualites.astro';
 import { RUBRIQUES, rubrique } from '../lib/rubriques.mjs';
 import { tousLesArticles, dateLongue, minutesDeLecture } from '../lib/articles.mjs';
 // Photo prise le 14/10/2009 (Panasonic DMC-TZ4). Astro la convertit en WebP
@@ -49,6 +50,8 @@ const total = articles.length.toLocaleString('fr-FR');
       <figcaption class="meta">Fronton d'une cour d'assises · photo Intime Conviction, 2009</figcaption>
     </figure>
   </section>
+
+  <Actualites />
 
   <section aria-labelledby="titre-derniers">
     <div class="titre-section"><h2 id="titre-derniers">Derniers articles</h2><a href="/archives/">Tout le fonds <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" /></svg></a></div>
