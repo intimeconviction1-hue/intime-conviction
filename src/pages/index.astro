@@ -44,13 +44,11 @@ const total = articles.length.toLocaleString('fr-FR');
         <span class="meta">{minutesDeLecture(une.data.mots)} min de lecture</span>
       </div>
     </div>
-    {/* La photo est celle de la maison, pas l'illustration de l'article :
-        la légende le dit, sinon on croirait voir le tribunal de l'affaire.
-        Elle fait 500 px de large et ne s'affiche jamais plus grande. */}
-    <figure class="fronton">
-      <Image src={fronton} alt="Fronton sculpté d'un palais de justice, au-dessus de l'inscription « Cour d'assises » en lettres dorées" widths={[375, 500]} sizes="(min-width: 64rem) 500px, 100vw" loading="eager" fetchpriority="high" />
-      <figcaption class="meta">Fronton d'une cour d'assises · photo Intime Conviction, 2009</figcaption>
-    </figure>
+    {/* Image d'ambiance de la maison, indépendante de l'affaire présentée. */}
+    <div class="une-fond" aria-hidden="true">
+      <Image src={fronton} alt="" width={500} loading="eager" fetchpriority="high" />
+    </div>
+    <p class="credit-photo meta">Fronton d’une cour d’assises · photo Intime Conviction, 2009</p>
   </section>
 
   <Actualites />
@@ -103,18 +101,19 @@ const total = articles.length.toLocaleString('fr-FR');
   .journal-intro { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.25rem 2rem; padding:1.25rem 0; border-bottom:1px solid var(--filet); }
   .journal-intro p { font-size:1.25rem; margin:0; font-style:italic; }
   .journal-intro a { flex-shrink:0; font-family:var(--sans); font-size:0.75rem; min-height:44px; display:inline-flex; align-items:center; gap:1rem; }
-  .une { display:grid; gap:2rem; margin-top:2rem; grid-template-columns:minmax(0,1fr); }
-  .une-texte { min-width:0; }
+  .une { position:relative; isolation:isolate; overflow:hidden; display:grid; gap:2rem; min-height:34rem; padding:clamp(1.5rem,4vw,3rem); margin-top:2rem; grid-template-columns:minmax(0,1fr); background:var(--papier-2); }
+  .une-fond { position:absolute; inset:0; z-index:-2; }
+  .une-fond img { display:block; width:100%; height:100%; object-fit:cover; object-position:center 46%; filter:grayscale(1) contrast(1.05); }
+  .une::before { content:''; position:absolute; inset:0; z-index:-1; background:linear-gradient(90deg,color-mix(in srgb,var(--papier) 98%,transparent) 0%,color-mix(in srgb,var(--papier) 96%,transparent) 45%,color-mix(in srgb,var(--papier) 88%,transparent) 60%,color-mix(in srgb,var(--papier) 15%,transparent) 100%); }
+  .credit-photo { grid-column:1/-1; align-self:end; justify-self:start; max-width:100%; margin:0; padding:0.4rem 0.6rem; background:var(--papier); font-size:0.6875rem; line-height:1.5; }
+  .une-texte { min-width:0; max-width:36rem; align-self:center; }
   .une .meta { margin:0; display:flex; flex-wrap:wrap; gap:0.35rem 0.6rem; align-items:center; }
   .une h2 { font-size:clamp(2.4rem,5.4vw,4.5rem); line-height:1.04; letter-spacing:-0.025em; margin:1rem 0 1.25rem; text-wrap:balance; }
   .chapeau { font-size:1.25rem; line-height:1.5; color:var(--encre-2); margin:0; max-width:38rem; }
   .lecture { display:flex; flex-wrap:wrap; gap:0.75rem 1.5rem; align-items:center; margin-top:1.5rem; }
   .lire { display:inline-flex; align-items:center; gap:1.5rem; font-family:var(--sans); font-size:0.875rem; font-weight:700; min-height:44px; border-bottom:1px solid var(--encre); }
-  .fronton { margin:0; width:100%; max-width:500px; align-self:center; justify-self:center; }
-  .fronton img { display:block; width:100%; height:auto; filter:grayscale(1) contrast(1.08); }
-  .fronton figcaption { margin-top:0.75rem; font-size:0.6875rem; line-height:1.5; }
   @media (min-width:64rem) {
-    .une { grid-template-columns:minmax(0,1fr) minmax(0,0.88fr); gap:3.5rem; align-items:center; margin-top:2.5rem; }
+    .une { grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr); gap:2rem; align-items:center; margin-top:2.5rem; }
   }
   .colonnes { list-style:none; margin:0; padding:0; display:grid; gap:0 2rem; grid-template-columns:repeat(2,minmax(0,1fr)); }
   .colonnes > li { min-width:0; padding:1.5rem 0; border-bottom:1px solid var(--filet); }
@@ -143,7 +142,9 @@ const total = articles.length.toLocaleString('fr-FR');
     .colonnes { grid-template-columns:minmax(0,1fr); }
     .derniers .principal { grid-row:auto; border-right:0; border-bottom:1px solid var(--filet); padding-right:0; }
     .rubriques h3 { font-size:1.75rem; }
-    .fronton { margin-top:0.5rem; }
+    .une { min-height:0; padding:1.5rem; gap:1.5rem; }
+    .une::before { background:color-mix(in srgb,var(--papier) 94%,transparent); }
+    .une-fond img { object-position:65% center; }
     .annees { grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 1.25rem; }
   }
 </style>
