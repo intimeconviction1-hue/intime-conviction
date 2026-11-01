@@ -37,3 +37,6 @@ Thumbs.db
 
 # Copie privée du fonds pour Sites : jamais dans ce dépôt public
 .site-content/
+
+# Relevés d’actualités : données temporaires, sans historique public
+.cache/

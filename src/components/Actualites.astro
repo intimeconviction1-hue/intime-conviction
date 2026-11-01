@@ -1,38 +1,39 @@
 ---
-// Recherche fournie par la rédaction, débarrassée des paramètres de session
-// et de l'ancien identifiant de résultat. Google trie les nouvelles par date.
-// Le RSS Google réserve sa lecture à un usage personnel : on ouvre les
-// résultats chez Google, sans recopier leurs titres ni leurs descriptions.
-const recherche = new URL('https://www.google.fr/search');
-for (const [nom, valeur] of Object.entries({q: "cour d'assises", hl:'fr', gl:'fr', tbm:'nws', tbs:'sbd:1'})) {
-  recherche.searchParams.set(nom, valeur);
-}
+import { lireFil, RECHERCHE } from '../lib/fil-actualites.mjs';
+const fil = await lireFil();
+const nouvelles = (fil?.articles ?? []).slice(0,8);
+const formatDate = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'});
+const formatReleve = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Paris'});
+const ancien = fil && Date.now()-new Date(fil.releveLe).getTime() > 6*3_600_000;
 ---
 <section id="actualites" class="actualites" aria-labelledby="titre-actualites">
-  <div>
+  <div class="titre-section">
     <h2 id="titre-actualites">L’actualité des assises</h2>
-    <p>Suivre les procès et les verdicts dans la presse.</p>
+    <a href={RECHERCHE} target="_blank" rel="noopener noreferrer">Tout voir sur Google Actualités <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" /></svg><span class="sr-only"> (nouvel onglet)</span></a>
   </div>
-  <div class="actualites-acces">
-    <a href={recherche.href} target="_blank" rel="noopener noreferrer">
-      Consulter les dernières nouvelles
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" /></svg>
-      <span class="sr-only"> sur Google Actualités (nouvel onglet)</span>
-    </a>
-    <p>Google Actualités · recherche « cour d’assises » · tri par date</p>
-  </div>
+  <p class="provenance">Revue de presse automatique via Google Actualités. Les titres sont ceux des médias cités.</p>
+  {fil && <p class="meta releve">Relevé du <time datetime={fil.releveLe}>{formatReleve.format(new Date(fil.releveLe))}</time>, heure de Paris · actualisation prévue toutes les 3 heures</p>}
+  {ancien && <p class="indisponible">L’actualisation tarde. Le dernier relevé disponible reste affiché.</p>}
+  {nouvelles.length ? <ul class="nouvelles">
+    {nouvelles.map(n => <li>
+      <p class="meta"><span class="source">{n.source}</span><time datetime={n.date}>{formatDate.format(new Date(n.date))}</time></p>
+      <h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> — {n.source} (nouvel onglet)</span></a></h3>
+    </li>)}
+  </ul> : <p>Le fil est momentanément indisponible. <a class="secours" href={RECHERCHE}>Consulter les nouvelles sur Google Actualités.</a></p>}
 </section>
 <style>
-  .actualites { margin-top:3rem; padding:1.75rem 0; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:center; gap:1.25rem 2rem; border-block:1px solid var(--filet-fort); scroll-margin-top:2rem; }
-  h2 { margin:0; font-size:clamp(1.75rem,3vw,2.25rem); line-height:1.1; }
-  p { margin:0.5rem 0 0; color:var(--encre-2); font-size:1.0625rem; }
-  .actualites-acces { justify-self:end; }
-  .actualites-acces a { display:inline-flex; align-items:center; gap:1rem; min-height:44px; font-family:var(--sans); font-size:0.875rem; font-weight:700; text-decoration:underline; text-underline-offset:0.3em; }
-  .actualites-acces svg { flex-shrink:0; }
-  .actualites-acces p { font-family:var(--sans); font-size:0.6875rem; line-height:1.6; }
+  .actualites { scroll-margin-top:2rem; }
+  .provenance { margin:1rem 0 0; font-size:1.0625rem; color:var(--encre-2); }
+  .releve { margin:0.5rem 0 1.25rem; font-size:0.6875rem; line-height:1.7; }
+  .nouvelles { list-style:none; padding:0; margin:0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 2.5rem; }
+  .nouvelles li { min-width:0; border-bottom:1px solid var(--filet); padding:1.25rem 0; }
+  .nouvelles .meta { margin:0; display:flex; flex-wrap:wrap; gap:0.35rem 0.75rem; align-items:baseline; font-size:0.75rem; }
+  .source { min-width:0; overflow-wrap:anywhere; font-weight:700; color:var(--rouge); }
+  h3 { font-size:clamp(1.25rem,2.2vw,1.5rem); line-height:1.25; margin:0.5rem 0 0; }
+  h3 a { display:block; min-height:44px; }
+  .titre-section a svg { flex-shrink:0; }
+  .indisponible { font-family:var(--sans); font-size:0.8125rem; color:var(--encre-2); }
+  .secours { text-decoration:underline; text-underline-offset:0.2em; }
   .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
-  @media(max-width:47.99rem) {
-    .actualites { grid-template-columns:minmax(0,1fr); margin-top:2rem; padding:1.5rem 0; }
-    .actualites-acces { justify-self:start; }
-  }
+  @media(max-width:47.99rem) { .nouvelles { grid-template-columns:minmax(0,1fr); } }
 </style>

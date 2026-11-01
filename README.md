@@ -74,3 +74,21 @@ Les articles proposent un texte agrandissable, une progression de lecture et
 la copie du lien. Les six rubriques et les adresses existantes sont conservées.
 
 Le fonds reste dans le dépôt privé d’articles et est chargé par IC_ARTICLES.
+
+
+### Actualités automatiques
+
+L’accueil affiche les huit titres les plus récents de la recherche Google
+Actualités « cour d’assises », avec média, date et lien. Aucun article intégral,
+image, résumé ou commentaire éditorial n’est recopié ou généré. Le fil est séparé
+du fonds d’articles d’Intime Conviction et identifié comme revue de presse automatique.
+
+`npm run build` relève le flux avant de construire. `npm run actualites` permet un
+relevé manuel ; `npm test` vérifie le tri, le dédoublonnage et le repli sur panne.
+Le relevé `.cache/actualites.json` est ignoré par Git : les titres ne s’accumulent
+pas dans l’historique du dépôt public. GitHub Actions tente une republication toutes
+les trois heures, à la minute 17 UTC (l’horaire réel dépend de sa file d’attente).
+
+Le dernier relevé est conservé dans le cache GitHub pour les pannes de Google.
+Sa date reste affichée ; au-delà de six heures, un message signale le retard.
+Sans aucun relevé utilisable, la construction échoue et laisse le site publié en place.
