@@ -27,12 +27,19 @@ const annees = [...parAnnee].sort((a, b) => b[0] - a[0]);
 const total = articles.length.toLocaleString('fr-FR');
 ---
 <Base accueil>
+  <div class="journal-intro">
+    <p>Suivi d’audience, règles du procès, culture criminelle.</p>
+    <a href="/archives/">{total} articles à explorer <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" /></svg></a>
+  </div>
   <section class="une" aria-labelledby="titre-une">
     <div class="une-texte">
       <p class="meta"><span class="etiquette">{rubrique(une.data.rubrique).nom}</span>&ensp;<time datetime={une.data.date.toISOString()}>{dateLongue(une.data.date)}</time></p>
       <h2 id="titre-une"><a href={une.data.chemin}>{une.data.titre}</a></h2>
       <p class="chapeau">{une.data.extrait}</p>
-      <p class="meta">{minutesDeLecture(une.data.mots)} min de lecture</p>
+      <div class="lecture">
+        <a class="lire" href={une.data.chemin}>Lire l’article <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg></a>
+        <span class="meta">{minutesDeLecture(une.data.mots)} min de lecture</span>
+      </div>
     </div>
     {/* La photo est celle de la maison, pas l'illustration de l'article :
         la légende le dit, sinon on croirait voir le tribunal de l'affaire.
@@ -44,12 +51,13 @@ const total = articles.length.toLocaleString('fr-FR');
   </section>
 
   <section aria-labelledby="titre-derniers">
-    <div class="titre-section"><h2 id="titre-derniers">Derniers articles</h2></div>
-    <ul class="colonnes">
-      {derniers.map(({ data }) => (
-        <li>
+    <div class="titre-section"><h2 id="titre-derniers">Derniers articles</h2><a href="/archives/">Tout le fonds <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" /></svg></a></div>
+    <ul class="colonnes derniers">
+      {derniers.map(({ data }, i) => (
+        <li class:list={{principal: i === 0}}>
           <p class="meta"><span class="etiquette">{rubrique(data.rubrique).nom}</span>&ensp;<time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time></p>
           <h3><a href={data.chemin}>{data.titre}</a></h3>
+          {i === 0 && <p class="apercu">{data.extrait}</p>}
         </li>
       ))}
     </ul>
@@ -73,7 +81,7 @@ const total = articles.length.toLocaleString('fr-FR');
     </ul>
   </section>
 
-  <section aria-labelledby="titre-fonds">
+  <section class="fonds" aria-labelledby="titre-fonds">
     <div class="titre-section">
       <h2 id="titre-fonds">Le fonds<small>{total} articles, année par année</small></h2>
       <a href="/archives/">Toutes les archives</a>
@@ -87,32 +95,49 @@ const total = articles.length.toLocaleString('fr-FR');
 </Base>
 
 <style>
-  /* ——— La une ——— */
-  .une { display: grid; gap: 1.5rem; margin-top: 2rem; grid-template-areas: 'photo' 'texte'; }
-  .une-texte { grid-area: texte; }
-  .fronton { grid-area: photo; margin: 0; max-width: 500px; }
-  @media (min-width: 64rem) {
-    .une { grid-template-columns: minmax(0, 1fr) 500px; grid-template-areas: 'texte photo'; gap: 4rem; align-items: center; margin-top: 3.5rem; }
+  .journal-intro { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.25rem 2rem; padding:1.25rem 0; border-bottom:1px solid var(--filet); }
+  .journal-intro p { font-size:1.25rem; margin:0; font-style:italic; }
+  .journal-intro a { flex-shrink:0; font-family:var(--sans); font-size:0.75rem; min-height:44px; display:inline-flex; align-items:center; gap:1rem; }
+  .une { display:grid; gap:2rem; margin-top:2rem; grid-template-columns:minmax(0,1fr); }
+  .une-texte { min-width:0; }
+  .une .meta { margin:0; display:flex; flex-wrap:wrap; gap:0.35rem 0.6rem; align-items:center; }
+  .une h2 { font-size:clamp(2.4rem,5.4vw,4.5rem); line-height:1.04; letter-spacing:-0.025em; margin:1rem 0 1.25rem; text-wrap:balance; }
+  .chapeau { font-size:1.25rem; line-height:1.5; color:var(--encre-2); margin:0; max-width:38rem; }
+  .lecture { display:flex; flex-wrap:wrap; gap:0.75rem 1.5rem; align-items:center; margin-top:1.5rem; }
+  .lire { display:inline-flex; align-items:center; gap:1.5rem; font-family:var(--sans); font-size:0.875rem; font-weight:700; min-height:44px; border-bottom:1px solid var(--encre); }
+  .fronton { margin:0; width:100%; max-width:500px; align-self:center; justify-self:center; }
+  .fronton img { display:block; width:100%; height:auto; filter:grayscale(1) contrast(1.08); }
+  .fronton figcaption { margin-top:0.75rem; font-size:0.6875rem; line-height:1.5; }
+  @media (min-width:64rem) {
+    .une { grid-template-columns:minmax(0,1fr) minmax(0,0.88fr); gap:3.5rem; align-items:center; margin-top:2.5rem; }
   }
-  .une h2 { font-size: clamp(2.5rem, 6.5vw, 4.75rem); line-height: 1; letter-spacing: -0.025em; margin: 0.9rem 0 1.25rem; }
-  .chapeau { font-size: 1.3rem; line-height: 1.5; color: var(--encre-2); margin: 0 0 1rem; max-width: 40rem; }
-  .fronton img { display: block; width: 100%; height: auto; filter: grayscale(1) contrast(1.12); }
-  .fronton figcaption { margin-top: 0.5rem; }
-
-  /* ——— Colonnes séparées par des filets ——— */
-  .colonnes { list-style: none; margin: 0; padding: 0; display: grid; gap: 0 2.5rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
-  .colonnes > li { padding: 1.25rem 0 1.5rem; border-bottom: 1px solid var(--filet); }
-  .colonnes h3 { font-size: 1.3rem; line-height: 1.22; margin: 0.4rem 0 0; }
-
-  .rubriques h3 { font-size: 1.75rem; margin: 0; }
-  .sous-titre { margin: 0.2rem 0 0; font-style: italic; color: var(--encre-2); }
-  .titres { list-style: none; margin: 1rem 0 0; padding: 0; }
-  .titres li { padding: 0.45rem 0; border-top: 1px solid var(--filet); line-height: 1.35; font-size: 1.0625rem; }
-  .tout { margin: 0.75rem 0 0; font-family: var(--sans); font-size: 0.875rem; font-weight: 600; }
-  .tout a { display: inline-flex; align-items: center; min-height: 44px; color: var(--rouge); }
-
-  /* ——— Le fonds ——— */
-  .annees { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: 0.5rem; grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr)); }
-  .annees a { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; padding: 0.75rem 0; min-height: 44px; border-bottom: 1px solid var(--filet); }
-  .an { font-weight: 700; font-size: 1.25rem; }
+  .colonnes { list-style:none; margin:0; padding:0; display:grid; gap:0 2rem; grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .colonnes > li { min-width:0; padding:1.5rem 0; border-bottom:1px solid var(--filet); }
+  .colonnes .meta { margin:0; line-height:1.6; }
+  .colonnes h3 { font-size:1.5rem; line-height:1.2; margin:0.6rem 0 0; text-wrap:pretty; }
+  .derniers .principal { grid-row:span 3; padding-right:2rem; border-right:1px solid var(--filet); border-bottom:0; }
+  .derniers .principal h3 { font-size:clamp(2rem,3.3vw,2.75rem); margin-top:0.75rem; line-height:1.1; }
+  .derniers .apercu { color:var(--encre-2); font-size:1.125rem; line-height:1.6; margin:1rem 0 0; }
+  .rubriques { column-gap:3.5rem; }
+  .rubriques > li { padding:1.75rem 0 2rem; }
+  .rubriques h3 { font-size:2rem; margin:0; }
+  .sous-titre { margin:0.35rem 0 0; font-style:italic; color:var(--encre-2); }
+  .titres { list-style:none; margin:1.25rem 0 0; padding:0; }
+  .titres li { padding:0.65rem 0; border-top:1px solid var(--filet); line-height:1.4; font-size:1.125rem; }
+  .tout { margin:0.75rem 0 0; font-family:var(--sans); font-size:0.75rem; font-weight:600; }
+  .tout a { display:inline-flex; align-items:center; min-height:44px; color:var(--rouge); text-decoration:underline; text-underline-offset:0.3em; }
+  .fonds { padding-bottom:1rem; }
+  .annees { list-style:none; margin:1.5rem 0 0; padding:0; display:grid; gap:0 1.5rem; grid-template-columns:repeat(auto-fill,minmax(8rem,1fr)); }
+  .annees a { display:flex; align-items:baseline; justify-content:space-between; gap:0.5rem; padding:1rem 0; min-height:44px; border-bottom:1px solid var(--filet); }
+  .an { font-weight:500; font-size:2rem; line-height:1; font-variant-numeric:lining-nums; }
+  @media (max-width:47.99rem) {
+    .journal-intro { padding:0.75rem 0; }
+    .journal-intro p { font-size:1.125rem; }
+    .journal-intro a { font-size:0.6875rem; }
+    .colonnes { grid-template-columns:minmax(0,1fr); }
+    .derniers .principal { grid-row:auto; border-right:0; border-bottom:1px solid var(--filet); padding-right:0; }
+    .rubriques h3 { font-size:1.75rem; }
+    .fronton { margin-top:0.5rem; }
+    .annees { grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 1.25rem; }
+  }
 </style>
