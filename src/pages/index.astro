@@ -30,6 +30,9 @@ const annees = [...parAnnee].sort((a, b) => b[0] - a[0]);
 const total = articles.length.toLocaleString('fr-FR');
 ---
 <Base accueil>
+  <div slot="fond" class="fond-page" aria-hidden="true">
+    <Image src={fronton} alt="" width={500} loading="eager" fetchpriority="high" />
+  </div>
   <div class="journal-intro">
     <p>Suivi d’audience, règles du procès, culture criminelle.</p>
     <a href="/archives/">{total} articles à explorer <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" /></svg></a>
@@ -43,10 +46,6 @@ const total = articles.length.toLocaleString('fr-FR');
         <a class="lire" href={une.data.chemin}>Lire l’article <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg></a>
         <span class="meta">{minutesDeLecture(une.data.mots)} min de lecture</span>
       </div>
-    </div>
-    {/* Image d'ambiance de la maison, indépendante de l'affaire présentée. */}
-    <div class="une-fond" aria-hidden="true">
-      <Image src={fronton} alt="" width={500} loading="eager" fetchpriority="high" />
     </div>
     <p class="credit-photo meta">Fronton d’une cour d’assises · photo Intime Conviction, 2009</p>
   </section>
@@ -101,10 +100,12 @@ const total = articles.length.toLocaleString('fr-FR');
   .journal-intro { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.25rem 2rem; padding:1.25rem 0; border-bottom:1px solid var(--filet); }
   .journal-intro p { font-size:1.25rem; margin:0; font-style:italic; }
   .journal-intro a { flex-shrink:0; font-family:var(--sans); font-size:0.75rem; min-height:44px; display:inline-flex; align-items:center; gap:1rem; }
-  .une { position:relative; isolation:isolate; overflow:hidden; display:grid; gap:2rem; min-height:34rem; padding:clamp(1.5rem,4vw,3rem); margin-top:2rem; grid-template-columns:minmax(0,1fr); background:var(--papier-2); }
-  .une-fond { position:absolute; inset:0; z-index:-2; }
-  .une-fond img { display:block; width:100%; height:100%; object-fit:cover; object-position:center 46%; filter:grayscale(1) contrast(1.05); }
-  .une::before { content:''; position:absolute; inset:0; z-index:-1; background:linear-gradient(90deg,color-mix(in srgb,var(--papier) 98%,transparent) 0%,color-mix(in srgb,var(--papier) 96%,transparent) 45%,color-mix(in srgb,var(--papier) 88%,transparent) 60%,color-mix(in srgb,var(--papier) 15%,transparent) 100%); }
+  .une { position:relative; isolation:isolate; overflow:hidden; display:grid; gap:2rem; min-height:34rem; padding:clamp(1.5rem,4vw,3rem); margin-top:2rem; grid-template-columns:minmax(0,1fr); }
+  /* La photo couvre le viewport et reste présente pendant le défilement,
+     derrière toutes les sections et le pied, pas seulement derrière la une. */
+  .fond-page { position:fixed; inset:0; z-index:-1; pointer-events:none; }
+  .fond-page img { display:block; width:100%; height:100%; object-fit:cover; object-position:center; filter:grayscale(1) contrast(1.05); }
+  .fond-page::after { content:''; position:absolute; inset:0; background:color-mix(in srgb,var(--papier) 90%,transparent); }
   .credit-photo { grid-column:1/-1; align-self:end; justify-self:start; max-width:100%; margin:0; padding:0.4rem 0.6rem; background:var(--papier); font-size:0.6875rem; line-height:1.5; }
   .une-texte { min-width:0; max-width:36rem; align-self:center; }
   .une .meta { margin:0; display:flex; flex-wrap:wrap; gap:0.35rem 0.6rem; align-items:center; }
@@ -143,8 +144,6 @@ const total = articles.length.toLocaleString('fr-FR');
     .derniers .principal { grid-row:auto; border-right:0; border-bottom:1px solid var(--filet); padding-right:0; }
     .rubriques h3 { font-size:1.75rem; }
     .une { min-height:0; padding:1.5rem; gap:1.5rem; }
-    .une::before { background:color-mix(in srgb,var(--papier) 94%,transparent); }
-    .une-fond img { object-position:65% center; }
     .annees { grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 1.25rem; }
   }
 </style>

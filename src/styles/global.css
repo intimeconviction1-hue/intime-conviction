@@ -203,3 +203,7 @@ button:hover { background:var(--rouge);color:var(--papier); }
 
 /* Le pied reste lisible sur écran étroit et lorsque le lecteur zoome. */
 @media (max-width:25rem) { .pied ul { columns:1; min-width:0; max-width:100%; } }
+
+/* Le fond photographique de l'accueil a son propre plan sous la page. */
+body.avec-fond { position:relative; isolation:isolate; }
+.avec-fond .pied { background:color-mix(in srgb,var(--pied) 94%,transparent); }

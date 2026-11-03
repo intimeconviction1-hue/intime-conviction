@@ -37,7 +37,8 @@ const annee = new Date().getFullYear();
     <link rel="sitemap" href="/sitemap.xml" />
     {[policeTexte, policeSans].map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
   </head>
-  <body>
+  <body class:list={{'avec-fond':accueil}}>
+    <slot name="fond" />
     <a class="evitement" href="#contenu">Aller au contenu</a>
     <header class="entete">
       <div class="cadre">
