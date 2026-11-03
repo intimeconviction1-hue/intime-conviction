@@ -19,3 +19,5 @@ aucune ombre de carte. Filets fins et contrastes d’échelle structurent le jou
 Une animation d’entrée légère dans l’ouverture, désactivée si le lecteur réduit
 les mouvements. Liens focus visibles et cibles tactiles d’au moins 44 px.
 Sur mobile : menu sur une ligne défilante, textes et contenus sur une colonne.
+
+Accueil densifié le 4 novembre : ouverture sans hauteur de plein écran, avec trois nouvelles à droite du nom. Le fil poursuit les nouvelles sans les répéter. Rythme de section de 2 à 3 rem, manifeste sur fond rouge, rubriques en trois colonnes sur grand écran et archives plus compactes.

@@ -1,17 +1,17 @@
 ---
 import { lireFil, RECHERCHE } from '../lib/fil-actualites.mjs';
 import { rubrique } from '../lib/rubriques.mjs';
-const { rubriqueSlug = 'cours-du-jour', limite = 8, titre, lienRubrique = true } = Astro.props;
+const { rubriqueSlug = 'cours-du-jour', limite = 8, titre, lienRubrique = true, debut = 0, compacte = false } = Astro.props;
 const r = rubrique(rubriqueSlug);
 const titreAffiche = titre ?? r.nom;
 const fil = await lireFil();
-const nouvelles = (fil?.articles ?? []).filter(n=>n.rubrique === rubriqueSlug).slice(0,limite);
+const nouvelles = (fil?.articles ?? []).filter(n=>n.rubrique === rubriqueSlug).slice(debut,debut+limite);
 const afficher = nouvelles.length > 0 || rubriqueSlug === 'cours-du-jour';
 const formatDate = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'});
 const formatReleve = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Paris'});
 const ancien = fil && Date.now()-new Date(fil.releveLe).getTime() > 6*3_600_000;
 ---
-{afficher && <section id="actualites" class="actualites" aria-labelledby="titre-actualites">
+{afficher && <section id="actualites" class:list={["actualites", { compacte }]} aria-labelledby="titre-actualites">
   <div class="titre-section">
     <h2 id="titre-actualites">{titreAffiche}</h2>
     {lienRubrique ? <a href={`/rubrique/${r.slug}/`}>Toute la rubrique <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg></a> : <a href={RECHERCHE} target="_blank" rel="noopener noreferrer">Voir la recherche Google <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" /></svg><span class="sr-only"> (nouvel onglet)</span></a>}
@@ -42,6 +42,7 @@ const ancien = fil && Date.now()-new Date(fil.releveLe).getTime() > 6*3_600_000;
   .indisponible { font-family:var(--sans); font-size:0.8125rem; color:var(--encre-2); }
   .secours { text-decoration:underline; text-underline-offset:0.2em; }
   .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+  .compacte .nouvelles li:first-child { grid-row:auto; }
   @media(max-width:63.99rem) { .nouvelles { grid-template-columns:repeat(2,minmax(0,1fr)); }.nouvelles li:first-child { grid-column:span 1; }.nouvelles li:first-child h3 { font-size:2rem; } }
   @media(max-width:47.99rem) { .nouvelles { grid-template-columns:minmax(0,1fr); }.nouvelles li:first-child { grid-column:auto; grid-row:auto; padding-right:0; border-right:0; }.nouvelles li:first-child h3 { font-size:1.75rem; } }
 </style>
