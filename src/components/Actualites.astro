@@ -16,7 +16,7 @@ const ancien = fil && Date.now()-new Date(fil.releveLe).getTime() > 6*3_600_000;
     <h2 id="titre-actualites">{titreAffiche}</h2>
     {lienRubrique ? <a href={`/rubrique/${r.slug}/`}>Toute la rubrique <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg></a> : <a href={RECHERCHE} target="_blank" rel="noopener noreferrer">Voir la recherche Google <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" /></svg><span class="sr-only"> (nouvel onglet)</span></a>}
   </div>
-  <p class="provenance">Revue de presse · {r.sousTitre}. Les titres sont ceux des médias cités.</p>
+  <p class="provenance">Revue de presse · {r.sousTitre}. Titres des médias cités, sélectionnés automatiquement. Les liens ouvrent leurs articles.</p>
   {fil && <p class="meta releve">Relevé du <time datetime={fil.releveLe}>{formatReleve.format(new Date(fil.releveLe))}</time>, heure de Paris · actualisation prévue toutes les 3 heures</p>}
   {ancien && <p class="indisponible">L’actualisation tarde. Le dernier relevé disponible reste affiché.</p>}
   {nouvelles.length ? <ul class="nouvelles">

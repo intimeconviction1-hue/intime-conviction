@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import { RUBRIQUES } from '../lib/rubriques.mjs';
+const regards = [
+  'Faire le tour des audiences à travers une revue de presse et les récits du fonds d’Intime Conviction.',
+  'Rendre les règles, les rôles et le déroulement du procès accessibles aux lecteurs qui découvrent les assises.',
+  'Restituer les voix, les gestes, les silences et l’atmosphère de l’audience à travers la chronique.',
+  'Ouvrir la réflexion et accueillir des regards argumentés sur la justice et la société.',
+  'Prendre le temps de décrypter une affaire, une pratique ou une question judiciaire.',
+  'Explorer l’histoire, les livres, les œuvres et les archives qui éclairent la justice criminelle.'
+];
+---
+<Base titre="Notre ligne éditoriale" description="Le projet d’Intime Conviction : raconter les audiences, expliquer le procès et rendre la justice accessible, avec attention pour les personnes et sans voyeurisme.">
+  <article class="editorial">
+    <header><h1>Les assises comme<br /><em>si vous y étiez.</em></h1><p class="introduction">Intime Conviction est consacré au procès criminel : ce moment où les faits sont débattus, les récits confrontés et des vies engagées.</p></header>
+    <div class="corps">
+      <h2>Une affaire citoyenne</h2>
+      <p>La justice nous concerne tous. Pourtant, son langage, ses usages et ses rituels peuvent tenir à distance ceux qui ne les connaissent pas. Notre projet est d’ouvrir une fenêtre sur ce monde, pour les habitués des prétoires comme pour ceux qui le découvrent.</p>
+      <p>Suivre une audience, c’est entendre des personnes, comprendre ce qui se discute et observer comment se construit une décision. C’est aussi regarder notre société, ses tensions et ses contradictions, à travers des histoires singulières.</p>
+      <h2>Le procès au centre du récit</h2>
+      <p>Notre point de vue est celui de l’audience. L’enquête policière n’est pas notre terrain d’investigation : ce qui nous intéresse est la manière dont les faits sont exposés et discutés au procès, la confrontation des arguments et le cheminement jusqu’au verdict.</p>
+      <p>La chronique peut restituer une voix, un geste, une hésitation, un silence. Elle donne à percevoir la dimension humaine des débats, en gardant le contexte nécessaire à leur compréhension.</p>
+      <h2>Comprendre sans voyeurisme</h2>
+      <p>La gravité des faits exige une attention constante aux mots et aux personnes. Notre ligne éditoriale proscrit le voyeurisme et la recherche du sensationnel. Elle appelle au respect des victimes, des accusés, des proches et de tous ceux qui participent au procès.</p>
+      <p>Un récit n’épuise pas une affaire. Les faits rapportés, les arguments des parties et le regard de l’auteur doivent pouvoir se distinguer. La réflexion reste ouverte ; la remise en question fait partie de la démarche.</p>
+      <h2>Des voix et des formes</h2>
+      <p>Récit d’audience, chronique, analyse, réflexion ou détour par la culture : le projet laisse une place au style et au regard de chaque auteur. Cette liberté de forme s’accompagne d’une exigence de précision, de contexte et de mesure.</p>
+      <h2>Ce que vous lisez sur le site</h2>
+      <p>La revue de presse rassemble automatiquement des titres de médias, avec leur source, leur date et un lien vers l’article d’origine. Elle se distingue des textes du fonds d’Intime Conviction et ne constitue pas une couverture de terrain réalisée par notre rédaction.</p>
+      <p>Les archives conservent leur date de publication. Elles témoignent d’un moment et peuvent décrire des situations ou des pratiques qui ont évolué depuis.</p>
+    </div>
+    <section class="regards" aria-labelledby="regards-titre">
+      <h2 id="regards-titre">Six rubriques pour explorer la justice</h2>
+      <dl>{RUBRIQUES.map((r,i)=><div><dt><a href={'/rubrique/'+r.slug+'/'}>{r.nom}</a></dt><dd>{regards[i]}</dd></div>)}</dl>
+    </section>
+    <p class="note-editoriale">Cette présentation reprend les orientations de la ligne éditoriale d’Intime Conviction, version 7.</p>
+    <a class="retour" href="/#actualites">Lire Cours du Jour</a>
+  </article>
+</Base>
+<style>
+  .editorial { max-width:var(--mesure); margin:4rem auto 0; }
+  h1 { font-size:clamp(2.75rem,6vw,4.5rem); margin:0 0 2rem; line-height:1.05; }
+  .introduction { font-size:clamp(1.375rem,3vw,1.75rem); line-height:1.45; margin:0; }
+  .regards { margin-top:3rem; border-top:1px solid var(--filet-fort); padding-top:1.5rem; }
+  .regards h2 { font-size:2rem; margin:0 0 1.5rem; }
+  dl { margin:0; }dl div { padding:1.25rem 0; border-bottom:1px solid var(--filet); }
+  dt { font-size:1.5rem; }dt a { display:inline-flex; align-items:center; min-height:44px; text-decoration:underline; text-decoration-color:var(--rouge); text-underline-offset:0.2em; }
+  dd { margin:0.4rem 0 0; color:var(--encre-2); line-height:1.65; }
+  .note-editoriale { font-family:var(--sans); font-size:0.75rem; color:var(--encre-2); margin-top:2rem; }
+  .retour { display:inline-flex; align-items:center; min-height:44px; margin-top:1rem; font-family:var(--sans); font-size:0.8125rem; }
+</style>

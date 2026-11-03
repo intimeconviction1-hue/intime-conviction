@@ -27,8 +27,8 @@ const total=articles.length.toLocaleString('fr-FR');
     <div class="cadre ouverture-interieur">
       <div class="ouverture-texte">
         <h1 id="titre-journal">Intime<br /><em>Conviction<span>.</span></em></h1>
-        <p class="ouverture-promesse">Le média des cours d’assises.</p>
-        <p class="ouverture-description">Suivi d’audience, règles du procès,<br class="desktop-br" /> chroniques et culture criminelle.</p>
+        <p class="ouverture-promesse">Les assises comme si vous y étiez.</p>
+        <p class="ouverture-description">Suivre les audiences. Comprendre le procès.<br class="desktop-br" /> Regarder la justice à hauteur humaine.</p>
         <div class="ouverture-actions">
           <a class="entrer" href="#actualites">Lire Cours du Jour <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a>
           <a class="explorer" href="/archives/">Explorer les archives</a>
@@ -43,6 +43,7 @@ const total=articles.length.toLocaleString('fr-FR');
 
   <div class="surface-lecture"><div class="cadre journal-corps">
     <Actualites />
+<section class="conviction-editoriale" aria-labelledby="titre-conviction"><h2 id="titre-conviction">Des vies se jouent.<br /><em>La justice se raconte.</em></h2><div><p>À la barre, des faits deviennent des récits, des certitudes se discutent et des destins se nouent. Intime Conviction s’intéresse à ce moment du procès où chacun peut être entendu.</p><p>Raconter l’audience, expliquer ses règles, restituer ses voix et ses silences : une justice à comprendre, ouverte à la curiosité de tous, avec attention pour les personnes et sans voyeurisme.</p><a class="lire-article" href="/ligne-editoriale/">Découvrir notre ligne éditoriale</a></div></section>
 
     <section class="selection" aria-labelledby="titre-selection">
       <div class="titre-section"><h2 id="titre-selection">À relire.</h2><a href="/archives/">Le fonds d’Intime Conviction <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></div>
@@ -93,6 +94,11 @@ const total=articles.length.toLocaleString('fr-FR');
   .ouverture-bas a { display:flex; align-items:center; gap:1rem; min-height:44px; }.ouverture-bas p { text-align:right; margin:0; padding:0.6rem 0.8rem; line-height:1.8; background:color-mix(in srgb,var(--pied) 84%,transparent); }
   .surface-lecture { background:color-mix(in srgb,var(--papier) 95%,transparent); padding-top:0.25rem; }
   .journal-corps { padding-bottom:5rem; }
+  .conviction-editoriale { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:2rem 4rem; margin-top:5rem; padding-block:2.5rem; border-block:1px solid var(--filet-fort); }
+  .conviction-editoriale h2 { margin:0; font-size:clamp(2.25rem,4vw,3.5rem); line-height:1.1; }
+  .conviction-editoriale p { margin:0 0 1rem; max-width:60ch; font-size:1.1875rem; line-height:1.65; }
+  .conviction-editoriale p+p { color:var(--encre-2); }
+  @media(max-width:47.99rem) { .conviction-editoriale { grid-template-columns:minmax(0,1fr); gap:1.5rem; } }
   .selection-grille { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr); gap:4rem; padding-top:1rem; }
   .article-principal { padding-right:3rem; border-right:1px solid var(--filet); }.article-principal .meta { display:flex; flex-wrap:wrap; gap:0.5rem 1rem; }
   .article-principal h3 { font-size:clamp(2.5rem,4.2vw,3.75rem); line-height:1.05; margin:1.25rem 0; }

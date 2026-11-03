@@ -9,7 +9,7 @@ const PAR_PAGE = 30; // même pagination que les pages de rubrique
 
 export async function GET({ site }) {
   const articles = await tousLesArticles();
-  const adresses = [{ chemin: '/' }, { chemin: '/archives/' }];
+  const adresses = [{ chemin: '/' }, { chemin: '/archives/' }, { chemin: '/ligne-editoriale/' }];
 
   for (const r of RUBRIQUES) {
     const n = articles.filter((a) => a.data.rubrique === r.slug).length;

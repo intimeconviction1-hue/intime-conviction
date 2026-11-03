@@ -14,3 +14,5 @@ Engagements demandés par David : photo du palais en fond de toute la page
 d’accueil ; nouvelles rattachées aux six rubriques, Cours du Jour en premier ;
 lecture mobile ; interface et textes en français. Dernière demande : amplifier
 la personnalité du frontend pour un effet plus marquant, sans changer le contenu.
+
+Depuis le 4 novembre 2026 : la ligne éditoriale v7 fournie par David guide les textes. Le procès, la pédagogie, la dimension humaine et le refus du voyeurisme priment. La page /ligne-editoriale/ en donne une synthèse adaptée au site actuel. La revue de presse automatisée est explicitement distinguée des archives ; aucun abonnement, boutique ou collectif de rédaction n’est présenté comme opérationnel.

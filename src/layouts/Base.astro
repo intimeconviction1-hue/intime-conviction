@@ -11,7 +11,7 @@ import policeTexte from '@fontsource-variable/newsreader/files/newsreader-latin-
 import policeSans from '@fontsource-variable/libre-franklin/files/libre-franklin-latin-wght-normal.woff2?url';
 import { RUBRIQUES } from '../lib/rubriques.mjs';
 
-const { titre, description = "Intime Conviction, le média des cours d'assises : suivi d'audience, règles du procès, chroniques et culture criminelle.", rubriqueActive, accueil = false } = Astro.props;
+const { titre, description = "Intime Conviction, le média des cours d'assises : suivre les audiences, comprendre le procès et regarder la justice à hauteur humaine.", rubriqueActive, accueil = false } = Astro.props;
 // Le nom du journal est le titre principal (h1) de la seule page d'accueil ;
 // ailleurs c'est un paragraphe, le h1 revenant au titre de la page.
 const Marque = 'p';
@@ -60,8 +60,8 @@ const annee = new Date().getFullYear();
 
     <footer class="pied">
       <div class="cadre">
-        <div class="pied-intro"><a class="pied-nom" href="/">Intime<br /><em>Conviction.</em></a><p>Le média des cours d’assises : suivi d’audience, règles du procès, chroniques et culture criminelle.</p></div>
-        <nav aria-label="Les rubriques du journal"><ul>{RUBRIQUES.map(r=><li><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></li>)}<li><a href="/archives/">Archives</a></li><li><a href="/recherche/">Rechercher un article</a></li></ul></nav>
+        <div class="pied-intro"><a class="pied-nom" href="/">Intime<br /><em>Conviction.</em></a><p>Le site des cours d’assises. Suivre les audiences, comprendre le procès, regarder la justice à hauteur humaine.</p></div>
+        <nav aria-label="Les rubriques du journal"><ul>{RUBRIQUES.map(r=><li><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></li>)}<li><a href="/archives/">Archives</a></li><li><a href="/recherche/">Rechercher un article</a></li><li><a href="/ligne-editoriale/">Notre ligne éditoriale</a></li></ul></nav>
         <div class="pied-bas"><span>Intime Conviction · {annee}</span><a href="https://x.com/IntimeConv" rel="noopener">@IntimeConv sur X</a><a href="#contenu">Retour en haut <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
       </div>
     </footer>
