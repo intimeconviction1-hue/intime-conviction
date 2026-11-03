@@ -14,7 +14,7 @@ import { RUBRIQUES } from '../lib/rubriques.mjs';
 const { titre, description = "Intime Conviction, le média des cours d'assises : suivi d'audience, règles du procès, chroniques et culture criminelle.", rubriqueActive, accueil = false } = Astro.props;
 // Le nom du journal est le titre principal (h1) de la seule page d'accueil ;
 // ailleurs c'est un paragraphe, le h1 revenant au titre de la page.
-const Marque = accueil ? 'h1' : 'p';
+const Marque = 'p';
 const titreComplet = titre ? `${titre} · Intime Conviction` : "Intime Conviction · Le média des cours d'assises";
 const canonique = new URL(Astro.url.pathname, Astro.site);
 const annee = new Date().getFullYear();
@@ -41,17 +41,17 @@ const annee = new Date().getFullYear();
     <slot name="fond" />
     <a class="evitement" href="#contenu">Aller au contenu</a>
     <header class="entete">
-      <div class="cadre">
-        <div class="journal-identite"><p class="signature">Le média des cours d’assises</p><Marque class="marque"><a href="/">Intime Conviction</a></Marque></div><a class="recherche-lien" href="/recherche/">Rechercher <span aria-hidden="true">↗</span></a>
-        <nav class="rubriques-nav" aria-label="Rubriques">
-          <ul>
-            {RUBRIQUES.map((r) => (
-              <li><a href={`/rubrique/${r.slug}/`} aria-current={rubriqueActive === r.slug ? 'page' : undefined}>{r.nom}</a></li>
-            ))}
-            <li><a href="/archives/" aria-current={rubriqueActive === 'archives' ? 'page' : undefined}>Archives</a></li>
-          </ul>
-        </nav>
+      <div class="barre cadre">
+        <Marque class="marque"><a href="/" aria-label="Intime Conviction, accueil"><span class="sigle" aria-hidden="true">ic.</span><span>Intime<br />Conviction</span></a></Marque>
+        <p class="signature">Le média des cours d’assises</p>
+        <a class="recherche-lien" href="/recherche/" aria-label="Rechercher dans les articles"><span>Rechercher</span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>
       </div>
+      <nav class="rubriques-nav" aria-label="Rubriques">
+        <ul class="cadre">
+          {RUBRIQUES.map(r=><li><a href={`/rubrique/${r.slug}/`} aria-current={rubriqueActive===r.slug?'page':undefined}>{r.nom}</a></li>)}
+          <li><a href="/archives/" aria-current={rubriqueActive==='archives'?'page':undefined}>Archives</a></li>
+        </ul>
+      </nav>
     </header>
 
     <main id="contenu" class="cadre">
@@ -60,15 +60,9 @@ const annee = new Date().getFullYear();
 
     <footer class="pied">
       <div class="cadre">
-        <div>
-          <p class="marque"><a href="/">Intime Conviction</a></p>
-          <p>Le média des cours d'assises : suivi d'audience, règles du procès, chroniques et culture criminelle.</p>
-        </div>
-        <ul>
-          {RUBRIQUES.map((r) => <li><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></li>)}
-          <li><a href="/archives/">Archives</a></li>
-          <li><a href="https://x.com/IntimeConv" rel="noopener">@IntimeConv sur X</a></li>
-        </ul>
+        <div class="pied-intro"><a class="pied-nom" href="/">Intime<br /><em>Conviction.</em></a><p>Le média des cours d’assises : suivi d’audience, règles du procès, chroniques et culture criminelle.</p></div>
+        <nav aria-label="Les rubriques du journal"><ul>{RUBRIQUES.map(r=><li><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></li>)}<li><a href="/archives/">Archives</a></li><li><a href="/recherche/">Rechercher un article</a></li></ul></nav>
+        <div class="pied-bas"><span>Intime Conviction · {annee}</span><a href="https://x.com/IntimeConv" rel="noopener">@IntimeConv sur X</a><a href="#contenu">Retour en haut <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
       </div>
     </footer>
   </body>

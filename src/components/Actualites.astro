@@ -28,17 +28,20 @@ const ancien = fil && Date.now()-new Date(fil.releveLe).getTime() > 6*3_600_000;
 </section>}
 <style>
   .actualites { scroll-margin-top:2rem; }
-  .provenance { margin:1rem 0 0; font-size:1.0625rem; color:var(--encre-2); }
-  .releve { margin:0.5rem 0 1.25rem; font-size:0.6875rem; line-height:1.7; }
-  .nouvelles { list-style:none; padding:0; margin:0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 2.5rem; }
-  .nouvelles li { min-width:0; border-bottom:1px solid var(--filet); padding:1.25rem 0; }
-  .nouvelles .meta { margin:0; display:flex; flex-wrap:wrap; gap:0.35rem 0.75rem; align-items:baseline; font-size:0.75rem; }
-  .source { min-width:0; overflow-wrap:anywhere; font-weight:700; color:var(--rouge); }
-  h3 { font-size:clamp(1.25rem,2.2vw,1.5rem); line-height:1.25; margin:0.5rem 0 0; }
+  .provenance { font-size:1.0625rem; color:var(--encre-2); margin:0.5rem 0; }
+  .releve { font-size:0.625rem; margin:0.5rem 0 1.5rem; }
+  .nouvelles { list-style:none; padding:0; margin:0; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 2rem; }
+  .nouvelles li { min-width:0; border-bottom:1px solid var(--filet); padding:1.4rem 0; }
+  .nouvelles li:first-child { grid-column:span 2; grid-row:span 2; padding-right:2rem; border-right:1px solid var(--filet); }
+  .nouvelles .meta { display:flex; align-items:baseline; flex-wrap:wrap; gap:0.35rem 0.75rem; margin:0; font-size:0.625rem; }
+  .source { min-width:0; overflow-wrap:anywhere; color:var(--rouge); font-weight:700; }
+  h3 { font-size:1.35rem; line-height:1.24; margin:0.65rem 0 0; }
+  .nouvelles li:first-child h3 { font-size:clamp(2rem,3.2vw,3rem); line-height:1.12; margin-top:1rem; }
   h3 a { display:block; min-height:44px; }
   .titre-section a svg { flex-shrink:0; }
   .indisponible { font-family:var(--sans); font-size:0.8125rem; color:var(--encre-2); }
   .secours { text-decoration:underline; text-underline-offset:0.2em; }
   .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
-  @media(max-width:47.99rem) { .nouvelles { grid-template-columns:minmax(0,1fr); } }
+  @media(max-width:63.99rem) { .nouvelles { grid-template-columns:repeat(2,minmax(0,1fr)); }.nouvelles li:first-child { grid-column:span 1; }.nouvelles li:first-child h3 { font-size:2rem; } }
+  @media(max-width:47.99rem) { .nouvelles { grid-template-columns:minmax(0,1fr); }.nouvelles li:first-child { grid-column:auto; grid-row:auto; padding-right:0; border-right:0; }.nouvelles li:first-child h3 { font-size:1.75rem; } }
 </style>

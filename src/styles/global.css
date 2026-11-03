@@ -1,209 +1,85 @@
-/* Intime Conviction — « le magazine ».
-   Blanc, noir, un seul rouge : celui des robes de la cour d'assises, réservé
-   aux étiquettes de rubrique et aux liens au survol. La hiérarchie tient à la
-   typographie et aux filets noirs, pas à des boîtes ni à des motifs.
-   Deux familles : Newsreader (titres et texte), Libre Franklin (le titre du
-   journal, le menu, les étiquettes) — le couple serif / grotesque de la presse.
-   Les couleurs passent toutes par ces jetons ; aucune valeur en dur ailleurs. */
-
-:root {
-  --papier: #ffffff;
-  --papier-2: #f4f4f2;
-  --encre: #111111;
-  --encre-2: #595959;
-  --filet: #e3e3e3;
-  --filet-fort: #111111;
-  --rouge: #c8102e;
-  /* Le pied reste noir dans les deux thèmes : il ne suit pas le papier. */
-  --pied: #111111;
-  --pied-texte: #f1f1ef;
-  --pied-2: #b5b5b0;
-  --pied-survol: #ff8a8a;
-
-  --serif: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
-  --sans: 'Libre Franklin Variable', 'Helvetica Neue', Arial, sans-serif;
-
-  --mesure: 40rem;
-  --large: 78rem;
-  color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --papier: #101010;
-    --papier-2: #1a1a1a;
-    --encre: #f1f1ef;
-    --encre-2: #a8a8a4;
-    --filet: #2c2c2c;
-    --filet-fort: #f1f1ef;
-    --rouge: #ff6b6b;
-    color-scheme: dark;
-  }
-}
-
-*, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
-
-body {
-  margin: 0;
-  background: var(--papier);
-  color: var(--encre);
-  font-family: var(--serif);
-  font-size: 1.125rem;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-h1, h2, h3 { text-wrap: pretty; overflow-wrap: break-word; font-family: var(--serif); font-weight: 700; letter-spacing: -0.015em; line-height: 1.12; }
-
-a { color: inherit; text-decoration: none; }
-a:hover { color: var(--rouge); }
-:focus-visible { outline: 2px solid var(--rouge); outline-offset: 3px; }
-
-.evitement { position: absolute; left: -9999px; top: 0; background: var(--encre); color: var(--papier); padding: 0.75rem 1rem; z-index: 10; font-family: var(--sans); }
-.evitement:focus { left: 1rem; }
-
-.cadre { max-width: var(--large); margin: 0 auto; padding: 0 1.25rem; }
-@media (min-width: 48rem) { .cadre { padding: 0 2.5rem; } }
-
-/* L'étiquette : petite capitale grasse, interlettrée — la seule voix rouge. */
-.etiquette {
-  font-family: var(--sans);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--rouge);
-}
-.meta { font-family: var(--sans); font-size: 0.8125rem; color: var(--encre-2); }
-
-/* ——— En-tête : une barre fine, blanche ——— */
-
-.entete { border-bottom: 1px solid var(--filet-fort); }
-.entete .cadre { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 2rem; }
-.marque { margin: 0; font-size: inherit; letter-spacing: 0; line-height: 1; }
-.marque a {
-  display: inline-flex; align-items: center; gap: 0.6rem; min-height: 64px;
-  font-family: var(--sans); font-weight: 800; font-size: 1.25rem; letter-spacing: 0.04em; text-transform: uppercase;
-}
-.marque a:hover { color: var(--encre); }
-.entete .marque a::before { content: ''; width: 0.7rem; height: 0.7rem; background: var(--rouge); }
-
-.rubriques-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 0 1.5rem; }
-.rubriques-nav a {
-  display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap;
-  font-family: var(--sans); font-size: 0.875rem; font-weight: 500;
-}
-.rubriques-nav a[aria-current='page'] { color: var(--rouge); box-shadow: inset 0 -2px 0 var(--rouge); }
-
-/* Au téléphone, le menu passe sous la marque et défile sur une rangée. */
-@media (max-width: 63.99rem) {
-  .rubriques-nav { width: 100%; border-top: 1px solid var(--filet); margin: 0 -1.25rem; width: calc(100% + 2.5rem); }
-  .rubriques-nav ul { overflow-x: auto; padding: 0 1.25rem; scrollbar-width: none; }
-  .rubriques-nav ul::-webkit-scrollbar { display: none; }
-}
-@media (min-width: 48rem) and (max-width: 63.99rem) {
-  .rubriques-nav { margin: 0 -2.5rem; width: calc(100% + 5rem); }
-  .rubriques-nav ul { padding: 0 2.5rem; }
-}
-
-/* ——— Pied : noir, pour ancrer la page ——— */
-
-.pied { margin-top: 6rem; background: var(--pied); color: var(--pied-texte); }
-.pied .cadre { padding-top: 3rem; padding-bottom: 3rem; display: flex; flex-wrap: wrap; gap: 1.5rem 3rem; justify-content: space-between; align-items: flex-start; }
-.pied .marque a { color: var(--pied-texte); }
-.pied p { margin: 0.5rem 0 0; font-family: var(--sans); font-size: 0.875rem; color: var(--pied-2); max-width: 28rem; }
-.pied ul { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 2.5rem; font-family: var(--sans); font-size: 0.875rem; }
-.pied li a { display: inline-flex; align-items: center; min-height: 44px; color: var(--pied-texte); }
-.pied li a:hover { color: var(--pied-survol); }
-
-/* ——— Sections et listes ——— */
-
-.titre-section { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem 1rem; flex-wrap: wrap; margin: 4.5rem 0 0; padding-top: 0.75rem; border-top: 3px solid var(--filet-fort); }
-.titre-section :is(h1, h2) { margin: 0; font-family: var(--sans); font-weight: 800; font-size: 1rem; letter-spacing: 0.06em; text-transform: uppercase; }
-.titre-section :is(h1, h2) small { display: block; margin-top: 0.2rem; font-family: var(--serif); font-weight: 400; font-style: italic; font-size: 1rem; letter-spacing: 0; text-transform: none; color: var(--encre-2); }
-.titre-section > a { font-family: var(--sans); font-size: 0.875rem; font-weight: 600; display: inline-flex; align-items: center; min-height: 44px; }
-.titre-section > a:hover { color: var(--rouge); }
-
-/* Une page de rubrique ou d'archives : le titre est le sujet, en grand. */
-.titre-page { margin: 3rem 0 0; padding-bottom: 1.5rem; border-bottom: 3px solid var(--filet-fort); }
-.titre-page h1 { margin: 0.5rem 0 0; font-size: clamp(2.5rem, 7vw, 4.5rem); line-height: 1; }
-.titre-page p { margin: 0.75rem 0 0; }
-.titre-page .sous-titre { font-style: italic; font-size: 1.25rem; color: var(--encre-2); }
-
-.role { list-style: none; margin: 0; padding: 0; }
-.role > li { padding: 1.4rem 0; border-bottom: 1px solid var(--filet); }
-.role :is(h2, h3) { font-size: 1.375rem; margin: 0.35rem 0 0; }
-.role p.extrait { margin: 0.5rem 0 0; color: var(--encre-2); font-size: 1.0625rem; line-height: 1.55; max-width: 46rem; }
-.role .meta { margin: 0; }
-
-.pagination { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2rem; font-family: var(--sans); font-weight: 600; font-size: 0.9375rem; }
-.pagination a { display: inline-flex; align-items: center; min-height: 44px; }
-
-/* ——— Article ——— */
-
-.article { padding-top: 1rem; border-top: 3px solid var(--filet-fort); max-width: var(--mesure); margin: 3.5rem auto 0; }
-.article h1 { font-size: clamp(2.25rem, 6vw, 3.75rem); line-height: 1.04; margin: 0.75rem 0 1.25rem; }
-.article .meta { padding-bottom: 1.25rem; border-bottom: 1px solid var(--filet); margin: 0; }
-
-.corps { hyphens: auto; margin-top: 2rem; font-size: 1.1875rem; line-height: 1.7; overflow-wrap: anywhere; }
-.corps p { margin: 0 0 1.15em; }
-.corps h2, .corps h3, .corps h4 { line-height: 1.2; margin: 2em 0 0.6em; }
-.corps h2 { font-size: 1.6rem; }
-.corps h3 { font-size: 1.35rem; }
-.corps blockquote { margin: 1.75em 0; padding-left: 1.25rem; border-left: 3px solid var(--rouge); font-style: italic; font-size: 1.25rem; }
-.corps ul, .corps ol { padding-left: 1.25rem; }
-.corps li { margin: 0.3em 0; }
-.corps a { text-decoration: underline; text-decoration-color: var(--rouge); text-underline-offset: 0.18em; }
-.corps table { display: block; overflow-x: auto; border-collapse: collapse; font-size: 1rem; }
-.corps td, .corps th { border: 1px solid var(--filet); padding: 0.4rem 0.6rem; vertical-align: top; }
-.corps hr { border: 0; border-top: 1px solid var(--filet); margin: 2em 0; }
-
-.voisins { max-width: var(--mesure); margin: 4rem auto 0; }
-
-@media (prefers-reduced-motion: no-preference) {
-  a { transition: color 0.15s ease; }
-}
-
-/* Navigation et lecture */
-.journal-identite { padding: 1.5rem 0 1rem; }
-.signature { font-family:var(--sans);font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--encre-2);margin:0 0 .4rem; }
-.journal-identite .marque a { min-height:36px;font-size:clamp(1.2rem,3vw,1.75rem);letter-spacing:-.03em; }
-.recherche-lien { margin-left:auto;font-family:var(--sans);font-size:.8rem;font-weight:600;padding:.7rem 0; }
-.entete .rubriques-nav { flex-basis:100%;border-top:1px solid var(--filet); }
-.entete .rubriques-nav ul { justify-content:space-between; }
-button,input,select { font:inherit; }
-button { cursor:pointer;min-height:44px;border:1px solid var(--filet-fort);background:var(--encre);color:var(--papier);padding:.6rem 1rem;font-family:var(--sans);font-size:.85rem; }
-button:hover { background:var(--rouge);color:var(--papier); }
-.recherche-form { display:grid;grid-template-columns:2fr 1fr 1fr auto;align-items:end;gap:1rem;margin:2rem 0; }
-.recherche-form label { display:grid;gap:.5rem;font-family:var(--sans);font-size:.8rem;font-weight:600; }
-.recherche-form input,.recherche-form select { min-width:0;width:100%;min-height:48px;border:1px solid var(--filet);border-bottom-color:var(--encre);background:var(--papier);color:var(--encre);padding:.7rem;font-size:1rem; }
-.recherche-form button { min-height:48px; }
-.outils-lecture { display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin:1.2rem 0;font-family:var(--sans);font-size:.75rem;color:var(--encre-2); }
-.outils-lecture button { background:transparent;color:var(--encre);border-color:var(--filet);font-size:.75rem; }
-.corps.texte-grand { font-size:1.45rem; }
-.lecture-progression { position:fixed;top:0;left:0;height:3px;background:var(--rouge);z-index:20;width:0; }
-@media(max-width:48rem){.recherche-form{grid-template-columns:1fr 1fr}.recherche-form label:first-child{grid-column:1/-1}.entete .rubriques-nav ul{justify-content:flex-start}.signature{font-size:.6rem}.recherche-lien{font-size:.75rem}}
-/* Les métadonnées restent groupées au titre, les sections respirent. */
-.role > li { padding: 1.75rem 0; }
-.role :is(h2, h3) { max-width: 36ch; font-size: clamp(1.375rem, 2.4vw, 1.75rem); line-height: 1.2; }
-.role p.extrait { max-width: 65ch; }
-.titre-section > a { gap: 0.75rem; }
-@media (min-width: 64rem) {
-  .entete .cadre { flex-direction: row; align-items: center; gap: 0; }
-  .entete .marque a { min-height: 44px; font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -0.035em; }
-  .entete .marque a::before { width: 0.8rem; height: 0.8rem; margin-right: 0.25rem; }
-  .rubriques-nav { border-top: 1px solid var(--filet); }
-  .rubriques-nav ul { justify-content: space-between; gap: 0 1rem; }
-  .rubriques-nav a { min-height: 48px; font-size: 0.8125rem; }
-}
-@media (max-width: 25rem) {
-  .marque a { font-size: 1.0625rem; gap: 0.5rem; }
-}
-
-/* Le pied reste lisible sur écran étroit et lorsque le lecteur zoome. */
-@media (max-width:25rem) { .pied ul { columns:1; min-width:0; max-width:100%; } }
-
-/* Le fond photographique de l'accueil a son propre plan sous la page. */
+/* Intime Conviction — un journal de caractère, construit pour la lecture.
+   Les mêmes voix : Newsreader, Libre Franklin, noir, blanc et rouge judiciaire. */
+:root { --papier:#fff; --papier-2:#f4f4f2; --encre:#111; --encre-2:#595959; --filet:#dededb; --filet-fort:#111; --rouge:#c8102e; --action:#c8102e; --action-survol:#a90e27; --sur-action:#fff; --pied:#111; --pied-texte:#f1f1ef; --pied-2:#b5b5b0; --pied-survol:#ff8a8a; --serif:'Newsreader Variable',Georgia,'Times New Roman',serif; --sans:'Libre Franklin Variable','Helvetica Neue',Arial,sans-serif; --mesure:42rem; --large:82rem; color-scheme:light; }
+@media(prefers-color-scheme:dark) { :root:not([data-theme='light']) { --papier:#101010; --papier-2:#1a1a1a; --encre:#f1f1ef; --encre-2:#aaa; --filet:#373737; --filet-fort:#f1f1ef; --rouge:#ff8181; color-scheme:dark; } }
+*,*::before,*::after { box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; scroll-padding-top:1.5rem; }
+body { margin:0; background:var(--papier); color:var(--encre); font-family:var(--serif); font-size:1.125rem; line-height:1.6; -webkit-font-smoothing:antialiased; }
+h1,h2,h3,h4 { font-family:var(--serif); font-weight:500; line-height:1.12; letter-spacing:-0.025em; text-wrap:pretty; overflow-wrap:break-word; }
+a { color:inherit; text-decoration:none; }
+a:hover { color:var(--rouge); }
+:focus-visible { outline:2px solid var(--rouge); outline-offset:5px; }
+img { max-width:100%; }
+.cadre { width:100%; max-width:var(--large); margin-inline:auto; padding-inline:clamp(1.25rem,4vw,4rem); }
+.evitement { position:absolute; left:-9999px; top:0; padding:1rem; background:var(--encre); color:var(--papier); z-index:30; font-family:var(--sans); }
+.evitement:focus { left:1rem; }
+.meta { font-family:var(--sans); font-size:0.75rem; color:var(--encre-2); line-height:1.7; }
+.etiquette { font-family:var(--sans); font-size:0.6875rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--rouge); }
+.entete { border-bottom:1px solid var(--filet); }
+.barre { min-height:90px; display:flex; align-items:center; gap:2rem; }
+.marque { margin:0; line-height:1; }
+.marque a { display:inline-flex; align-items:center; gap:0.85rem; min-height:64px; font-family:var(--sans); font-size:0.8125rem; font-weight:800; letter-spacing:-0.02em; line-height:1.12; }
+.sigle { font-family:var(--serif); font-style:italic; font-weight:500; font-size:3rem; color:var(--rouge); line-height:1; }
+.signature { margin:0 0 0 auto; font-family:var(--serif); font-style:italic; font-size:1rem; color:var(--encre-2); }
+.recherche-lien { display:inline-flex; align-items:center; gap:0.75rem; min-height:44px; margin-left:2rem; font-family:var(--sans); font-size:0.75rem; }
+.rubriques-nav { border-top:1px solid var(--filet); }
+.rubriques-nav ul { margin-block:0; display:flex; align-items:center; justify-content:space-between; gap:1.5rem; list-style:none; padding-block:0; overflow-x:auto; scrollbar-width:thin; }
+.rubriques-nav li { flex-shrink:0; }
+.rubriques-nav a { display:flex; align-items:center; min-height:48px; font-family:var(--sans); font-size:0.75rem; white-space:nowrap; position:relative; }
+.rubriques-nav a[aria-current='page'] { color:var(--rouge); box-shadow:inset 0 -2px var(--rouge); }
 body.avec-fond { position:relative; isolation:isolate; }
-.avec-fond .pied { background:color-mix(in srgb,var(--pied) 94%,transparent); }
+.avec-fond .entete { color:var(--pied-texte); background:color-mix(in srgb,var(--pied) 84%,transparent); border-color:color-mix(in srgb,var(--pied-texte) 22%,transparent); }
+.avec-fond .signature { color:var(--pied-2); }
+.avec-fond .sigle { color:var(--pied-survol); }
+.avec-fond .rubriques-nav { border-color:color-mix(in srgb,var(--pied-texte) 22%,transparent); }
+.avec-fond .entete a:hover { color:var(--pied-survol); }
+.avec-fond main.cadre { max-width:none; padding:0; }
+.avec-fond .pied { margin-top:0; }
+.titre-section { margin:5rem 0 1rem; padding-top:1.25rem; border-top:1px solid var(--filet-fort); display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:1rem 2rem; }
+.titre-section :is(h1,h2) { margin:0; font-size:clamp(2rem,4.3vw,3.5rem); font-weight:500; letter-spacing:-0.035em; }
+.titre-section :is(h1,h2) small { display:block; font-family:var(--sans); font-size:0.75rem; line-height:1.7; margin-top:0.75rem; font-weight:400; letter-spacing:0; color:var(--encre-2); }
+.titre-section > a { display:inline-flex; align-items:center; gap:0.75rem; min-height:44px; font-family:var(--sans); font-size:0.75rem; }
+.titre-page { margin:4rem 0 0; padding-bottom:2.5rem; border-bottom:1px solid var(--filet-fort); }
+.titre-page > .etiquette { margin:0 0 1rem; }
+.titre-page h1 { margin:0; font-size:clamp(3rem,8vw,6rem); line-height:0.98; }
+.titre-page .sous-titre { margin:1rem 0; font-size:1.375rem; font-style:italic; color:var(--encre-2); }
+.role { list-style:none; margin:0; padding:0; }
+.role > li { padding:1.75rem 0; border-bottom:1px solid var(--filet); }
+.role :is(h2,h3) { font-size:clamp(1.5rem,2.5vw,2rem); margin:0.55rem 0 0; max-width:40ch; }
+.role .meta { margin:0; }
+.role .extrait { margin:0.7rem 0 0; color:var(--encre-2); max-width:65ch; font-size:1.0625rem; line-height:1.6; }
+.pagination { display:flex; justify-content:space-between; gap:1rem; margin-top:2rem; font-family:var(--sans); font-size:0.8125rem; }
+.pagination a { display:flex; align-items:center; min-height:44px; }
+.article { max-width:var(--mesure); margin:4rem auto 0; }
+.article h1 { margin:1rem 0 1.5rem; font-size:clamp(2.5rem,5.5vw,4.5rem); line-height:1.05; }
+.article>.meta { border-block:1px solid var(--filet); padding-block:1rem; margin:0; }
+.corps { margin-top:2.5rem; font-size:1.25rem; line-height:1.75; overflow-wrap:anywhere; hyphens:auto; }
+.corps p { margin:0 0 1.2em; }
+.corps :is(h2,h3,h4) { margin:2em 0 0.7em; line-height:1.2; font-weight:600; }
+.corps h2 { font-size:1.8rem; }.corps h3 { font-size:1.5rem; }
+.corps blockquote { margin:2em 0; border-block:1px solid var(--filet); padding:1.5rem 0; font-style:italic; font-size:1.5rem; }
+.corps :is(ul,ol) { padding-left:1.4rem; }.corps li { margin:0.4em 0; }
+.corps a { text-decoration:underline; text-decoration-color:var(--rouge); text-underline-offset:0.2em; }
+.corps table { display:block; overflow-x:auto; border-collapse:collapse; font-size:1rem; }.corps :is(td,th) { border:1px solid var(--filet); padding:0.5rem; vertical-align:top; }
+.corps hr { border:0; border-top:1px solid var(--filet); margin:2em 0; }
+.voisins { max-width:var(--mesure); margin:4rem auto 0; }
+button,input,select { font:inherit; }button { cursor:pointer; min-height:44px; border:1px solid var(--encre); background:var(--encre); color:var(--papier); padding:0.75rem 1.2rem; font-family:var(--sans); font-size:0.8125rem; }button:hover { background:var(--rouge); }button:disabled { cursor:default; opacity:0.55; }
+.recherche-form { display:grid; grid-template-columns:2fr 1fr 1fr auto; align-items:end; gap:1rem; margin:2.5rem 0; }
+.recherche-form label { display:grid; gap:0.6rem; font-family:var(--sans); font-size:0.75rem; }
+.recherche-form :is(input,select) { width:100%; min-width:0; min-height:48px; border:1px solid var(--filet); border-bottom-color:var(--encre); background:var(--papier); color:var(--encre); padding:0.75rem; font-size:1rem; }
+.recherche-form button { min-height:48px; }
+.outils-lecture { display:flex; align-items:center; flex-wrap:wrap; gap:0.5rem; margin:1rem 0 2rem; font-family:var(--sans); font-size:0.6875rem; color:var(--encre-2); }
+.outils-lecture button { background:transparent; color:var(--encre); border-color:var(--filet); font-size:0.6875rem; padding:0.5rem 0.7rem; }
+.outils-lecture button[aria-pressed='true'] { background:var(--encre); color:var(--papier); }
+.corps.texte-grand { font-size:1.5rem; }.lecture-progression { position:fixed; top:0; left:0; height:3px; background:var(--rouge); z-index:20; width:0; }
+.pied { margin-top:7rem; background:color-mix(in srgb,var(--pied) 97%,transparent); color:var(--pied-texte); padding-block:4.5rem 0; }
+.pied>.cadre { display:grid; grid-template-columns:1.2fr 1fr; gap:3rem; }
+.pied-nom { display:inline-block; font-size:clamp(2.5rem,5vw,4rem); line-height:0.95; letter-spacing:-0.04em; }
+.pied-nom em { font-weight:400; }.pied-intro p { color:var(--pied-2); font-family:var(--sans); font-size:0.75rem; max-width:34ch; margin-top:1.5rem; line-height:1.8; }
+.pied ul { list-style:none; margin:0; padding:0; columns:2; column-gap:2rem; font-family:var(--sans); font-size:0.75rem; }
+.pied li a { display:inline-flex; align-items:center; min-height:44px; }.pied a:hover { color:var(--pied-survol); }
+.pied-bas { grid-column:1/-1; border-top:1px solid color-mix(in srgb,var(--pied-texte) 20%,transparent); padding-block:1.25rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem 2rem; font-family:var(--sans); font-size:0.6875rem; color:var(--pied-2); }
+.pied-bas a { display:flex; align-items:center; gap:0.75rem; min-height:44px; }
+@media(max-width:47.99rem) { .barre { min-height:78px; gap:1rem; }.signature { display:none; }.recherche-lien { margin-left:auto; }.recherche-lien span { display:none; }.sigle { font-size:2.5rem; }.rubriques-nav ul { justify-content:flex-start; gap:1.5rem; }.rubriques-nav a { min-height:44px; }.titre-section { margin-top:3.5rem; }.recherche-form { grid-template-columns:1fr 1fr; }.recherche-form label:first-child { grid-column:1/-1; }.pied>.cadre { grid-template-columns:minmax(0,1fr); gap:2rem; }.pied ul { column-gap:1.5rem; }.pied-bas { grid-column:1; }.article { margin-top:2.5rem; } }
+@media(max-width:25rem) { .pied ul { columns:1; } }
+@media(prefers-reduced-motion:no-preference) { a { transition:color 180ms ease; } }
