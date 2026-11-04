@@ -1,0 +1,19 @@
+---
+import { CULTURE } from '../lib/culture.mjs';
+const { titre = 'La justice se lit. Se regarde. Se raconte.' } = Astro.props;
+---
+<section class="culture-selection" aria-labelledby="titre-culture">
+  <div class="titre-section"><h2 id="titre-culture">{titre}</h2><a href="/rubrique/le-greffe/">Explorer Le Greffe</a></div>
+  <p class="culture-intro">Cinéma, livres et histoire : trois portes d’entrée dans la culture judiciaire.</p>
+  <ul>{CULTURE.map(c=><li><p class="meta">{c.genre} · {c.auteur}</p><h3><a href={'/culture/'+c.slug+'/'}>{c.titre}</a></h3><p>{c.extrait}</p><a class="ouvrir" href={'/culture/'+c.slug+'/'}>Découvrir cette œuvre <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></li>)}</ul>
+</section>
+<style>
+  .culture-intro { color:var(--encre-2); margin:0 0 1.5rem; }
+  ul { display:grid; grid-template-columns:1.35fr 1fr 1fr; padding:0; margin:0; list-style:none; border-bottom:1px solid var(--filet); }
+  li { min-width:0; padding:1.5rem; border-top:1px solid var(--filet); border-right:1px solid var(--filet); display:flex; flex-direction:column; }
+  li:first-child { padding-left:0; }li:last-child { border-right:0; }
+  h3 { font-size:2rem; line-height:1.1; margin:0.75rem 0; }li:first-child h3 { font-size:clamp(2rem,3.5vw,3rem); font-style:italic; }
+  li>p:not(.meta) { font-size:1.0625rem; color:var(--encre-2); margin:0 0 1rem; }
+  .meta { margin:0; }.ouvrir { display:inline-flex; align-items:center; gap:1rem; min-height:44px; margin-top:auto; font-family:var(--sans); font-size:0.75rem; }
+  @media(max-width:47.99rem) { ul { grid-template-columns:minmax(0,1fr); }li { padding:1.25rem 0; border-right:0; } }
+</style>

@@ -2,6 +2,7 @@
 import Base from '../../../layouts/Base.astro';
 import ListeArticles from '../../../components/ListeArticles.astro';
 import Actualites from '../../../components/Actualites.astro';
+import Culture from '../../../components/Culture.astro';
 import { RUBRIQUES, rubrique } from '../../../lib/rubriques.mjs';
 import { tousLesArticles } from '../../../lib/articles.mjs';
 
@@ -24,6 +25,7 @@ const titre = page.currentPage > 1 ? `${r.nom}, page ${page.currentPage}` : r.no
     <p class="meta">{page.total.toLocaleString('fr-FR')} articles d’archives · page {page.currentPage} sur {page.lastPage}</p>
   </header>
   {page.currentPage === 1 && <Actualites rubriqueSlug={r.slug} limite={24} titre="Dans la presse" lienRubrique={false} />}
+  {page.currentPage === 1 && r.slug === 'le-greffe' && <Culture titre="À lire, à voir" />}
   <div class="titre-section"><h2>Les articles d’Intime Conviction</h2></div>
   <ListeArticles articles={page.data} rubriqueVisible={false} niveau={3} />
   <nav class="pagination" aria-label="Pages">

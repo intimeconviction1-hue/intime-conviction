@@ -2,6 +2,8 @@
 // en trente lignes et liste exactement les pages que le site fabrique.
 // Les redirections des anciennes catégories n'y figurent pas — on n'annonce
 // pas à Google une adresse qui renvoie ailleurs.
+import { lireVeille } from '../lib/veille.mjs';
+import { CULTURE } from '../lib/culture.mjs';
 import { RUBRIQUES } from '../lib/rubriques.mjs';
 import { tousLesArticles } from '../lib/articles.mjs';
 
@@ -11,6 +13,11 @@ export async function GET({ site }) {
   const articles = await tousLesArticles();
   const adresses = [{ chemin: '/' }, { chemin: '/archives/' }, { chemin: '/ligne-editoriale/' }];
 
+  adresses.push({ chemin:'/archives/presse/' });
+  const veille=await lireVeille();
+  const anneesPresse=new Map();for(const a of veille.articles){const an=a.dateAlerte.slice(0,4);anneesPresse.set(an,(anneesPresse.get(an)??0)+1);}
+  for(const [an,n] of anneesPresse)for(let p=1;p<=Math.ceil(n/60);p++)adresses.push({chemin:'/archives/presse/'+an+'/'+(p===1?'':p+'/')});
+  for (const c of CULTURE) adresses.push({ chemin: '/culture/'+c.slug+'/' });
   for (const r of RUBRIQUES) {
     const n = articles.filter((a) => a.data.rubrique === r.slug).length;
     for (let p = 1; p <= Math.ceil(n / PAR_PAGE); p++) {

@@ -61,7 +61,7 @@ const annee = new Date().getFullYear();
     <footer class="pied">
       <div class="cadre">
         <div class="pied-intro"><a class="pied-nom" href="/">Intime<br /><em>Conviction.</em></a><p>Le site des cours d’assises. Suivre les audiences, comprendre le procès, regarder la justice à hauteur humaine.</p></div>
-        <nav aria-label="Les rubriques du journal"><ul>{RUBRIQUES.map(r=><li><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></li>)}<li><a href="/archives/">Archives</a></li><li><a href="/recherche/">Rechercher un article</a></li><li><a href="/ligne-editoriale/">Notre ligne éditoriale</a></li></ul></nav>
+        <nav aria-label="Les rubriques du journal"><ul>{RUBRIQUES.map(r=><li><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></li>)}<li><a href="/archives/">Archives</a></li><li><a href="/recherche/">Rechercher un article</a></li><li><a href="/archives/presse/">Archives de presse</a></li><li><a href="/ligne-editoriale/">Notre ligne éditoriale</a></li></ul></nav>
         <div class="pied-bas"><span>Intime Conviction · {annee}</span><a href="https://x.com/IntimeConv" rel="noopener">@IntimeConv sur X</a><a href="#contenu">Retour en haut <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
       </div>
     </footer>

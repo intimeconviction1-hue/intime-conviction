@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import { CULTURE } from '../../lib/culture.mjs';
+export function getStaticPaths(){ return CULTURE.map(oeuvre=>({params:{slug:oeuvre.slug},props:{oeuvre}})); }
+const { oeuvre:c } = Astro.props;
+---
+<Base titre={c.titre} description={c.extrait} rubriqueActive="le-greffe">
+  <article class="article">
+    <a class="etiquette" href="/rubrique/le-greffe/">Le Greffe · {c.genre}</a>
+    <h1>{c.titre}</h1>
+    <p class="meta">{c.auteur} · {c.repere}</p>
+    <div class="corps"><h2>{c.angle}</h2>{c.paragraphes.map(p=><p>{p}</p>)}<blockquote>{c.question}</blockquote>
+      <h2>Pour aller plus loin</h2><ul>{c.sources.map(s=><li><a href={s.lien} target="_blank" rel="noopener noreferrer">{s.nom}<span class="sr-only"> (nouvel onglet)</span></a></li>)}</ul>
+      <p class="note">Notice de découverte issue des pistes du fonds Culture d’Intime Conviction. Références vérifiées le 4 novembre 2026.</p>
+    </div>
+    <a class="retour" href="/rubrique/le-greffe/">Retrouver les livres, films et archives du Greffe</a>
+  </article>
+</Base>
+<style>.note { color:var(--encre-2); font-family:var(--sans); font-size:0.75rem; }.retour { display:inline-flex; align-items:center; min-height:44px; text-decoration:underline; }.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }</style>

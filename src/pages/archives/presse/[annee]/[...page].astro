@@ -1,0 +1,24 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import { lireVeille } from '../../../../lib/veille.mjs';
+import { RUBRIQUES, rubrique } from '../../../../lib/rubriques.mjs';
+export async function getStaticPaths({paginate}) {
+  const v=await lireVeille();return [...new Set(v.articles.map(a=>a.dateAlerte.slice(0,4)))].flatMap(annee=>paginate(v.articles.filter(a=>a.dateAlerte.startsWith(annee)),{params:{annee},pageSize:60}));
+}
+const {page}=Astro.props;const annee=Astro.params.annee;
+const date=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'}).format(new Date(s+'T12:00:00Z'));
+---
+<Base titre={'Revue de presse '+annee+', page '+page.currentPage} rubriqueActive="archives">
+  <header class="titre-page"><a href="/archives/presse/">Toutes les années de la revue de presse</a><h1>{annee}<br /><em>dans la presse.</em></h1><p class="sous-titre">{page.total.toLocaleString('fr-FR')} références · page {page.currentPage} sur {page.lastPage}</p></header>
+  <p>Dates des alertes de veille. Les titres et les articles appartiennent aux médias cités.</p>
+  <form class="filtres" role="search"><label>Sur cette page<input type="search" id="filtre-titre" placeholder="Un nom, une affaire…" /></label><label>Rubrique<select id="filtre-rubrique"><option value="">Toutes les rubriques</option>{RUBRIQUES.map(r=><option value={r.slug}>{r.nom}</option>)}</select></label></form>
+  <p id="compte" class="meta" aria-live="polite">{page.data.length} références sur cette page</p>
+  <ul class="role" id="liens-presse">{page.data.map(a=><li data-rubrique={a.rubrique}><p class="meta">{a.source} · Alerte du <time datetime={a.dateAlerte}>{date(a.dateAlerte)}</time> · {rubrique(a.rubrique).nom}</p><h2><a href={a.lien} target="_blank" rel="noopener noreferrer">{a.titre}<span class="sr-only"> (nouvel onglet)</span></a></h2></li>)}</ul>
+  <nav class="pagination" aria-label="Pages de presse">{page.url.prev?<a href={page.url.prev}>Page précédente</a>:<span/>}{page.url.next?<a href={page.url.next}>Page suivante</a>:<span/>}</nav>
+</Base>
+<script>
+  const champ=document.querySelector<HTMLInputElement>('#filtre-titre'),rubrique=document.querySelector<HTMLSelectElement>('#filtre-rubrique');
+  function filtrer(){const q=champ.value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();let n=0;document.querySelectorAll<HTMLLIElement>('#liens-presse>li').forEach(li=>{li.hidden=!(li.textContent.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(q)&&(!rubrique.value||li.dataset.rubrique===rubrique.value));if(!li.hidden)n++;});document.querySelector('#compte').textContent=n+' référence'+(n>1?'s':'')+' sur cette page';}
+  champ.addEventListener('input',filtrer);rubrique.addEventListener('change',filtrer);document.querySelector('form').addEventListener('submit',e=>e.preventDefault());
+</script>
+<style>.filtres { display:flex; flex-wrap:wrap; gap:1rem; margin:1.5rem 0; }.filtres label { display:flex; flex-direction:column; gap:0.5rem; font-family:var(--sans); font-size:0.8125rem; }.filtres input,.filtres select { min-height:44px; padding:0.75rem; font:inherit; max-width:100%; background:var(--papier); color:var(--encre); border:1px solid var(--filet); }.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }</style>
