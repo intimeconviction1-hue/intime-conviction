@@ -9,11 +9,13 @@ const { titre = 'La justice se lit. Se regarde. Se raconte.' } = Astro.props;
 </section>
 <style>
   .culture-intro { color:var(--encre-2); margin:0 0 1.5rem; }
-  ul { display:grid; grid-template-columns:1.35fr 1fr 1fr; padding:0; margin:0; list-style:none; border-bottom:1px solid var(--filet); }
-  li { min-width:0; padding:1.5rem; border-top:1px solid var(--filet); border-right:1px solid var(--filet); display:flex; flex-direction:column; }
+  ul { display:grid; grid-template-columns:1.35fr 1fr 1fr; padding:0; margin:0; list-style:none; counter-reset:culture; border-bottom:1px solid var(--filet); }
+  li { counter-increment:culture; min-width:0; padding:1.5rem; border-top:1px solid var(--filet); border-right:1px solid var(--filet); display:flex; flex-direction:column; }
   li:first-child { padding-left:0; }li:last-child { border-right:0; }
-  h3 { font-size:2rem; line-height:1.1; margin:0.75rem 0; }li:first-child h3 { font-size:clamp(2rem,3.5vw,3rem); font-style:italic; }
+  h3 { font-size:2rem; line-height:1.1; margin:0.75rem 0; }li:first-child h3 { font-size:clamp(2rem,3.5vw,3rem); font-style:normal; }
   li>p:not(.meta) { font-size:1.0625rem; color:var(--encre-2); margin:0 0 1rem; }
   .meta { margin:0; }.ouvrir { display:inline-flex; align-items:center; gap:1rem; min-height:44px; margin-top:auto; font-family:var(--sans); font-size:0.75rem; }
   @media(max-width:47.99rem) { ul { grid-template-columns:minmax(0,1fr); }li { padding:1.25rem 0; border-right:0; } }
+
+  ul{gap:1rem;border-bottom:0;grid-template-columns:repeat(3,minmax(0,1fr))}li,li:first-child{padding:1.5rem;background:var(--pied);color:var(--pied-texte);border:0;min-height:340px;position:relative}li::before{content:counter(culture,decimal-leading-zero);font:600 3.5rem/1 var(--serif);color:var(--pied-survol);margin-bottom:1.5rem}li .meta,li>p:not(.meta){color:#c9c6c0}h3,li:first-child h3{font-size:2rem;font-weight:600;font-style:normal}li a:hover{color:var(--pied-survol)}.ouvrir{padding-top:1rem;border-top:1px solid #ffffff33} @media(max-width:47.99rem){ul{grid-template-columns:1fr}li,li:first-child{min-height:0;padding:1.5rem}li::before{font-size:2.5rem;margin-bottom:1rem}}
 </style>

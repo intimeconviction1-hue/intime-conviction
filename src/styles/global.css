@@ -1,6 +1,6 @@
 /* Intime Conviction — un journal de caractère, construit pour la lecture.
    Les mêmes voix : Newsreader, Libre Franklin, noir, blanc et rouge judiciaire. */
-:root { --papier:#fff; --papier-2:#f4f4f2; --encre:#111; --encre-2:#595959; --filet:#dededb; --filet-fort:#111; --rouge:#c8102e; --action:#c8102e; --action-survol:#a90e27; --sur-action:#fff; --pied:#111; --pied-texte:#f1f1ef; --pied-2:#b5b5b0; --pied-survol:#ff8a8a; --serif:'Newsreader Variable',Georgia,'Times New Roman',serif; --sans:'Libre Franklin Variable','Helvetica Neue',Arial,sans-serif; --mesure:42rem; --large:82rem; color-scheme:light; }
+:root { --papier:#faf8f4; --papier-2:#eeebe5; --encre:#111; --encre-2:#595959; --filet:#dededb; --filet-fort:#111; --rouge:#bd1730; --action:#bd1730; --action-survol:#a90e27; --sur-action:#fff; --pied:#111; --pied-texte:#f1f1ef; --pied-2:#b5b5b0; --pied-survol:#ff8a8a; --serif:'Newsreader Variable',Georgia,'Times New Roman',serif; --sans:'Libre Franklin Variable','Helvetica Neue',Arial,sans-serif; --mesure:42rem; --large:82rem; color-scheme:light; }
 @media(prefers-color-scheme:dark) { :root:not([data-theme='light']) { --papier:#101010; --papier-2:#1a1a1a; --encre:#f1f1ef; --encre-2:#aaa; --filet:#373737; --filet-fort:#f1f1ef; --rouge:#ff8181; color-scheme:dark; } }
 *,*::before,*::after { box-sizing:border-box; }
 html { -webkit-text-size-adjust:100%; scroll-padding-top:1.5rem; }
@@ -83,3 +83,17 @@ button,input,select { font:inherit; }button { cursor:pointer; min-height:44px; b
 @media(max-width:47.99rem) { .barre { min-height:78px; gap:1rem; }.signature { display:none; }.recherche-lien { margin-left:auto; }.recherche-lien span { display:none; }.sigle { font-size:2.5rem; }.rubriques-nav ul { justify-content:flex-start; gap:1.5rem; }.rubriques-nav a { min-height:44px; }.titre-section { margin-top:3.5rem; }.recherche-form { grid-template-columns:1fr 1fr; }.recherche-form label:first-child { grid-column:1/-1; }.pied>.cadre { grid-template-columns:minmax(0,1fr); gap:2rem; }.pied ul { column-gap:1.5rem; }.pied-bas { grid-column:1; }.article { margin-top:2.5rem; } }
 @media(max-width:25rem) { .pied ul { columns:1; } }
 @media(prefers-reduced-motion:no-preference) { a { transition:color 180ms ease; } }
+
+/* Refonte éditoriale : une signature de presse et une lecture sur papier. */
+.entete{background:var(--papier);border-bottom:3px solid var(--encre)}
+.barre{min-height:130px;gap:1.5rem}
+.marque a{font-family:var(--serif);font-size:clamp(2.7rem,6.3vw,5.5rem);font-weight:700;letter-spacing:-.065em;line-height:.95;min-height:80px}
+.marque-point{color:var(--rouge);margin-inline:.01em .04em}
+.signature{font:400 .65rem/1.7 var(--sans);margin-left:auto;letter-spacing:.01em;max-width:17ch}
+.recherche-lien{border:1px solid var(--filet-fort);padding:.6rem .85rem;margin-left:.5rem;font-size:.65rem;min-height:42px;gap:1.5rem}
+.rubriques-nav{border-top:1px solid var(--filet-fort)}.rubriques-nav a{font-size:.66rem;font-weight:600;min-height:45px}.rubriques-nav a::after{content:'';position:absolute;left:0;right:0;bottom:8px;height:2px;background:var(--rouge);transform:scaleX(0);transform-origin:left;transition:transform .18s}.rubriques-nav a:hover::after{transform:scaleX(1)}
+.avec-fond .entete{color:var(--encre);background:var(--papier);border-color:var(--encre)}.avec-fond .signature{color:var(--encre-2)}.avec-fond .rubriques-nav{border-color:var(--filet-fort)}.avec-fond .entete a:hover{color:var(--rouge)}
+.titre-section{border-top:4px solid var(--encre);padding-top:1rem}.titre-section :is(h1,h2){font-weight:600;font-size:clamp(2rem,3.7vw,3rem);font-style:normal}.titre-section em,.pied em,.signature,.sigle,.titre-page .sous-titre{font-style:normal}
+.pied-nom{font-weight:600}.pied-nom span{color:var(--pied-survol)}
+@media(max-width:63.99rem){.barre{min-height:110px}.marque a{font-size:clamp(2.5rem,6.7vw,4.7rem)}.signature{display:none}}
+@media(max-width:47.99rem){.barre{min-height:88px;gap:.6rem}.marque a{font-size:clamp(1.75rem,7.5vw,3rem);min-height:64px;letter-spacing:-.06em}.recherche-lien{border:0;padding:.4rem;min-width:40px;margin-left:auto;justify-content:center}.recherche-lien svg{width:19px}.rubriques-nav ul{gap:1.4rem}.rubriques-nav a{font-size:.65rem}}
