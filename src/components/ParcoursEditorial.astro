@@ -1,0 +1,76 @@
+---
+const parcours = [
+  {
+    numero: '01',
+    titre: 'Raconter.',
+    accroche: 'Une audience ne tient pas dans un verdict.',
+    detail: 'Les paroles, les gestes, les silences. Restituer ce qui se passe à la barre, sans effacer les personnes derrière les faits.',
+    liens: [
+      { texte: 'Suivre les audiences', href: '/rubrique/cours-du-jour/' },
+      { texte: 'Lire les chroniques', href: '/rubrique/la-cour-se-leve/' }
+    ]
+  },
+  {
+    numero: '02',
+    titre: 'Expliquer.',
+    accroche: 'Comprendre comment la justice juge.',
+    detail: 'Le rôle des jurés, les droits des parties, la place du doute. Donner des clés sans réduire le procès à des formules.',
+    liens: [
+      { texte: 'Les règles du procès', href: '/rubrique/le-banc-des-jures/' },
+      { texte: 'Les décryptages', href: '/rubrique/l-expose/' }
+    ]
+  },
+  {
+    numero: '03',
+    titre: 'Transmettre.',
+    accroche: 'La justice a une mémoire.',
+    detail: 'Relire les affaires, les réflexions et les œuvres qui interrogent notre manière de juger. Garder le passé accessible, avec ses dates et son contexte.',
+    liens: [
+      { texte: 'Réflexions et opinions', href: '/rubrique/delibere/' },
+      { texte: 'Explorer les archives', href: '/archives/' }
+    ]
+  }
+];
+---
+<section class="parcours-editoriaux" aria-labelledby="parcours-editoriaux-titre">
+  <header class="parcours-editoriaux-intro">
+    <div>
+      <p class="sur-titre">NOTRE RAISON D’ÊTRE</p>
+      <h2 id="parcours-editoriaux-titre">Raconter. Expliquer.<br /><em>Transmettre.</em></h2>
+    </div>
+    <p>Plus qu’un fil de procès, un regard sur la justice. Trois chemins dans le journal, au-delà de l’actualité immédiate.</p>
+  </header>
+  <div class="parcours-editoriaux-grille">
+    {parcours.map((p) => <article class="parcours-editorial">
+      <span class="numero">{p.numero}</span>
+      <h3>{p.titre}</h3>
+      <p class="accroche">{p.accroche}</p>
+      <p class="detail">{p.detail}</p>
+      <nav aria-label={`Explorer : ${p.titre}`}>
+        {p.liens.map((l) => <a href={l.href}>{l.texte}<span aria-hidden="true">↗</span></a>)}
+      </nav>
+    </article>)}
+  </div>
+  <p class="note">Nos textes et nos archives sont distincts de la revue de presse : les titres de médias tiers restent attribués à leurs sources.</p>
+</section>
+<style>
+  .parcours-editoriaux{margin-top:4.5rem;border-top:5px solid var(--encre);padding-top:1.5rem}
+  .parcours-editoriaux-intro{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,0.8fr);align-items:end;gap:1.5rem;margin-bottom:2.2rem}
+  .sur-titre{font:700 .62rem/1.5 var(--sans);letter-spacing:.1em;color:var(--rouge);margin:0 0 1rem}
+  .parcours-editoriaux h2{font-size:clamp(2.25rem,4.2vw,4rem);font-weight:600;line-height:1.04;letter-spacing:-.025em;margin:0}
+  .parcours-editoriaux h2 em{font-style:normal;color:var(--rouge)}
+  .parcours-editoriaux-intro>p{font:400 1.15rem/1.55 var(--serif);max-width:37ch;margin:0 0 .15rem;color:var(--encre-2)}
+  .parcours-editoriaux-grille{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--filet-fort);border:1px solid var(--filet-fort)}
+  .parcours-editorial{min-width:0;background:var(--papier);padding:1.55rem 1.6rem 1.3rem;display:flex;flex-direction:column}
+  .numero{font:700 .65rem/1.6 var(--sans);color:var(--rouge);letter-spacing:.1em}
+  .parcours-editorial h3{font-size:clamp(1.8rem,2.45vw,2.8rem);font-weight:600;line-height:1.04;margin:1rem 0 1.15rem}
+  .accroche{font:600 1.1rem/1.3 var(--serif);margin:0 0 .7rem}
+  .detail{font:400 .88rem/1.6 var(--sans);color:var(--encre-2);margin:0 0 1.7rem}
+  .parcours-editorial nav{margin-top:auto;border-top:1px solid var(--filet)}
+  .parcours-editorial nav a{display:flex;justify-content:space-between;gap:.7rem;align-items:center;min-height:45px;padding:.5rem 0;border-bottom:1px solid var(--filet);font:600 .72rem/1.4 var(--sans)}
+  .parcours-editorial nav a:hover{text-decoration:underline;text-decoration-color:var(--rouge);text-underline-offset:.2em}
+  .parcours-editorial nav a span{color:var(--rouge);font-size:1.05rem}
+  .note{font:400 .68rem/1.6 var(--sans);color:var(--encre-2);margin:.9rem 0 0}
+  @media(max-width:63.99rem){.parcours-editorial{padding:1.2rem}.parcours-editoriaux-intro>p{font-size:1rem}}
+  @media(max-width:47.99rem){.parcours-editoriaux{margin-top:3rem}.parcours-editoriaux-intro{grid-template-columns:1fr;gap:.8rem;margin-bottom:1.5rem}.parcours-editoriaux h2{font-size:2.45rem}.parcours-editoriaux-grille{grid-template-columns:1fr}.parcours-editorial h3{font-size:2.15rem;margin:.6rem 0 .75rem}.detail{margin-bottom:1rem}.parcours-editorial nav a{min-height:48px}}
+</style>
