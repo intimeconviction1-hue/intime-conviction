@@ -58,6 +58,7 @@ jobs:
         env:
           IC_ARTICLES: articles-prives/articles
           IC_VEILLE: articles-prives/veille-alertes.json
+          IC_VEILLE_AJOUTS: articles-prives/veille-alertes-ajouts.json
 
       - uses: actions/upload-pages-artifact@v5
         with:
