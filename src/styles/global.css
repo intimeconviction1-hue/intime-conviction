@@ -122,3 +122,110 @@ button,input,select { font:inherit; }button { cursor:pointer; min-height:44px; b
 .pied-nom{font-size:clamp(3.5rem,7vw,7rem);letter-spacing:-.07em}
 @media(max-width:63.99rem){.barre{min-height:110px}.marque a{font-size:clamp(2.5rem,7vw,5rem)}}
 @media(max-width:47.99rem){.barre{min-height:90px}.marque a{font-size:clamp(1.9rem,7.8vw,3.4rem)}.recherche-lien{width:44px;height:44px;min-width:44px;min-height:44px}.rubriques-nav a{min-height:46px;font-size:.64rem}.article h1{font-size:clamp(2.7rem,10vw,4.3rem)}.corps{font-size:1.18rem;line-height:1.75}}
+
+
+/* 2026 / Nouvelle identite - contraste broadcast, sans fioritures.
+   Codes visuels : encre noire, jaune signal, blanc editorial, trames et aplats. */
+:root{
+  --papier:#f4f4f1;
+  --papier-2:#e5e5df;
+  --encre:#131516;
+  --encre-2:#4e5151;
+  --filet:#c7c9c4;
+  --filet-fort:#171819;
+  --rouge:#131516;
+  --action:#ffe100;
+  --action-survol:#f4c900;
+  --sur-action:#111214;
+  --pied:#111214;
+  --pied-texte:#f8f8f4;
+  --pied-2:#b4b7b5;
+  --pied-survol:#ffe100;
+  --serif:'Libre Franklin Variable','Arial Black',Arial,sans-serif;
+  --sans:'Libre Franklin Variable','Arial Black',Arial,sans-serif;
+  --mesure:47rem;
+  --large:94rem;
+  color-scheme:light;
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme='light']){
+    --papier:#f4f4f1;--papier-2:#e5e5df;--encre:#131516;
+    --encre-2:#4e5151;--filet:#c7c9c4;--filet-fort:#171819;
+    --rouge:#131516;--pied:#111214;--pied-texte:#f8f8f4;
+    --pied-2:#b4b7b5;--pied-survol:#ffe100;color-scheme:light;
+  }
+}
+/* Rien en italique, meme dans les anciens articles. */
+*,*::before,*::after{font-style:normal !important}
+body{background:var(--papier);color:var(--encre);font-family:var(--sans);font-size:1rem;line-height:1.65}
+h1,h2,h3,h4{font-family:var(--sans);font-weight:850;letter-spacing:-.055em;line-height:1.04}
+a:hover{color:#746100}
+:focus-visible{outline:3px solid #d7b500;outline-offset:4px}
+.etiquette{color:#151515;background:var(--action);display:inline-block;padding:.22rem .5rem;font-size:.69rem;font-weight:850;letter-spacing:.05em}
+.meta{font-family:var(--sans);font-weight:500}
+.entete,.avec-fond .entete{position:relative;z-index:10;background:#111214;color:#fff;border:0;border-bottom:4px solid var(--action)}
+.barre{min-height:112px;gap:1.6rem}
+.marque a{font-family:var(--sans);font-size:clamp(1.35rem,3.65vw,3.55rem);font-weight:900;letter-spacing:-.068em;min-height:72px;line-height:.96}
+.marque-mot{display:inline-flex;align-items:center;gap:.11em;white-space:nowrap}
+.marque-intime{color:#fff}
+.marque-conviction{display:inline-block;padding:.12em .14em .17em;background:var(--action);color:#111214}
+.marque-point{color:#111214;margin:0}
+.signature,.avec-fond .signature{font-family:var(--sans);font-size:.61rem;font-weight:800;letter-spacing:.1em;line-height:1.8;color:#ccc;max-width:20ch}
+.recherche-lien{width:48px;height:48px;min-width:48px;min-height:48px;margin-left:1rem;padding:0;border:2px solid var(--action);color:var(--action);border-radius:0;justify-content:center}
+.recherche-lien:hover{color:#111214!important;background:var(--action)}
+.recherche-lien span{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.rubriques-nav,.avec-fond .rubriques-nav{background:#202224;border-top:1px solid #494a47;border-bottom:0}
+.rubriques-nav ul{justify-content:flex-start;gap:clamp(1rem,2.4vw,2.9rem)}
+.rubriques-nav a{color:#f8f8f4;font-size:.67rem;font-weight:850;letter-spacing:.07em;text-transform:uppercase;min-height:54px}
+.rubriques-nav a:hover,.avec-fond .entete a:hover{color:var(--action)}
+.rubriques-nav a[aria-current='page']{background:var(--action);color:#111214;padding-inline:.6rem;box-shadow:none}
+.rubriques-nav a::after{background:var(--action)!important;bottom:0}
+.avec-fond .rubriques-nav a{color:#f8f8f4}
+.avec-fond .rubriques-nav a:hover{color:var(--action)}
+.avec-fond .rubriques-nav a[aria-current='page']{color:#111214}
+.titre-section{border-top:7px solid var(--filet-fort);padding-top:.85rem;margin-top:4.5rem}
+.titre-section :is(h1,h2){font-family:var(--sans);font-size:clamp(2.1rem,4.4vw,4rem);font-weight:900;letter-spacing:-.065em;text-transform:uppercase}
+.titre-section>a{font-family:var(--sans);font-weight:800;font-size:.68rem;text-transform:uppercase}
+.titre-page{border-bottom:6px solid var(--filet-fort)}
+.titre-page h1,.article h1{font-size:clamp(2.6rem,6.4vw,5.6rem);font-weight:900;text-transform:uppercase;letter-spacing:-.07em;line-height:1.01}
+.titre-page .sous-titre{font:600 1.12rem/1.45 var(--sans)}
+.role>li{border-bottom:1px solid var(--filet)}
+.role :is(h2,h3){font-weight:850;letter-spacing:-.04em;line-height:1.12}
+.role .extrait{font:400 1rem/1.65 var(--sans)}
+.article{max-width:var(--mesure)}
+.article>.meta{border-top:4px solid var(--filet-fort);font-size:.7rem;font-weight:700}
+.corps{font-family:var(--sans);font-size:1.12rem;line-height:1.85;hyphens:auto}
+.corps :is(h2,h3,h4){font-family:var(--sans);font-weight:900;text-transform:uppercase;letter-spacing:-.045em;line-height:1.13}
+.corps blockquote{font-size:1.15rem;font-weight:750;line-height:1.55;border-left:7px solid var(--action);border-block:0;padding:.6rem 1.4rem;background:#e8e8e1}
+.corps>p:first-of-type::first-letter{float:none;font:inherit;line-height:inherit;margin:0;color:inherit}
+.corps a{text-decoration-color:#c7aa00;text-decoration-thickness:2px}
+button{font-family:var(--sans);font-weight:800;text-transform:uppercase;background:#151515;color:#fff;letter-spacing:.03em;border-color:#151515}
+button:hover{background:#dfc500;color:#131516}
+.recherche-form :is(input,select){background:#fff;border:2px solid #686a66;font-family:var(--sans)}
+.recherche-form :is(input,select):focus{outline:3px solid #dfc500;outline-offset:1px}
+.pied{background:#111214;color:#fafafa;padding-top:4rem;border-top:10px solid var(--action)}
+.pied>.cadre{grid-template-columns:1.3fr 1fr}
+.pied-nom{font-family:var(--sans);font-weight:900;letter-spacing:-.09em;font-size:clamp(3rem,7vw,7rem);line-height:.9}
+.pied-nom span{color:var(--action)}
+.pied-intro p{font:500 .82rem/1.65 var(--sans);max-width:42ch}
+.pied a:hover{color:var(--action)}
+.pied li a{font-weight:750;font-size:.73rem;text-transform:uppercase}
+.pied-bas{font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+@media(max-width:63.99rem){
+  .barre{min-height:95px}.marque a{font-size:clamp(1.35rem,3.8vw,2.5rem)}
+  .signature{display:none}.recherche-lien{margin-left:auto}
+}
+@media(max-width:47.99rem){
+  .barre{min-height:79px;gap:.4rem}
+  .marque a{font-size:clamp(1.08rem,4.15vw,1.75rem);min-height:53px}
+  .marque-mot{gap:.08em}
+  .recherche-lien{width:42px;height:42px;min-width:42px;min-height:42px;border-width:1px}
+  .rubriques-nav ul{gap:1.25rem;padding-inline:1.25rem}
+  .rubriques-nav a{min-height:48px;font-size:.65rem}
+  .titre-section{margin-top:3.1rem}
+  .titre-section :is(h1,h2){font-size:clamp(2rem,8vw,3.3rem)}
+  .article h1{font-size:clamp(2.55rem,9vw,4.4rem)}
+  .corps{font-size:1.03rem;line-height:1.79}
+  .pied>.cadre{grid-template-columns:minmax(0,1fr)}
+  .pied-nom{font-size:clamp(3rem,13vw,6rem)}
+}
