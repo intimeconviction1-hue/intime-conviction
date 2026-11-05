@@ -32,6 +32,7 @@ const dateEdition=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',ye
   <section class="ouverture" aria-labelledby="titre-journal">
     <div class="cadre ouverture-interieur">
       <div class="edition"><p><span class="point-rouge" aria-hidden="true"></span> LE JOURNAL DES COURS D’ASSISES</p><p>Édition du {dateEdition}</p></div>
+      <div class="manifeste-accueil"><div><span class="manifeste-index">IC. / 01</span><p>LE SITE DES COURS D’ASSISES</p></div><h2>Au cœur des procès.<br /><em>À hauteur humaine.</em></h2><a href="/ligne-editoriale/">Notre regard sur les assises <span aria-hidden="true">↗</span></a></div>
       <div class="une-grille">
         <article class="grand-angle">
           <Image src={fronton} alt="Fronton sculpté d’une cour d’assises, photographie du journal" width={500} loading="eager" fetchpriority="high" />
@@ -71,6 +72,8 @@ const dateEdition=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',ye
         <ul class="selection-suite">{derniers.map(({data})=><li><p class="meta"><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time></p><h3><a href={data.chemin}>{data.titre}</a></h3></li>)}</ul>
       </div>
     </section>
+
+    <section class="bandeau-archives" aria-label="Explorer les archives"><div><span class="bandeau-kicker">LA MÉMOIRE DES ASSISES</span><strong>{total}</strong><p>récits, audiences et archives pour comprendre les procès criminels.</p></div><a href="/archives/">Entrer dans les archives <span aria-hidden="true">↗</span></a></section>
 
     <ParcoursEditorial />
 
