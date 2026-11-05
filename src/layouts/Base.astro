@@ -4,18 +4,22 @@
 import '@fontsource-variable/newsreader/wght.css';
 import '@fontsource-variable/libre-franklin/wght.css';
 import '../styles/global.css';
+import frontonAssises from '../assets/fronton-cour-dassises.jpg';
 // Les deux fichiers du premier écran, préchargés : sans ça, les titres
 // s'affichent d'abord dans la police de secours puis « sautent ».
 import policeTexte from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
 import policeSans from '@fontsource-variable/libre-franklin/files/libre-franklin-latin-wght-normal.woff2?url';
 import { RUBRIQUES } from '../lib/rubriques.mjs';
 
-const { titre, description = "Intime Conviction, le média des cours d'assises : suivre les audiences, comprendre le procès et regarder la justice à hauteur humaine.", rubriqueActive, accueil = false } = Astro.props;
+const { titre, description = "Intime Conviction, le site des cours d'assises : suivre les audiences, comprendre les procès criminels, retrouver les verdicts et les récits d'assises.", rubriqueActive, accueil = false, image, imageAlt = "Image d'Intime Conviction" } = Astro.props;
 // Le nom du journal est le titre principal (h1) de la seule page d'accueil ;
 // ailleurs c'est un paragraphe, le h1 revenant au titre de la page.
 const Marque = 'p';
-const titreComplet = titre ? `${titre} · Intime Conviction` : "Intime Conviction · Le média des cours d'assises";
+const titreComplet = titre ? `${titre} · Intime Conviction` : "Intime Conviction | Le site des cours d'assises";
 const canonique = new URL(Astro.url.pathname, Astro.site);
+// À l'accueil, une image éditoriale propre au journal ; chaque article pourra
+// fournir sa propre photographie sans illustration trompeuse.
+const imagePartage = image ? new URL(image, Astro.site).href : (accueil ? new URL(frontonAssises.src, Astro.site).href : null);
 const annee = new Date().getFullYear();
 ---
 <!doctype html>
@@ -25,11 +29,21 @@ const annee = new Date().getFullYear();
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{titreComplet}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content="max-image-preview:large" />
     <link rel="canonical" href={canonique} />
     <meta property="og:title" content={titreComplet} />
+    <meta property="og:site_name" content="Intime Conviction" />
+    <meta property="og:type" content="website" />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonique} />
     <meta property="og:locale" content="fr_FR" />
+    {imagePartage && <meta property="og:image" content={imagePartage} />}
+    {imagePartage && <meta property="og:image:alt" content={image ? imageAlt : "Fronton d'une cour d'assises"} />}
+    <meta name="twitter:card" content={imagePartage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={titreComplet} />
+    <meta name="twitter:description" content={description} />
+    {imagePartage && <meta name="twitter:image" content={imagePartage} />}
+    {accueil && <script type="application/ld+json" set:html={JSON.stringify({ '@context':'https://schema.org', '@type':'WebSite', name:'Intime Conviction', alternateName:'Le site des cours d’assises', url:'https://www.intimeconviction.fr/', description, inLanguage:'fr-FR' })} />}
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#101010" media="(prefers-color-scheme: dark)" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
