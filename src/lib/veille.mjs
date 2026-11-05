@@ -23,7 +23,23 @@ let cache;
 export async function lireVeille() {
   cache ??= (async()=>{
     const fichier=process.env.IC_VEILLE ?? resolve('../intime-conviction-articles/veille-alertes.json');
-    try { const d=JSON.parse(await readFile(fichier,'utf8'));return {...d,articles:normaliserVeille(d.articles)}; }
+    try {
+      const d=JSON.parse(await readFile(fichier,'utf8'));
+      const supplement=process.env.IC_VEILLE_AJOUTS;
+      let ajouts=[];
+      let importeLe=d.importeLe;
+      if (supplement) {
+        try {
+          const extra=JSON.parse(await readFile(supplement,'utf8'));
+          if (!Array.isArray(extra.articles)) throw new Error('Veille : articles complémentaires invalides.');
+          ajouts=extra.articles;
+          if (extra.importeLe && (!importeLe || extra.importeLe>importeLe)) importeLe=extra.importeLe;
+        } catch(e) {
+          if (e.code!=='ENOENT') throw e;
+        }
+      }
+      return {...d, importeLe, articles:normaliserVeille([...d.articles,...ajouts])};
+    }
     catch(e){if(e.code==='ENOENT'&&!process.env.IC_VEILLE)return {articles:[]};throw e;}
   })();
   return cache;
