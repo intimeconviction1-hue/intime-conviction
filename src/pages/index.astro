@@ -32,7 +32,11 @@ const dateEdition=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',ye
   <section class="ouverture" aria-labelledby="titre-journal">
     <div class="cadre ouverture-interieur">
       <div class="edition"><p><span class="point-rouge" aria-hidden="true"></span> LE JOURNAL DES COURS D’ASSISES</p><p>Édition du {dateEdition}</p></div>
-      <div class="manifeste-accueil"><div><span class="manifeste-index">IC. / 01</span><p>LE SITE DES COURS D’ASSISES</p></div><h2>Au cœur des procès.<br /><em>À hauteur humaine.</em></h2><a href="/ligne-editoriale/">Notre regard sur les assises <span aria-hidden="true">↗</span></a></div>
+      <div class="manifeste-accueil">
+        <div class="manifeste-enquete"><span class="manifeste-index">IC / 001</span><p>UN JOURNAL. UNE COUR. DES VERSIONS.</p><span class="manifeste-balise" aria-hidden="true"></span></div>
+        <h2>LES ASSISES.<br /><span>SANS RACCOURCI.</span></h2>
+        <a href="/ligne-editoriale/">LE JOURNAL <span aria-hidden="true">↗</span></a>
+      </div>
       <div class="une-grille">
         <article class="grand-angle">
           <Image src={fronton} alt="Fronton sculpté d’une cour d’assises, photographie du journal" width={500} loading="eager" fetchpriority="high" />
@@ -49,7 +53,7 @@ const dateEdition=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',ye
           <div class="fil-entete"><h2 id="titre-fil-ouverture">À la barre<span>.</span></h2><span class="fil-label">LES AUDIENCES</span></div>
           {nouvellesOuverture.length>1 ? <ol>{nouvellesOuverture.slice(1).map((n,i)=><li><span class="fil-numero" aria-hidden="true">0{i+2}</span><div><p>{n.source}<time datetime={n.date}>{n.dateAlerte&&'Alerte du '}{datePresse.format(new Date(n.date))}</time></p><h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> (nouvel onglet)</span></a></h3></div></li>)}</ol>:<p>Retrouvez les récits d’audience dans <a href="/rubrique/cours-du-jour/">Cours du Jour</a>.</p>}
           <a class="tout-le-fil" href="#actualites">Tout le fil d’audience <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v16m-6-6 6 6 6-6" /></svg></a>
-          <div class="note-redaction"><span class="note-signe" aria-hidden="true">ic.</span><p>Les assises comme si vous y étiez.<br /><strong>La justice à hauteur humaine.</strong></p></div>
+          <div class="note-redaction"><span class="note-signe" aria-hidden="true">IC</span><p>LE PROCÈS. PAS LE SPECTACLE.<br /><strong>ACTUALITÉS SOURCÉES ET ARCHIVES DATÉES.</strong></p></div>
         </aside>
       </div>
       <div class="parcours"><span>COMPRENDRE AUSSI</span><a href="/rubrique/le-banc-des-jures/">Les règles du procès <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/rubrique/le-greffe/">La culture judiciaire <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/archives/">{total} articles d’archives <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a></div>
@@ -58,7 +62,10 @@ const dateEdition=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',ye
 
   <div class="surface-lecture"><div class="cadre journal-corps">
     <Actualites debut={nouvellesOuverture.length} limite={5} compacte />
-<section class="conviction-editoriale" aria-labelledby="titre-conviction"><h2 id="titre-conviction">Des vies se jouent.<br /><em>La justice se raconte.</em></h2><div><p>À la barre, des faits deviennent des récits, des certitudes se discutent et des destins se nouent. Intime Conviction s’intéresse à ce moment du procès où chacun peut être entendu.</p><p>Raconter l’audience, expliquer ses règles, restituer ses voix et ses silences : une justice à comprendre, ouverte à la curiosité de tous, avec attention pour les personnes et sans voyeurisme.</p><a class="lire-article" href="/ligne-editoriale/">Découvrir notre ligne éditoriale</a></div></section>
+<section class="conviction-editoriale" aria-labelledby="titre-conviction">
+      <h2 id="titre-conviction">UN PROCÈS<br /><span>N’EST PAS UN<br />FAIT DIVERS.</span></h2>
+      <div><p>Aux assises, chaque version est discutée publiquement. Les mots comptent. Les silences aussi.</p><p>Intime Conviction réunit des récits de procès, des analyses et des archives. La revue de presse est identifiée séparément et renvoie aux médias d’origine.</p><a class="lire-article" href="/ligne-editoriale/">LIRE NOTRE LIGNE ÉDITORIALE <span aria-hidden="true">↗</span></a></div>
+    </section>
 
     <section class="selection" aria-labelledby="titre-selection">
       <div class="titre-section"><h2 id="titre-selection">À relire.</h2><a href="/archives/">Le fonds d’Intime Conviction <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></div>
@@ -73,14 +80,14 @@ const dateEdition=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',ye
       </div>
     </section>
 
-    <section class="bandeau-archives" aria-label="Explorer les archives"><div><span class="bandeau-kicker">LA MÉMOIRE DES ASSISES</span><strong>{total}</strong><p>récits, audiences et archives pour comprendre les procès criminels.</p></div><a href="/archives/">Entrer dans les archives <span aria-hidden="true">↗</span></a></section>
+    <section class="bandeau-archives" aria-label="Explorer les archives"><div><span class="bandeau-kicker">LES ARCHIVES / LE FONDS INTIME CONVICTION</span><strong>{total}</strong><p>récits, audiences et archives pour comprendre les procès criminels.</p></div><a href="/archives/">Entrer dans les archives <span aria-hidden="true">↗</span></a></section>
 
     <ParcoursEditorial />
 
     <Culture />
 
     <section class="univers" aria-labelledby="titre-rubriques">
-      <div class="titre-section"><h2 id="titre-rubriques">Six regards <em>sur la justice.</em></h2></div>
+      <div class="titre-section"><h2 id="titre-rubriques">SIX RUBRIQUES. <span>LES ASSISES EN FACE.</span></h2></div>
       <ul class="rubriques">{rubriques.map(r=><li>
         <div class="rubrique-entete"><h3><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></h3><a class="ouvrir-rubrique" href={`/rubrique/${r.slug}/`} aria-label={`Ouvrir ${r.nom}`}><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div>
         <p class="sous-titre">{r.sousTitre}</p>
@@ -151,5 +158,143 @@ const dateEdition=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',ye
 .bandeau-archives>a span{font-size:1.4rem}
 @media(max-width:63.99rem){.manifeste-accueil{grid-template-columns:1fr 2.4fr}.manifeste-accueil>a{grid-column:2}.grand-angle{min-height:570px}.grand-angle-texte{padding:2rem 2rem 3rem}.rubriques>li{min-height:250px}}
 @media(max-width:47.99rem){.manifeste-accueil{grid-template-columns:1fr;gap:1.1rem;padding:1.7rem 0}.manifeste-accueil>div{display:flex;align-items:center;gap:1rem}.manifeste-index{margin:0}.manifeste-accueil h2{font-size:clamp(3.2rem,11vw,5.5rem)}.manifeste-accueil>a{grid-column:1}.une-grille{grid-template-columns:1fr}.grand-angle{min-height:510px}.grand-angle-texte{padding:1.5rem 1.3rem 3rem}.grand-angle h1{font-size:clamp(2.2rem,8.5vw,3.6rem)}.grand-angle h1.titre-long{font-size:clamp(1.9rem,7.3vw,3rem)}.ouverture-fil{padding:1.2rem}.conviction-editoriale{gap:1.5rem}.rubriques{grid-template-columns:1fr}.rubriques>li{min-height:0;padding:1.5rem}.bandeau-archives{flex-direction:column;align-items:stretch}.bandeau-archives strong{font-size:clamp(5rem,22vw,8rem)}.bandeau-archives>a{min-width:0}}
+
+
+/* Identite 2026 : vrai contraste noir / jaune, langage de bande-annonce, sans effets decoratifs gratuits. */
+.fond-page{background:#111314}
+.fond-page img{filter:grayscale(1) contrast(1.5);opacity:.2}
+.ouverture{background:#111314;color:#fff}
+.ouverture-interieur{padding-top:0}
+.edition{border-bottom:1px solid #525454;color:#fff;padding:1.3rem 0;font-size:.68rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.edition p+p{color:#cbcdca;font-weight:700}
+.point-rouge{width:12px;height:12px;background:#ffe100;border-radius:0}
+.manifeste-accueil{display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,3fr);align-items:end;gap:2rem;margin:0 0 2.1rem;padding:clamp(2.4rem,5vw,5.3rem) 0 clamp(2rem,4vw,3.4rem);border-bottom:2px solid #747674}
+.manifeste-enquete{align-self:start;display:flex;flex-direction:column;align-items:start;gap:.6rem}
+.manifeste-index{display:inline-block;background:#ffe100;color:#111314;font:900 .72rem/1.2 var(--sans);padding:.55rem .7rem;margin:0}
+.manifeste-accueil p{color:#dadcda;font:800 .69rem/1.7 var(--sans);letter-spacing:.11em;max-width:15ch;text-transform:uppercase;margin:.7rem 0 0}
+.manifeste-balise{display:block;width:70px;height:11px;margin-top:1.6rem;background:repeating-linear-gradient(105deg,#ffe100 0,#ffe100 7px,transparent 7px,transparent 12px)}
+.manifeste-accueil h2{grid-column:2;grid-row:1;margin:0;color:#fff;font-family:var(--sans);font-weight:900;font-size:clamp(3.4rem,7.7vw,8.5rem);letter-spacing:-.084em;line-height:.94;text-transform:uppercase;max-width:none}
+.manifeste-accueil h2 span{display:inline-block;background:#ffe100;color:#111314;padding:.03em .11em .09em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.manifeste-accueil>a{grid-column:2;grid-row:2;justify-self:end;display:inline-flex;align-items:center;gap:2rem;color:#fff;border:1px solid #b4b6b3;padding:1rem 1.3rem;font:850 .7rem/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;max-width:none}
+.manifeste-accueil>a:hover{background:#ffe100;border-color:#ffe100;color:#111314}
+.manifeste-accueil>a span{font-size:1.2rem}
+.une-grille{grid-template-columns:minmax(0,1.8fr) minmax(0,.9fr);gap:0;border:1px solid #525453}
+.grand-angle{background:#101214;min-height:clamp(31rem,49vw,44rem);border-right:1px solid #525453}
+.grand-angle>img{filter:grayscale(1) brightness(.77) contrast(1.34);object-position:center 35%}
+.grand-angle-voile{background:linear-gradient(180deg,#0c0d0d18 0%,#0c0d0d77 31%,#0c0d0df5 100%)}
+.grand-angle-texte{padding:clamp(1.7rem,3.3vw,4.2rem);padding-bottom:4.2rem}
+.cartouche{background:#ffe100;color:#111314;font:900 .68rem/1.3 var(--sans);letter-spacing:.1em;padding:.55rem .75rem;margin-bottom:1.8rem}
+.une-source{font:850 .71rem/1.55 var(--sans);text-transform:uppercase;letter-spacing:.05em}
+.une-source span{color:#d6d8d5;font-weight:600}
+.grand-angle h1{font-family:var(--sans);font-size:clamp(2.55rem,4.6vw,5.6rem);font-weight:900;letter-spacing:-.07em;text-transform:uppercase;line-height:.99;max-width:19ch}
+.grand-angle h1.titre-long{font-size:clamp(2rem,3.3vw,3.5rem)}
+.grand-angle h1 a:hover{color:#ffe100}
+.une-lire{border-bottom:4px solid #ffe100;font:850 .74rem/1.4 var(--sans);letter-spacing:.05em;text-transform:uppercase;padding-bottom:.55rem}
+.une-lire:hover{color:#ffe100}
+.credit-photo{background:#0c0d0dc9;padding:.45rem 1rem;font-size:.53rem;text-transform:uppercase}
+.ouverture-fil{background:#212324;color:#f9f9f7;border-top:0;border-left:6px solid #ffe100;padding:clamp(1.2rem,2.2vw,2.2rem)}
+.fil-entete{display:block;border-bottom:1px solid #555856;padding-bottom:1rem;margin-bottom:.25rem}
+.fil-entete h2{font-family:var(--sans);font-size:clamp(2.1rem,3.15vw,3.6rem);font-weight:900;letter-spacing:-.065em;text-transform:uppercase}
+.fil-entete h2 span{color:#ffe100}
+.fil-label{font-size:.65rem;font-weight:900;color:#ffe100;letter-spacing:.13em}
+.ouverture-fil li{grid-template-columns:2.5rem minmax(0,1fr);border-color:#505452;padding:1.35rem 0}
+.fil-numero{font-family:var(--sans);font-size:1.5rem;font-weight:900;color:#ffe100}
+.ouverture-fil li p{font-size:.62rem;font-weight:850;color:#ffe100;text-transform:uppercase}
+.ouverture-fil time{color:#c6c7c4}
+.ouverture-fil h3{font:800 clamp(1.05rem,1.5vw,1.5rem)/1.2 var(--sans);letter-spacing:-.035em}
+.ouverture-fil a:hover{color:#ffe100}
+.tout-le-fil{border-top:2px solid #ffe100;margin-top:1rem;color:#fff;font-size:.7rem;font-weight:850;text-transform:uppercase}
+.note-redaction{margin-top:auto;background:#ffe100;color:#111314;padding:1rem;gap:.9rem}
+.note-signe{color:#111314;font:900 2.2rem/1 var(--sans);letter-spacing:-.1em}
+.note-redaction p{font:850 .62rem/1.6 var(--sans);text-transform:uppercase}
+.parcours{border-top:1px solid #666;border-bottom:0;color:#fff;padding:1.25rem 0;margin-top:1.6rem}
+.parcours>span{color:#ffe100;font-size:.65rem;font-weight:900}
+.parcours a{font-size:.7rem;font-weight:850;text-transform:uppercase}
+.parcours a:hover{color:#ffe100}
+.surface-lecture{background:#f4f4f1}
+.journal-corps{padding-top:2rem}
+.journal-corps :global(.titre-section){border-top:7px solid #111314;margin-top:4.5rem}
+.conviction-editoriale{background:#17191a;color:#fff;grid-template-columns:minmax(0,1.4fr) minmax(0,.8fr);gap:clamp(2rem,5vw,6rem);padding:clamp(3.2rem,6vw,6rem);border-left:13px solid #ffe100;margin-top:4rem}
+.conviction-editoriale::before{content:"NOTRE POSITION / 001";left:clamp(3.2rem,6vw,6rem);top:1.3rem;color:#ffe100;font-size:.67rem}
+.conviction-editoriale h2{font:900 clamp(2.4rem,4.6vw,5.2rem)/1.01 var(--sans);letter-spacing:-.065em;text-transform:uppercase}
+.conviction-editoriale h2 span{color:#ffe100}
+.conviction-editoriale p{font:500 1rem/1.7 var(--sans);color:#dadbd7}
+.conviction-editoriale .lire-article{font-weight:900;letter-spacing:.07em;text-decoration:none;border-bottom:4px solid #ffe100;padding-bottom:.6rem;color:#fff}
+.conviction-editoriale .lire-article:hover{color:#ffe100}
+.selection-grille{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:3rem}
+.article-principal{padding-right:3rem;border-right:2px solid #b9bcb6}
+.article-principal h3{font:900 clamp(2.3rem,4vw,4.6rem)/1.04 var(--sans);letter-spacing:-.065em;text-transform:uppercase}
+.article-principal h3 a:hover,.selection-suite h3 a:hover{background:#ffe100;color:#111314}
+.chapeau{font:500 1.08rem/1.6 var(--sans)}
+.lire-article{font-size:.7rem;font-weight:850;text-transform:uppercase;letter-spacing:.03em}
+.selection-suite li{padding-left:3.5rem;border-bottom:2px solid #d4d5d1}
+.selection-suite li::before{font:900 1.5rem var(--sans);color:#131516}
+.selection-suite h3{font:800 1.32rem/1.2 var(--sans);letter-spacing:-.035em}
+.rubriques{gap:0;border-left:2px solid #111314;border-top:2px solid #111314}
+.rubriques>li{border:0;border-right:2px solid #111314;border-bottom:2px solid #111314;background:#f4f4f1;min-height:300px;padding:2rem}
+.rubriques>li:hover{background:#ffe100}
+.rubriques>li::before{font:900 .72rem var(--sans);color:#111314;margin-bottom:3rem}
+.rubrique-entete h3{font:900 clamp(1.8rem,2.2vw,2.6rem)/1.04 var(--sans);letter-spacing:-.05em;text-transform:uppercase}
+.sous-titre{font:700 .76rem/1.5 var(--sans);text-transform:uppercase;color:#555}
+.rubriques .titres li{font:650 .9rem/1.45 var(--sans)}
+.rubrique-volume{font-size:.7rem;font-weight:850;text-transform:uppercase;margin-top:1rem}
+.bandeau-archives{background:#ffe100;color:#111314;border:0;margin-top:4.5rem;position:relative;overflow:hidden}
+.bandeau-archives::after{content:"";position:absolute;width:19rem;height:30rem;right:22%;top:-3rem;transform:rotate(22deg);opacity:.16;background:repeating-linear-gradient(90deg,#111 0,#111 12px,transparent 12px,transparent 24px);pointer-events:none}
+.bandeau-kicker{font:900 .72rem/1.5 var(--sans);letter-spacing:.12em}
+.bandeau-archives strong{font:900 clamp(5rem,11vw,11rem)/.9 var(--sans);letter-spacing:-.1em;position:relative;z-index:1}
+.bandeau-archives p{font:750 clamp(1.1rem,1.8vw,1.6rem)/1.35 var(--sans);text-transform:uppercase;max-width:29ch;position:relative;z-index:1}
+.bandeau-archives>a{border-color:#222;color:#111314;position:relative;z-index:1;font-size:.72rem;font-weight:900;text-transform:uppercase}
+.bandeau-archives>a:hover{color:#333}
+.fonds{border-top:7px solid #111314}
+.fonds h2{font:900 clamp(2.8rem,5vw,5rem)/1 var(--sans);text-transform:uppercase;letter-spacing:-.07em}
+.fonds h2 span{color:#111314}
+.fonds-intro p{font:700 1rem/1.45 var(--sans);text-transform:uppercase}
+.an{font:900 clamp(1.5rem,2vw,2.4rem)/1.2 var(--sans);letter-spacing:-.05em}
+.annees a:hover{background:#ffe100;color:#111314}
+@media(max-width:63.99rem){
+.manifeste-accueil{grid-template-columns:1fr 3fr;gap:1.2rem}
+.manifeste-accueil h2{font-size:clamp(3rem,7.5vw,6.3rem)}
+.une-grille{grid-template-columns:1.4fr 1fr}
+.grand-angle{min-height:560px}
+.grand-angle-texte{padding:2rem 1.7rem 3.5rem}
+.grand-angle h1{font-size:clamp(2.1rem,4.1vw,3.4rem)}
+.ouverture-fil{padding:1.2rem}
+.ouverture-fil h3{font-size:1.1rem}
+.conviction-editoriale{gap:2rem}
+}
+@media(max-width:47.99rem){
+.edition{padding:.9rem 0;font-size:.58rem;gap:.6rem}
+.manifeste-accueil{grid-template-columns:1fr;gap:1.2rem;padding:2.2rem 0 1.5rem}
+.manifeste-enquete{display:flex;flex-direction:row;align-items:center;gap:1rem}
+.manifeste-accueil p{margin:0;max-width:24ch;font-size:.59rem}
+.manifeste-balise{display:none}
+.manifeste-accueil h2{grid-column:1;grid-row:auto;font-size:clamp(2.75rem,10.5vw,5.1rem);letter-spacing:-.075em;line-height:1}
+.manifeste-accueil>a{grid-column:1;grid-row:auto;justify-self:stretch;justify-content:space-between;min-height:48px;margin-top:.3rem}
+.une-grille{grid-template-columns:1fr;border:0}
+.grand-angle{min-height:500px;border:1px solid #555}
+.grand-angle-texte{padding:1.3rem 1.3rem 3rem}
+.grand-angle h1{font-size:clamp(2rem,7.6vw,3.5rem)}
+.grand-angle h1.titre-long{font-size:clamp(1.65rem,6.7vw,2.7rem)}
+.ouverture-fil{margin-top:1rem;border-left:5px solid #ffe100;padding:1.35rem}
+.fil-entete{display:flex}
+.fil-entete h2{font-size:2.3rem}
+.ouverture-fil li{grid-template-columns:2.1rem minmax(0,1fr)}
+.ouverture-fil h3{font-size:1.12rem}
+.parcours{display:grid;grid-template-columns:1fr 1fr}
+.parcours>span{grid-column:1/-1}
+.parcours a:last-child{border-color:#555}
+.conviction-editoriale{grid-template-columns:1fr;border-left-width:8px;padding:3.2rem 1.4rem 1.7rem;gap:1rem}
+.conviction-editoriale::before{left:1.4rem;top:1rem}
+.conviction-editoriale h2{font-size:clamp(2.4rem,9vw,4.1rem)}
+.selection-grille{grid-template-columns:1fr;gap:1rem}
+.article-principal{padding:0 0 1.5rem;border:0;border-bottom:2px solid #ccc}
+.article-principal h3{font-size:clamp(2.2rem,8vw,3.5rem)}
+.rubriques{grid-template-columns:1fr}
+.rubriques>li{min-height:0;padding:1.5rem}
+.rubriques>li::before{margin-bottom:1.3rem}
+.bandeau-archives{flex-direction:column;align-items:stretch}
+.bandeau-archives strong{font-size:clamp(4.5rem,20vw,7rem)}
+.bandeau-archives>a{min-width:0}
+}
 
 </style>
