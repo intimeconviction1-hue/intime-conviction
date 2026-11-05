@@ -97,3 +97,28 @@ button,input,select { font:inherit; }button { cursor:pointer; min-height:44px; b
 .pied-nom{font-weight:600}.pied-nom span{color:var(--pied-survol)}
 @media(max-width:63.99rem){.barre{min-height:110px}.marque a{font-size:clamp(2.5rem,6.7vw,4.7rem)}.signature{display:none}}
 @media(max-width:47.99rem){.barre{min-height:88px;gap:.6rem}.marque a{font-size:clamp(1.75rem,7.5vw,3rem);min-height:64px;letter-spacing:-.06em}.recherche-lien{border:0;padding:.4rem;min-width:40px;margin-left:auto;justify-content:center}.recherche-lien svg{width:19px}.rubriques-nav ul{gap:1.4rem}.rubriques-nav a{font-size:.65rem}}
+
+
+/* Système visuel du journal : encre, ivoire et accent bordeaux */
+:root{--papier:#f8f5ef;--papier-2:#efe8dd;--encre:#191b1a;--encre-2:#615e59;--filet:#d3cbc0;--filet-fort:#272727;--rouge:#92253a;--action:#92253a;--action-survol:#762034;--pied:#202525;--pied-survol:#e9b9ac;--large:90rem}
+@media(prefers-color-scheme:dark){:root:not([data-theme='light']){--papier:#151717;--papier-2:#242726;--encre:#f5f0e7;--encre-2:#b9b3ab;--filet:#4b4c47;--filet-fort:#e7e0d7;--rouge:#e4a3a7}}
+.entete{border-bottom:1px solid var(--filet-fort)}
+.barre{min-height:150px}
+.marque a{font-size:clamp(3rem,6.5vw,6.4rem);letter-spacing:-.075em}
+.marque-point{color:#92253a}
+.signature{font-size:.7rem;line-height:1.65;text-transform:uppercase;letter-spacing:.09em;font-weight:600;max-width:20ch}
+.recherche-lien{border-radius:50%;width:48px;height:48px;min-width:48px;min-height:48px;justify-content:center;padding:0;border:1px solid var(--filet-fort)}
+.recherche-lien span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.rubriques-nav ul{gap:2rem}
+.rubriques-nav a{font-size:.68rem;letter-spacing:.055em;text-transform:uppercase;min-height:54px}
+.titre-section{border-top:2px solid var(--encre)}
+.titre-section :is(h1,h2){font-size:clamp(2.5rem,4.5vw,4.6rem);letter-spacing:-.05em}
+.titre-page h1{letter-spacing:-.055em}
+.article h1{font-size:clamp(3.2rem,6.2vw,5.8rem);letter-spacing:-.06em}
+.article{max-width:46rem}
+.corps{font-size:1.3rem;line-height:1.8}
+.corps>p:first-of-type::first-letter{font-size:2.4em;float:left;line-height:.8;margin:.11em .1em 0 0;font-weight:600;color:var(--rouge)}
+.pied{padding-top:5rem}
+.pied-nom{font-size:clamp(3.5rem,7vw,7rem);letter-spacing:-.07em}
+@media(max-width:63.99rem){.barre{min-height:110px}.marque a{font-size:clamp(2.5rem,7vw,5rem)}}
+@media(max-width:47.99rem){.barre{min-height:90px}.marque a{font-size:clamp(1.9rem,7.8vw,3.4rem)}.recherche-lien{width:44px;height:44px;min-width:44px;min-height:44px}.rubriques-nav a{min-height:46px;font-size:.64rem}.article h1{font-size:clamp(2.7rem,10vw,4.3rem)}.corps{font-size:1.18rem;line-height:1.75}}
