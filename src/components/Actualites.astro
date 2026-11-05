@@ -46,4 +46,23 @@ const ancien = fil && Date.now()-new Date(fil.releveLe).getTime() > 6*3_600_000;
   .compacte .nouvelles li:first-child { grid-row:auto; }
   @media(max-width:63.99rem) { .nouvelles { grid-template-columns:repeat(2,minmax(0,1fr)); }.nouvelles li:first-child { grid-column:span 1; }.nouvelles li:first-child h3 { font-size:2rem; } }
   @media(max-width:47.99rem) { .nouvelles { grid-template-columns:minmax(0,1fr); }.nouvelles li:first-child { grid-column:auto; grid-row:auto; padding-right:0; border-right:0; }.nouvelles li:first-child h3 { font-size:1.75rem; } }
+
+/* Flash d'actualite : composition de chaine documentaire, sans effets de presse ancienne. */
+.actualites{padding-bottom:1rem}
+.provenance{font:600 .87rem/1.55 var(--sans);max-width:85ch;color:#3d4242}
+.releve{font-size:.68rem;font-weight:750;text-transform:uppercase}
+.nouvelles{gap:0;grid-template-columns:repeat(3,minmax(0,1fr));border-left:2px solid #111314;border-top:2px solid #111314}
+.nouvelles li{border:0;border-right:2px solid #111314;border-bottom:2px solid #111314;min-height:205px;padding:1.5rem;position:relative;background:#fff}
+.nouvelles li:first-child{padding:2rem;border-right:2px solid #111314;background:#17191a;color:#fff}
+.nouvelles .meta{font-weight:800;font-size:.65rem;text-transform:uppercase;letter-spacing:.025em}
+.source{display:inline-block;background:#ffe100;color:#111314;font-weight:900;padding:.23rem .5rem}
+.nouvelles li:first-child .meta{color:#dededb}
+h3{font:850 clamp(1.1rem,1.7vw,1.5rem)/1.18 var(--sans);letter-spacing:-.04em;margin-top:1rem}
+.nouvelles li:first-child h3{font:900 clamp(1.9rem,3.3vw,3.4rem)/1.05 var(--sans);letter-spacing:-.07em;text-transform:uppercase;margin-top:1.5rem}
+.nouvelles li:first-child h3 a:hover{color:#ffe100}
+.nouvelles li:not(:first-child) h3 a:hover{background:#ffe100;color:#111314}
+.indisponible{font-weight:700;border-left:5px solid #ffe100;padding-left:1rem}
+@media(max-width:63.99rem){.nouvelles{grid-template-columns:repeat(2,minmax(0,1fr))}.nouvelles li:first-child{grid-column:span 1}.nouvelles li:first-child h3{font-size:clamp(1.8rem,3.2vw,2.6rem)}}
+@media(max-width:47.99rem){.nouvelles{grid-template-columns:1fr}.nouvelles li{min-height:0;padding:1.3rem}.nouvelles li:first-child{grid-column:auto;grid-row:auto;padding:1.5rem}.nouvelles li:first-child h3{font-size:clamp(1.8rem,7vw,2.9rem)}}
+
 </style>
