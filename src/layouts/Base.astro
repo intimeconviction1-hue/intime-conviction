@@ -54,9 +54,14 @@ const annee = new Date().getFullYear();
     <slot name="fond" />
     <a class="evitement" href="#contenu">Aller au contenu</a>
     <header class="entete">
+      <div class="surbarre cadre" aria-label="Informations du journal">
+        <span>LE JOURNAL DES COURS D’ASSISES</span>
+        <span>RÉCITS D’AUDIENCE <span aria-hidden="true">·</span> DÉCRYPTAGES <span aria-hidden="true">·</span> MÉMOIRE</span>
+        <a href="/archives/">Explorer les archives <span aria-hidden="true">↗</span></a>
+      </div>
       <div class="barre cadre">
         <Marque class="marque"><a href="/" aria-label="Intime Conviction, accueil"><span class="marque-mot">Intime<span class="marque-point">.</span>Conviction</span></a></Marque>
-        <p class="signature">Suivre les audiences.<br />Comprendre le procès.</p>
+        <p class="signature">Des vies se jouent.<br />Les assises se racontent.</p>
         <a class="recherche-lien" href="/recherche/" aria-label="Rechercher dans les articles"><span>Rechercher</span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>
       </div>
       <nav class="rubriques-nav" aria-label="Rubriques">
