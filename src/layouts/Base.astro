@@ -7,7 +7,7 @@ import frontonAssises from '../assets/fronton-cour-dassises.jpg';
 import policeSans from '@fontsource-variable/libre-franklin/files/libre-franklin-latin-wght-normal.woff2?url';
 import { RUBRIQUES } from '../lib/rubriques.mjs';
 
-const { titre, description = "Intime Conviction, le site des cours d'assises : suivre les audiences, comprendre les procès criminels, retrouver les verdicts et les récits d'assises.", rubriqueActive, accueil = false, image, imageAlt = "Image d'Intime Conviction" } = Astro.props;
+const { titre, description = "Intime Conviction, le site des cours d'assises : suivre les audiences, comprendre les procès criminels, retrouver les verdicts et les récits d'assises.", rubriqueActive, accueil = false, image, article, imageAlt = "Image d'Intime Conviction" } = Astro.props;
 // Le nom du journal est le titre principal (h1) de la seule page d'accueil ;
 // ailleurs c'est un paragraphe, le h1 revenant au titre de la page.
 const Marque = 'p';
@@ -29,12 +29,24 @@ const annee = new Date().getFullYear();
     <link rel="canonical" href={canonique} />
     <meta property="og:title" content={titreComplet} />
     <meta property="og:site_name" content="Intime Conviction" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    {article && <meta property="article:published_time" content={article.datePublished} />}
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonique} />
     <meta property="og:locale" content="fr_FR" />
     {imagePartage && <meta property="og:image" content={imagePartage} />}
     {imagePartage && <meta property="og:image:alt" content={image ? imageAlt : "Fronton d'une cour d'assises"} />}
+    {article && <script type="application/ld+json" set:html={JSON.stringify({
+      '@context':'https://schema.org',
+      '@type':'Article',
+      headline:article.headline,
+      description,
+      datePublished:article.datePublished,
+      ...(article.author ? { author:{'@type':'Person',name:article.author} } : {}),
+      publisher:{'@type':'Organization',name:'Intime Conviction',url:'https://www.intimeconviction.fr/'},
+      mainEntityOfPage:canonique.href,
+      inLanguage:'fr-FR'
+    })} />}
     <meta name="twitter:card" content={imagePartage ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={titreComplet} />
     <meta name="twitter:description" content={description} />
