@@ -4,13 +4,13 @@ import Base from '../layouts/Base.astro';
 import Actualites from '../components/Actualites.astro';
 import Culture from '../components/Culture.astro';
 import ParcoursEditorial from '../components/ParcoursEditorial.astro';
-import { lireActualites } from '../lib/veille.mjs';
+import { lireActualites, lireVeille } from '../lib/veille.mjs';
 import { RUBRIQUES, rubrique } from '../lib/rubriques.mjs';
 import { tousLesArticles, dateLongue, minutesDeLecture } from '../lib/articles.mjs';
 import fronton from '../assets/fronton-cour-dassises.jpg';
 
 const articles = await tousLesArticles();
-const fil = await lireActualites();
+const [fil, veille] = await Promise.all([lireActualites(), lireVeille()]);
 const [une,...suite] = articles;
 const derniers = suite.slice(0,5);
 const vus = new Set([une,...derniers].map(a=>a.data.slug));
@@ -20,7 +20,9 @@ const rubriques = RUBRIQUES.map(r=>{
 });
 const parAnnee = new Map();
 for(const a of articles){ const an=a.data.date.getFullYear(); if(an>=2009) parAnnee.set(an,(parAnnee.get(an)??0)+1); }
-const annees=[...parAnnee].sort((a,b)=>b[0]-a[0]);
+const parAnneePresse=new Map();
+for(const a of veille.articles){const an=Number(a.dateAlerte.slice(0,4));if(an>=2009)parAnneePresse.set(an,(parAnneePresse.get(an)??0)+1);}
+const annees=[...new Set([...parAnnee.keys(),...parAnneePresse.keys()])].sort((a,b)=>b-a).map(an=>({an,articles:parAnnee.get(an)??0,presse:parAnneePresse.get(an)??0}));
 const nouvellesOuverture=(fil?.articles??[]).filter(n=>n.rubrique==='cours-du-jour').slice(0,3);
 const total=articles.length.toLocaleString('fr-FR');
 const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',timeZone:'Europe/Paris'});
@@ -100,9 +102,9 @@ const dateEdition=fil?.releveLe ? new Intl.DateTimeFormat('fr-FR',{day:'numeric'
     </section>
 
     <section class="fonds" aria-labelledby="titre-fonds">
-      <div class="fonds-intro"><h2 id="titre-fonds">Les archives<span>.</span></h2><p>{total} articles,<br />année par année.</p><a href="/archives/">Explorer tout le fonds <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></div>
+      <div class="fonds-intro"><h2 id="titre-fonds">Les archives<span>.</span></h2><p>{total} articles du journal<br />et une revue de presse, année par année.</p><a href="/archives/">Explorer la chronologie complète <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></div>
       <p><a class="lire-article" href="/archives/presse/">Parcourir la mémoire de la revue de presse</a></p>
-      <ul class="annees">{annees.map(([an,n])=><li><a href={`/archives/${an}/`}><span class="an">{an}</span><span class="meta">{n.toLocaleString('fr-FR')} articles</span></a></li>)}</ul>
+      <ul class="annees">{annees.map(({an,articles:nbArticles,presse:nbPresse})=><li><a href={nbArticles ? `/archives/${an}/` : `/archives/presse/${an}/`}><span class="an">{an}</span><span class="meta">{nbArticles ? nbArticles.toLocaleString('fr-FR')+' articles du journal' : ''}{nbArticles && nbPresse ? ' · ' : ''}{nbPresse ? nbPresse.toLocaleString('fr-FR')+' références presse' : ''}</span></a></li>)}</ul>
     </section>
   </div></div>
 </Base>
