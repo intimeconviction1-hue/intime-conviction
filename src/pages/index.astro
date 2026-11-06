@@ -23,15 +23,14 @@ for(const a of articles){ const an=a.data.date.getFullYear(); if(an>=2009) parAn
 const annees=[...parAnnee].sort((a,b)=>b[0]-a[0]);
 const nouvellesOuverture=(fil?.articles??[]).filter(n=>n.rubrique==='cours-du-jour').slice(0,3);
 const total=articles.length.toLocaleString('fr-FR');
-const principale=nouvellesOuverture[0];
 const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',timeZone:'Europe/Paris'});
-const dateEdition=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'}).format(new Date(fil?.releveLe??Date.now()));
+const dateEdition=fil?.releveLe ? new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'}).format(new Date(fil.releveLe)) : null;
 ---
 <Base accueil>
   <div slot="fond" class="fond-page" aria-hidden="true"><Image src={fronton} alt="" width={500} loading="eager" fetchpriority="high" /></div>
   <section class="ouverture" aria-labelledby="titre-journal">
     <div class="cadre ouverture-interieur">
-      <div class="edition"><p><span class="point-rouge" aria-hidden="true"></span> LE JOURNAL DES COURS D’ASSISES</p><p>Édition du {dateEdition}</p></div>
+      <div class="edition"><p><span class="point-rouge" aria-hidden="true"></span> LE JOURNAL DES COURS D’ASSISES</p><p>{dateEdition ? `Veille relevée le ${dateEdition}` : 'Archives du journal'}</p></div>
       <div class="manifeste-accueil">
         <div class="manifeste-enquete"><span class="manifeste-index">IC / 001</span><p>UN JOURNAL. UNE COUR. DES VERSIONS.</p><span class="manifeste-balise" aria-hidden="true"></span></div>
         <h2>LES ASSISES.<br /><span>SANS RACCOURCI.</span></h2>
@@ -42,21 +41,25 @@ const dateEdition=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',ye
           <Image src={fronton} alt="Fronton sculpté d’une cour d’assises, photographie du journal" width={500} loading="eager" fetchpriority="high" />
           <div class="grand-angle-voile"></div>
           <div class="grand-angle-texte">
-            <p class="cartouche">{principale?'À LA UNE · REVUE DE PRESSE':'À LA UNE · LES ARCHIVES'}</p>
-            <p class="une-source">{principale?.source??rubrique(une.data.rubrique).nom} <span>— {principale?datePresse.format(new Date(principale.date)):dateLongue(une.data.date)}</span></p>
-            <h1 id="titre-journal" class:list={{'titre-long':(principale?.titre??une.data.titre).length>145}}><a href={principale?.lien??une.data.chemin} target={principale?'_blank':undefined} rel={principale?'noopener noreferrer':undefined}>{principale?.titre??une.data.titre}{principale&&<span class="sr-only"> (nouvel onglet)</span>}</a></h1>
-            <a class="une-lire" href={principale?.lien??une.data.chemin} target={principale?'_blank':undefined} rel={principale?'noopener noreferrer':undefined}>{principale?'Lire chez '+principale.source:'Lire l’article'} <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a>
+            <p class="cartouche">INTIME CONVICTION · DANS NOS ARCHIVES</p>
+            <p class="une-source">{rubrique(une.data.rubrique).nom} <span>— Article du {dateLongue(une.data.date)}</span></p>
+            <h1 id="titre-journal" class:list={{'titre-long':une.data.titre.length>145}}><a href={une.data.chemin}>{une.data.titre}</a></h1>
+            <a class="une-lire" href={une.data.chemin}>LIRE DANS NOS ARCHIVES <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a>
           </div>
-          <p class="credit-photo">Photo du journal · Cour d’assises, 2009 · Image d’ambiance</p>
+          <p class="credit-photo">Photographie d’illustration · sans lien avec l’affaire présentée</p>
         </article>
         <aside class="ouverture-fil" aria-labelledby="titre-fil-ouverture">
-          <div class="fil-entete"><h2 id="titre-fil-ouverture">À la barre<span>.</span></h2><span class="fil-label">LES AUDIENCES</span></div>
-          {nouvellesOuverture.length>1 ? <ol>{nouvellesOuverture.slice(1).map((n,i)=><li><span class="fil-numero" aria-hidden="true">0{i+2}</span><div><p>{n.source}<time datetime={n.date}>{n.dateAlerte&&'Alerte du '}{datePresse.format(new Date(n.date))}</time></p><h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> (nouvel onglet)</span></a></h3></div></li>)}</ol>:<p>Retrouvez les récits d’audience dans <a href="/rubrique/cours-du-jour/">Cours du Jour</a>.</p>}
+          <div class="fil-entete"><h2 id="titre-fil-ouverture">À la barre<span>.</span></h2><span class="fil-label">REVUE DE PRESSE · SOURCES EXTERNES</span></div>
+          {nouvellesOuverture.length>0 ? <ol>{nouvellesOuverture.map((n,i)=><li><span class="fil-numero" aria-hidden="true">0{i+1}</span><div><p>{n.source}<time datetime={n.date}>{n.dateAlerte&&'Alerte du '}{datePresse.format(new Date(n.date))}</time></p><h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> (nouvel onglet)</span></a></h3></div></li>)}</ol>:<p>Retrouvez les récits d’audience dans <a href="/rubrique/cours-du-jour/">Cours du Jour</a>.</p>}
           <a class="tout-le-fil" href="#actualites">Tout le fil d’audience <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v16m-6-6 6 6 6-6" /></svg></a>
           <div class="note-redaction"><span class="note-signe" aria-hidden="true">IC</span><p>LE PROCÈS. PAS LE SPECTACLE.<br /><strong>ACTUALITÉS SOURCÉES ET ARCHIVES DATÉES.</strong></p></div>
         </aside>
       </div>
-      <div class="parcours"><span>COMPRENDRE AUSSI</span><a href="/rubrique/le-banc-des-jures/">Les règles du procès <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/rubrique/le-greffe/">La culture judiciaire <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/archives/">{total} articles d’archives <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a></div>
+      <div class="parcours"><span>ALLER PLUS LOIN</span><a href="/rubrique/le-banc-des-jures/">Les règles du procès <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/rubrique/le-greffe/">La culture judiciaire <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/archives/">{total} articles d’archives <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a></div>
+      <form class="accueil-recherche" action="/recherche/" method="get" role="search" aria-label="Rechercher dans les archives">
+        <label for="recherche-accueil"><span>RECHERCHER DANS {total} ARTICLES</span><strong>UNE AFFAIRE. UN NOM. UN MOT.</strong></label>
+        <div class="accueil-recherche-champs"><input id="recherche-accueil" type="search" name="q" placeholder="Nom, affaire, mot-clé..." autocomplete="off" /><button type="submit">EXPLORER <span aria-hidden="true">↗</span></button></div>
+      </form>
     </div>
   </section>
 
@@ -91,7 +94,7 @@ const dateEdition=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',ye
       <ul class="rubriques">{rubriques.map(r=><li>
         <div class="rubrique-entete"><h3><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></h3><a class="ouvrir-rubrique" href={`/rubrique/${r.slug}/`} aria-label={`Ouvrir ${r.nom}`}><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div>
         <p class="sous-titre">{r.sousTitre}</p>
-        <ul class="titres">{r.presse.length ? r.presse.slice(0,2).map(n=><li><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}</a><span class="meta source-presse">{n.source} · presse</span></li>) : r.titres.map(({data})=><li><a href={data.chemin}>{data.titre}</a></li>)}</ul>
+        <ul class="titres">{r.titres.length ? r.titres.map(({data})=><li><a href={data.chemin}>{data.titre}</a><span class="meta source-presse">Intime Conviction · archive</span></li>) : r.presse.slice(0,2).map(n=><li><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}</a><span class="meta source-presse">{n.source} · revue de presse</span></li>)}</ul>
         <a class="rubrique-volume" href={`/rubrique/${r.slug}/`}>{r.total.toLocaleString('fr-FR')} articles d’archives{r.presse.length>0&&` · ${r.presse.length} nouvelle${r.presse.length>1?'s':''}`}</a>
       </li>)}</ul>
     </section>
@@ -296,5 +299,22 @@ const dateEdition=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',ye
 .bandeau-archives strong{font-size:clamp(4.5rem,20vw,7rem)}
 .bandeau-archives>a{min-width:0}
 }
+
+
+/* Navigation intentionnelle : le lecteur reste au sein du journal. */
+.accueil-recherche{display:grid;grid-template-columns:1fr minmax(0,1.4fr);align-items:end;gap:2rem;padding:1.8rem 0 2.1rem;border-top:1px solid #575958;margin-top:.3rem}
+.accueil-recherche label{display:flex;flex-direction:column;gap:.35rem}
+.accueil-recherche label span{font:850 .62rem/1.6 var(--sans);letter-spacing:.12em;color:#ffe100}
+.accueil-recherche label strong{font:900 clamp(1.2rem,1.8vw,1.75rem)/1.15 var(--sans);letter-spacing:-.04em;color:#fff}
+.accueil-recherche-champs{display:flex;min-height:56px}
+.accueil-recherche input{appearance:none;min-width:0;flex:1;background:#fff;color:#111314;border:2px solid #fff;border-right:0;border-radius:0;padding:.8rem 1rem;font:650 .9rem/1.2 var(--sans)}
+.accueil-recherche input:focus{outline:3px solid #ffe100;outline-offset:2px;position:relative;z-index:1}
+.accueil-recherche input::placeholder{color:#6a6d6b}
+.accueil-recherche button{background:#ffe100;color:#111314;border:2px solid #ffe100;font:900 .75rem/1.2 var(--sans);letter-spacing:.04em;padding:0 1.4rem;white-space:nowrap}
+.accueil-recherche button:hover{background:#fff;border-color:#fff;color:#111314}
+.accueil-recherche button span{font-size:1.15rem;margin-left:.6rem}
+.grand-angle .cartouche{letter-spacing:.1em}
+@media(max-width:63.99rem){.accueil-recherche{grid-template-columns:1fr;gap:1rem}}
+@media(max-width:47.99rem){.accueil-recherche{padding:1.5rem 0}.accueil-recherche label strong{font-size:1.4rem}.accueil-recherche-champs{min-height:54px}.accueil-recherche input{font-size:.84rem;padding:.7rem}.accueil-recherche button{padding:0 .85rem;font-size:.69rem}.accueil-recherche button span{margin-left:.25rem}}
 
 </style>

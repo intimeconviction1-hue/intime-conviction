@@ -8,14 +8,22 @@ import { tousLesArticles, dateLongue, minutesDeLecture } from '../../../../lib/a
 // liens partagés depuis 2009 mènent toujours au bon article.
 export async function getStaticPaths() {
   const articles = await tousLesArticles();
+  // Precalcul des voisins par rubrique en O(n), plutot qu'un filtrage
+  // integral de 3 436 articles pour chacune des pages generees.
+  const groupes = new Map();
+  for (const article of articles) {
+    if (!groupes.has(article.data.rubrique)) groupes.set(article.data.rubrique, []);
+    groupes.get(article.data.rubrique).push(article);
+  }
+  const voisinage = new Map();
+  for (const groupe of groupes.values()) {
+    for (let i = 0; i < groupe.length; i++) {
+      voisinage.set(groupe[i], [groupe[i - 1], groupe[i + 1], groupe[i + 2]].filter(Boolean));
+    }
+  }
   return articles.map((article) => {
     const [, slug, mois, annee] = article.data.chemin.split('/');
-    const memeRubrique = articles.filter((a) => a.data.rubrique === article.data.rubrique);
-    const i = memeRubrique.indexOf(article);
-    // Les voisins dans la rubrique : le plus récent et les deux plus anciens
-    // qui l'entourent, pour continuer la lecture sans revenir à l'accueil.
-    const voisins = [...memeRubrique.slice(Math.max(0, i - 1), i), ...memeRubrique.slice(i + 1, i + 3)];
-    return { params: { slug, mois, annee }, props: { article, voisins } };
+    return { params: { slug, mois, annee }, props: { article, voisins: voisinage.get(article) ?? [] } };
   });
 }
 
@@ -23,8 +31,11 @@ const { article, voisins } = Astro.props;
 const { data } = article;
 const r = rubrique(data.rubrique);
 ---
-<Base titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique}>
+<Base titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} article={{ headline:data.titre,datePublished:data.date.toISOString(),author:data.auteur || null }}>
   <div class="lecture-progression" aria-hidden="true"></div>
+  <nav class="fil-ariane" aria-label="Fil d’Ariane">
+    <a href="/">ACCUEIL</a><span aria-hidden="true">/</span><a href={`/rubrique/${r.slug}/`}>{r.nom}</a><span aria-hidden="true">/</span><span>ARTICLE DU {dateLongue(data.date)}</span>
+  </nav>
   <article class="article">
     <p class="etiquette"><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></p>
     <h1>{data.titre}</h1>
@@ -39,7 +50,7 @@ const r = rubrique(data.rubrique);
 
   {voisins.length > 0 && (
     <aside class="voisins" aria-labelledby="voisins">
-      <div class="titre-section"><h2 id="voisins">À lire aussi dans {r.nom}</h2></div>
+      <div class="titre-section"><h2 id="voisins">CONTINUER DANS {r.nom}</h2></div>
       <ListeArticles articles={voisins} rubriqueVisible={false} extraits={false} />
     </aside>
   )}
@@ -50,5 +61,15 @@ const taille=document.querySelector<HTMLButtonElement>('#taille-texte')!;
 taille.addEventListener('click',()=>{const actif=taille.getAttribute('aria-pressed')!=='true';taille.setAttribute('aria-pressed',String(actif));document.querySelector('.corps')!.classList.toggle('texte-grand',actif);taille.textContent=actif?'Taille normale':'Agrandir le texte';});
 document.querySelector('#copier-lien')!.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(location.href);document.querySelector('#partage-statut')!.textContent='Lien copié';}catch{document.querySelector('#partage-statut')!.textContent='Copiez l’adresse depuis votre navigateur.';}});
 const barre=document.querySelector<HTMLElement>('.lecture-progression')!;const article=document.querySelector('.article')!;
-function progression(){const r=article.getBoundingClientRect();barre.style.width=Math.max(0,Math.min(100,(-r.top/(r.height-innerHeight))*100))+'%';}addEventListener('scroll',progression,{passive:true});progression();
+function progression(){const r=article.getBoundingClientRect();barre.style.width=Math.max(0,Math.min(100,(-r.top/Math.max(1,r.height-innerHeight))*100))+'%';}addEventListener('scroll',progression,{passive:true});progression();
 </script>
+
+<style>
+.fil-ariane{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;max-width:var(--mesure);margin:2rem auto 0;font:850 .63rem/1.5 var(--sans);letter-spacing:.045em;text-transform:uppercase}
+.fil-ariane span[aria-hidden]{color:#787b77}
+.fil-ariane a{border-bottom:2px solid #ffe100;padding-bottom:.15rem}
+.fil-ariane a:hover{background:#ffe100;color:#151515}
+.article{margin-top:2rem}
+.outils-lecture{border-bottom:1px solid var(--filet);padding-bottom:1rem}
+@media(max-width:47.99rem){.fil-ariane{margin-top:1.5rem;font-size:.6rem;gap:.5rem}.article{margin-top:1.3rem}}
+</style>
