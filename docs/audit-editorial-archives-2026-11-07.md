@@ -43,5 +43,30 @@ Ces chiffres représentent des fichiers de la collection « articles » et non l
 - Distinguer les articles originaux, les compilations de liens et les références externes après vérification humaine.
 - Conserver la présomption d'innocence et la temporalité des décisions et recours.
 
+
+## Exécution exhaustive du 7 novembre 2026
+
+Exécution GitHub Actions : [Publier le site, run 42406490377](https://github.com/intimeconviction1-hue/intime-conviction/actions/runs/42406490377), étape « Auditer les archives sans les modifier » réussie. Un artefact `audit-documentaire-archives` contient le détail des signalements.
+
+- Articles analysés : **3 436**.
+- Erreurs structurelles détectées par les règles actuellement programmées : **0**.
+- Signalements non bloquants : **1 506**, susceptibles de concerner plusieurs fois un même article.
+- Contenus inférieurs à 100 mots : **513**.
+- Mentions de sources extérieures à l'ouverture : **368**.
+- Signatures génériques à vérifier en présence d'une telle mention : **367**.
+- Titres récurrents : **192**.
+- Titres génériques : **66**.
+
+Ces statistiques comptent les signalements, non les erreurs établies ni les articles uniques affectés. Les règles d'analyse sont indicatives : elles ne détectent pas toutes les reprises, ne tranchent aucun droit d'auteur et ne permettent pas de qualifier juridiquement la provenance. Une absence d'erreur structurelle détectée ne vaut pas certification du contenu.
+
+### Ordre de traitement éditorial
+
+1. **Provenance et crédit** : examiner conjointement les 368 mentions de sources et les 367 signatures génériques.
+2. **Format éditorial** : distinguer brèves, sélections de liens, dépêches reprises et articles rédigés parmi les 513 contenus courts.
+3. **Titres** : examiner les 192 récurrences et les 66 titres génériques, avec conservation des URL historiques.
+4. **Contrôle juridique et factuel** : vérifier les dates, le statut procédural et l'éventuelle évolution d'affaires avant tout ajout ou réécriture.
+
+Aucune modification automatique des articles n'est autorisée par cet audit.
+
 ## Suite du chantier
 Lancer `IC_ARTICLES=articles-prives/articles npm run audit:archives` sur le fonds complet ; rapprocher les anomalies détectées des fichiers d'origine ; établir une liste de corrections validées, puis tester les éventuelles améliorations de présentation.
