@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,SOURCES_A_COMPLETER,AUDIENCES_A_RECONFIRMER,sessionsAvenir,verifierSessions,dateLocaleAgenda} from '../src/lib/agenda-sessions.mjs';
+import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,SOURCES_A_COMPLETER,AUDIENCES_A_RECONFIRMER,PROVENANCE_AGENDA,provenancePeriode,sessionsAvenir,verifierSessions,dateLocaleAgenda} from '../src/lib/agenda-sessions.mjs';
 
 test('les périodes publiées ont une source institutionnelle et des dates cohérentes',()=>{
   assert.equal(verifierSessions(),true);
@@ -79,4 +79,17 @@ test('Ille-et-Vilaine : trois dates institutionnelles non reconfirmées, sans as
  assert.ok(rows.every(a=>a.ville==='Rennes'));
  assert.ok(rows.every(a=>!a.juridiction.includes('mineurs')));
  assert.ok(rows.every(a=>a.source==='https://www.cours-appel.justice.fr/rennes/cour-dassises-et-la-cour-criminelle-departementale-dille-et-vilaine'));
+});
+
+test('la provenance distingue publication source, examen éditorial et confirmation',()=>{
+ assert.equal(PROVENANCE_AGENDA.dateExamen,'2026-11-07');
+ const session=provenancePeriode(SESSIONS_AGENDA[0]);
+ assert.equal(session.publicationSource,null);
+ assert.match(session.niveau,/Période de session/);
+ const finistere=provenancePeriode(AUDIENCES_A_RECONFIRMER.find(a=>a.departement==='Finistère'));
+ assert.equal(finistere.publicationSource,'2026-06-08');
+ assert.match(finistere.niveau,/non reconfirmé/);
+ const illeEtVilaine=provenancePeriode(AUDIENCES_A_RECONFIRMER.find(a=>a.departement==='Ille-et-Vilaine'));
+ assert.equal(illeEtVilaine.publicationSource,'2026-09-16');
+ assert.throws(()=>provenancePeriode({id:'inconnu',departement:'Inconnu'}),/Provenance inconnue/);
 });
