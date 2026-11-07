@@ -6,7 +6,8 @@ import { REPERES_JUDICIAIRES, reperesPourDossier } from '../../lib/chronologie-j
 
 validerJuridictions(JURIDICTIONS, DOSSIERS);
 const dossiers = DOSSIERS.map(d => ({ ...d, lieux: JURIDICTIONS.filter(j => j.dossier === d.slug) }));
-const points = JURIDICTIONS.map(j => ({ ...j, ...coordonneesPlan(j.lat, j.lon), dossierTitre:DOSSIERS.find(d => d.slug === j.dossier)?.titre, jalons:reperesPourDossier(j.dossier).filter(r => r.juridiction.toLowerCase().includes(j.ville.toLowerCase())).length }));
+const etiquettes = {albi:{dx:-6,dy:-7},besancon:{dx:7,dy:-5},avignon:{dx:8,dy:-5},nimes:{dx:-9,dy:7},blois:{dx:-7,dy:-6}};
+const points = JURIDICTIONS.map(j => ({ ...j, ...coordonneesPlan(j.lat, j.lon), dossierTitre:DOSSIERS.find(d => d.slug === j.dossier)?.titre, jalons:reperesPourDossier(j.dossier).filter(r => r.juridiction.toLowerCase().includes(j.ville.toLowerCase())) }));
 // Contour simplifié : schéma géographique, pas limite administrative.
 const limites = [
   [-5.2,48.4],[-4.7,48.6],[-4.2,48.4],[-3.6,48.7],[-2.0,48.5],[-1.8,49.6],[-1.1,49.7],
@@ -27,7 +28,7 @@ const cartouche="CARTE ÉDITORIALE / FRANCE MÉTROPOLITAINE";
   <header class="carte-intro">
     <p class="surtitre">INTIME CONVICTION / GÉOGRAPHIE JUDICIAIRE</p>
     <h1>CARTE DES<br /><span>JURIDICTIONS.</span></h1>
-    <p>Du palais de justice aux audiences d’appel : cinq villes et quatre affaires pour commencer à parcourir la France des procès criminels.</p>
+    <p>Quatre grandes affaires, cinq villes d’audience : explorez les juridictions et les étapes vérifiées de chaque procédure.</p>
     <div class="intro-chiffres"><span><strong>{JURIDICTIONS.length}</strong> lieux d’audience associés</span><span><strong>{dossiers.length}</strong> affaires documentées</span><span><strong>{new Set(JURIDICTIONS.map(j=>j.departement)).size}</strong> départements</span></div>
   </header>
   <section class="methode-carte" aria-label="Comprendre la carte">
@@ -41,6 +42,7 @@ const cartouche="CARTE ÉDITORIALE / FRANCE MÉTROPOLITAINE";
       <button type="button" class="f-active" data-choix="tous" aria-pressed="true">TOUTES LES AFFAIRES</button>
       {dossiers.map(d=><button type="button" data-choix={d.slug} aria-pressed="false">{d.titre}</button>)}
     </div>
+    <p class="consigne-navigation">Sur la carte ou dans le répertoire, sélectionnez une ville pour accéder à sa fiche et à la chronologie judiciaire associée.</p>
     <div class="carto-grille">
       <div class="carte-dessin">
         <svg class="france-svg" viewBox="0 0 100 100" role="img" aria-labelledby="titre-svg description-svg">
@@ -54,10 +56,13 @@ const cartouche="CARTE ÉDITORIALE / FRANCE MÉTROPOLITAINE";
           <path d={contours} fill="#fff" stroke="#151718" strokeWidth=".85" strokeLinejoin="round"/>
           <g class="map-points">
             {points.map((p,i)=>(
-              <a href={'#lieu-'+p.id} data-dossier={p.dossier} class="map-point" aria-label={p.juridiction+', '+p.ville+' ; voir les détails'}>
-                <circle class="halo" cx={p.x} cy={p.y} r="3.6" fill="#ffe100" stroke="#151718" strokeWidth=".32"/>
-                <circle cx={p.x} cy={p.y} r="1.5" fill="#151718"/>
-                <text x={p.x} y={p.y-4.4} fontSize="2.15" textAnchor="middle" fontWeight="900" fill="#151718">{p.ville.toUpperCase()}</text>
+              <a href={'#lieu-'+p.id} data-dossier={p.dossier} class="map-point" aria-label={p.juridiction+', '+p.ville+' ; voir la fiche et les audiences'}>
+                <title>{p.ville} · {p.juridiction} · {p.dossierTitre}</title>
+                <line class="liaison-point" x1={p.x} y1={p.y} x2={p.x+etiquettes[p.id].dx*.75} y2={p.y+etiquettes[p.id].dy*.75}/>
+                <circle class="cible-point" cx={p.x} cy={p.y} r="5.4"/>
+                <circle class="halo" cx={p.x} cy={p.y} r="3.1" fill="#ffe100" stroke="#151718" strokeWidth=".5"/>
+                <text class="numero-point" x={p.x} y={p.y+.95} textAnchor="middle">{String(i+1).padStart(2,'0')}</text>
+                <text class="nom-point" x={p.x+etiquettes[p.id].dx} y={p.y+etiquettes[p.id].dy} textAnchor="middle">{p.ville.toUpperCase()}</text>
               </a>
             ))}
           </g>
@@ -77,7 +82,7 @@ const cartouche="CARTE ÉDITORIALE / FRANCE MÉTROPOLITAINE";
         <p class="precision">La cour criminelle départementale et la cour d’assises ne sont pas interchangeables. La juridiction exacte est indiquée dans chaque fiche.</p>
       </div>
     </div>
-    <p class="bilan-carte" id="compte-carte" role="status" aria-live="polite">5 lieux affichés</p>
+    <p class="bilan-carte" id="compte-carte" role="status" aria-live="polite">{points.length} lieux affichés</p>
   </section>
 
   <section class="fiches-juridictions" aria-labelledby="titre-fiches">
@@ -90,6 +95,20 @@ const cartouche="CARTE ÉDITORIALE / FRANCE MÉTROPOLITAINE";
           <p class="nom-juridiction">{p.juridiction}</p>
           <p class="adresse">{p.adresse}</p>
           <p class="affaire-liee">AFFAIRE ASSOCIÉE : <a href={'/dossiers/'+p.dossier+'/'}>{p.dossierTitre}</a></p>
+          {p.jalons.length > 0 && (
+            <div class="etapes-fiche">
+              <h4>Étapes judiciaires documentées</h4>
+              <ol>
+                {p.jalons.map(etape => (
+                  <li>
+                    <time datetime={etape.dateEvenement}>{new Intl.DateTimeFormat('fr-FR',{day:'2-digit',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(etape.dateEvenement+'T12:00:00Z'))}</time>
+                    <span>{etape.titre} <small>({etape.phase==='appel'?'appel':'première instance'})</small></span>
+                    <a href={etape.urlSource} target="_blank" rel="noopener noreferrer" aria-label={'Lire la source de '+etape.titre}>Source ↗</a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
           <div class="liens-fiche">
             <a href={p.urlInstitutionnelle} target="_blank" rel="noopener noreferrer">SOURCE OFFICIELLE <span aria-hidden="true">↗</span><span class="sr-only"> (site externe)</span></a>
             <a href={'/dossiers/'+p.dossier+'/'}>CONSULTER LE DOSSIER <span aria-hidden="true">↗</span></a>
@@ -187,4 +206,25 @@ const cartouche="CARTE ÉDITORIALE / FRANCE MÉTROPOLITAINE";
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 @media(max-width:63.99rem){.carto-grille{grid-template-columns:1fr}.index-juridictions{border-left:0;border-top:3px solid #151718}.carto-head,.fin-carto{grid-template-columns:1fr}}
 @media(max-width:47.99rem){.carte-intro{padding:2rem 1.2rem}.carte-intro h1{font-size:clamp(2.7rem,9.5vw,4.5rem)}.methode-carte{grid-template-columns:1fr;gap:.7rem}.filtres-lieux button{flex:1}.fiches-grille{grid-template-columns:1fr}.carte-dessin{padding:.5rem}.carto-grille{min-height:0}.tete-index{flex-wrap:wrap}.intro-chiffres{gap:1rem 2rem}}
+
+/* Lisibilité et navigation de la carte éditoriale */
+.consigne-navigation{margin:.9rem 0;font:650 .83rem/1.6 var(--sans);color:#343b3f}
+.france-svg{aspect-ratio:1/1;max-height:none;background:#f0f0eb}
+.map-point .cible-point{fill:transparent;stroke:none;pointer-events:all}
+.map-point .liaison-point{stroke:#151718;stroke-width:.38;stroke-dasharray:.7 .5}
+.map-point .numero-point{font:900 2.2px var(--sans);fill:#151718;pointer-events:none}
+.map-point .nom-point{font:900 2.5px var(--sans);letter-spacing:-.07px;fill:#151718;stroke:#fff;stroke-width:.75px;paint-order:stroke;stroke-linejoin:round;pointer-events:none}
+.map-point:hover .halo,.map-point:focus-visible .halo{fill:#fff;stroke:#b02737;stroke-width:.8}
+.map-point:hover .nom-point,.map-point:focus-visible .nom-point{fill:#a12c39;text-decoration:underline}
+.map-point:focus-visible{outline:none}
+.map-point:focus-visible .cible-point{stroke:#a12c39;stroke-width:.5;stroke-dasharray:1 1}
+.etapes-fiche{margin:1.4rem 0 0;padding:1rem 0;border-top:1px solid #747b7e}
+.etapes-fiche h4{font:900 .77rem/1.4 var(--sans);letter-spacing:.01em;margin:0 0 .75rem}
+.etapes-fiche ol{margin:0;padding:0;list-style:none}
+.etapes-fiche li{display:grid;grid-template-columns:6.3rem minmax(0,1fr) auto;align-items:start;gap:.65rem;padding:.65rem 0;border-top:1px solid #d0d1ca;font:650 .76rem/1.45 var(--sans)}
+.etapes-fiche li time{font-weight:850;white-space:nowrap}
+.etapes-fiche li small{font-weight:500;color:#4e5353}
+.etapes-fiche li a{color:#8e2432;text-decoration:underline;text-underline-offset:3px;font-weight:850;white-space:nowrap}
+@media(max-width:47.99rem){.france-svg{aspect-ratio:1/1}.etapes-fiche li{grid-template-columns:1fr auto}.etapes-fiche li time{grid-column:1/-1}.nom-point{font-size:2.5px}}
+
 </style>
