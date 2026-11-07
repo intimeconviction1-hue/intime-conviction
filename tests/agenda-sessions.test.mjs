@@ -59,11 +59,24 @@ test('Sarthe : un rôle modificatif sans dates vérifiées reste une source non 
 });
 
 test('Finistère : seules les audiences non-mineurs sont consignées comme dates à reconfirmer',()=>{
- assert.equal(AUDIENCES_A_RECONFIRMER.length,4);
- assert.equal(new Set(AUDIENCES_A_RECONFIRMER.map(a=>a.id)).size,4);
- assert.ok(AUDIENCES_A_RECONFIRMER.every(a=>a.ville==='Quimper'));
+ assert.equal(AUDIENCES_A_RECONFIRMER.length,7);
+ assert.equal(new Set(AUDIENCES_A_RECONFIRMER.map(a=>a.id)).size,7);
+ assert.ok(AUDIENCES_A_RECONFIRMER.every(a=>a.ville==='Quimper'||a.ville==='Rennes'));
  assert.ok(AUDIENCES_A_RECONFIRMER.every(a=>!a.juridiction.toLowerCase().includes('mineurs')));
  assert.ok(AUDIENCES_A_RECONFIRMER.every(a=>a.debut<=a.fin));
  assert.ok(AUDIENCES_A_RECONFIRMER.every(a=>new URL(a.source).hostname==='www.cours-appel.justice.fr'));
  assert.ok(sessionsAvenir(AUDIENCES_A_RECONFIRMER,'2027-01-01').length===0);
+});
+
+test('Ille-et-Vilaine : trois dates institutionnelles non reconfirmées, sans assises des mineurs',()=>{
+ const rows=AUDIENCES_A_RECONFIRMER.filter(a=>a.departement==='Ille-et-Vilaine');
+ assert.deepEqual(rows.map(a=>[a.debut,a.fin]),[
+  ['2026-11-24','2026-11-26'],['2026-11-27','2026-11-30'],['2026-12-01','2026-12-04']
+ ]);
+ assert.deepEqual(rows.map(a=>a.juridiction),[
+  'Cour criminelle départementale','Cour d’assises','Cour d’assises'
+ ]);
+ assert.ok(rows.every(a=>a.ville==='Rennes'));
+ assert.ok(rows.every(a=>!a.juridiction.includes('mineurs')));
+ assert.ok(rows.every(a=>a.source==='https://www.cours-appel.justice.fr/rennes/cour-dassises-et-la-cour-criminelle-departementale-dille-et-vilaine'));
 });
