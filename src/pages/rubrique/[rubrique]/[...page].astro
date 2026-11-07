@@ -1,6 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import ListeArticles from '../../../components/ListeArticles.astro';
+import Actualites from '../../../components/Actualites.astro';
 import Culture from '../../../components/Culture.astro';
 import { RUBRIQUES, rubrique } from '../../../lib/rubriques.mjs';
 import { tousLesArticles } from '../../../lib/articles.mjs';
@@ -51,6 +52,7 @@ const liensRubrique = ressources[r.slug] ?? [];
       <ul>{liensRubrique.map(l => <li><a href={l.url}>{l.titre} <span aria-hidden="true">↗</span></a></li>)}</ul>
     </nav>
   )}
+  {page.currentPage === 1 && r.slug === 'cours-du-jour' && <Actualites rubriqueSlug="cours-du-jour" limite={24} titre="Dans la presse" lienRubrique={false} />}
   {page.currentPage === 1 && r.slug === 'le-greffe' && <Culture titre="À lire, à voir" />}
   <div class="titre-section"><h2>Les articles d’Intime Conviction</h2></div>
   <ListeArticles articles={page.data} rubriqueVisible={false} niveau={3} />
