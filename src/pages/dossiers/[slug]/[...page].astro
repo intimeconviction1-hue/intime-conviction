@@ -79,7 +79,11 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
   )}
   {page.currentPage === 1 && <CouvertureMensuelle moisDonnes={moisCouverture} />}
   {page.currentPage > 1 && (
-    <p class="retour-frise">Le registre des étapes judiciaires et l’historique mensuel des alertes sont présentés sur la <a href={'/dossiers/' + dossier.slug + '/#reperes-judiciaires'}>première page de ce dossier</a>.</p>
+    <p class="retour-frise">
+      {reperes.length > 0
+        ? <>Les repères judiciaires et l’historique mensuel des références figurent sur la <a href={'/dossiers/' + dossier.slug + '/#reperes-judiciaires'}>première page du dossier</a>.</>
+        : <>L’historique mensuel des références figure sur la <a href={'/dossiers/' + dossier.slug + '/'}>première page du dossier</a>.</>}
+    </p>
   )}
 
   <section class="couverture" aria-labelledby="titre-periode">
@@ -112,6 +116,10 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
     </nav>
   </section>
 
+  <aside class="fonds-distincts" aria-label="Consulter les autres archives">
+    <p>Les articles historiques et la revue de presse sont deux fonds distincts. Aucun rapprochement entre leurs affaires n’est établi automatiquement.</p>
+    <a href="/archives/">Parcourir les articles historiques</a>
+  </aside>
   <div class="bas-dossier">
     <a href="/dossiers/">← REVENIR À TOUS LES DOSSIERS</a>
     <a href="/archives/presse/">CONSULTER LA REVUE DE PRESSE →</a>
@@ -181,4 +189,9 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
 .retour-frise{margin:2rem 0;background:#ffe100;color:#151718;padding:1.1rem;font:700 .84rem/1.55 var(--sans)}
 .retour-frise a{text-decoration:underline}
 @media(max-width:48rem){.tete-reperes{grid-template-columns:1fr}.tete-reperes>p{grid-column:auto}.tete-reperes h2{font-size:2.5rem}}
-.lieux-en-tete{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;background:#ffe100;color:#151718;padding:1.3rem 1.7rem;margin:1rem 0 2rem}.lieux-en-tete strong{font:900 .75rem/1.4 var(--sans)}.lieux-en-tete p{font:650 .8rem/1.55 var(--sans);margin:.35rem 0 0}.lieux-en-tete a{border:2px solid #151718;padding:.85rem;font:900 .69rem/1.4 var(--sans);flex-shrink:0}.lieux-en-tete a:hover{background:#151718;color:#fff}@media(max-width:48rem){.lieux-en-tete{flex-direction:column;align-items:stretch}.lieux-en-tete a{flex-shrink:1}}</style>
+.lieux-en-tete{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;background:#ffe100;color:#151718;padding:1.3rem 1.7rem;margin:1rem 0 2rem}.lieux-en-tete strong{font:900 .75rem/1.4 var(--sans)}.lieux-en-tete p{font:650 .8rem/1.55 var(--sans);margin:.35rem 0 0}.lieux-en-tete a{border:2px solid #151718;padding:.85rem;font:900 .69rem/1.4 var(--sans);flex-shrink:0}.lieux-en-tete a:hover{background:#151718;color:#fff}@media(max-width:48rem){.lieux-en-tete{flex-direction:column;align-items:stretch}.lieux-en-tete a{flex-shrink:1}}
+.fonds-distincts{margin:2.5rem 0 1.5rem;border-top:1px solid var(--filet);padding:1.2rem 0;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.8rem 2rem}
+.fonds-distincts p{margin:0;max-width:65ch;font:500 .85rem/1.6 var(--sans);color:var(--encre-2)}
+.fonds-distincts a{font:700 .85rem/1.5 var(--sans);text-decoration:underline;text-underline-offset:.2em;white-space:normal}
+.fonds-distincts a:hover{color:#a12c39}
+</style>
