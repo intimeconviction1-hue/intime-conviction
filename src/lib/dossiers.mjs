@@ -18,7 +18,7 @@ export const DOSSIERS = Object.freeze([
   {
     slug: 'viols-de-mazan',
     titre: 'Procès des viols de Mazan',
-    repere: 'MAZAN / PELOTIC',
+    repere: 'MAZAN / PELICOT',
     presentation: 'Les titres citant Mazan ou Pelicot, y compris des publications évoquant l’affaire sans porter nécessairement sur le même procès.',
   },
   {
