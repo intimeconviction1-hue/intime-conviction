@@ -66,6 +66,10 @@ try {
       if(erreurMois)throw Error('Le filtre mois ne respecte pas le chevauchement des périodes.');
       await page.locator('#filtres-agenda button[type=reset]').click();
       await page.waitForFunction(()=>[...document.querySelectorAll('[data-agenda-ligne]')].every(e=>!e.hidden));
+      await page.goto(new URL('/agenda/?departement='+encodeURIComponent(choix),base).href,{waitUntil:'domcontentloaded'});
+      await page.waitForFunction(dep=>document.querySelector('#filtre-departement')?.value===dep,choix);
+      const mauvaisLiens=await page.locator('[data-agenda-ligne]:not([hidden])').evaluateAll((rows,dep)=>rows.some(r=>r.dataset.departement!==dep),choix);
+      if(mauvaisLiens)throw Error('Le lien direct depuis l’annuaire ne filtre pas correctement.');
       console.log('Filtres agenda validés : '+c.nom+', '+total+' périodes, département '+choix+', mois '+moisActif);
     }
     await page.screenshot({path:`${dossier}/${c.nom}.png`,fullPage:true});
