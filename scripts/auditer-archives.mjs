@@ -24,6 +24,7 @@ async function parcourir(dossier) {
 }
 
 const findings = [];
+const revueAttributions = [];
 const annees = new Map();
 const urls = new Map();
 const titres = new Map();
@@ -70,8 +71,24 @@ for (const chemin of fichiers) {
     || /^\s*<p>\s*(?:AFP|AP|Reuters)\b/i.test(html);
   if (sourceEnOuverture) {
     avis('a_verifier','provenance_source',chemin,'Une source extérieure apparaît au début du texte');
-    if (String(article.auteur ?? '').trim().toLowerCase() === 'intime conviction')
+    if (String(article.auteur ?? '').trim().toLowerCase() === 'intime conviction') {
       avis('a_verifier','attribution_a_controler',chemin,'Signature générique et source extérieure mentionnée : vérifier les crédits');
+      const source = /^\s*(AFP|AP|Reuters|SOURCE|NOUVELOBS\.COM|CLICANOO\.COM)\b/i.exec(debutTexte)?.[1] ?? 'Agence ou source à identifier';
+      const lienSource = [...html.matchAll(/<a\s+[^>]*href=["'](https?:\/\/[^"']+)["']/gi)]
+        .map(m => m[1].replace(/&amp;/g, '&'))[0] ?? '';
+      revueAttributions.push({
+        fichier:relative(racine,chemin),
+        urlArticle:url,
+        titre,
+        date:String(article.date ?? ''),
+        signature:String(article.auteur ?? ''),
+        indiceSource:source,
+        lienSource,
+        extraitInitial:debutTexte.slice(0,180),
+        statut:'A vérifier',
+        commentaire:''
+      });
+    }
   }
   if (!String(article.auteur ?? '').trim()) avis('a_verifier','signature_absente',chemin,'Aucun auteur renseigné');
 }
@@ -80,17 +97,29 @@ const ordre = ['erreur','a_verifier'];
 const comptes = Object.fromEntries(ordre.map(k=>[k,findings.filter(f=>f.niveau===k).length]));
 const codes = {};
 for (const f of findings) codes[f.code]=(codes[f.code]??0)+1;
+const champs = ['fichier','urlArticle','titre','date','signature','indiceSource','lienSource','extraitInitial','statut','commentaire'];
+// Protège l'import dans un tableur contre l'interprétation d'une valeur comme formule.
+function celluleCSV(valeur) {
+  let v = String(valeur ?? '').replace(/[\r\n\t]+/g,' ').trim();
+  if (/^[=+@-]/.test(v)) v = "'" + v;
+  return '"' + v.replace(/"/g,'""') + '"';
+}
+const tableauCSV = [champs.join(';'), ...revueAttributions.map(ligne => champs.map(champ => celluleCSV(ligne[champ])).join(';'))].join('\n')+'\n';
 const rapport = {
   fichiers:fichiers.length,
   repartitionParAnnee:Object.fromEntries([...annees].sort((a,b)=>b[0].localeCompare(a[0]))),
   signalements:comptes, parType:codes,
+  revueAttributionsCount:revueAttributions.length,
   signalementsDetailles:findings,
   note:'Signalements pour examen humain ; aucune modification des archives.'
 };
 if (sortie) {
   await mkdir(dirname(sortie), { recursive:true });
   await writeFile(sortie, JSON.stringify(rapport,null,2)+'\n','utf8');
+  const fichierRevue = join(dirname(sortie),'attributions-a-verifier.csv');
+  await writeFile(fichierRevue, '\uFEFF'+tableauCSV, 'utf8');
   console.log('Rapport complet enregistré : '+sortie);
+  console.log('Liste de revue éditoriale enregistrée : '+fichierRevue);
 }
 console.log(JSON.stringify({
   fichiers:rapport.fichiers,
