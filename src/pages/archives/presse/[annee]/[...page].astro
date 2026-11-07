@@ -10,10 +10,10 @@ const date=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'
 ---
 <Base titre={'Revue de presse '+annee+', page '+page.currentPage} rubriqueActive="archives">
   <header class="titre-page"><a href="/archives/presse/">Toutes les années de la revue de presse</a><h1>{annee}<br /><em>dans la presse.</em></h1><p class="sous-titre">{page.total.toLocaleString('fr-FR')} références · page {page.currentPage} sur {page.lastPage}</p></header>
-  <p>Dates des alertes de veille. Les titres et les articles appartiennent aux médias cités.</p>
+  <p>Dates de repérage des références, qui peuvent différer des dates de publication et des événements judiciaires. Les titres et les articles appartiennent aux médias cités.</p>
   <form class="filtres" role="search"><label>Sur cette page<input type="search" id="filtre-titre" placeholder="Un nom, une affaire…" /></label><label>Rubrique<select id="filtre-rubrique"><option value="">Toutes les rubriques</option>{RUBRIQUES.map(r=><option value={r.slug}>{r.nom}</option>)}</select></label></form>
   <p id="compte" class="meta" aria-live="polite">{page.data.length} références sur cette page</p>
-  <ul class="role" id="liens-presse">{page.data.map(a=><li data-rubrique={a.rubrique}><p class="meta">{a.source} · Alerte du <time datetime={a.dateAlerte}>{date(a.dateAlerte)}</time> · {rubrique(a.rubrique).nom}</p><h2><a href={a.lien} target="_blank" rel="noopener noreferrer">{a.titre}<span class="sr-only"> (nouvel onglet)</span></a></h2></li>)}</ul>
+  <ul class="role" id="liens-presse">{page.data.map(a=><li data-rubrique={a.rubrique}><p class="meta">{a.source} · Repéré le <time datetime={a.dateAlerte}>{date(a.dateAlerte)}</time> · {rubrique(a.rubrique).nom}</p><h2><a href={a.lien} target="_blank" rel="noopener noreferrer">{a.titre}<span class="sr-only"> (nouvel onglet)</span></a></h2></li>)}</ul>
   <nav class="pagination" aria-label="Pages de presse">{page.url.prev?<a href={page.url.prev}>Page précédente</a>:<span/>}{page.url.next?<a href={page.url.next}>Page suivante</a>:<span/>}</nav>
 </Base>
 <script>
