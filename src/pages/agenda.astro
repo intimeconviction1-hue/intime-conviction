@@ -27,6 +27,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
     <p class="sur-titre">Les juridictions / Les sessions annoncées</p>
     <h1>Agenda des <span>sessions criminelles</span></h1>
     <p>Les périodes ci-dessous proviennent des intitulés de rôles publiés par les cours d’appel. Une période de session ne confirme ni la tenue d’un procès particulier ni l’accès du public à chaque audience.</p>
+    <p id="alerte-actualite" class="alerte-actualite" data-date-generation={dateDuJour} data-date-verification={DATE_CONTROLE_AGENDA} hidden role="status"></p>
     <p class="date-controle">Sources vérifiées le <time datetime={DATE_CONTROLE_AGENDA}>{formatDate(DATE_CONTROLE_AGENDA)}</time>. Sessions non terminées au <time datetime={dateDuJour}>{formatDate(dateDuJour)}</time>, date de génération de cette page.</p>
   </header>
   <form class="filtres-agenda" id="filtres-agenda" aria-label="Filtrer les sessions et audiences">
@@ -118,6 +119,30 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
       ?'Aucune période répertoriée ne correspond à ces filtres.'
       :visibles+' période'+(visibles>1?'s':'')+' affichée'+(visibles>1?'s':'')+'.';
   }
+  const params=new URLSearchParams(window.location.search);
+  const departementDemande=params.get('departement');
+  if(departementDemande && territoire && [...territoire.options].some(option=>option.value===departementDemande)){
+    territoire.value=departementDemande;
+  }
+  const moisDemande=params.get('mois');
+  if(moisDemande && periode && [...periode.options].some(option=>option.value===moisDemande)){
+    periode.value=moisDemande;
+  }
+  afficherSelection();
+  const alerte=document.querySelector<HTMLElement>('#alerte-actualite');
+  if(alerte){
+    const maintenant=new Date();
+    const aujourdhui=new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'2-digit',day:'2-digit',timeZone:'Europe/Paris'}).format(maintenant);
+    const conversion=(v:string)=>Date.parse(v+'T12:00:00Z');
+    const dateVerification=alerte.dataset.dateVerification??'';
+    const dateGeneration=alerte.dataset.dateGeneration??'';
+    const joursDepuisControle=Math.floor((conversion(aujourdhui)-conversion(dateVerification))/86400000);
+    const joursDepuisGeneration=Math.floor((conversion(aujourdhui)-conversion(dateGeneration))/86400000);
+    if(joursDepuisControle>7 || joursDepuisGeneration>1){
+      alerte.hidden=false;
+      alerte.textContent='Attention : cette sélection n’est pas un calendrier judiciaire en temps réel. La dernière vérification documentaire date de '+dateVerification+' et cette page a été générée le '+dateGeneration+'. Consultez les rôles officiels avant tout déplacement.';
+    }
+  }
   filtres?.addEventListener('change',afficherSelection);
   filtres?.addEventListener('reset',()=>requestAnimationFrame(afficherSelection));
 </script>
@@ -178,4 +203,5 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
 .filtres-agenda #resultats-agenda{flex-basis:100%;margin:0;color:#555b5f;font-size:.81rem}
 .sessions li[hidden],.audiences-indicatives li[hidden]{display:none!important}
 @media(max-width:40rem){.filtres-agenda{padding:1rem}.filtres-agenda button{width:100%}}
+.alerte-actualite:not([hidden]){display:block;margin:1rem 0;padding:1rem;background:#fff4dc;border-left:4px solid #98631b;color:#272521;font:650 .85rem/1.6 var(--sans)}
 </style>
