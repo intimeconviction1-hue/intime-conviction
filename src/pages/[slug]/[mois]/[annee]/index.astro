@@ -32,6 +32,15 @@ const { data } = article;
 const r = rubrique(data.rubrique);
 ---
 <Base titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} article={{ headline:data.titre,datePublished:data.date.toISOString(),author:data.auteur || null }}>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context':'https://schema.org',
+    '@type':'BreadcrumbList',
+    itemListElement:[
+      {'@type':'ListItem',position:1,name:'Accueil',item:'https://www.intimeconviction.fr/'},
+      {'@type':'ListItem',position:2,name:r.nom,item:new URL('/rubrique/'+r.slug+'/',Astro.site).href},
+      {'@type':'ListItem',position:3,name:data.titre,item:new URL(data.chemin,Astro.site).href}
+    ]
+  })} />
   <div class="lecture-progression" aria-hidden="true"></div>
   <nav class="fil-ariane" aria-label="Fil d’Ariane">
     <a href="/">Accueil</a><span aria-hidden="true">/</span><a href={`/rubrique/${r.slug}/`}>{r.nom}</a><span aria-hidden="true">/</span><span>Article du {dateLongue(data.date)}</span>
