@@ -19,9 +19,9 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
   rubriqueActive="dossiers"
 >
   <header class="en-tete-dossiers">
-    <p class="code-dossier">IC / LE FONDS DOCUMENTAIRE</p>
-    <p class="en-tete-sur">LES DOSSIERS</p>
-    <h1>LES DOSSIERS<br /><span>JUDICIAIRES.</span></h1>
+    <p class="code-dossier">Les affaires et leurs sources</p>
+    <p class="en-tete-sur">Dossiers judiciaires</p>
+    <h1>Les dossiers<br /><span>judiciaires</span></h1>
     <p class="sous-titre">Les mentions d’une même affaire, retrouvées dans la presse. Les sources restent identifiées. Les dates aussi.</p>
     <div class="chiffres"><span><strong>{dossiers.length}</strong> dossiers thématiques</span><span><strong>{nombre(totalReferences)}</strong> liens répertoriés</span></div>
   </header>
@@ -30,12 +30,12 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
     <p>Une sélection de liens vers des médias extérieurs, réunis parce que le <strong>titre</strong> mentionne explicitement le nom ou les mots-clés d’une affaire. Une référence peut seulement évoquer l’affaire sans traiter du même procès. Il ne s’agit ni d’un récit judiciaire rédigé par Intime Conviction, ni d’une chronologie certifiée des faits ou des décisions.</p>
   </section>
   <aside class="lien-chronologie">
-    <div><span>LE TEMPS DES PROCÈS / LES DATES RECOUPÉES</span><strong>AU-DELÀ DES TITRES : LES ÉTAPES DE JUSTICE.</strong><p>Ouvertures d’audience, verdicts et procédures d’appel sont consignés à part des alertes de presse, avec la date de l’événement et sa source.</p></div>
-    <a href="/chronologie/">EXPLORER LA CHRONOLOGIE JUDICIAIRE <span aria-hidden="true">↗</span></a>
+    <div><span>Repères judiciaires documentés</span><strong>Les étapes des procédures</strong><p>Ouvertures d’audience, verdicts et procédures d’appel sont consignés à part des alertes de presse, avec la date de l’événement et sa source.</p></div>
+    <a href="/chronologie/">Consulter la chronologie judiciaire <span aria-hidden="true">↗</span></a>
   </aside>
-  <p class="lien-carte-index"><a href="/carte/">SITUER LES JURIDICTIONS DES DOSSIERS SUR LA CARTE <span aria-hidden="true">↗</span></a></p>
+  <p class="lien-carte-index"><a href="/carte/">Voir les juridictions sur la carte <span aria-hidden="true">↗</span></a></p>
   <section class="repertoire" aria-labelledby="titre-repertoire">
-    <div class="barre"><h2 id="titre-repertoire">OUVRIR UN DOSSIER</h2><span>{dossiers.length} DOSSIERS DISPONIBLES</span></div>
+    <div class="barre"><h2 id="titre-repertoire">Explorer les dossiers</h2><span>{dossiers.length} dossiers disponibles</span></div>
     <ol class="cartes">
       {dossiers.map((d,i)=>(
         <li>
@@ -45,7 +45,7 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
             <h3>{d.titre}</h3>
             <p class="description">{d.presentation}</p>
             <div class="mesures"><span><strong>{nombre(d.total)}</strong> références</span><span><strong>{d.medias}</strong> médias</span></div>
-            <p class="date-source">DERNIÈRE ALERTE RÉPERTORIÉE : <time datetime={d.fin}>{date(d.fin)}</time></p>
+            <p class="date-source">Dernière référence repérée le <time datetime={d.fin}>{date(d.fin)}</time></p>
           </a>
         </li>
       ))}
@@ -53,7 +53,7 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
   </section>
   <aside class="pied-repertoire">
     <div><h2>Consulter l’ensemble des archives</h2><p>Les dossiers constituent des portes d’entrée thématiques. Toutes les autres références restent consultables, année par année, dans les archives de la revue de presse.</p></div>
-    <a href="/archives/presse/">EXPLORER LA REVUE DE PRESSE <span aria-hidden="true">↗</span></a>
+    <a href="/archives/presse/">Consulter les archives de presse <span aria-hidden="true">↗</span></a>
   </aside>
 </Base>
 <style>
@@ -101,4 +101,52 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
 .lien-chronologie p{font:500 .81rem/1.55 var(--sans);margin:.2rem 0 0}
 .lien-chronologie a{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#ffe100;color:#151718;padding:1rem;font:900 .67rem/1.4 var(--sans);max-width:220px}
 .lien-chronologie a:hover{background:#fff;color:#151718}
-@media(max-width:47.99rem){.lien-chronologie{flex-direction:column;align-items:stretch}.lien-chronologie a{max-width:none;flex-shrink:1}}.lien-carte-index{margin:0 0 1.5rem}.lien-carte-index a{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#ffe100;color:#151718;padding:1.25rem;font:900 .74rem/1.45 var(--sans)}.lien-carte-index a:hover{background:#151718;color:#fff}</style>
+@media(max-width:47.99rem){.lien-chronologie{flex-direction:column;align-items:stretch}.lien-chronologie a{max-width:none;flex-shrink:1}}.lien-carte-index{margin:0 0 1.5rem}.lien-carte-index a{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#ffe100;color:#151718;padding:1.25rem;font:900 .74rem/1.45 var(--sans)}.lien-carte-index a:hover{background:#151718;color:#fff}
+/* Continuité visuelle avec les pages de dossier : papier, encre et bordeaux. */
+.en-tete-dossiers{background:#f5f2ed;color:#202427;border-top:3px solid #a12c39}
+.code-dossier{color:#96313b;font:700 .78rem/1.5 var(--sans);letter-spacing:.02em;margin-bottom:1.7rem}
+.en-tete-sur{color:#596066;font:600 .8rem/1.5 var(--sans);letter-spacing:0;text-transform:none}
+.en-tete-dossiers h1{font:650 clamp(2.7rem,6vw,5.2rem)/1.05 var(--serif);letter-spacing:-.045em;overflow-wrap:anywhere;margin-bottom:1.2rem}
+.en-tete-dossiers h1 span{color:#96313b}
+.en-tete-dossiers .sous-titre{font:450 clamp(1rem,1.6vw,1.18rem)/1.65 var(--sans);text-transform:none;color:#3b4145;max-width:64ch}
+.chiffres{border-top:1px solid #c8c3bd}
+.chiffres span{font:550 .85rem/1.5 var(--sans);text-transform:none}
+.chiffres strong{font:650 clamp(1.5rem,3vw,2.5rem)/1 var(--sans);color:#96313b}
+.chapo{border-bottom:1px solid #c8c3bd}
+.chapo h2{font:650 clamp(1.35rem,2.4vw,2rem)/1.15 var(--serif);letter-spacing:-.02em}
+.repertoire .barre{border-bottom:2px solid #a12c39}
+.repertoire .barre h2{font:650 clamp(1.8rem,3.6vw,3rem)/1.15 var(--serif);letter-spacing:-.03em}
+.repertoire .barre span{font:600 .8rem/1.5 var(--sans)}
+.cartes{gap:1rem}
+.cartes li:nth-child(odd){border-right:0}
+.cartes a,.cartes li:first-child a{background:#f9f7f3;border:1px solid #d7d1cb;color:#202427;min-height:320px}
+.cartes a:hover,.cartes li:first-child a:hover{background:#efe9e1;color:#202427;border-color:#a12c39}
+.cartes a:focus-visible,.lien-chronologie a:focus-visible,.lien-carte-index a:focus-visible,.pied-repertoire a:focus-visible{outline:3px solid #a12c39;outline-offset:3px}
+.ligne-haute{font:600 .75rem/1.5 var(--sans);letter-spacing:0;color:#62676b}
+.signe{color:#96313b}
+.cartes .theme{font:650 .76rem/1.5 var(--sans);letter-spacing:0;color:#96313b;margin-top:.9rem}
+.cartes h3{font:650 clamp(1.8rem,3vw,2.8rem)/1.12 var(--serif);letter-spacing:-.035em}
+.cartes .description{font:450 .94rem/1.65 var(--sans)}
+.mesures{border-top:1px solid #d7d1cb}
+.mesures span{font:550 .8rem/1.5 var(--sans);text-transform:none}
+.mesures strong{font:650 1.25rem/1 var(--sans)}
+.date-source{font:500 .76rem/1.5 var(--sans);letter-spacing:0;color:#62676b}
+.lien-chronologie{background:#f3f0eb;color:#202427;border-left:3px solid #a12c39}
+.lien-chronologie div>span{color:#96313b;font:650 .8rem/1.5 var(--sans);letter-spacing:0}
+.lien-chronologie strong{font:650 clamp(1.25rem,2vw,1.85rem)/1.18 var(--serif);letter-spacing:-.02em}
+.lien-chronologie p{font:450 .9rem/1.6 var(--sans)}
+.lien-chronologie a{background:#fff;color:#202427;border:1px solid #a12c39;font:650 .8rem/1.45 var(--sans);max-width:235px}
+.lien-chronologie a:hover{background:#a12c39;color:#fff}
+.lien-carte-index a{background:#f9f7f3;color:#202427;border:1px solid #d7d1cb;font:650 .85rem/1.5 var(--sans)}
+.lien-carte-index a:hover{background:#efe9e1;color:#202427}
+.pied-repertoire{background:#f3f0eb;color:#202427;border-top:2px solid #a12c39}
+.pied-repertoire h2{font:650 clamp(1.5rem,2.6vw,2.2rem)/1.15 var(--serif);letter-spacing:-.025em}
+.pied-repertoire a{background:#fff;border:1px solid #a12c39;color:#202427;font:650 .82rem/1.5 var(--sans)}
+.pied-repertoire a:hover{background:#a12c39;color:#fff}
+@media(max-width:48rem){
+ .en-tete-dossiers h1{font-size:clamp(2.5rem,9vw,4rem)}
+ .cartes{grid-template-columns:minmax(0,1fr)}
+ .cartes a{min-height:unset}
+ .lien-chronologie a{max-width:none}
+}
+</style>
