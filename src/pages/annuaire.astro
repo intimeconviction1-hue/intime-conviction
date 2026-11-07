@@ -1,0 +1,87 @@
+---
+import Base from '../layouts/Base.astro';
+import { DEPARTEMENTS_ASSISES, ANNUAIRE_OFFICIEL, NOTICE_DATE, validerAnnuaire } from '../lib/guide-assises.mjs';
+validerAnnuaire();
+const nombreDepartements = DEPARTEMENTS_ASSISES.length;
+const nombreOutreMer = DEPARTEMENTS_ASSISES.filter(d=>d.outreMer).length;
+const troisEntrees = [
+  {n:'01', titre:'Repérez la ville',texte:'Saisissez un numéro de département, son nom ou la ville-siège habituelle des assises.'},
+  {n:'02', titre:'Vérifiez le palais',texte:'Ouvrez ensuite l’annuaire officiel de la Justice pour obtenir les coordonnées actualisées et l’adresse exacte.'},
+  {n:'03', titre:'Demandez le rôle',texte:'Pour connaître les audiences programmées et leurs éventuelles restrictions, contactez le greffe ou consultez la page officielle de la juridiction.'},
+];
+---
+<Base titre="Annuaire des cours d’assises" description="Rechercher par département, code et ville le siège habituel des cours d’assises françaises, avec renvoi à l’annuaire du ministère de la Justice." rubriqueActive="annuaire">
+  <header class="annuaire-head">
+    <p class="surtitre">LE RÉPERTOIRE / JURIDICTIONS CRIMINELLES</p>
+    <h1>LA FRANCE<br /><span>DES ASSISES.</span></h1>
+    <p class="accroche">Un département, une cour, une ville où se rendre. Retrouvez le siège habituel des assises et les coordonnées officielles de la juridiction à partir de l’annuaire du ministère.</p>
+    <div class="stats"><span><strong>{nombreDepartements}</strong> départements référencés</span><span><strong>{nombreOutreMer}</strong> départements d’outre-mer</span><span><strong>01</strong> annuaire officiel à consulter</span></div>
+  </header>
+  <section class="notice" aria-labelledby="titre-notice"><h2 id="titre-notice">L’ANNUAIRE NE FAIT PAS LE RÔLE.</h2><p>Les villes ci-dessous servent de <strong>repères d’orientation</strong>, pas de preuve de la tenue d’une audience aujourd’hui. La cour de la Haute-Saône et du Territoire de Belfort est commune aux deux départements et siège à Vesoul. D’autres collectivités françaises ont une organisation judiciaire spécifique qui ne figure pas dans cette liste départementale. Les adresses, téléphones et horaires sont à vérifier dans le répertoire officiel.</p><a href={ANNUAIRE_OFFICIEL} target="_blank" rel="noopener noreferrer">OUVRIR L’ANNUAIRE DU MINISTÈRE <span aria-hidden="true">↗</span></a></section>
+  <section class="methode"><h2>EN TROIS GESTES.</h2><ol>{troisEntrees.map(x=><li><strong>{x.n}</strong><div><h3>{x.titre}</h3><p>{x.texte}</p></div></li>)}</ol></section>
+  <section id="repertoire" class="liste-repertoire" aria-labelledby="titre-repertoire">
+    <div class="intro-liste"><p>LE FONDS / MÉTROPOLE & OUTRE-MER</p><h2 id="titre-repertoire">TROUVER<br /><mark>UNE COUR.</mark></h2></div>
+    <form id="filtres" class="formulaire" role="search">
+      <label>VILLE, DÉPARTEMENT OU CODE
+        <input type="search" id="recherche-annuaire" placeholder="Ex. 33, Gironde, Bordeaux..." autocomplete="off" />
+      </label>
+      <label>TERRITOIRE
+        <select id="zone-annuaire">
+          <option value="tous">Tous les départements</option>
+          <option value="metropole">France métropolitaine</option>
+          <option value="outre-mer">Outre-mer départemental</option>
+        </select>
+      </label>
+      <button type="reset">RÉINITIALISER</button>
+    </form>
+    <p class="compteur" id="compteur" role="status" aria-live="polite">{nombreDepartements} départements affichés</p>
+    <ol class="juridictions" id="resultats">
+      {DEPARTEMENTS_ASSISES.map(d=><li data-code={d.code} data-departement={d.departement} data-ville={d.ville} data-zone={d.outreMer?'outre-mer':'metropole'}>
+        <div class="fiche-code"><strong>{d.code}</strong><span>CODE DÉPARTEMENT</span></div>
+        <div class="fiche-texte">
+          <p class="departement">{d.departement}</p>
+          <h3>{d.ville}</h3>
+          <p class="indice">{d.courPartagee?'Cour d’assises commune à la Haute-Saône et au Territoire de Belfort':'Ville-siège habituelle de la cour d’assises'}</p>
+        </div>
+        <a class="lien-officiel" href={d.courPartagee?'https://www.justice.gouv.fr/annuaire/fiche/cour-d-assises-de-la-haute-saone-et-du-territoire-de-belfort':ANNUAIRE_OFFICIEL} target="_blank" rel="noopener noreferrer" aria-label={'Vérifier la juridiction de ' + d.departement + ' dans l’annuaire du ministère de la Justice'}>
+          VÉRIFIER <span aria-hidden="true">↗</span>
+        </a>
+      </li>)}
+    </ol>
+    <p id="aucun" class="aucun" hidden>Aucune correspondance. Essayez le nom d’une ville ou le numéro du département.</p>
+    <p class="note-maj">Répertoire géographique d’orientation établi le <time datetime={NOTICE_DATE}>7 novembre 2026</time>. Certains sièges dérogatoires sont expressément fixés par <a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000045459417/2026-02-21" target="_blank" rel="noopener noreferrer">l’article R. 41 du Code de procédure pénale</a>. Les lieux d’audience peuvent varier selon les sessions et les procédures. Informations institutionnelles à confirmer avant tout déplacement.</p>
+  </section>
+  <aside class="cours-repertoire"><p class="surtitre">À PARTIR D’UNE AFFAIRE</p><h2>LE PROCÈS<br />AUSSI SE DÉPLACE.</h2><p>Une première instance et un appel peuvent se tenir devant des juridictions différentes. Consultez notre carte des dossiers déjà documentés pour visualiser les villes concernées.</p><a href="/carte/">VOIR NOTRE CARTE DES DOSSIERS <span aria-hidden="true">↗</span></a></aside>
+  <div class="suite-annuaire"><a href="/assister/">ASSISTER À UNE AUDIENCE <span aria-hidden="true">↗</span></a><a href="/comprendre/">COMPRENDRE LES ASSISES <span aria-hidden="true">↗</span></a></div>
+</Base>
+<script>
+  const form=document.querySelector<HTMLFormElement>('#filtres');
+  const recherche=document.querySelector<HTMLInputElement>('#recherche-annuaire');
+  const zone=document.querySelector<HTMLSelectElement>('#zone-annuaire');
+  const elements=[...document.querySelectorAll<HTMLElement>('#resultats>li')];
+  const compteur=document.querySelector<HTMLElement>('#compteur');
+  const aucun=document.querySelector<HTMLElement>('#aucun');
+  const normaliser=(t:string)=>t.toLocaleLowerCase('fr').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  function filtrer() {
+    const query=normaliser(recherche.value.trim()),choix=zone.value;
+    let n=0;
+    for(const li of elements){
+      const texte=normaliser((li.dataset.code||'')+' '+(li.dataset.departement||'')+' '+(li.dataset.ville||''));
+      const visible=texte.includes(query)&&(choix==='tous'||li.dataset.zone===choix);
+      li.hidden=!visible;if(visible)n++;
+    }
+    compteur.textContent=n+' département'+(n>1?'s':'')+' affiché'+(n>1?'s':'');
+    aucun.hidden=n!==0;
+  }
+  const params=new URLSearchParams(location.search);
+  recherche.value=params.get('q')||'';
+  zone.value=['metropole','outre-mer'].includes(params.get('zone')||'')?params.get('zone'):'tous';
+  recherche.addEventListener('input',filtrer);
+  zone.addEventListener('change',filtrer);
+  form.addEventListener('submit',e=>{e.preventDefault();filtrer()});
+  form.addEventListener('reset',()=>{recherche.value='';zone.value='tous';filtrer()});
+  filtrer();
+</script>
+<style>
+.annuaire-head{margin-top:1.5rem;padding:clamp(1.5rem,5vw,5rem);background:#151718;color:#fff;border-top:9px solid #ffe100}.surtitre{font:900 .68rem/1.4 var(--sans);letter-spacing:.08em;color:#ffe100;margin:0 0 2rem}.annuaire-head h1{font:900 clamp(2.7rem,7.8vw,7.4rem)/.96 var(--sans);letter-spacing:-.08em;margin:0}.annuaire-head h1 span{color:#ffe100}.accroche{font:650 clamp(1rem,1.7vw,1.34rem)/1.55 var(--sans);max-width:65ch;margin:2rem 0}.stats{border-top:1px solid #777;padding-top:1rem;display:flex;flex-wrap:wrap;gap:1rem 3rem}.stats span{font:900 .68rem/1.5 var(--sans);text-transform:uppercase;display:flex;align-items:baseline;gap:.65rem}.stats strong{font:900 2rem/1 var(--sans);color:#ffe100}.notice{margin:2rem 0;display:grid;grid-template-columns:1fr 2fr;gap:1.3rem 2.4rem;align-items:center;padding:1.5rem;border:2px solid #151718}.notice h2{font:900 clamp(1.4rem,2.5vw,2.2rem)/1.16 var(--sans);letter-spacing:-.04em;margin:0}.notice p{font:540 .88rem/1.65 var(--sans);margin:0}.notice a{grid-column:1/-1;background:#ffe100;color:#151718;padding:1rem;font:900 .71rem/1.4 var(--sans);display:flex;justify-content:space-between;gap:1rem}.notice a:hover{background:#151718;color:#fff}.methode{margin:3.5rem 0}.methode h2{font:900 1.4rem/1.2 var(--sans);border-bottom:4px solid #151718;padding-bottom:.7rem}.methode ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.methode li{border:1px solid var(--filet);padding:1.2rem}.methode li>strong{font:900 2.3rem/1 var(--sans);color:var(--encre-2)}.methode h3{font:900 1.16rem/1.2 var(--sans);margin:1rem 0 .5rem}.methode p{font:500 .8rem/1.6 var(--sans);margin:0}.intro-liste{border-top:8px solid #151718;padding:1.4rem 0}.intro-liste p{font:900 .69rem/1.4 var(--sans);letter-spacing:.06em}.intro-liste h2{font:900 clamp(2.5rem,5.5vw,5rem)/.96 var(--sans);letter-spacing:-.065em;margin:.9rem 0}.intro-liste mark{background:#ffe100;color:#151718}.formulaire{display:grid;grid-template-columns:2.5fr 1.2fr auto;gap:.8rem;background:#ffe100;color:#151718;padding:1.3rem;align-items:end}.formulaire label{display:flex;flex-direction:column;gap:.4rem;font:900 .68rem/1.4 var(--sans)}.formulaire input,.formulaire select{min-height:50px;border:2px solid #151718;background:#fff;color:#151718;border-radius:0;padding:.75rem;font:650 .86rem/1.45 var(--sans);width:100%}.formulaire button{min-height:50px;background:#151718;color:#fff;border:2px solid #151718;padding:0 1rem;font:900 .65rem/1.4 var(--sans);cursor:pointer}.formulaire button:hover{background:#fff;color:#151718}.compteur{font:900 .72rem/1.5 var(--sans);text-transform:uppercase;border-bottom:3px solid #151718;margin:1.5rem 0 0;padding:0 0 1rem}.juridictions{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 1.4rem}.juridictions li{display:grid;grid-template-columns:69px minmax(0,1fr) auto;gap:.9rem;align-items:center;padding:1.1rem 0;border-bottom:1px solid var(--filet);min-width:0}.juridictions li[hidden],.aucun[hidden]{display:none}.fiche-code{background:#151718;color:#fff;min-height:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem}.fiche-code strong{font:900 1.5rem/1 var(--sans)}.fiche-code span{font:750 .37rem/1.3 var(--sans);text-align:center}.fiche-texte{min-width:0}.fiche-texte .departement{font:900 .66rem/1.4 var(--sans);text-transform:uppercase;color:var(--encre-2);margin:0}.fiche-texte h3{font:900 clamp(1.05rem,1.7vw,1.4rem)/1.17 var(--sans);letter-spacing:-.035em;margin:.25rem 0}.fiche-texte .indice{font:500 .65rem/1.4 var(--sans);margin:0;color:var(--encre-2)}.lien-officiel{background:#ffe100;color:#151718;padding:.75rem .55rem;font:900 .6rem/1.4 var(--sans);display:flex;gap:.6rem;align-items:center}.lien-officiel:hover{background:#151718;color:#fff}.note-maj{font:550 .72rem/1.65 var(--sans);color:var(--encre-2);margin:1.3rem 0}.aucun{padding:1.2rem;background:#ffe100;font:750 .92rem/1.5 var(--sans)}.cours-repertoire{background:#151718;color:#fff;padding:clamp(1.5rem,4vw,3rem);margin:3rem 0;display:grid;grid-template-columns:1fr 1.2fr;gap:1rem 2rem}.cours-repertoire .surtitre{grid-column:1/-1;margin:0}.cours-repertoire h2{font:900 clamp(1.9rem,3.3vw,3rem)/1.06 var(--sans);letter-spacing:-.05em;margin:.8rem 0}.cours-repertoire p:not(.surtitre){font:500 .9rem/1.6 var(--sans)}.cours-repertoire a{grid-column:1/-1;display:flex;justify-content:space-between;gap:1rem;background:#ffe100;color:#151718;padding:1rem;font:900 .72rem/1.45 var(--sans)}.cours-repertoire a:hover{background:#fff;color:#151718}.suite-annuaire{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:2rem 0 4rem}.suite-annuaire a{display:flex;justify-content:space-between;gap:1rem;border:2px solid #151718;padding:1.1rem;font:900 .71rem/1.4 var(--sans)}.suite-annuaire a:hover{background:#ffe100;color:#151718}@media(max-width:70rem){.juridictions{grid-template-columns:1fr}}@media(max-width:48rem){.annuaire-head{padding:2rem 1.2rem}.annuaire-head h1{font-size:clamp(2.5rem,11vw,4.5rem)}.notice,.cours-repertoire,.formulaire,.methode ol,.suite-annuaire{grid-template-columns:1fr}.notice a,.cours-repertoire .surtitre,.cours-repertoire a{grid-column:auto}.juridictions li{grid-template-columns:55px minmax(0,1fr) auto;gap:.6rem}.fiche-code{min-height:60px}.fiche-code strong{font-size:1.3rem}.fiche-texte h3{font-size:1.05rem}.lien-officiel{font-size:.54rem;padding:.7rem .4rem}.formulaire{padding:1rem}}
+</style>

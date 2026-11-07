@@ -1,0 +1,119 @@
+---
+import Base from '../layouts/Base.astro';
+import { ETAPES_ASSISES, ACTEURS_ASSISES, LEXIQUE_ASSISES } from '../lib/guide-assises.mjs';
+const sources=[
+  {titre:'Service-Public : le procès devant les juridictions criminelles',url:'https://www.service-public.gouv.fr/particuliers/vosdroits/F1487'},
+  {titre:'Service-Public : la fonction de juré d’assises',url:'https://www.service-public.gouv.fr/particuliers/vosdroits/F1540'},
+  {titre:'Ministère de la Justice : annuaire des juridictions',url:'https://www.justice.gouv.fr/annuaire/juridictions-judiciaires'},
+];
+---
+<Base titre="Comprendre les assises" description="De la mise en accusation au verdict : une exploration originale du procès criminel, de ses douze étapes, de ses acteurs et de vingt mots de procédure." rubriqueActive="comprendre">
+  <header class="ouverture">
+    <p class="kicker">INTIME CONVICTION / LE DÉCODEUR JUDICIAIRE</p>
+    <h1>LE PROCÈS.<br /><span>EXPLIQUÉ.</span></h1>
+    <p class="chapô">Ce qui se joue derrière la porte d’une cour d’assises : les règles, les personnes, le temps de la parole et celui du jugement. Sans folklore, sans jargon gratuit.</p>
+    <div class="stats"><span><strong>12</strong> étapes du procès</span><span><strong>8</strong> acteurs à connaître</span><span><strong>{LEXIQUE_ASSISES.length}</strong> mots de justice</span></div>
+  </header>
+  <nav class="sommaire" aria-label="Dans ce guide">
+    <a href="#juridictions">QUI JUGE QUOI ? <span aria-hidden="true">↘</span></a>
+    <a href="#etapes">LE DÉROULEMENT <span aria-hidden="true">↘</span></a>
+    <a href="#acteurs">LES ACTEURS <span aria-hidden="true">↘</span></a>
+    <a href="#lexique">LE LEXIQUE <span aria-hidden="true">↘</span></a>
+  </nav>
+  <section id="juridictions" class="blocs" aria-labelledby="titre-juridictions">
+    <div class="head-section"><p>01 / COMPRENDRE LES INSTITUTIONS</p><h2 id="titre-juridictions">TOUS LES PROCÈS<br /><mark>NE SONT PAS DES ASSISES.</mark></h2></div>
+    <div class="comparateur">
+      <article class="carte-type principale"><div><span>LA COUR D’ASSISES</span><span>AVEC JURY POPULAIRE</span></div><h3>3 magistrats.<br />6 jurés.</h3><p>En première instance, les cours d’assises de droit commun jugent notamment les crimes relevant de leur compétence. La loi distingue ces affaires de celles confiées à la cour criminelle départementale. En appel, le jury compte neuf citoyens.</p><p class="precision">Certaines affaires, notamment de terrorisme, relèvent de formations spéciales sans jury populaire.</p></article>
+      <article class="carte-type"><div><span>LA COUR CRIMINELLE DÉPARTEMENTALE</span><span>MAGISTRATS PROFESSIONNELS</span></div><h3>5 magistrats.<br />Pas de jurés.</h3><p>Elle connaît en première instance de certains crimes punis de quinze à vingt ans de réclusion, dans les conditions prévues par les textes. Son organisation n’est pas celle d’une cour d’assises à jury.</p><p class="precision">Cette organisation a été généralisée à partir de 2023, avec des particularités territoriales et de compétence.</p></article>
+    </div>
+    <p class="note-source">Pour une qualification, une composition ou une exception, la source de référence reste <a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F1487" target="_blank" rel="noopener noreferrer">la fiche officielle de Service-Public ↗</a>.</p>
+  </section>
+  <section id="etapes" class="etapes" aria-labelledby="titre-etapes">
+    <div class="head-section"><p>02 / DANS LA SALLE D’AUDIENCE</p><h2 id="titre-etapes">DOUZE TEMPS.<br /><mark>UN PROCÈS.</mark></h2><div class="intro-section">La séquence varie selon la juridiction, les incidents de procédure, la nature des débats et la durée des audiences. Ces douze repères aident à lire ce qui se passe, sans prétendre imposer un ordre identique à tous les procès.</div></div>
+    <ol class="timeline">
+      {ETAPES_ASSISES.map((e,i)=><li><span class="index">{String(i+1).padStart(2,'0')}</span><div><h3>{e.titre}</h3><p>{e.texte}</p></div></li>)}
+    </ol>
+  </section>
+  <section id="acteurs" class="acteurs" aria-labelledby="titre-acteurs">
+    <div class="head-section"><p>03 / QUI PARLE ? QUI DÉCIDE ?</p><h2 id="titre-acteurs">LES VISAGES<br /><mark>DE L’AUDIENCE.</mark></h2></div>
+    <div class="grille-acteurs">{ACTEURS_ASSISES.map((a,i)=><article><p class="indice">RÔLE {String(i+1).padStart(2,'0')}</p><h3>{a.nom}</h3><p>{a.fonction}</p></article>)}</div>
+  </section>
+  <section id="lexique" class="lexique" aria-labelledby="titre-lexique">
+    <div class="head-section"><p>04 / LE DROIT EN MOTS SIMPLES</p><h2 id="titre-lexique">LES MOTS<br /><mark>DU PRÉTOIRE.</mark></h2></div>
+    <div class="aide-lexique"><p>Un glossaire original et volontairement bref. Les définitions générales n’effacent pas les subtilités propres à chaque procédure.</p><label for="chercher-mot">CHERCHER UN MOT <input id="chercher-mot" type="search" autocomplete="off" placeholder="Ex. appel, juré, huis clos..." /></label></div>
+    <dl class="entrees" id="entrees-lexique">{LEXIQUE_ASSISES.map(([mot,definition])=><div data-terme={mot}><dt>{mot}</dt><dd>{definition}</dd></div>)}</dl>
+    <p class="absence" id="rien" hidden>Aucun terme correspondant. Essaie un autre mot.</p>
+  </section>
+  <footer class="footer-ressources"><div><p class="kicker">POUR APPROFONDIR / SOURCES PRIMAIRES</p><h2>LE DROIT<br />À LA SOURCE.</h2><p>Ce guide est une synthèse originale à visée pédagogique, non un conseil juridique individuel. Les textes et les situations peuvent évoluer.</p></div><ul>{sources.map(s=><li><a href={s.url} target="_blank" rel="noopener noreferrer">{s.titre} <span aria-hidden="true">↗</span></a></li>)}<li><a href="/assister/">Assister à une audience : le guide pratique <span aria-hidden="true">↗</span></a></li><li><a href="/jurisprudence/">Lire les décisions et comprendre la cassation <span aria-hidden="true">↗</span></a></li><li><a href="/annuaire/">Trouver une juridiction par département <span aria-hidden="true">↗</span></a></li></ul></footer>
+</Base>
+<script>
+  const champ=document.querySelector<HTMLInputElement>('#chercher-mot');
+  const entrées=[...document.querySelectorAll<HTMLElement>('#entrees-lexique>div')];
+  const absence=document.querySelector<HTMLElement>('#rien');
+  function filtrer() {
+    const q=(champ?.value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+    let n=0;
+    for(const e of entrées){const texte=(e.textContent||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();e.hidden=!texte.includes(q);if(!e.hidden)n++;}
+    if(absence)absence.hidden=n>0;
+  }
+  champ?.addEventListener('input',filtrer);
+</script>
+<style>
+.ouverture{background:#151718;color:#fff;border-top:9px solid #ffe100;padding:clamp(1.5rem,5vw,4.5rem);margin:1.6rem 0 0}
+.kicker{font:900 .68rem/1.5 var(--sans);letter-spacing:.08em;color:#ffe100;margin:0 0 2.2rem}
+.ouverture h1{font:900 clamp(3.4rem,8.5vw,8rem)/.94 var(--sans);letter-spacing:-.08em;margin:0}
+.ouverture h1 span{color:#ffe100}
+.chapô{max-width:64ch;font:600 clamp(1rem,1.7vw,1.4rem)/1.55 var(--sans);margin:2rem 0}
+.stats{display:flex;flex-wrap:wrap;gap:1rem 3.5rem;border-top:1px solid #777;padding-top:1rem}
+.stats span{display:flex;align-items:baseline;gap:.7rem;font:900 .7rem/1.5 var(--sans);text-transform:uppercase}
+.stats strong{font:900 2.2rem/1 var(--sans);color:#ffe100}
+.sommaire{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.3rem;margin:0 0 4rem;background:#151718;padding:.35rem}
+.sommaire a{display:flex;justify-content:space-between;align-items:center;gap:.6rem;background:#ffe100;color:#151718;min-height:60px;padding:.8rem;font:900 .68rem/1.3 var(--sans)}
+.sommaire a:hover{background:#fff;color:#151718}
+.blocs,.etapes,.acteurs,.lexique{scroll-margin-top:2rem;margin:4.5rem 0}
+.head-section{border-top:7px solid #151718;padding-top:1.6rem;display:grid;grid-template-columns:1.3fr 1fr;gap:1.4rem 2rem;align-items:end;margin-bottom:1.6rem}
+.head-section>p{grid-column:1/-1;font:900 .7rem/1.4 var(--sans);letter-spacing:.06em;margin:0}
+.head-section h2{font:900 clamp(2.3rem,5vw,4.8rem)/.98 var(--sans);letter-spacing:-.067em;margin:0}
+.head-section mark{background:#ffe100;color:#151718}
+.intro-section{font:550 .92rem/1.6 var(--sans)}
+.comparateur{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.carte-type{background:#ededeb;color:#151718;padding:clamp(1.2rem,2.7vw,2.3rem);border:2px solid #151718;display:flex;flex-direction:column}
+.carte-type.principale{background:#ffe100}
+.carte-type>div{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:space-between;font:900 .65rem/1.3 var(--sans);letter-spacing:.04em}
+.carte-type>div span:last-child{color:#555}
+.carte-type h3{font:900 clamp(2rem,3vw,3.2rem)/1.03 var(--sans);letter-spacing:-.065em;margin:2rem 0 1rem}
+.carte-type p{font:550 .95rem/1.6 var(--sans);max-width:60ch;margin:.3rem 0 1rem}
+.carte-type .precision{font:750 .72rem/1.5 var(--sans);border-top:2px solid #151718;padding-top:1rem;margin-top:auto}
+.note-source{font:650 .76rem/1.55 var(--sans)}
+.note-source a{text-decoration:underline}
+.timeline{list-style:none;padding:0;margin:0;border-top:3px solid #151718}
+.timeline li{display:grid;grid-template-columns:minmax(75px,.5fr) 4fr;gap:1.5rem;padding:1.5rem 0;border-bottom:1px solid var(--filet)}
+.timeline .index{font:900 clamp(2rem,3.5vw,3.2rem)/1 var(--sans);letter-spacing:-.06em;color:var(--encre-2)}
+.timeline h3{font:900 clamp(1.25rem,2.1vw,1.8rem)/1.15 var(--sans);margin:0 0 .45rem}
+.timeline p{font:520 .94rem/1.55 var(--sans);max-width:75ch;margin:0}
+.grille-acteurs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:3px solid #151718}
+.grille-acteurs article{padding:1.7rem;border-bottom:2px solid #151718;min-width:0}
+.grille-acteurs article:nth-child(odd){border-right:2px solid #151718}
+.grille-acteurs .indice{font:900 .62rem/1.4 var(--sans);color:var(--encre-2);margin:0}
+.grille-acteurs h3{font:900 clamp(1.3rem,2.2vw,2rem)/1.18 var(--sans);margin:.8rem 0}
+.grille-acteurs article>p:last-child{font:500 .9rem/1.55 var(--sans);margin:0;max-width:50ch}
+.aide-lexique{display:grid;grid-template-columns:1fr 1fr;align-items:end;gap:2rem;background:#ffe100;color:#151718;padding:1.4rem;margin-bottom:.5rem}
+.aide-lexique p{font:550 .9rem/1.55 var(--sans);margin:0}
+.aide-lexique label{font:900 .65rem/1.4 var(--sans);display:flex;flex-direction:column;gap:.4rem}
+.aide-lexique input{min-height:49px;padding:.65rem;border:2px solid #151718;border-radius:0;background:#fff;color:#151718;font:600 .8rem/1.4 var(--sans);width:100%}
+.entrees{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin:0;gap:0}
+.entrees>div{padding:1.2rem;border-bottom:1px solid var(--filet)}
+.entrees>div:nth-child(odd){border-right:1px solid var(--filet)}
+.entrees>div[hidden],.absence[hidden]{display:none}
+.entrees dt{font:900 1.1rem/1.3 var(--sans)}
+.entrees dd{font:500 .87rem/1.55 var(--sans);margin:.5rem 0 0}
+.absence{padding:1rem;background:#ffe100;font:750 .9rem/1.5 var(--sans)}
+.footer-ressources{display:grid;grid-template-columns:1fr 1.1fr;gap:2.5rem;background:#151718;color:#fff;padding:clamp(1.5rem,3.5vw,3rem);margin:3rem 0}
+.footer-ressources h2{font:900 clamp(2rem,3vw,3rem)/1.05 var(--sans);letter-spacing:-.06em}
+.footer-ressources div>p:last-child{font:500 .87rem/1.6 var(--sans)}
+.footer-ressources ul{list-style:none;padding:0;margin:0}
+.footer-ressources li{border-top:1px solid #777}
+.footer-ressources a{display:flex;justify-content:space-between;gap:.7rem;padding:1rem 0;font:900 .76rem/1.45 var(--sans)}
+.footer-ressources a:hover{color:#ffe100}
+@media(max-width:48rem){.ouverture{padding:2rem 1.2rem}.ouverture h1{font-size:clamp(3.1rem,11vw,5rem)}.sommaire{grid-template-columns:repeat(2,minmax(0,1fr))}.head-section,.comparateur,.aide-lexique,.footer-ressources{grid-template-columns:1fr}.head-section>p{grid-column:auto}.timeline li{grid-template-columns:50px 1fr;gap:1rem}.grille-acteurs,.entrees{grid-template-columns:1fr}.grille-acteurs article:nth-child(odd),.entrees>div:nth-child(odd){border-right:0}}
+</style>
