@@ -22,3 +22,9 @@ Le fonds éditorial est stocké dans le dépôt privé `intime-conviction-articl
 - `articles/2025/fratricide-a-grasse-un-proces-bouleversant-sur-fond-de-violences-familiales.json` : contrôle du 7 novembre 2026. Aucun élément indépendant n'a permis d'identifier avec certitude le procès décrit ; les affirmations non attribuées ont été remplacées par une notice de vérification. Date, slug et URL conservés. Original accessible dans l'historique privé ; rétablir un récit seulement avec des sources identifiables.
 
 - `articles/2025/20-ans-pour-le-meurtre-de-son-pere.json` : contrôle du 7 novembre 2026. La condamnation à vingt ans en première instance (24 janvier 2025) a été suivie d'une peine de quinze ans en appel (6 novembre 2026), selon France 3 Pays de la Loire. Sources documentées et anciennes citations non vérifiées retirées. Vérifier l'existence d'un pourvoi éventuel. Date et URL historiques conservées.
+
+## Affichage et référencement des révisions du 7 novembre 2026
+
+Cinq articles corrigés portent désormais un champ `dateMiseAJour`, distinct de leur date de publication historique. L'affichage de l'article et les données structurées `Article.dateModified` doivent refléter cette correction, sans changer l'URL ni la date initiale. La recherche interne, les listes et l'accueil utilisent les titres et extraits du fonds privé au moment de chaque compilation, sans ancienne table de titres conservée en parallèle.
+
+La notice du 8 janvier 2025 relative à Grasse possède `verificationEnCours: true` : son URL historique reste accessible, avec une directive `noindex,follow`; cette URL n'est plus ajoutée au sitemap. Il s'agit d'une décision de prudence éditoriale, et non d'une décision judiciaire sur l'affaire.
