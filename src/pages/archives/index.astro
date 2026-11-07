@@ -24,7 +24,7 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
 ---
 <Base titre="Archives" description="Toutes les archives d’Intime Conviction, année par année : articles du journal et références de revue de presse, clairement distingués." rubriqueActive="archives">
   <header class="titre-page archives-tete">
-    <p class="etiquette">LES ARCHIVES / DEUX FONDS</p>
+    <p class="etiquette">INTIME CONVICTION</p>
     <h1>ARCHIVES<br /><span>DU JOURNAL.</span></h1>
     <p class="sous-titre">Retrouvez les articles du journal et les références de presse, classés par année et présentés séparément.</p>
   </header>
@@ -33,7 +33,7 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
     <section class="fonds-original">
       <span class="fonds-chiffre">{totalArticles}</span>
       <h2>ARTICLES DU JOURNAL</h2>
-      <p>Textes importés de l’ancien Intime Conviction. Chaque année renvoie aux articles publiés cette année-là.</p>
+      <p>Retrouvez les articles publiés par Intime Conviction, classés selon leur année de publication.</p>
     </section>
     <section class="fonds-presse">
       <span class="fonds-chiffre">{totalPresse}</span>
@@ -43,10 +43,10 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
     </section>
   </div>
 
-  <aside class="acces-dossiers" aria-label="Dossiers par affaire"><div><span>LES AFFAIRES / PAR THÈME</span><strong>DOSSIERS JUDICIAIRES PAR AFFAIRE</strong></div><a href="/dossiers/">OUVRIR LES DOSSIERS JUDICIAIRES <span aria-hidden="true">↗</span></a></aside>
+  <aside class="acces-dossiers" aria-label="Dossiers par affaire"><div><span>LES AFFAIRES / PAR THÈME</span><strong>Consulter les dossiers judiciaires</strong></div><a href="/dossiers/">OUVRIR LES DOSSIERS JUDICIAIRES <span aria-hidden="true">↗</span></a></aside>
   <section class="chronologie" aria-labelledby="titre-chronologie">
     <div class="chronologie-tete">
-      <h2 id="titre-chronologie">LA CHRONOLOGIE</h2>
+      <h2 id="titre-chronologie">Archives par année</h2>
       <span>{annees.length} ANNÉES RÉPERTORIÉES</span>
     </div>
     <ol class="annees">
@@ -109,4 +109,31 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
 .annee-acces .fleche{position:absolute;right:1rem;top:1rem;font:900 1.3rem/1 var(--sans)}
 .aucun-original{align-self:center;margin:0;padding:1rem 1.2rem;font:650 .79rem/1.5 var(--sans);color:#545852}
 @media(max-width:47.99rem){.archives-tete{padding:2rem 1.2rem}.archives-tete h1{font-size:clamp(2.7rem,11vw,4.5rem)}.fonds-legende{grid-template-columns:1fr}.fonds-original{border-right:0;border-bottom:3px solid #151718}.chronologie-tete{align-items:start;flex-direction:column}.annees>li{grid-template-columns:1fr;gap:.7rem}.annee-acces{grid-template-columns:1fr}.annee-acces a{min-height:90px}.annee{font-size:3.5rem}.aucun-original{align-self:start;padding:.4rem 0}}
-.acces-dossiers{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#151718;color:#fff;padding:1.5rem 2rem;margin:1.5rem 0 3rem}.acces-dossiers div{display:flex;flex-direction:column;gap:.6rem}.acces-dossiers div span{font:850 .7rem/1.4 var(--sans);letter-spacing:.08em;color:#ffe100}.acces-dossiers div strong{font:900 clamp(1rem,1.8vw,1.6rem)/1.2 var(--sans);letter-spacing:-.04em}.acces-dossiers a{flex-shrink:0;display:flex;gap:1rem;justify-content:space-between;align-items:center;background:#ffe100;color:#151718;font:900 .7rem/1.4 var(--sans);padding:1.2rem}.acces-dossiers a:hover{background:white;color:#151718}@media(max-width:48rem){.acces-dossiers{flex-direction:column;align-items:stretch;padding:1.3rem}.acces-dossiers a{flex-shrink:1}}</style>
+.acces-dossiers{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#151718;color:#fff;padding:1.5rem 2rem;margin:1.5rem 0 3rem}.acces-dossiers div{display:flex;flex-direction:column;gap:.6rem}.acces-dossiers div span{font:850 .7rem/1.4 var(--sans);letter-spacing:.08em;color:#ffe100}.acces-dossiers div strong{font:900 clamp(1rem,1.8vw,1.6rem)/1.2 var(--sans);letter-spacing:-.04em}.acces-dossiers a{flex-shrink:0;display:flex;gap:1rem;justify-content:space-between;align-items:center;background:#ffe100;color:#151718;font:900 .7rem/1.4 var(--sans);padding:1.2rem}.acces-dossiers a:hover{background:white;color:#151718}@media(max-width:48rem){.acces-dossiers{flex-direction:column;align-items:stretch;padding:1.3rem}.acces-dossiers a{flex-shrink:1}}
+
+.archives-tete{background:#f0eee9;color:#202529;border:0;border-top:3px solid #a12c39;padding:clamp(1.8rem,4vw,3.5rem)}
+.archives-tete .etiquette{background:transparent;color:#a12c39;padding:0}
+.archives-tete h1{font:650 clamp(2.8rem,6vw,5.3rem)/1.06 var(--serif);letter-spacing:-.04em;text-transform:none}
+.archives-tete h1 span{color:#202529}
+.archives-tete .sous-titre{font:450 clamp(1rem,1.6vw,1.2rem)/1.6 var(--sans);text-transform:none;max-width:65ch;color:#505457}
+.fonds-legende{border:1px solid #d2cec6;gap:1px;background:#d2cec6}
+.fonds-original,.fonds-presse{background:#fff;color:#202529;border:0}
+.fonds-presse{background:#f0eee9}
+.fonds-chiffre{font:650 clamp(2.8rem,5vw,4.8rem)/1 var(--serif);letter-spacing:-.04em}
+.fonds-legende h2{font:700 clamp(1.15rem,2vw,1.55rem)/1.2 var(--sans);letter-spacing:-.02em}
+.fonds-legende a{border-color:#bbb7b1;font-weight:700}
+.chronologie-tete{border-color:#a12c39;border-bottom-width:2px}
+.chronologie-tete h2{font:650 clamp(2rem,3.7vw,3.2rem)/1.15 var(--serif);letter-spacing:-.03em;text-transform:none}
+.annees>li{border-bottom:1px solid #d9d5ce}
+.annee{font:650 clamp(2.5rem,5vw,4.4rem)/1 var(--serif);letter-spacing:-.04em}
+.annee-acces a{border:1px solid #d1ccc4}
+.annee-acces a span:first-child{font-weight:700}
+.lien-original{background:#fff}.lien-presse{background:#f0eee9}
+.lien-original:hover,.lien-presse:hover{background:#e5dfd5}
+.acces-dossiers{background:#eeece7;color:#202529;border-left:3px solid #a12c39}
+.acces-dossiers div span{color:#a12c39}
+.acces-dossiers div strong{font:650 clamp(1.15rem,2vw,1.65rem)/1.2 var(--serif);letter-spacing:0}
+.acces-dossiers a{background:#a12c39;color:#fff;font-weight:700}
+.acces-dossiers a:hover{background:#842631;color:#fff}
+
+</style>
