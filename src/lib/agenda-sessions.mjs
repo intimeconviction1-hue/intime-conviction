@@ -71,7 +71,7 @@ export const SOURCES_A_COMPLETER = Object.freeze([
     source:'https://www.cours-appel.justice.fr/bordeaux/roles-des-cours-dassises'},
   {code:'42',ressort:'Loire',statut:'Rôle publié ; dates exactes à relever dans le document',
     source:'https://www.cours-appel.justice.fr/lyon/la-cour-dassises-de-la-loire'},
-  {code:'72',ressort:'Sarthe',statut:'Publication institutionnelle à contrôler après maintenance',
+  {code:'72',ressort:'Sarthe',statut:'Publication institutionnelle à contrôler après maintenance ; dates non confirmées',
     source:'https://www.cours-appel.justice.fr/angers/la-cour-dassises-de-la-sarthe'}
 ]);
 
