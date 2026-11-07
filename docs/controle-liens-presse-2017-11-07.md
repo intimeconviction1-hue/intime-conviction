@@ -35,3 +35,9 @@ Les gabarits et mécanismes de publication contrôlés par l'autre session ne so
 Correction de ces trois libellés dans le dépôt privé : `40f927c7e99d4b8a37fde87ec9d368383e01a429`. Les URL de la revue de presse et les liens externes non vérifiés sont préservés.
 
 **Limite du contrôle :** un échec de consultation, une restriction robots ou un abonnement ne prouvent pas qu'un article a disparu. Les 26 destinations n'ont pas toutes été validées une par une ; les conclusions portent uniquement sur les entrées examinées.
+
+## Complément : décision de la Cour de cassation du 20 juin 2018
+
+L'affaire de Kodjo Ben Hodor, dite du « tueur aux mocassins », signalée dans la revue de presse du 4 février 2017, bénéficie désormais d'une source judiciaire primaire : [Cour de cassation, chambre criminelle, 20 juin 2018, pourvoi n° 17-82.237](https://www.courdecassation.fr/decision/5fca8c597c06047eb3833736), rejet du pourvoi dirigé contre l'arrêt de la cour d'assises de Seine-et-Marne du 27 janvier 2017 (22 ans de réclusion pour assassinat). La mention de cette décision est ajoutée au lien Paris Match déjà archivé ; il n'a pas été supprimé. Commit privé : `3a445867579f62664d391ea79f7b89df54972fa0`.
+
+Le reportage de presse Europe 1 avec AFP daté du 30 janvier 2017 confirme le verdict d'appel et l'acquittement d'un autre chef poursuivi : https://www.europe1.fr/faits-divers/le-tueur-aux-mocassins-condamne-en-appel-a-22-ans-pour-assassinat-2964821 . La décision de cassation constitue ici la référence procédurale principale. Les archives relatives à Rennes et au Var restent sous vérification pour leurs suites judiciaires ; un article décrivant l'ouverture d'un procès ne doit pas être confondu avec le compte rendu du verdict.
