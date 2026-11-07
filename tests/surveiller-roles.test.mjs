@@ -63,7 +63,7 @@ test('la première collecte constitue une base, les suivantes signalent les docu
   assert.equal(etat.pages[BASE].length,2);
   const notice=await readFile(opts.issueChemin,'utf8');
   assert.match(notice,/Vérification éditoriale obligatoire/);
-  assert.match(notice,/novembre/);
+  assert.match(notice,/décembre/);
  } finally {await rm(dossier,{recursive:true,force:true});}
 });
 
@@ -73,8 +73,10 @@ test('un échec réseau ou une page vidée de tous ses documents ne supprime jam
   const opts={sources:[{url:BASE,codes:['33'],mode:'publication'}],
     etatChemin:join(dossier,'etat.json'),rapportChemin:join(dossier,'rapport.json'),issueChemin:join(dossier,'issue.md')};
   await executer({...opts,lire:async()=>({urlFinale:BASE,html:html([{url:PDF1,titre:'Rôle novembre'}])})});
-  let r=await executer({...opts,lire:async()=>({urlFinale:BASE,html:html([])})});
-  assert.equal(r.erreurs.length,1);assert.equal(r.modifications.length,0);
+  await assert.rejects(
+    executer({...opts,lire:async()=>({urlFinale:BASE,html:html([])})}),
+    /Aucune source officielle accessible/
+  );
   const etat=JSON.parse(await readFile(opts.etatChemin,'utf8'));
   assert.equal(etat.pages[BASE][0].url,PDF1);
   await assert.rejects(executer({...opts,lire:async()=>{throw Error('Timeout');}}),/Aucune source officielle accessible/);
