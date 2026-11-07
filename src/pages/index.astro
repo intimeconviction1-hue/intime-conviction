@@ -27,12 +27,15 @@ const nouvellesOuverture=(fil?.articles??[]).filter(n=>n.rubrique==='cours-du-jo
 const total=articles.length.toLocaleString('fr-FR');
 const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',timeZone:'Europe/Paris'});
 const dateEdition=fil?.releveLe ? new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'}).format(new Date(fil.releveLe)) : null;
+const dernierSignalement=veille.articles[0]?.dateAlerte ?? null;
+const dateDerniereAlerte=dernierSignalement ? new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'}).format(new Date(dernierSignalement+'T12:00:00Z')) : null;
+const releveRetarde=fil?.releveLe ? Date.now()-Date.parse(fil.releveLe)>6*60*60*1000 : true;
 ---
 <Base accueil>
   <div slot="fond" class="fond-page" aria-hidden="true"><Image src={fronton} alt="" width={500} loading="eager" fetchpriority="high" /></div>
   <section class="ouverture" aria-labelledby="titre-journal">
     <div class="cadre ouverture-interieur">
-      <div class="edition"><p><span class="point-rouge" aria-hidden="true"></span> LE JOURNAL DES COURS D’ASSISES</p><p>{dateEdition ? `Veille relevée le ${dateEdition}` : 'Archives du journal'}</p></div>
+      <div class="edition"><p><span class="point-rouge" aria-hidden="true"></span> LE JOURNAL DES COURS D’ASSISES</p><p>{dateEdition ? `Relevé RSS du ${dateEdition}${releveRetarde ? ' · Actualisation en retard' : ''}` : 'Flux RSS indisponible'}{dateDerniereAlerte && ` · Dernière alerte archivée : ${dateDerniereAlerte}`}</p></div>
       <div class="manifeste-accueil">
         <div class="manifeste-enquete"><span class="manifeste-index">IC / 001</span><p>UN JOURNAL. UNE COUR. DES VERSIONS.</p><span class="manifeste-balise" aria-hidden="true"></span></div>
         <h2>LES ASSISES.<br /><span>SANS RACCOURCI.</span></h2>
