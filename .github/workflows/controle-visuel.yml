@@ -6,6 +6,9 @@ on:
     branches: [main]
     paths:
       - 'src/pages/dossiers/**'
+      - 'src/pages/agenda.astro'
+      - 'src/lib/agenda-sessions.mjs'
+      - 'src/layouts/Base.astro'
       - 'src/styles/global.css'
       - 'scripts/controle-visuel.mjs'
       - '.github/workflows/controle-visuel.yml'
