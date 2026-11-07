@@ -46,6 +46,9 @@ jobs:
 
       - run: npm test
 
+      - name: Tester la collecte privée avant publication
+        run: node --test articles-prives/outils/actualites.test.mjs
+
       - name: Auditer les archives sans les modifier
         continue-on-error: true
         run: npm run audit:archives
