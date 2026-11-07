@@ -43,6 +43,7 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
     </section>
   </div>
 
+  <aside class="acces-dossiers" aria-label="Dossiers par affaire"><div><span>LES AFFAIRES / PAR THÈME</span><strong>DES SOURCES RELIÉES. DES DOSSIERS À EXPLORER.</strong></div><a href="/dossiers/">OUVRIR LES DOSSIERS JUDICIAIRES <span aria-hidden="true">↗</span></a></aside>
   <section class="chronologie" aria-labelledby="titre-chronologie">
     <div class="chronologie-tete">
       <h2 id="titre-chronologie">LA CHRONOLOGIE</h2>
@@ -108,4 +109,4 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
 .annee-acces .fleche{position:absolute;right:1rem;top:1rem;font:900 1.3rem/1 var(--sans)}
 .aucun-original{align-self:center;margin:0;padding:1rem 1.2rem;font:650 .79rem/1.5 var(--sans);color:#545852}
 @media(max-width:47.99rem){.archives-tete{padding:2rem 1.2rem}.archives-tete h1{font-size:clamp(2.7rem,11vw,4.5rem)}.fonds-legende{grid-template-columns:1fr}.fonds-original{border-right:0;border-bottom:3px solid #151718}.chronologie-tete{align-items:start;flex-direction:column}.annees>li{grid-template-columns:1fr;gap:.7rem}.annee-acces{grid-template-columns:1fr}.annee-acces a{min-height:90px}.annee{font-size:3.5rem}.aucun-original{align-self:start;padding:.4rem 0}}
-</style>
+.acces-dossiers{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#151718;color:#fff;padding:1.5rem 2rem;margin:1.5rem 0 3rem}.acces-dossiers div{display:flex;flex-direction:column;gap:.6rem}.acces-dossiers div span{font:850 .7rem/1.4 var(--sans);letter-spacing:.08em;color:#ffe100}.acces-dossiers div strong{font:900 clamp(1rem,1.8vw,1.6rem)/1.2 var(--sans);letter-spacing:-.04em}.acces-dossiers a{flex-shrink:0;display:flex;gap:1rem;justify-content:space-between;align-items:center;background:#ffe100;color:#151718;font:900 .7rem/1.4 var(--sans);padding:1.2rem}.acces-dossiers a:hover{background:white;color:#151718}@media(max-width:48rem){.acces-dossiers{flex-direction:column;align-items:stretch;padding:1.3rem}.acces-dossiers a{flex-shrink:1}}</style>
