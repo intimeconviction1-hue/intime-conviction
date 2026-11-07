@@ -2,10 +2,9 @@
 import Base from '../../../layouts/Base.astro';
 import { lireVeille } from '../../../lib/veille.mjs';
 import { DOSSIERS, referencesPourDossier, statistiquesDossier } from '../../../lib/dossiers.mjs';
-import { reperesPourDossier, couvertureParMois, VERIFICATION_AU } from '../../../lib/chronologie-judiciaire.mjs';
+import { reperesPourDossier, VERIFICATION_AU } from '../../../lib/chronologie-judiciaire.mjs';
 import { juridictionsPourDossier } from '../../../lib/juridictions.mjs';
 import ChronologieEvenements from '../../../components/ChronologieEvenements.astro';
-import CouvertureMensuelle from '../../../components/CouvertureMensuelle.astro';
 
 export async function getStaticPaths({ paginate }) {
   const veille = await lireVeille();
@@ -13,16 +12,15 @@ export async function getStaticPaths({ paginate }) {
     const references = referencesPourDossier(dossier, veille.articles);
     if (!references.length) return [];
     const statistiques = statistiquesDossier(references);
-    const moisCouverture = couvertureParMois(references);
     return paginate(references, {
       params: { slug: dossier.slug },
-      props: { dossier, statistiques, moisCouverture },
+      props: { dossier, statistiques },
       pageSize: 42
     });
   });
 }
 
-const { page, dossier, statistiques, moisCouverture } = Astro.props;
+const { page, dossier, statistiques } = Astro.props;
 const reperes = reperesPourDossier(dossier.slug);
 const lieux = juridictionsPourDossier(dossier.slug);
 const nombre = (n) => n.toLocaleString('fr-FR');
@@ -44,8 +42,7 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
     <p class="description">{dossier.presentation}</p>
     <div class="compteurs">
       <div><strong>{nombre(statistiques.total)}</strong><span>RÉFÉRENCES</span></div>
-      <div><strong>{nombre(statistiques.medias)}</strong><span>MÉDIAS CITÉS</span></div>
-      <div><strong>{statistiques.annees.length}</strong><span>ANNÉES DE VEILLE</span></div>
+
     </div>
   </header>
 
@@ -56,11 +53,6 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
       <p>Une liste de titres et de liens de presse ayant une <strong>mention explicite</strong> du sujet. Les contenus appartiennent aux médias cités. Certains titres peuvent seulement évoquer l’affaire, sans porter sur le même procès ou la même procédure. Aucun fait ni aucune décision de justice n’est déduit automatiquement de ces rapprochements.</p>
       <p>Les dates ci-dessous sont celles des <strong>alertes Google</strong>, pas nécessairement celles de publication, d’audience ou de jugement. Un lien ancien peut être devenu indisponible.</p>
     </div>
-    <aside class="periode">
-      <h2>REPÈRES DANS LE FONDS</h2>
-      <p><span>Début de la période couverte</span><strong><time datetime={statistiques.debut}>{date(statistiques.debut)}</time></strong></p>
-      <p><span>Fin de la période couverte</span><strong><time datetime={statistiques.fin}>{date(statistiques.fin)}</time></strong></p>
-    </aside>
   </div>
 
   {page.currentPage === 1 && reperes.length > 0 && (
@@ -77,24 +69,9 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
       <ChronologieEvenements reperes={reperes} />
     </section>
   )}
-  {page.currentPage === 1 && <CouvertureMensuelle moisDonnes={moisCouverture} />}
-  {page.currentPage > 1 && (
-    <p class="retour-frise">
-      {reperes.length > 0
-        ? <>Les repères judiciaires et l’historique mensuel des références figurent sur la <a href={'/dossiers/' + dossier.slug + '/#reperes-judiciaires'}>première page du dossier</a>.</>
-        : <>L’historique mensuel des références figure sur la <a href={'/dossiers/' + dossier.slug + '/'}>première page du dossier</a>.</>}
-    </p>
+  {page.currentPage > 1 && reperes.length > 0 && (
+    <p class="retour-frise">Les étapes judiciaires documentées figurent sur la <a href={'/dossiers/' + dossier.slug + '/#reperes-judiciaires'}>première page du dossier</a>.</p>
   )}
-
-  <section class="couverture" aria-labelledby="titre-periode">
-    <h2 id="titre-periode">La presse <span>par année</span></h2>
-    <ul>
-      {statistiques.annees.map(([annee, n]) => (
-        <li><a href={'/archives/presse/' + annee + '/'} title={'Voir toute la revue de presse de ' + annee}><strong>{annee}</strong><span>{nombre(n)} mentions dans ce dossier</span><span aria-hidden="true">↗</span></a></li>
-      ))}
-    </ul>
-    <p>Les liens par année ouvrent l’archive complète de presse, sans filtre sur ce dossier.</p>
-  </section>
 
   <section class="references" aria-labelledby="titre-references">
     <div class="titre-references">
