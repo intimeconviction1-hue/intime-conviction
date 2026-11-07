@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,sessionsAvenir} from '../lib/agenda-sessions.mjs';
+
+const dates=sessionsAvenir(SESSIONS_AGENDA,DATE_CONTROLE_AGENDA);
+const formatDate=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(s+'T12:00:00Z'));
+---
+<Base titre="Agenda des sessions criminelles" description="Dates de sessions publiées par les cours d’appel. Sources officielles identifiées, sans déduire les audiences individuelles ni les décisions." rubriqueActive="annuaire">
+  <header class="tete-agenda">
+    <p class="sur-titre">Les juridictions / Les sessions annoncées</p>
+    <h1>Agenda des <span>sessions criminelles</span></h1>
+    <p>Les périodes ci-dessous proviennent des intitulés de rôles publiés par les cours d’appel. Une période de session ne confirme ni la tenue d’un procès particulier ni l’accès du public à chaque audience.</p>
+    <p class="date-controle">Dernière vérification documentaire : <time datetime={DATE_CONTROLE_AGENDA}>{formatDate(DATE_CONTROLE_AGENDA)}</time>.</p>
+  </header>
+  <section class="sessions" aria-labelledby="titre-sessions">
+    <div class="titre-liste"><h2 id="titre-sessions">Sessions répertoriées</h2><span>{dates.length} périodes documentées</span></div>
+    <ol>
+      {dates.map(s=>(
+        <li>
+          <div class="periode"><time datetime={s.debut}>{formatDate(s.debut)}</time><span>au</span><time datetime={s.fin}>{formatDate(s.fin)}</time></div>
+          <div class="contenu">
+            <p class="localisation">{s.ville} · {s.departement}</p>
+            <h3>{s.juridiction}</h3>
+            <p>{s.libelle}</p>
+            <a href={s.source} target="_blank" rel="noopener noreferrer">Consulter la page officielle <span class="sr-only">(nouvel onglet)</span><span aria-hidden="true">↗</span></a>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+  <aside class="precautions">
+    <h2>Avant de se déplacer</h2>
+    <p>Les rôles peuvent être modifiés, notamment à l’approche des audiences. Vérifiez directement auprès du greffe ou de la cour d’appel les dates, la juridiction compétente et les conditions d’accès. Certaines audiences, notamment celles concernant des mineurs, ne sont pas publiques.</p>
+    <a href="/veille-roles/">Consulter toutes les sources officielles répertoriées</a>
+  </aside>
+</Base>
+<style>
+.tete-agenda{margin:2rem 0 2.5rem;padding:clamp(1.5rem,4vw,3rem);background:#f3f0eb;border-top:3px solid #a12c39;color:#202529}
+.sur-titre{margin:0 0 1rem;font:650 .8rem/1.5 var(--sans);color:#96313b}
+.tete-agenda h1{font:650 clamp(2.6rem,6vw,5rem)/1.08 var(--serif);letter-spacing:-.045em;margin:0 0 1.1rem}
+.tete-agenda h1 span{color:#96313b}
+.tete-agenda>p:not(.sur-titre){max-width:75ch;font:450 1rem/1.7 var(--sans)}
+.tete-agenda .date-controle{font-size:.83rem!important;color:#575b5e}
+.titre-liste{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;align-items:baseline;border-bottom:2px solid #a12c39;padding-bottom:.8rem}
+.titre-liste h2{font:650 clamp(1.7rem,3vw,2.6rem)/1.15 var(--serif);margin:0}
+.titre-liste span{font:550 .82rem var(--sans)}
+.sessions ol{list-style:none;margin:0;padding:0}
+.sessions li{display:grid;grid-template-columns:minmax(11rem,1fr) minmax(0,2fr);gap:clamp(1rem,3vw,2.5rem);padding:1.5rem 0;border-bottom:1px solid #d9d5cf}
+.periode{display:flex;flex-direction:column;align-items:flex-start;gap:.15rem;font:650 .94rem/1.45 var(--sans)}
+.periode span{font:450 .75rem var(--sans);color:#596066}
+.localisation{font:650 .8rem/1.5 var(--sans);color:#96313b;margin:0 0 .4rem}
+.contenu h3{font:600 clamp(1.3rem,2vw,1.65rem)/1.25 var(--serif);margin:0}
+.contenu>p:not(.localisation){font:450 .9rem/1.6 var(--sans);margin:.5rem 0}
+.contenu a{display:inline-block;font:650 .84rem/1.6 var(--sans);text-decoration:underline;text-underline-offset:.22em}
+.contenu a:hover,.precautions a:hover{color:#96313b}
+.precautions{border-left:3px solid #a12c39;background:#f3f0eb;padding:1.4rem clamp(1.2rem,3vw,2.2rem);margin:2.5rem 0 3.5rem}
+.precautions h2{font:650 1.5rem var(--serif);margin:0}
+.precautions p{font:450 .92rem/1.7 var(--sans)}
+.precautions a{font:650 .85rem/1.55 var(--sans);text-decoration:underline;text-underline-offset:.2em}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@media(max-width:40rem){.sessions li{grid-template-columns:minmax(0,1fr);gap:.7rem}.periode{flex-direction:row;flex-wrap:wrap;gap:.4rem}.tete-agenda{margin-top:1.1rem}.tete-agenda h1{overflow-wrap:anywhere}}
+</style>
