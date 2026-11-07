@@ -125,7 +125,7 @@ export const ETAPES_ASSISES = Object.freeze([
   { titre: 'La parole de l’accusé', texte: 'Le président interroge l’accusé, qui peut répondre, donner sa version et exercer son droit au silence.' },
   { titre: 'Les témoins et les experts', texte: 'Les témoignages, constatations et analyses sont discutés à l’audience. Les parties peuvent faire préciser ou contester les éléments présentés.' },
   { titre: 'Les parties civiles', texte: 'Les victimes constituées parties civiles peuvent exposer leur préjudice et faire valoir leurs demandes dans le cadre prévu par la loi.' },
-  { titre: 'Les réquisitions et les plaidoiries', texte: 'Le ministère public présente sa position. Les avocats des parties civiles interviennent, puis la défense expose ses arguments.' },
+  { titre: 'Les plaidoiries et les réquisitions', texte: 'Les avocats des parties civiles présentent leurs demandes, le ministère public prononce ses réquisitions, puis la défense plaide. Les modalités précises dépendent de l’audience.' },
   { titre: 'Le dernier mot', texte: 'Avant la clôture des débats, la parole est donnée une dernière fois à l’accusé.' },
   { titre: 'Le délibéré', texte: 'La cour se retire pour délibérer. Le contenu des échanges et des votes est couvert par le secret.' },
   { titre: 'Le verdict et la motivation', texte: 'La décision est annoncée publiquement. Elle précise notamment la culpabilité ou l’acquittement et, le cas échéant, la peine et les motifs prévus par le droit.' },
