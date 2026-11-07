@@ -171,7 +171,8 @@ export function validerDecryptages(articles=DECRYPTAGES, angles=ANGLES_A_CREUSER
   for(const a of articles){
     if(!/^[a-z0-9-]+$/.test(a.slug??'')||slugs.has(a.slug))throw new Error('Slug de décryptage invalide ou répété');
     slugs.add(a.slug);
-    for(const champ of ['titre','question','chapô','thematique','aRetenir'])if(typeof a[champ]!=='string'||a[champ].length<15)throw new Error('Décryptage incomplet : '+champ);
+    for(const champ of ['titre','question','chapô','aRetenir'])if(typeof a[champ]!=='string'||a[champ].length<15)throw new Error('Décryptage incomplet : '+champ);
+    if(typeof a.thematique!=='string'||a.thematique.length<6)throw new Error('Thématique manquante');
     if(!Array.isArray(a.sections)||a.sections.length<3||a.sections.some(s=>s.titre.length<10||s.paragraphes.length<2||s.paragraphes.some(p=>p.length<50)))throw new Error('Corps du décryptage insuffisant');
     if(!Array.isArray(a.sources)||!a.sources.length)throw new Error('Sources de décryptage absentes');
     for(const source of a.sources) {
