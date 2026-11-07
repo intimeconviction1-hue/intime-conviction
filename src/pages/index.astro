@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import frontonAssises from '../assets/fronton-cour-dassises.jpg';
 import AgendaEnBref from '../components/AgendaEnBref.astro';
 import Culture from '../components/Culture.astro';
 import { lireVeille } from '../lib/veille.mjs';
@@ -30,6 +31,10 @@ const total=articles.length.toLocaleString('fr-FR');
         </div>
         <a class="une-news-lien" href="/rubrique/cours-du-jour/">Toute la rubrique <span aria-hidden="true">↗</span></a>
       </header>
+      <figure class="accueil-photo-reportage">
+        <img src={frontonAssises.src} width={frontonAssises.width} height={frontonAssises.height} alt="Fronton d'une cour d'assises" fetchpriority="high" decoding="async" />
+        <figcaption><span>LA JUSTICE EN IMAGES</span><span>Les lieux où se tiennent les procès criminels</span></figcaption>
+      </figure>
       {articlesCarrousel.length > 0 && (
         <section class="articles-carrousel" aria-label="Trois articles à la une" data-editorial-carousel>
           <div class="articles-carrousel-tete">
@@ -701,4 +706,11 @@ const total=articles.length.toLocaleString('fr-FR');
   .univers .rubrique-visuel img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
   .univers .rubrique-visuel:hover img,.univers .rubrique-visuel:focus-visible img{transform:scale(1.035)}
   @media(prefers-reduced-motion:reduce){.univers .rubrique-visuel img{transition:none}.univers .rubrique-visuel:hover img{transform:none}}
+
+  /* Photographie documentaire immédiatement visible sous l'entête Cours du Jour. */
+  .accueil-photo-reportage{position:relative;margin:1.15rem 0 1.5rem;overflow:hidden;min-height:250px;max-height:430px;background:#292828}
+  .accueil-photo-reportage img{display:block;width:100%;height:clamp(250px,32vw,430px);object-fit:cover;object-position:center;filter:contrast(1.04)}
+  .accueil-photo-reportage::after{content:'';position:absolute;inset:44% 0 0;background:linear-gradient(transparent,#0f0d0cca);pointer-events:none}
+  .accueil-photo-reportage figcaption{position:absolute;z-index:1;left:clamp(1rem,3vw,2rem);right:1rem;bottom:1.1rem;color:#fff;display:flex;flex-direction:column;gap:.25rem;font:650 clamp(.9rem,1.6vw,1.3rem)/1.35 var(--sans)}
+  .accueil-photo-reportage figcaption span:first-child{font:800 .65rem/1.2 var(--sans);letter-spacing:.09em;color:#f4d8d5}
 </style>
