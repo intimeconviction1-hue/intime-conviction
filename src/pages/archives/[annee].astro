@@ -23,11 +23,11 @@ for (const a of articles) {
   parMois.get(m).push(a);
 }
 ---
-<Base titre={`Archives ${annee}`} description={`Consulter les ${articles.length.toLocaleString('fr-FR')} articles publiés par Intime Conviction en ${annee}, classés par mois et par rubrique.`} rubriqueActive="archives">
+<Base titre={`Archives ${annee}`} description={`Parcourir les ${articles.length.toLocaleString('fr-FR')} documents conservés dans les archives d’Intime Conviction pour l’année ${annee}, classés par mois et rubrique.`} rubriqueActive="archives">
   <header class="titre-page">
     <p class="etiquette"><a href="/archives/">Archives</a></p>
     <h1>Archives {annee}</h1>
-    <p class="sous-titre">{articles.length.toLocaleString('fr-FR')} article{articles.length > 1 ? 's' : ''} publié{articles.length > 1 ? 's' : ''} cette année-là</p>
+    <p class="sous-titre">{articles.length.toLocaleString('fr-FR')} document{articles.length > 1 ? 's' : ''} conservé{articles.length > 1 ? 's' : ''} pour cette année</p>
   </header>
   {[...parMois].map(([mois, liste]) => (
     <section>
