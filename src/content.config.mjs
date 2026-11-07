@@ -13,6 +13,8 @@ const articles = defineCollection({
     titre: z.string(),
     slug: z.string(),
     date: z.coerce.date(),
+    dateMiseAJour: z.coerce.date().optional(),
+    verificationEnCours: z.boolean().optional(),
     chemin: z.string(),
     rubrique: z.enum(RUBRIQUES.map((r) => r.slug)),
     anciennesCategories: z.array(z.string()),
