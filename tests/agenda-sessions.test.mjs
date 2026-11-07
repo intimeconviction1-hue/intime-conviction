@@ -93,3 +93,13 @@ test('la provenance distingue publication source, examen éditorial et confirmat
  assert.equal(illeEtVilaine.publicationSource,'2026-09-16');
  assert.throws(()=>provenancePeriode({id:'inconnu',departement:'Inconnu'}),/Provenance inconnue/);
 });
+
+test('Limoges : les rôles initial et modificatif restent sans audience déduite',()=>{
+  const source=SOURCES_A_COMPLETER.find(s=>s.code==='19-23-87');
+  assert.ok(source);
+  assert.match(source.statut,/initial et modificatif/);
+  assert.match(source.statut,/PDF non lus/);
+  assert.equal('debut' in source,false);
+  assert.equal('fin' in source,false);
+  assert.ok(!SESSIONS_AGENDA.some(s=>s.id.startsWith('limoges')));
+});
