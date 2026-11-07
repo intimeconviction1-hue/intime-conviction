@@ -82,6 +82,11 @@ jobs:
       - name: Contrôler le texte destiné au public
         run: node scripts/controle-publication.mjs dist
 
+      - name: Bloquer les doublons entre le journal et la presse en accueil
+        run: node scripts/controle-doublons-accueil.mjs dist
+        env:
+          IC_ARTICLES: articles-prives/articles
+
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
