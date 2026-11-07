@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import AgendaEnBref from '../components/AgendaEnBref.astro';
 import Culture from '../components/Culture.astro';
 import { lireActualites, lireVeille } from '../lib/veille.mjs';
+import { hierarchiserPresse } from '../lib/hierarchiser-presse.mjs';
 import { RUBRIQUES, rubrique } from '../lib/rubriques.mjs';
 import { DOSSIERS, referencesPourDossier } from '../lib/dossiers.mjs';
 import { tousLesArticles, dateLongue, minutesDeLecture } from '../lib/articles.mjs';
@@ -16,7 +17,7 @@ const rubriques = RUBRIQUES.map(r=>{
   const archives=articles.filter(a=>a.data.rubrique===r.slug);
   return {...r,total:archives.length,presse:(fil?.articles??[]).filter(n=>n.rubrique===r.slug),titres:archives.filter(a=>!vus.has(a.data.slug)).slice(0,2)};
 });
-const nouvellesOuverture=(fil?.articles??[]).filter(n=>n.rubrique==='cours-du-jour').slice(0,6);
+const nouvellesOuverture=hierarchiserPresse((fil?.articles??[]).filter(n=>n.rubrique==='cours-du-jour')).slice(0,6);
 const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
 const [nouvellePrincipale, ...autresNouvelles] = nouvellesOuverture;
 const total=articles.length.toLocaleString('fr-FR');
