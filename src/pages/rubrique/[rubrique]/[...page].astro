@@ -16,6 +16,28 @@ export async function getStaticPaths({ paginate }) {
 const { page } = Astro.props;
 const r = rubrique(Astro.params.rubrique);
 const titre = page.currentPage > 1 ? `${r.nom}, page ${page.currentPage}` : r.nom;
+const ressources = {
+  'cours-du-jour': [
+    {titre:'Agenda des audiences',url:'/agenda/'},
+    {titre:'Rôles officiels',url:'/veille-roles/'}
+  ],
+  'le-banc-des-jures': [
+    {titre:'Comprendre les assises',url:'/comprendre/'},
+    {titre:'Annuaire des juridictions',url:'/annuaire/'},
+    {titre:'Carte des juridictions',url:'/carte/'},
+    {titre:'Assister à une audience',url:'/assister/'}
+  ],
+  'l-expose': [
+    {titre:'Dossiers judiciaires',url:'/dossiers/'},
+    {titre:'Chronologie des affaires',url:'/chronologie/'},
+    {titre:'Jurisprudence criminelle',url:'/jurisprudence/'}
+  ],
+  'le-greffe': [
+    {titre:'Culture judiciaire',url:'/culture/'},
+    {titre:'Archives du journal',url:'/archives/'}
+  ]
+};
+const liensRubrique = ressources[r.slug] ?? [];
 ---
 <Base titre={titre} description={`${r.nom} — ${r.sousTitre}. ${page.total} articles d'Intime Conviction.`} rubriqueActive={r.slug}>
   <header class="titre-page">
@@ -24,6 +46,12 @@ const titre = page.currentPage > 1 ? `${r.nom}, page ${page.currentPage}` : r.no
     <p class="sous-titre">{r.sousTitre}</p>
     <p class="meta">{page.total.toLocaleString('fr-FR')} articles d’archives · page {page.currentPage} sur {page.lastPage}</p>
   </header>
+  {page.currentPage === 1 && liensRubrique.length > 0 && (
+    <nav class="ressources-rubrique" aria-label={`Accès thématiques : ${r.nom}`}>
+      <h2>À découvrir dans cette rubrique</h2>
+      <ul>{liensRubrique.map(l => <li><a href={l.url}>{l.titre} <span aria-hidden="true">↗</span></a></li>)}</ul>
+    </nav>
+  )}
   {page.currentPage === 1 && <Actualites rubriqueSlug={r.slug} limite={24} titre="Dans la presse" lienRubrique={false} />}
   {page.currentPage === 1 && r.slug === 'le-greffe' && <Culture titre="À lire, à voir" />}
   <div class="titre-section"><h2>Les articles d’Intime Conviction</h2></div>
@@ -33,3 +61,12 @@ const titre = page.currentPage > 1 ? `${r.nom}, page ${page.currentPage}` : r.no
     {page.url.next ? <a href={page.url.next}>Plus anciens →</a> : <span />}
   </nav>
 </Base>
+
+<style>
+  .ressources-rubrique{border-top:1px solid var(--filet-fort);border-bottom:1px solid var(--filet);padding:1.25rem 0 1.5rem;margin:1rem 0 2rem}
+  .ressources-rubrique h2{font-family:var(--sans);font-size:.85rem;letter-spacing:.04em;font-weight:750;margin:0 0 1rem}
+  .ressources-rubrique ul{display:flex;flex-wrap:wrap;list-style:none;padding:0;margin:0;gap:.65rem}
+  .ressources-rubrique a{display:inline-flex;align-items:center;min-height:44px;padding:.65rem .85rem;border:1px solid var(--filet);font-family:var(--sans);font-size:.8rem;font-weight:600;text-decoration:none}
+  .ressources-rubrique a:hover,.ressources-rubrique a:focus-visible{border-color:var(--rouge);color:var(--rouge)}
+  .ressources-rubrique a span{margin-left:.6rem}
+</style>
