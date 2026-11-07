@@ -56,6 +56,10 @@ const sources=[
         <p>La participation est une obligation légale lorsqu’on est désigné, sauf dispense admise. Des indemnités peuvent couvrir le temps consacré à la mission et certains frais.</p>
       </article>
     </div>
+    <aside class="jures-lecture" aria-label="À lire sur le tirage au sort">
+      <div><p>LE RÉCIT / LE BANC DES JURÉS</p><h3>Un nom tiré au sort, une vie devant les assises</h3><p>De Toulouse à Orange, du premier tirage municipal au siège de juré : notre enquête de synthèse raconte le parcours des citoyens appelés à juger.</p></div>
+      <a href="/jures-en-mai/05/2022/">Découvrir l’article <span aria-hidden="true">↗</span></a>
+    </aside>
     <div class="jures-faits">
       <div><strong>6</strong><span>jurés en première instance</span></div>
       <div><strong>9</strong><span>jurés en appel</span></div>
@@ -153,4 +157,7 @@ const sources=[
 .jures-faits a{margin-left:auto;font:700 .76rem/1.4 var(--sans);text-decoration:underline;text-underline-offset:.25rem}
 @media(max-width:63.99rem){.jures-grille{grid-template-columns:1fr 1fr}.sommaire{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:47.99rem){.jures-grille{grid-template-columns:1fr}.jures-faits{align-items:flex-start;flex-direction:column;gap:.8rem}.jures-faits a{margin-left:0}.sommaire{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.jures-lecture{display:flex;align-items:center;justify-content:space-between;gap:1.4rem 2rem;flex-wrap:wrap;border:2px solid #151718;border-left:8px solid #ffe100;padding:1.5rem;margin:2rem 0;background:#f6f5f0}
+.jures-lecture>div{flex:1 1 340px;min-width:0}.jures-lecture>div>p:first-child{font:850 .66rem var(--sans);letter-spacing:.07em;margin:0 0 .6rem}.jures-lecture h3{font:800 clamp(1.4rem,2.4vw,2.2rem)/1.15 var(--sans);margin:0 0 .7rem;letter-spacing:-.03em}.jures-lecture>div>p:last-child{font:500 .9rem/1.55 var(--sans);margin:0}.jures-lecture>a{display:flex;align-items:center;justify-content:center;gap:.6rem;min-height:48px;padding:.8rem 1rem;background:#151718;color:white;font:800 .72rem var(--sans);text-transform:uppercase}.jures-lecture>a:hover{background:#a12c39}
 </style>
