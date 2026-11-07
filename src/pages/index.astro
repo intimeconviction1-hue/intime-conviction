@@ -20,6 +20,15 @@ const rubriques = RUBRIQUES.map(r=>{
 });
 const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
 const total=articles.length.toLocaleString('fr-FR');
+const PHOTOS_RUBRIQUES = {
+  'cours-du-jour': {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Palais-de-justice-paris.jpg?width=960',alt:"Façade du palais de justice de Paris",credit:"Nitot",page:'https://commons.wikimedia.org/wiki/File:Palais-de-justice-paris.jpg'},
+  'le-banc-des-jures': {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Palais_de_Justice_(Paris).jpg?width=960',alt:"Palais de justice de Paris",credit:"Wikimedia Commons",page:'https://commons.wikimedia.org/wiki/File:Palais_de_Justice_(Paris).jpg'},
+  'la-cour-se-leve': {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Palais_de_justice_de_Paris%2C_juin_2026_04.jpg?width=960',alt:"Façade du palais de justice de Paris",credit:"Ibex73",page:'https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris%2C_juin_2026_04.jpg'},
+  'delibere': {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Palais_de_justice_de_Paris%2C_juin_2026_06.jpg?width=960',alt:"Statue La Vérité, palais de justice de Paris",credit:"Ibex73",page:'https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris%2C_juin_2026_06.jpg'},
+  'l-expose': {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Palais_de_justice_de_Paris%2C_juin_2026_01.jpg?width=960',alt:"Statue La Vérité, palais de justice de Paris",credit:"Ibex73",page:'https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris%2C_juin_2026_01.jpg'},
+  'le-greffe': {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Fa%C3%A7ade_du_Palais_de_Justice_sur_la_place_Dauphine%2C_vue_de_trois_quarts%2C_1er_arrondissement%2C_Paris%2C_PH77876.jpg?width=960',alt:"Photographie historique du palais de justice de Paris",credit:"Hippolyte Blancard / Musée Carnavalet",page:'https://commons.wikimedia.org/wiki/File:Fa%C3%A7ade_du_Palais_de_Justice_sur_la_place_Dauphine%2C_vue_de_trois_quarts%2C_1er_arrondissement%2C_Paris%2C_PH77876.jpg'},
+};
+
 ---
 <Base accueil>
   <section class="ouverture" aria-labelledby="titre-cours-du-jour">
@@ -106,7 +115,10 @@ const total=articles.length.toLocaleString('fr-FR');
     <section class="univers" aria-labelledby="titre-rubriques">
       <div class="titre-section"><h2 id="titre-rubriques">LES SIX RUBRIQUES <span>DU JOURNAL.</span></h2></div>
       <ul class="rubriques">{rubriques.map(r=><li>
-        <a class="rubrique-visuel" href={`/rubrique/${r.slug}/`} aria-label={`Découvrir ${r.nom}`}><img src={`/illustrations/${r.slug}.svg`} alt="" width="640" height="520" loading="lazy" decoding="async" /></a>
+        <figure class="rubrique-photo">
+          <a class="rubrique-visuel" href={`/rubrique/${r.slug}/`} aria-label={`Découvrir ${r.nom}`}><img src={PHOTOS_RUBRIQUES[r.slug].src} alt={PHOTOS_RUBRIQUES[r.slug].alt} width="960" height="600" loading="lazy" decoding="async" /></a>
+          <figcaption>Photo : <a href={PHOTOS_RUBRIQUES[r.slug].page} target="_blank" rel="noopener noreferrer">{PHOTOS_RUBRIQUES[r.slug].credit}</a> · Wikimedia Commons</figcaption>
+        </figure>
         <div class="rubrique-entete"><h3><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></h3><a class="ouvrir-rubrique" href={`/rubrique/${r.slug}/`} aria-label={`Ouvrir ${r.nom}`}><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div>
         <p class="sous-titre">{r.sousTitre}</p>
         <ul class="titres">{r.titres.map(({data})=><li><a href={data.chemin}>{data.titre}</a><span class="meta source-presse">Intime Conviction · archive</span></li>)}</ul>
@@ -713,4 +725,10 @@ const total=articles.length.toLocaleString('fr-FR');
   .accueil-photo-reportage::after{content:'';position:absolute;inset:44% 0 0;background:linear-gradient(transparent,#0f0d0cca);pointer-events:none}
   .accueil-photo-reportage figcaption{position:absolute;z-index:1;left:clamp(1rem,3vw,2rem);right:1rem;bottom:1.1rem;color:#fff;display:flex;flex-direction:column;gap:.25rem;font:650 clamp(.9rem,1.6vw,1.3rem)/1.35 var(--sans)}
   .accueil-photo-reportage figcaption span:first-child{font:800 .65rem/1.2 var(--sans);letter-spacing:.09em;color:#f4d8d5}
+
+  /* Photographies documentaires sous les six rubriques. */
+  .univers .rubrique-photo{margin:0 0 1.15rem}
+  .univers .rubrique-photo .rubrique-visuel{margin-bottom:0}
+  .univers .rubrique-photo figcaption{padding:.55rem 0 0;font:450 .65rem/1.45 var(--sans);color:var(--encre-2)}
+  .univers .rubrique-photo figcaption a{text-decoration:underline;text-underline-offset:2px}
 </style>
