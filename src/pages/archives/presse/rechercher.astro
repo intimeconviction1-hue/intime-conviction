@@ -1,0 +1,129 @@
+---
+import Base from '../../../layouts/Base.astro';
+---
+<Base titre="Rechercher dans toute la revue de presse" description="Retrouvez les titres de la revue de presse d’Intime Conviction par nom, ville, juridiction et date d’alerte. Sources extérieures identifiées." rubriqueActive="archives">
+<header class="recherche-presse-tete">
+ <p>INTIME CONVICTION / MOTEUR DE RECHERCHE</p>
+ <h1>DES TITRES.<br /><span>DES SOURCES.</span></h1>
+ <p class="intro">Explorer l’ensemble des références publiques de la veille par ville, nom, affaire ou média, sans parcourir chaque page de chaque année.</p>
+ <a href="/archives/presse/">← LES ARCHIVES DE PRESSE</a>
+</header>
+<div class="mise-en-garde"><strong>UNE SOURCE, PAS UN VERDICT.</strong><p>Les résultats ci-dessous sont des titres et des liens de médias extérieurs. La date indiquée est celle de l’alerte Google, pas nécessairement celle de publication ou de l’événement judiciaire. Un résultat ne prouve pas qu’une audience s’est tenue à la date de l’alerte.</p></div>
+<form id="formulaire-presse" role="search" class="filtres-presse">
+ <label>VILLE, AFFAIRE, MOT-CLÉ OU MÉDIA
+  <input id="mot-cle" name="q" type="search" placeholder="Ex. Blois, Gironde, jurés..." autocomplete="off" required />
+ </label>
+ <label>ANNÉE DE L’ALERTE
+  <select id="filtre-annee" name="annee"><option value="">Toutes les années</option></select>
+ </label>
+ <button type="submit">CHERCHER <span aria-hidden="true">↗</span></button>
+</form>
+<div class="ligne-resultats"><p id="nombre" role="status" aria-live="polite">Saisissez au moins deux caractères pour lancer une recherche dans les titres.</p><button type="button" id="effacer" hidden>EFFACER</button></div>
+<ol id="resultats-presse" class="resultats-presse"></ol>
+<button id="charger-plus" type="button" hidden class="plus">AFFICHER 40 RÉFÉRENCES SUPPLÉMENTAIRES ↓</button>
+<noscript>Cette recherche nécessite JavaScript. Les titres restent consultables <a href="/archives/presse/">dans les archives de presse par année</a>.</noscript>
+<aside class="lien-double"><div><span>DEUX FONDS. DEUX VOIX.</span><h2>LES ARTICLES DU JOURNAL<br />SONT AUSSI CONSULTABLES.</h2><p>La revue de presse renvoie à des médias extérieurs. Les articles d’Intime Conviction sont répertoriés séparément et possèdent leur propre moteur de recherche.</p></div><a href="/recherche/">RECHERCHER DANS LES ARTICLES DU JOURNAL <span aria-hidden="true">↗</span></a></aside>
+</Base>
+<script>
+ type Presse=[string,string,string,string];
+ const champ=document.querySelector<HTMLInputElement>('#mot-cle');
+ const annee=document.querySelector<HTMLSelectElement>('#filtre-annee');
+ const form=document.querySelector<HTMLFormElement>('#formulaire-presse');
+ const liste=document.querySelector<HTMLOListElement>('#resultats-presse');
+ const bilan=document.querySelector<HTMLElement>('#nombre');
+ const effacer=document.querySelector<HTMLButtonElement>('#effacer');
+ const suite=document.querySelector<HTMLButtonElement>('#charger-plus');
+ let base:Presse[]|null=null, enCours:Promise<Presse[]>|null=null, matches:Presse[]=[];
+ let limite=40,delai=0,requeteCourante=0;
+ const norm=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr');
+ const date=(s:string)=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'}).format(new Date(s+'T12:00:00Z'));
+ async function index() {
+   if(base)return base;
+   if(!enCours)enCours=fetch('/archives/presse/index-recherche.json')
+      .then(r=>{if(!r.ok)throw new Error('Index indisponible');return r.json()})
+      .then((v:{articles:Presse[]})=>{
+        if(!Array.isArray(v.articles))throw new Error('Index invalide');
+        base=v.articles.filter(x=>Array.isArray(x)&&x.length===4);
+        const annees=[...new Set(base.map(x=>x[3].slice(0,4)))].sort((a,b)=>b.localeCompare(a));
+        const choisi=new URLSearchParams(location.search).get('annee')||'';
+        for(const y of annees){const o=document.createElement('option');o.value=y;o.textContent=y;annee.append(o);}
+        if(annees.includes(choisi))annee.value=choisi;
+        return base;
+      }).catch(e=>{enCours=null;throw e;});
+   return enCours;
+ }
+ function afficher() {
+   liste.replaceChildren();
+   const group=document.createDocumentFragment();
+   for(const a of matches.slice(0,limite)){
+      const li=document.createElement('li');
+      const meta=document.createElement('p');meta.className='meta';meta.textContent=a[1]+' · ALERTE DU '+date(a[3]);
+      const h2=document.createElement('h2');const link=document.createElement('a');
+      link.href=a[2];link.target='_blank';link.rel='noopener noreferrer';link.textContent=a[0]+' ↗';
+      h2.append(link);li.append(meta,h2);group.append(li);
+   }
+   liste.append(group);
+   bilan.textContent=matches.length.toLocaleString('fr-FR')+' référence'+(matches.length>1?'s':'')+' trouvée'+(matches.length>1?'s':'')+' · '+Math.min(limite,matches.length)+' affichée'+(Math.min(limite,matches.length)>1?'s':'');
+   suite.hidden=matches.length<=limite;
+   effacer.hidden=!champ.value.trim()&&!annee.value;
+ }
+ async function rechercher() {
+   const demande=++requeteCourante;
+   const q=norm(champ.value.trim());
+   if(q.length<2){matches=[];liste.replaceChildren();suite.hidden=true;effacer.hidden=!champ.value.trim()&&!annee.value;bilan.textContent='Saisissez au moins deux caractères pour chercher parmi les titres.';return;}
+   bilan.textContent='Recherche dans les titres en cours…';
+   try{
+     const data=await index();
+     if(demande!==requeteCourante)return;
+     const y=annee.value;
+     const morceaux=q.split(/\s+/).filter(Boolean);
+     matches=data.filter(r=>(!y||r[3].startsWith(y))&&morceaux.every(m=>norm(r[0]+' '+r[1]).includes(m)));
+     limite=40;
+     const params=new URLSearchParams();params.set('q',champ.value.trim());if(y)params.set('annee',y);
+     history.replaceState(null,'',location.pathname+'?'+params.toString());
+     afficher();
+   }catch(e){if(demande===requeteCourante)bilan.textContent='L’index est momentanément indisponible. Parcourez les archives par année.';}
+ }
+ const params=new URLSearchParams(location.search);champ.value=params.get('q')||'';
+ form.addEventListener('submit',e=>{e.preventDefault();rechercher()});
+ champ.addEventListener('input',()=>{clearTimeout(delai);delai=window.setTimeout(rechercher,300)});
+ annee.addEventListener('change',rechercher);
+ suite.addEventListener('click',()=>{limite+=40;afficher()});
+ effacer.addEventListener('click',()=>{champ.value='';annee.value='';history.replaceState(null,'',location.pathname);rechercher();champ.focus()});
+ if(champ.value.trim().length>=2)rechercher();
+</script>
+<style>
+.recherche-presse-tete{margin:1.5rem 0 0;background:#151718;color:#fff;padding:clamp(1.5rem,5vw,4rem);border-top:8px solid #ffe100}
+.recherche-presse-tete>p:first-child{font:900 .67rem/1.4 var(--sans);letter-spacing:.09em;color:#ffe100;margin:0 0 2rem}
+.recherche-presse-tete h1{font:900 clamp(2.8rem,7vw,7rem)/.96 var(--sans);letter-spacing:-.075em;margin:0}
+.recherche-presse-tete h1 span{color:#ffe100}
+.recherche-presse-tete .intro{font:650 clamp(.98rem,1.5vw,1.25rem)/1.6 var(--sans);max-width:68ch;margin:1.5rem 0}
+.recherche-presse-tete>a{font:900 .67rem/1.5 var(--sans);border-top:1px solid #777;display:inline-block;padding-top:1rem}
+.recherche-presse-tete>a:hover{color:#ffe100}
+.mise-en-garde{display:grid;grid-template-columns:1fr 2fr;gap:2rem;padding:2rem 0;border-bottom:3px solid #151718}
+.mise-en-garde strong{font:900 1.15rem/1.3 var(--sans)}
+.mise-en-garde p{font:500 .9rem/1.6 var(--sans);margin:0}
+.filtres-presse{background:#ffe100;display:grid;grid-template-columns:2fr 1fr auto;gap:.8rem;align-items:end;padding:1.5rem;color:#151718;margin-top:2rem}
+.filtres-presse label{font:900 .66rem/1.4 var(--sans);display:flex;flex-direction:column;gap:.5rem}
+.filtres-presse :is(input,select){min-height:52px;width:100%;border:2px solid #151718;color:#151718;background:#fff;padding:.7rem;border-radius:0;font:650 .82rem/1.5 var(--sans)}
+.filtres-presse button{min-height:52px;padding:0 1.2rem;border:2px solid #151718;background:#151718;color:#fff;font:900 .69rem/1.3 var(--sans);cursor:pointer}
+.filtres-presse button:hover{background:#fff;color:#151718}
+.ligne-resultats{display:flex;justify-content:space-between;align-items:center;gap:1rem;border-bottom:4px solid #151718;padding:1.5rem 0 .9rem}
+.ligne-resultats p{font:850 .75rem/1.5 var(--sans);margin:0}
+.ligne-resultats button{background:transparent;border:0;border-bottom:2px solid #151718;font:900 .7rem/1.4 var(--sans);color:var(--encre);cursor:pointer}
+.ligne-resultats button[hidden],.plus[hidden]{display:none}
+.resultats-presse{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 2.5rem;padding:0;margin:0}
+.resultats-presse li{border-bottom:1px solid var(--filet);padding:1.4rem 0}
+.resultats-presse .meta{font:900 .65rem/1.5 var(--sans);letter-spacing:.045em;text-transform:uppercase}
+.resultats-presse h2{font:850 clamp(1.15rem,1.95vw,1.7rem)/1.23 var(--sans);letter-spacing:-.03em;margin:.6rem 0 0}
+.resultats-presse a:hover{background:#ffe100;color:#151718}
+.plus{display:block;margin:2rem auto;background:#ffe100;border:2px solid #151718;color:#151718;padding:1.2rem;font:900 .75rem/1.4 var(--sans);cursor:pointer}
+.plus:hover{background:#151718;color:#fff}
+.lien-double{display:grid;grid-template-columns:1.5fr 1fr;gap:2rem;align-items:end;margin:3rem 0;background:#151718;color:white;padding:clamp(1.5rem,3vw,3rem)}
+.lien-double span{font:900 .7rem/1.4 var(--sans);color:#ffe100}
+.lien-double h2{font:900 clamp(1.5rem,3vw,2.5rem)/1.1 var(--sans);letter-spacing:-.05em;margin:.7rem 0}
+.lien-double p{font:500 .84rem/1.6 var(--sans)}
+.lien-double a{background:#ffe100;color:#151718;padding:1.2rem;display:flex;gap:1rem;justify-content:space-between;font:900 .68rem/1.4 var(--sans)}
+.lien-double a:hover{background:#fff;color:#151718}
+@media(max-width:48rem){.recherche-presse-tete{padding:2rem 1.2rem}.mise-en-garde,.filtres-presse,.resultats-presse,.lien-double{grid-template-columns:1fr}.mise-en-garde{gap:.7rem}.filtres-presse{padding:1rem}}
+</style>
