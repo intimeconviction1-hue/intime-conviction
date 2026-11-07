@@ -28,20 +28,16 @@ const nouvellesOuverture=(fil?.articles??[]).filter(n=>n.rubrique==='cours-du-jo
 const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
 const total=articles.length.toLocaleString('fr-FR');
 const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',timeZone:'Europe/Paris'});
-const dateEdition=fil?.releveLe ? new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'}).format(new Date(fil.releveLe)) : null;
-const dernierSignalement=veille.articles[0]?.dateAlerte ?? null;
-const dateDerniereAlerte=dernierSignalement ? new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'}).format(new Date(dernierSignalement+'T12:00:00Z')) : null;
-const releveRetarde=fil?.releveLe ? Date.now()-Date.parse(fil.releveLe)>6*60*60*1000 : true;
 ---
 <Base accueil>
   <div slot="fond" class="fond-page" aria-hidden="true"><Image src={fronton} alt="" width={500} loading="eager" fetchpriority="high" /></div>
   <section class="ouverture" aria-labelledby="titre-journal">
     <div class="cadre ouverture-interieur">
-      <div class="edition"><p><span class="point-rouge" aria-hidden="true"></span> LE JOURNAL DES COURS D’ASSISES</p><p>{dateEdition ? `Relevé RSS du ${dateEdition}${releveRetarde ? ' · Actualisation en retard' : ''}` : 'Flux RSS indisponible'}{dateDerniereAlerte && ` · Dernière alerte archivée : ${dateDerniereAlerte}`}</p></div>
+      <div class="edition"><p><span class="point-rouge" aria-hidden="true"></span> LE JOURNAL DES COURS D’ASSISES</p><p>PROCÈS CRIMINELS · AUDIENCES · VERDICTS · ANALYSES</p></div>
       <div class="manifeste-accueil">
-        <div class="manifeste-enquete"><span class="manifeste-index">IC / 001</span><p>UN JOURNAL. UNE COUR. DES VERSIONS.</p><span class="manifeste-balise" aria-hidden="true"></span></div>
-        <h2>LES ASSISES.<br /><span>SANS RACCOURCI.</span></h2>
-        <a href="/ligne-editoriale/">LE JOURNAL <span aria-hidden="true">↗</span></a>
+        <div class="manifeste-enquete"><span class="manifeste-index">INTIME CONVICTION</span><p>LE JOURNAL DES COURS D’ASSISES</p><span class="manifeste-balise" aria-hidden="true"></span></div>
+        <h2>AU CŒUR DES<br /><span>PROCÈS CRIMINELS.</span></h2>
+        <a href="/ligne-editoriale/">NOTRE LIGNE ÉDITORIALE <span aria-hidden="true">↗</span></a>
       </div>
       <div class="une-grille">
         <article class="grand-angle">
@@ -56,16 +52,16 @@ const releveRetarde=fil?.releveLe ? Date.now()-Date.parse(fil.releveLe)>6*60*60*
           <p class="credit-photo">Photographie d’illustration · sans lien avec l’affaire présentée</p>
         </article>
         <aside class="ouverture-fil" aria-labelledby="titre-fil-ouverture">
-          <div class="fil-entete"><h2 id="titre-fil-ouverture">À la barre<span>.</span></h2><span class="fil-label">REVUE DE PRESSE · SOURCES EXTERNES</span></div>
-          {nouvellesOuverture.length>0 ? <ol>{nouvellesOuverture.map((n,i)=><li><span class="fil-numero" aria-hidden="true">0{i+1}</span><div><p>{n.source}<time datetime={n.date}>{n.dateAlerte&&'Alerte du '}{datePresse.format(new Date(n.date))}</time></p><h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> (nouvel onglet)</span></a></h3></div></li>)}</ol>:<p>Retrouvez les récits d’audience dans <a href="/rubrique/cours-du-jour/">Cours du Jour</a>.</p>}
+          <div class="fil-entete"><h2 id="titre-fil-ouverture">L’actualité<span>.</span></h2><span class="fil-label">REVUE DE PRESSE</span></div>
+          {nouvellesOuverture.length>0 ? <ol>{nouvellesOuverture.map((n,i)=><li><span class="fil-numero" aria-hidden="true">0{i+1}</span><div><p>{n.source}<time datetime={n.date}>{datePresse.format(new Date(n.date))}</time></p><h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> (nouvel onglet)</span></a></h3></div></li>)}</ol>:<p>Retrouvez les récits d’audience dans <a href="/rubrique/cours-du-jour/">Cours du Jour</a>.</p>}
           <a class="tout-le-fil" href="#actualites">Tout le fil d’audience <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v16m-6-6 6 6 6-6" /></svg></a>
-          <div class="note-redaction"><span class="note-signe" aria-hidden="true">IC</span><p>LE PROCÈS. PAS LE SPECTACLE.<br /><strong>ACTUALITÉS SOURCÉES ET ARCHIVES DATÉES.</strong></p></div>
+          <div class="note-redaction"><span class="note-signe" aria-hidden="true">IC</span><p>INTIME CONVICTION<br /><strong>ACTUALITÉ JUDICIAIRE ET ANALYSE DES AUDIENCES.</strong></p></div>
         </aside>
       </div>
-      <div class="parcours"><span>ALLER PLUS LOIN</span><a href="/comprendre/">Comprendre le procès <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/annuaire/">Trouver une cour <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/dossiers/">Dossiers judiciaires <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/archives/">{total} articles d’archives <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a></div>
+      <div class="parcours"><span>À CONSULTER</span><a href="/comprendre/">Comprendre le procès <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/annuaire/">Trouver une cour <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/dossiers/">Dossiers judiciaires <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/archives/">{total} articles d’archives <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a></div>
       <form class="accueil-recherche" action="/recherche/" method="get" role="search" aria-label="Rechercher dans les archives">
-        <label for="recherche-accueil"><span>RECHERCHER DANS {total} ARTICLES</span><strong>UNE AFFAIRE. UN NOM. UN MOT.</strong></label>
-        <div class="accueil-recherche-champs"><input id="recherche-accueil" type="search" name="q" placeholder="Nom, affaire, mot-clé..." autocomplete="off" /><button type="submit">EXPLORER <span aria-hidden="true">↗</span></button></div>
+        <label for="recherche-accueil"><span>RECHERCHER DANS {total} ARTICLES</span><strong>RECHERCHER UN ARTICLE OU UNE AFFAIRE</strong></label>
+        <div class="accueil-recherche-champs"><input id="recherche-accueil" type="search" name="q" placeholder="Nom, affaire, mot-clé..." autocomplete="off" /><button type="submit">RECHERCHER <span aria-hidden="true">↗</span></button></div>
       </form>
     </div>
   </section>
@@ -73,8 +69,8 @@ const releveRetarde=fil?.releveLe ? Date.now()-Date.parse(fil.releveLe)>6*60*60*
   <div class="surface-lecture"><div class="cadre journal-corps">
     <Actualites debut={nouvellesOuverture.length} limite={5} compacte />
 <section class="conviction-editoriale" aria-labelledby="titre-conviction">
-      <h2 id="titre-conviction">UN PROCÈS<br /><span>N’EST PAS UN<br />FAIT DIVERS.</span></h2>
-      <div><p>Aux assises, chaque version est discutée publiquement. Les mots comptent. Les silences aussi.</p><p>Intime Conviction réunit des récits de procès, des analyses et des archives. La revue de presse est identifiée séparément et renvoie aux médias d’origine.</p><a class="lire-article" href="/ligne-editoriale/">LIRE NOTRE LIGNE ÉDITORIALE <span aria-hidden="true">↗</span></a></div>
+      <h2 id="titre-conviction">COMPRENDRE<br /><span>LES PROCÈS<br />CRIMINELS.</span></h2>
+      <div><p>Intime Conviction couvre les audiences criminelles, les décisions de justice et les questions de procédure.</p><p>Le journal propose des récits, des analyses et des archives judiciaires. Sa revue de presse répertorie séparément les publications des médias sources.</p><a class="lire-article" href="/ligne-editoriale/">LIRE NOTRE LIGNE ÉDITORIALE <span aria-hidden="true">↗</span></a></div>
     </section>
 
     <section class="selection" aria-labelledby="titre-selection">
@@ -90,12 +86,12 @@ const releveRetarde=fil?.releveLe ? Date.now()-Date.parse(fil.releveLe)>6*60*60*
       </div>
     </section>
 
-    <section class="bandeau-archives" aria-label="Explorer les archives"><div><span class="bandeau-kicker">LES ARCHIVES / LE FONDS INTIME CONVICTION</span><strong>{total}</strong><p>récits, audiences et archives pour comprendre les procès criminels.</p></div><a href="/archives/">Entrer dans les archives <span aria-hidden="true">↗</span></a></section>
+    <section class="bandeau-archives" aria-label="Explorer les archives"><div><span class="bandeau-kicker">LES ARCHIVES DU JOURNAL</span><strong>{total}</strong><p>articles conservés dans les archives éditoriales du journal.</p></div><a href="/archives/">Consulter les archives <span aria-hidden="true">↗</span></a></section>
 
     <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
       <div class="accueil-dossiers-entete">
-        <div><p class="accueil-dossiers-kicker">LE FONDS DOCUMENTAIRE / AFFAIRES</p><h2 id="titre-dossiers-accueil">UNE AFFAIRE.<br /><span>PLUSIEURS REGARDS.</span></h2></div>
-        <p>Des références de presse identifiées, classées par affaire, sans confusion entre dates d’alerte, événements judiciaires et commentaires. Chaque dossier rassemble des liens vers les sources d’origine.</p>
+        <div><p class="accueil-dossiers-kicker">DOSSIERS JUDICIAIRES</p><h2 id="titre-dossiers-accueil">LES GRANDES<br /><span>AFFAIRES JUDICIAIRES.</span></h2></div>
+        <p>Retrouvez, pour chaque affaire, les articles de presse répertoriés et les principales étapes judiciaires documentées.</p>
       </div>
       <ul class="accueil-dossiers-grille">
         {dossiersMisEnAvant.map((d,i)=><li><a href={`/dossiers/${d.slug}/`}><span class="accueil-dossiers-num">DOSSIER {String(i+1).padStart(2,'0')} <span aria-hidden="true">↗</span></span><h3>{d.titre}</h3><p>{d.nombre.toLocaleString('fr-FR')} références de presse</p></a></li>)}
@@ -108,7 +104,7 @@ const releveRetarde=fil?.releveLe ? Date.now()-Date.parse(fil.releveLe)>6*60*60*
     <Culture />
 
     <section class="univers" aria-labelledby="titre-rubriques">
-      <div class="titre-section"><h2 id="titre-rubriques">SIX RUBRIQUES. <span>LES ASSISES EN FACE.</span></h2></div>
+      <div class="titre-section"><h2 id="titre-rubriques">LES RUBRIQUES <span>DU JOURNAL.</span></h2></div>
       <ul class="rubriques">{rubriques.map(r=><li>
         <div class="rubrique-entete"><h3><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></h3><a class="ouvrir-rubrique" href={`/rubrique/${r.slug}/`} aria-label={`Ouvrir ${r.nom}`}><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div>
         <p class="sous-titre">{r.sousTitre}</p>
@@ -118,8 +114,8 @@ const releveRetarde=fil?.releveLe ? Date.now()-Date.parse(fil.releveLe)>6*60*60*
     </section>
 
     <section class="fonds" aria-labelledby="titre-fonds">
-      <div class="fonds-intro"><h2 id="titre-fonds">Les archives<span>.</span></h2><p>{total} articles du journal<br />et une revue de presse, année par année.</p><a href="/archives/">Explorer la chronologie complète <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></div>
-      <p><a class="lire-article" href="/archives/presse/">Parcourir la mémoire de la revue de presse</a></p>
+      <div class="fonds-intro"><h2 id="titre-fonds">Les archives<span>.</span></h2><p>{total} articles du journal<br />et une revue de presse, année par année.</p><a href="/archives/">Consulter les archives par année <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></div>
+      <p><a class="lire-article" href="/archives/presse/">Consulter les archives de presse</a></p>
       <ul class="annees">{annees.map(({an,articles:nbArticles,presse:nbPresse})=><li><a href={nbArticles ? `/archives/${an}/` : `/archives/presse/${an}/`}><span class="an">{an}</span><span class="meta">{nbArticles ? nbArticles.toLocaleString('fr-FR')+' articles du journal' : ''}{nbArticles && nbPresse ? ' · ' : ''}{nbPresse ? nbPresse.toLocaleString('fr-FR')+' références presse' : ''}</span></a></li>)}</ul>
     </section>
   </div></div>
