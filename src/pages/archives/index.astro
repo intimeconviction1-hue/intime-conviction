@@ -18,22 +18,22 @@ for (const a of veille.articles) {
 }
 const annees = [...new Set([...publications.keys(), ...presse.keys()])]
   .sort((a, b) => b - a)
-  .map((an) => ({ an, originaux: publications.get(an) ?? 0, references: presse.get(an) ?? 0 }));
+  .map((an) => ({ an, documents: publications.get(an) ?? 0, references: presse.get(an) ?? 0 }));
 const totalArticles = articles.length.toLocaleString('fr-FR');
 const totalPresse = veille.articles.length.toLocaleString('fr-FR');
 ---
-<Base titre="Archives" description="Toutes les archives d’Intime Conviction, année par année : articles du journal et références de revue de presse, clairement distingués." rubriqueActive="archives">
+<Base titre="Archives" description="Toutes les archives d’Intime Conviction, année par année : documents historiques conservés et références de revue de presse, clairement distingués." rubriqueActive="archives">
   <header class="titre-page archives-tete">
     <p class="etiquette">INTIME CONVICTION</p>
     <h1>ARCHIVES<br /><span>DU JOURNAL.</span></h1>
-    <p class="sous-titre">Retrouvez les articles du journal et les références de presse, classés par année et présentés séparément.</p>
+    <p class="sous-titre">Parcourez les textes historiques conservés et les références de presse, classés par année et présentés séparément.</p>
   </header>
 
   <div class="fonds-legende" aria-label="Comprendre les deux collections">
     <section class="fonds-original">
       <span class="fonds-chiffre">{totalArticles}</span>
-      <h2>ARTICLES DU JOURNAL</h2>
-      <p>Retrouvez les articles publiés par Intime Conviction, classés selon leur année de publication.</p>
+      <h2>FONDS HISTORIQUE</h2>
+      <p>Retrouvez les textes conservés dans le fonds historique du journal. Certains proviennent de médias extérieurs et font l’objet d’un contrôle de provenance.</p>
     </section>
     <section class="fonds-presse">
       <span class="fonds-chiffre">{totalPresse}</span>
@@ -50,18 +50,18 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
       <span>{annees.length} ANNÉES RÉPERTORIÉES</span>
     </div>
     <ol class="annees">
-      {annees.map(({an,originaux,references}) => (
+      {annees.map(({an,documents,references}) => (
         <li>
           <strong class="annee">{an}</strong>
           <div class="annee-acces">
-            {originaux > 0 ? (
+            {documents > 0 ? (
               <a class="lien-original" href={`/archives/${an}/`}>
-                <span>ARTICLES INTIME CONVICTION</span>
-                <strong>{originaux.toLocaleString('fr-FR')} article{originaux > 1 ? 's' : ''}</strong>
+                <span>DOCUMENTS HISTORIQUES</span>
+                <strong>{documents.toLocaleString('fr-FR')} document{documents > 1 ? 's' : ''}</strong>
                 <span aria-hidden="true" class="fleche">↗</span>
               </a>
             ) : (
-              <p class="aucun-original">Aucun article du journal importé pour cette année</p>
+              <p class="aucun-original">Aucun document historique conservé pour cette année</p>
             )}
             {references > 0 && (
               <a class="lien-presse" href={`/archives/presse/${an}/`}>
