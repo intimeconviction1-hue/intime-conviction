@@ -27,7 +27,9 @@ export async function GET({ site }) {
   const parRubrique = new Map(RUBRIQUES.map(r => [r.slug, 0]));
   for (const article of articles) {
     parRubrique.set(article.data.rubrique, (parRubrique.get(article.data.rubrique) ?? 0) + 1);
-    adresses.add(article.data.chemin);
+    // Une notice dont les faits restent invérifiables demeure accessible par son URL
+    // historique, mais n'est pas proposée à l'indexation.
+    if (article.data.verificationEnCours !== true) adresses.add(article.data.chemin);
     adresses.add('/archives/' + article.data.date.getFullYear() + '/');
   }
   for (const r of RUBRIQUES) {
