@@ -40,10 +40,20 @@ const PHOTOS_RUBRIQUES = {
         </div>
         <a class="une-news-lien" href="/rubrique/cours-du-jour/">Toute la rubrique <span aria-hidden="true">↗</span></a>
       </header>
-      <figure class="accueil-photo-reportage">
-        <img src={frontonAssises.src} width={frontonAssises.width} height={frontonAssises.height} alt="Fronton d'une cour d'assises" fetchpriority="high" decoding="async" />
-        <figcaption><span>LA JUSTICE EN IMAGES</span><span>Les lieux où se tiennent les procès criminels</span></figcaption>
-      </figure>
+      <section class="accueil-mosaique" aria-label="Découvrir la justice en images">
+        <figure class="accueil-photo-reportage accueil-visuel-majeur">
+          <img src={frontonAssises.src} width={frontonAssises.width} height={frontonAssises.height} alt="Fronton d'une cour d'assises" fetchpriority="high" decoding="async" />
+          <figcaption><span>LES LIEUX DE JUSTICE</span><span>Dans les palais de justice</span></figcaption>
+        </figure>
+        <a class="accueil-visuel-secondaire" href="/rubrique/le-banc-des-jures/">
+          <img src={PHOTOS_RUBRIQUES['le-banc-des-jures'].src} alt={PHOTOS_RUBRIQUES['le-banc-des-jures'].alt} width="960" height="600" loading="eager" decoding="async" onerror="this.onerror=null;this.src='/illustrations/le-banc-des-jures.svg'" />
+          <span class="accueil-visuel-legende"><small>COMPRENDRE</small>Le Banc des Jurés <span aria-hidden="true">↗</span></span>
+        </a>
+        <a class="accueil-visuel-secondaire" href="/rubrique/la-cour-se-leve/">
+          <img src={PHOTOS_RUBRIQUES['la-cour-se-leve'].src} alt={PHOTOS_RUBRIQUES['la-cour-se-leve'].alt} width="960" height="600" loading="eager" decoding="async" onerror="this.onerror=null;this.src='/illustrations/la-cour-se-leve.svg'" />
+          <span class="accueil-visuel-legende"><small>RACONTER</small>La Cour se Lève <span aria-hidden="true">↗</span></span>
+        </a>
+      </section>
       {articlesCarrousel.length > 0 && (
         <section class="articles-carrousel" aria-label="Trois articles à la une" data-editorial-carousel>
           <div class="articles-carrousel-tete">
@@ -731,4 +741,17 @@ const PHOTOS_RUBRIQUES = {
   .univers .rubrique-photo .rubrique-visuel{margin-bottom:0}
   .univers .rubrique-photo figcaption{padding:.55rem 0 0;font:450 .65rem/1.45 var(--sans);color:var(--encre-2)}
   .univers .rubrique-photo figcaption a{text-decoration:underline;text-underline-offset:2px}
+
+  /* Galerie visible immédiatement à l'ouverture, sans modifier les rubriques. */
+  .accueil-mosaique{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,.72fr);grid-template-rows:repeat(2,minmax(150px,1fr));gap:12px;margin:1.2rem 0 1.65rem;height:clamp(360px,39vw,530px)}
+  .accueil-mosaique .accueil-photo-reportage{grid-column:1;grid-row:1/3;margin:0;max-height:none;min-height:0;height:100%}
+  .accueil-mosaique .accueil-photo-reportage img{height:100%;min-height:0;object-fit:cover}
+  .accueil-visuel-secondaire{display:block;position:relative;overflow:hidden;background:#ded6cb;color:#fff;min-height:0}
+  .accueil-visuel-secondaire img{width:100%;height:100%;display:block;object-fit:cover}
+  .accueil-visuel-secondaire::after{content:'';position:absolute;inset:34% 0 0;background:linear-gradient(transparent,#15120fda);pointer-events:none}
+  .accueil-visuel-legende{position:absolute;z-index:1;left:1rem;bottom:1rem;right:1rem;display:block;font:800 clamp(1rem,1.7vw,1.4rem)/1.2 var(--sans)}
+  .accueil-visuel-legende small{display:block;margin-bottom:.35rem;font:750 .64rem/1.25 var(--sans);letter-spacing:.09em;color:#ffdfd2}
+  .accueil-visuel-legende span{font-size:1rem}
+  .accueil-visuel-secondaire:focus-visible{outline:3px solid #92253a;outline-offset:3px}
+  @media(max-width:720px){.accueil-mosaique{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:275px 145px;height:auto;gap:8px}.accueil-mosaique .accueil-photo-reportage{grid-column:1/3;grid-row:1}.accueil-visuel-legende{left:.7rem;right:.7rem;bottom:.7rem;font-size:.95rem}.accueil-visuel-legende small{font-size:.56rem}}
 </style>
