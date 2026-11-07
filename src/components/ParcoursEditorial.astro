@@ -2,8 +2,8 @@
 const parcours = [
   {
     numero: '01',
-    titre: 'Raconter.',
-    accroche: 'Le déroulement des audiences et les décisions de justice.',
+    titre: 'Récits d’audience',
+    accroche: 'Comptes rendus et chroniques d’audience.',
     detail: 'Des comptes rendus d’audience et des chroniques pour suivre les débats judiciaires et les décisions rendues.',
     liens: [
       { texte: 'Suivre les audiences', href: '/rubrique/cours-du-jour/' },
@@ -12,8 +12,8 @@ const parcours = [
   },
   {
     numero: '02',
-    titre: 'Expliquer.',
-    accroche: 'Les règles et les acteurs du procès criminel.',
+    titre: 'Comprendre le procès',
+    accroche: 'Procédure, acteurs et décisions.',
     detail: 'Des explications sur la procédure, les jurés, les droits des parties et les voies de recours.',
     liens: [
       { texte: 'Les règles du procès', href: '/rubrique/le-banc-des-jures/' },
@@ -22,8 +22,8 @@ const parcours = [
   },
   {
     numero: '03',
-    titre: 'Transmettre.',
-    accroche: 'Les affaires et les décisions dans leur contexte historique.',
+    titre: 'Archives judiciaires',
+    accroche: 'Articles anciens et références documentaires.',
     detail: 'Accéder aux publications antérieures du journal et aux références conservées dans ses archives.',
     liens: [
       { texte: 'Réflexions et opinions', href: '/rubrique/delibere/' },
@@ -36,9 +36,9 @@ const parcours = [
   <header class="parcours-editoriaux-intro">
     <div>
       <p class="sur-titre">LES CONTENUS DU JOURNAL</p>
-      <h2 id="parcours-editoriaux-titre">NOS DOMAINES<br /><span>DE COUVERTURE.</span></h2>
+      <h2 id="parcours-editoriaux-titre">Explorer<br /><span>le journal</span></h2>
     </div>
-    <p>Suivre les audiences, comprendre les procédures et consulter les archives du journal.</p>
+    <p>Accéder directement aux récits, aux explications et aux archives.</p>
   </header>
   <div class="parcours-editoriaux-grille">
     {parcours.map((p) => <article class="parcours-editorial">
@@ -51,7 +51,6 @@ const parcours = [
       </nav>
     </article>)}
   </div>
-  <p class="note">Les articles du journal et les publications des médias référencés sont présentés séparément.</p>
 </section>
 <style>
   .parcours-editoriaux{margin-top:4.5rem;border-top:5px solid var(--encre);padding-top:1.5rem}
