@@ -155,6 +155,13 @@ export async function executer({sources=sourcesSurveillees(),lire=chargerPage,
     try {
       const {html,urlFinale}=await lire(source.url);
       const documents=extraireDocuments(html,urlFinale,source.mode);
+      console.log('Source officielle',source.url,JSON.stringify({
+        tailleHTML:html.length,
+        nombresAncres:(html.match(/<a\\b/gi)||[]).length,
+        occurencesPDF:(html.match(/\\.pdf/gi)||[]).length,
+        documents:documents.length,
+        forme:/(?:cloudflare|access denied|captcha)/i.test(html)?'page de vérification probable':'HTML ordinaire'
+      }));
       liensDocuments+=documents.length;
       if(!documents.length)sourcesSansDocuments.push({url:source.url,codes:source.codes});
       const precedents=etat.pages[source.url];
