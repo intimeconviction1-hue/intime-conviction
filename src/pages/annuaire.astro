@@ -2,8 +2,11 @@
 import Base from '../layouts/Base.astro';
 import { DEPARTEMENTS_ASSISES, ANNUAIRE_OFFICIEL, NOTICE_DATE, validerAnnuaire } from '../lib/guide-assises.mjs';
 import { ROLES_OFFICIELS, MODES_ROLES, roleParDepartement, dossiersParDepartement, validerRoles, VERIFIE_LE } from '../lib/roles-officiels.mjs';
+import { SESSIONS_AGENDA, AUDIENCES_A_RECONFIRMER, sessionsAvenir, dateLocaleAgenda } from '../lib/agenda-sessions.mjs';
 validerAnnuaire();
 validerRoles(DEPARTEMENTS_ASSISES);
+const auCalendrier=sessionsAvenir([...SESSIONS_AGENDA,...AUDIENCES_A_RECONFIRMER],dateLocaleAgenda());
+const depAvecDates=new Set(auCalendrier.map(x=>x.departement));
 const nombreDepartements = DEPARTEMENTS_ASSISES.length;
 const nombreOutreMer = DEPARTEMENTS_ASSISES.filter(d=>d.outreMer).length;
 const troisEntrees = [
@@ -21,6 +24,7 @@ const troisEntrees = [
   </header>
   <section class="notice" aria-labelledby="titre-notice"><h2 id="titre-notice">Informations sur les audiences</h2><p>Les villes ci-dessous servent de <strong>repères d’orientation</strong>, pas de preuve de la tenue d’une audience aujourd’hui. La cour de la Haute-Saône et du Territoire de Belfort est commune aux deux départements et siège à Vesoul. D’autres collectivités françaises ont une organisation judiciaire spécifique qui ne figure pas dans cette liste départementale. Les adresses, téléphones et horaires sont à vérifier dans le répertoire officiel.</p><a href={ANNUAIRE_OFFICIEL} target="_blank" rel="noopener noreferrer">OUVRIR L’ANNUAIRE DU MINISTÈRE <span aria-hidden="true">↗</span></a></section>
   <aside class="signal-roles"><div><span>RÔLES DES AUDIENCES / LIENS OFFICIELS</span><strong>{ROLES_OFFICIELS.length} départements reliés à une page institutionnelle</strong><p>Ces liens mènent aux pages des cours d’appel, pas à un calendrier certifié en temps réel. Certains proposent des PDF publics, d’autres une information de ressort ou une consultation sur place réservée aux journalistes.</p></div><a href="/assister/">COMMENT ASSISTER À UNE AUDIENCE ? <span aria-hidden="true">↗</span></a></aside>
+  <p class="acces-veille"><a href="/agenda/">CONSULTER L’AGENDA DES SESSIONS CRIMINELLES <span aria-hidden="true">↗</span></a></p>
   <p class="acces-veille"><a href="/veille-roles/">COMMENT LES RÔLES OFFICIELS SONT-ILS VÉRIFIÉS ? <span aria-hidden="true">↗</span></a></p>
   <section class="methode"><h2>Comment trouver une audience</h2><ol>{troisEntrees.map(x=><li><strong>{x.n}</strong><div><h3>{x.titre}</h3><p>{x.texte}</p></div></li>)}</ol></section>
   <section id="repertoire" class="liste-repertoire" aria-labelledby="titre-repertoire">
@@ -60,6 +64,7 @@ const troisEntrees = [
           ) : (
             <p class="role-absent">Aucun rôle officiel en ligne identifié dans notre sélection pour ce département. Vérifier auprès du greffe.</p>
           )}
+          {depAvecDates.has(d.departement) && <a class="agenda-departement" href={'/agenda/?departement='+encodeURIComponent(d.departement)} aria-label={'Voir les périodes répertoriées dans l’agenda pour '+d.departement}>AGENDA DU DÉPARTEMENT <span aria-hidden="true">↗</span></a>}
           <div class="liens-archives">
             <a href={'/recherche/?q='+encodeURIComponent(d.ville)} title={'Chercher '+d.ville+' dans les articles originaux du journal'}>ARTICLES DU JOURNAL <span aria-hidden="true">↗</span></a>
             <a href={'/archives/presse/rechercher/?q='+encodeURIComponent(d.ville)} title={'Chercher '+d.ville+' parmi les titres de presse'}>TITRES DE PRESSE <span aria-hidden="true">↗</span></a>
@@ -123,4 +128,6 @@ const troisEntrees = [
 .liens-archives a:hover{background:#ffe100;color:#151718}
 .liens-archives .dossier-lie{background:#ffe100;color:#151718;border-color:#151718}
 @media(max-width:70rem){.signal-roles{grid-template-columns:1fr}}
-@media(max-width:48rem){.acces-role{flex-direction:column;align-items:stretch}.acces-role>a{align-self:flex-start;flex-shrink:1}.liens-archives{gap:.3rem}.liens-archives a{font-size:.56rem}}.acces-veille{margin:1.2rem 0 2rem}.acces-veille a{display:flex;justify-content:space-between;gap:1rem;align-items:center;background:#ffe100;color:#151718;padding:1.15rem;font:900 .72rem/1.45 var(--sans)}.acces-veille a:hover{background:#151718;color:#fff}</style>
+@media(max-width:48rem){.acces-role{flex-direction:column;align-items:stretch}.acces-role>a{align-self:flex-start;flex-shrink:1}.liens-archives{gap:.3rem}.liens-archives a{font-size:.56rem}}.acces-veille{margin:1.2rem 0 2rem}.acces-veille a{display:flex;justify-content:space-between;gap:1rem;align-items:center;background:#ffe100;color:#151718;padding:1.15rem;font:900 .72rem/1.45 var(--sans)}.acces-veille a:hover{background:#151718;color:#fff}.agenda-departement{display:inline-flex;align-self:flex-start;align-items:center;gap:.7rem;background:#151718;color:#fff;padding:.65rem .85rem;font:900 .63rem/1.5 var(--sans);text-decoration:none}
+.agenda-departement:hover{background:#ffe100;color:#151718}
+</style>
