@@ -95,7 +95,7 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
       </div>
     </section>
 
-    <section class="bandeau-archives" aria-label="Explorer les archives"><div><span class="bandeau-kicker">LES ARCHIVES DU JOURNAL</span><strong>{total}</strong><p>articles conservés dans les archives éditoriales du journal.</p></div><a href="/archives/">Consulter les archives <span aria-hidden="true">↗</span></a></section>
+    
 
 
     <ParcoursEditorial />
@@ -108,7 +108,7 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
         <div class="rubrique-entete"><h3><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></h3><a class="ouvrir-rubrique" href={`/rubrique/${r.slug}/`} aria-label={`Ouvrir ${r.nom}`}><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div>
         <p class="sous-titre">{r.sousTitre}</p>
         <ul class="titres">{r.titres.length ? r.titres.map(({data})=><li><a href={data.chemin}>{data.titre}</a><span class="meta source-presse">Intime Conviction · archive</span></li>) : r.presse.slice(0,2).map(n=><li><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}</a><span class="meta source-presse">{n.source} · revue de presse</span></li>)}</ul>
-        <a class="rubrique-volume" href={`/rubrique/${r.slug}/`}>{r.total.toLocaleString('fr-FR')} articles d’archives{r.presse.length>0&&` · ${r.presse.length} nouvelle${r.presse.length>1?'s':''}`}</a>
+        <a class="rubrique-volume" href={`/rubrique/${r.slug}/`}>{r.total.toLocaleString('fr-FR')} articles d’archives{r.presse.length>0&&` · ${r.presse.length} référence${r.presse.length>1?'s':''} de presse`}</a>
       </li>)}</ul>
     </section>
 
