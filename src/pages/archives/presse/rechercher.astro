@@ -69,12 +69,13 @@ import Base from '../../../../layouts/Base.astro';
  }
  async function rechercher() {
    const demande=++requeteCourante;
-   const q=norm(champ.value.trim()),y=annee.value;
-   if(q.length<2){matches=[];liste.replaceChildren();suite.hidden=true;effacer.hidden=!champ.value.trim()&&!y;bilan.textContent='Saisissez au moins deux caractères pour chercher parmi les titres.';return;}
+   const q=norm(champ.value.trim());
+   if(q.length<2){matches=[];liste.replaceChildren();suite.hidden=true;effacer.hidden=!champ.value.trim()&&!annee.value;bilan.textContent='Saisissez au moins deux caractères pour chercher parmi les titres.';return;}
    bilan.textContent='Recherche dans les titres en cours…';
    try{
      const data=await index();
      if(demande!==requeteCourante)return;
+     const y=annee.value;
      const morceaux=q.split(/\s+/).filter(Boolean);
      matches=data.filter(r=>(!y||r[3].startsWith(y))&&morceaux.every(m=>norm(r[0]+' '+r[1]).includes(m)));
      limite=40;
