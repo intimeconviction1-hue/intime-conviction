@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,sessionsAvenir,verifierSessions,dateLocaleAgenda} from '../src/lib/agenda-sessions.mjs';
+import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,SOURCES_A_COMPLETER,sessionsAvenir,verifierSessions,dateLocaleAgenda} from '../src/lib/agenda-sessions.mjs';
 
 test('les périodes publiées ont une source institutionnelle et des dates cohérentes',()=>{
   assert.equal(verifierSessions(),true);
@@ -22,4 +22,14 @@ test('le filtrage suit la date civile française et expire les sessions terminé
   assert.equal(dateLocaleAgenda(new Date('2026-11-07T23:30:00Z')),'2026-11-08');
   assert.ok(sessionsAvenir(SESSIONS_AGENDA,'2026-12-10').every(s=>s.fin>='2026-12-10'));
   assert.equal(sessionsAvenir(SESSIONS_AGENDA,'2026-12-19').length,0);
+});
+
+test('les sources sans date vérifiée restent hors de l’agenda daté',()=>{
+ const ids=new Set(SESSIONS_AGENDA.map(s=>s.departement));
+ for(const s of SOURCES_A_COMPLETER){
+  assert.ok(s.ressort && s.statut && s.source);
+  assert.equal(new URL(s.source).hostname,'www.cours-appel.justice.fr');
+  assert.ok(!('debut' in s)&&!('fin' in s));
+ }
+ assert.equal(new Set(SOURCES_A_COMPLETER.map(s=>s.code)).size,SOURCES_A_COMPLETER.length);
 });
