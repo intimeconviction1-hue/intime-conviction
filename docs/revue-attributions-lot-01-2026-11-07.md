@@ -12,8 +12,9 @@ Lecture des corps HTML et métadonnées du dépôt privé `intime-conviction-art
 - URL historique : `/12-hommes-en-colere-theatre-hebertot-jusquau-7-janvier-2018/11/2017/`.
 - Métadonnée `auteur` : « Intime Conviction ».
 - **Constat direct** : première ligne « SOURCE » avec lien vers un article de Dalloz Actualité ; le corps contient une signature explicite « par Thibault de Ravel d'Esclapon » et un lien vers sa page auteur sur le même site.
-- **Diagnostic** : discordance d'attribution documentée entre l'auteur renseigné par l'import et l'auteur cité dans le contenu. Les droits de republication ne sont pas établis.
-- **Décision** : priorité maximale pour contrôle de provenance, droits et crédits. Ne pas remplacer automatiquement le champ `auteur` sans revoir l'historique d'import et les conditions de publication.
+- **Vérification externe du 7 novembre 2026** : article original accessible chez [Dalloz Actualité](https://www.dalloz-actualite.fr/flash/12-hommes-en-colere-theatre-hebertot-jusqu-au-7-janvier-2018), publié le **3 novembre 2017** et signé **Thibault de Ravel d'Esclapon**. Le contenu de l'archive reprend le texte disponible chez Dalloz, dont le titre et les passages examinés correspondent. Provenance éditoriale **confirmée**.
+- **Diagnostic** : attribution originelle confirmée chez Dalloz, divergente du champ `auteur` issu de l'import WordPress. **L'autorisation de republication demeure inconnue.**
+- **Décision** : crédit source à rectifier après vérification des droits et de la politique de conservation. Ne pas remplacer automatiquement le champ `auteur` ni supprimer l'archive ; maintenir ce dossier en priorité maximale.
 
 ### 2. « 14 ans de prison pour avoir étranglé un camarade de lycée » (10 décembre 2009)
 - Fichier : `articles/2009/14-ans-de-prison-pour-avoir-etrangle-un-camarade-de-lycee.json`.
