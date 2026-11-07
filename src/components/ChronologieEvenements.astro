@@ -1,0 +1,48 @@
+---
+import { TYPES_REPERE, PHASES_REPERE, VERIFICATION_AU } from '../lib/chronologie-judiciaire.mjs';
+
+const { reperes = [], annee = null } = Astro.props;
+const date = (s) => new Intl.DateTimeFormat('fr-FR', {
+  day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris'
+}).format(new Date(s + 'T12:00:00Z'));
+---
+<ol class="frise-evenements" aria-label={annee ? 'Repères judiciaires de ' + annee : 'Repères judiciaires vérifiés dans les médias'}>
+  {reperes.map((r) => (
+    <li data-dossier={r.dossier} data-type={r.type} data-phase={r.phase}>
+      <div class="marqueur-date">
+        <time datetime={r.dateEvenement}>{date(r.dateEvenement)}</time>
+        <span>DATE DE L’ÉVÉNEMENT</span>
+      </div>
+      <div class="corps-repere">
+        <div class="etiquettes-repere"><span>{TYPES_REPERE[r.type]}</span><span>{PHASES_REPERE[r.phase]}</span></div>
+        <h3>{r.titre}</h3>
+        <p>{r.description}</p>
+        <p class="juridiction">{r.juridiction}</p>
+        <div class="source-repere">
+          <span>SOURCE : <a href={r.urlSource} target="_blank" rel="noopener noreferrer">{r.source} <span aria-hidden="true">↗</span><span class="sr-only"> (nouvel onglet)</span></a></span>
+          <span>Article publié le <time datetime={r.dateSource}>{date(r.dateSource)}</time></span>
+        </div>
+      </div>
+    </li>
+  ))}
+</ol>
+<style>
+.frise-evenements{list-style:none;counter-reset:ligne;display:flex;flex-direction:column;gap:0;padding:0;margin:0}
+.frise-evenements li{display:grid;grid-template-columns:minmax(145px,.9fr) minmax(0,2.8fr);gap:2rem;position:relative;border-top:1px solid var(--filet);padding:1.7rem 0 1.9rem}
+.frise-evenements li:last-child{border-bottom:1px solid var(--filet)}
+.marqueur-date{display:flex;flex-direction:column;gap:.45rem;border-left:5px solid #151718;padding:0 0 0 .8rem;align-self:start}
+.marqueur-date time{font:900 clamp(1.15rem,2vw,1.75rem)/1.2 var(--sans);letter-spacing:-.04em}
+.marqueur-date span{font:850 .59rem/1.5 var(--sans);letter-spacing:.055em;color:var(--encre-2)}
+.etiquettes-repere{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem}
+.etiquettes-repere span{display:inline-block;font:850 .61rem/1.3 var(--sans);letter-spacing:.045em;text-transform:uppercase;background:#e6e7e4;color:#151718;padding:.4rem .55rem}
+.etiquettes-repere span:first-child{background:#ffe100}
+.corps-repere h3{font:900 clamp(1.3rem,2.35vw,1.85rem)/1.15 var(--sans);letter-spacing:-.045em;margin:.85rem 0 .6rem}
+.corps-repere>p{font:500 .95rem/1.6 var(--sans);max-width:75ch;margin:0 0 1rem}
+.corps-repere .juridiction{font:800 .72rem/1.45 var(--sans);letter-spacing:.015em;color:var(--encre-2);text-transform:uppercase}
+.source-repere{display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem 1rem;border-top:1px solid var(--filet);padding-top:.75rem;color:var(--encre-2);font:750 .66rem/1.5 var(--sans)}
+.source-repere a{font-weight:900;color:var(--encre);text-decoration:underline;text-underline-offset:3px}
+.source-repere a:hover{background:#ffe100;color:#151718}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.frise-evenements li[hidden]{display:none}
+@media(max-width:47.99rem){.frise-evenements li{grid-template-columns:1fr;gap:.9rem}.marqueur-date{border-left-width:4px}.marqueur-date time{font-size:1.25rem}.source-repere{flex-direction:column}}
+</style>
