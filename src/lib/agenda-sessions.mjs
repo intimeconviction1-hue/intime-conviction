@@ -2,6 +2,9 @@
 // Une session n'est ni une audience individuelle, ni une confirmation de
 // déroulement. Ne jamais déduire les identités, chefs d'accusation ou verdicts.
 export const DATE_CONTROLE_AGENDA = '2026-11-07';
+// « verifieLe » = date de consultation éditoriale du signalement,
+// et NON confirmation de tenue d'une audience individuelle.
+// « publieLe » = date de mise à jour affichée par la source, lorsqu'elle est connue.
 export const SESSIONS_AGENDA = Object.freeze([
   {
     id:'toulouse-2026-11-09',ville:'Toulouse',departement:'Haute-Garonne',
@@ -110,6 +113,22 @@ export const AUDIENCES_A_RECONFIRMER = Object.freeze([
     objet:'Viol commis sur un mineur de 15 ans et corruption de mineur',
     source:'https://www.cours-appel.justice.fr/rennes/cour-dassises-et-cour-criminelle-departementale-du-finistere'}
 ]);
+
+// Traçabilité prudente : ne pas fabriquer de date de publication d'un rôle.
+// Les périodes de session proviennent d'annonces institutionnelles examinées
+// le 7 novembre 2026 ; l'audience elle-même n'est pas reconfirmée.
+export const PROVENANCE_AGENDA = Object.freeze({
+  dateExamen:'2026-11-07',
+  sessions:{niveau:'Période de session annoncée',publicationSource:null},
+  finistere:{niveau:'Audience inscrite à un calendrier ancien, maintien non reconfirmé',publicationSource:'2026-06-08'},
+  illeEtVilaine:{niveau:'Audience inscrite à un calendrier ancien, maintien non reconfirmé',publicationSource:'2026-09-16'}
+});
+export function provenancePeriode(entree){
+  if(SESSIONS_AGENDA.some(s=>s.id===entree.id))return PROVENANCE_AGENDA.sessions;
+  if(entree.departement==='Finistère')return PROVENANCE_AGENDA.finistere;
+  if(entree.departement==='Ille-et-Vilaine')return PROVENANCE_AGENDA.illeEtVilaine;
+  throw Error('Provenance inconnue pour cette période');
+}
 
 export function sessionsAvenir(sessions, dateISO) {
   return [...sessions].filter(s=>s.fin>=dateISO).sort((a,b)=>a.debut.localeCompare(b.debut)||a.ville.localeCompare(b.ville,'fr'));
