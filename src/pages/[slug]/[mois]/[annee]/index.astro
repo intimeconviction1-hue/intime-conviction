@@ -34,7 +34,7 @@ const r = rubrique(data.rubrique);
 <Base titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} article={{ headline:data.titre,datePublished:data.date.toISOString(),author:data.auteur || null }}>
   <div class="lecture-progression" aria-hidden="true"></div>
   <nav class="fil-ariane" aria-label="Fil d’Ariane">
-    <a href="/">ACCUEIL</a><span aria-hidden="true">/</span><a href={`/rubrique/${r.slug}/`}>{r.nom}</a><span aria-hidden="true">/</span><span>ARTICLE DU {dateLongue(data.date)}</span>
+    <a href="/">Accueil</a><span aria-hidden="true">/</span><a href={`/rubrique/${r.slug}/`}>{r.nom}</a><span aria-hidden="true">/</span><span>Article du {dateLongue(data.date)}</span>
   </nav>
   <article class="article">
     <p class="etiquette"><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></p>
@@ -50,7 +50,7 @@ const r = rubrique(data.rubrique);
 
   {voisins.length > 0 && (
     <aside class="voisins" aria-labelledby="voisins">
-      <div class="titre-section"><h2 id="voisins">CONTINUER DANS {r.nom}</h2></div>
+      <div class="titre-section"><h2 id="voisins">À lire également dans {r.nom}</h2></div>
       <ListeArticles articles={voisins} rubriqueVisible={false} extraits={false} />
     </aside>
   )}
@@ -72,4 +72,11 @@ function progression(){const r=article.getBoundingClientRect();barre.style.width
 .article{margin-top:2rem}
 .outils-lecture{border-bottom:1px solid var(--filet);padding-bottom:1rem}
 @media(max-width:47.99rem){.fil-ariane{margin-top:1.5rem;font-size:.6rem;gap:.5rem}.article{margin-top:1.3rem}}
+
+
+.fil-ariane{font:650 .69rem/1.6 var(--sans);letter-spacing:0;text-transform:none;color:#565b5e}
+.fil-ariane a{border-bottom:1px solid #a12c39}
+.fil-ariane a:hover{background:transparent;color:#a12c39}
+.outils-lecture button:focus-visible{outline:3px solid #a12c39}
+
 </style>
