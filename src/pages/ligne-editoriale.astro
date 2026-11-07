@@ -25,9 +25,6 @@ const regards = [
       <p>Un récit n’épuise pas une affaire. Les faits rapportés, les arguments des parties et le regard de l’auteur doivent pouvoir se distinguer. La réflexion reste ouverte ; la remise en question fait partie de la démarche.</p>
       <h2>Nos formats éditoriaux</h2>
       <p>Récit d’audience, chronique, analyse, réflexion ou détour par la culture : le projet laisse une place au style et au regard de chaque auteur. Cette liberté de forme s’accompagne d’une exigence de précision, de contexte et de mesure.</p>
-      <h2>L’histoire du journal</h2>
-      <p>Dès 2007, Intime Conviction était conçu comme un site consacré à la justice, avec l’envie de dépasser le simple relevé des affaires : des reportages de terrain, de nouvelles voix et des formats vidéo pour rendre ce monde plus proche. Le projet éditorial a évolué, mais cette ambition reste une direction : raconter ce que l’on ne comprend pas toujours et éclairer ce que l’on ne voit pas.</p>
-      <p>Ces formats ne sont pas présentés comme des rendez-vous actuellement produits par le journal. Ils constituent des pistes de développement, distinctes des récits publiés et de la veille de presse automatique.</p>
       <h2>Trois engagements, une même exigence</h2>
       <p><strong>Raconter</strong> : restituer le procès avec sa chronologie, ses contradictions et ses voix. <strong>Expliquer</strong> : rendre intelligibles la procédure, la place des jurés, le doute et le verdict. <strong>Transmettre</strong> : conserver les archives datées, remettre les récits en contexte et ouvrir la réflexion sans fabriquer de certitudes.</p>
       <h2>Ce que vous lisez sur le site</h2>
@@ -38,7 +35,6 @@ const regards = [
       <h2 id="regards-titre">Six rubriques pour explorer la justice</h2>
       <dl>{RUBRIQUES.map((r,i)=><div><dt><a href={'/rubrique/'+r.slug+'/'}>{r.nom}</a></dt><dd>{regards[i]}</dd></div>)}</dl>
     </section>
-    <p class="note-editoriale">Cette présentation reprend les orientations de la ligne éditoriale d’Intime Conviction, version 7. Le rappel de 2007 concerne l’ambition éditoriale du site consacré à la justice, distincte d’un ancien projet de services juridiques. Il ne décrit pas une offre de reportages ou de vidéos actuellement opérationnelle.</p>
     <a class="retour" href="/#actualites">Lire Cours du Jour</a>
   </article>
 </Base>
@@ -51,6 +47,5 @@ const regards = [
   dl { margin:0; }dl div { padding:1.25rem 0; border-bottom:1px solid var(--filet); }
   dt { font-size:1.5rem; }dt a { display:inline-flex; align-items:center; min-height:44px; text-decoration:underline; text-decoration-color:var(--rouge); text-underline-offset:0.2em; }
   dd { margin:0.4rem 0 0; color:var(--encre-2); line-height:1.65; }
-  .note-editoriale { font-family:var(--sans); font-size:0.75rem; color:var(--encre-2); margin-top:2rem; }
   .retour { display:inline-flex; align-items:center; min-height:44px; margin-top:1rem; font-family:var(--sans); font-size:0.8125rem; }
 </style>
