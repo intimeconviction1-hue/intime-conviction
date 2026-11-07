@@ -24,6 +24,13 @@ export const SESSIONS_AGENDA = Object.freeze([
     source:'https://www.cours-appel.justice.fr/toulouse/roles-des-cours-dassises-et-de-la-cour-criminelle-departementale-de-la-haute-garonne'
   },
   {
+    id:'besancon-ccd-2026-12-07',ville:'Besançon',departement:'Doubs',
+    juridiction:'Cour criminelle départementale du Doubs',
+    debut:'2026-12-07',fin:'2026-12-18',
+    libelle:'Session de la cour criminelle départementale, dates affichées par la cour d’appel de Besançon',
+    source:'https://www.cours-appel.justice.fr/besancon/prochaines-sessions'
+  },
+  {
     id:'lyon-2026-11-23',ville:'Lyon',departement:'Rhône',
     juridiction:'Cour d’assises et cour criminelle départementale',
     debut:'2026-11-23',fin:'2026-12-18',
@@ -50,11 +57,11 @@ export function dateLocaleAgenda(instant=new Date()) {
 // Sources pertinentes dont les dates précises ne sont PAS publiables dans l'agenda
 // tant que le rôle modificatif ou le PDF n'a pas été effectivement contrôlé.
 export const SOURCES_A_COMPLETER = Object.freeze([
-  {code:'01',ressort:'Ain',statut:'Rôle de décembre 2026 annoncé ; dates non revérifiées',
+  {code:'01',ressort:'Ain',statut:'Rôle de décembre 2026 disponible ; dates exactes à relever dans le document',
     source:'https://www.cours-appel.justice.fr/lyon/la-cour-dassises-de-lain'},
-  {code:'33',ressort:'Gironde',statut:'Publication institutionnelle à contrôler après maintenance',
+  {code:'33',ressort:'Gironde',statut:'Rôle publié ; dates exactes à relever dans le document',
     source:'https://www.cours-appel.justice.fr/bordeaux/roles-des-cours-dassises'},
-  {code:'42',ressort:'Loire',statut:'Publication institutionnelle à contrôler après maintenance',
+  {code:'42',ressort:'Loire',statut:'Rôle publié ; dates exactes à relever dans le document',
     source:'https://www.cours-appel.justice.fr/lyon/la-cour-dassises-de-la-loire'},
   {code:'72',ressort:'Sarthe',statut:'Publication institutionnelle à contrôler après maintenance',
     source:'https://www.cours-appel.justice.fr/angers/la-cour-dassises-de-la-sarthe'}
