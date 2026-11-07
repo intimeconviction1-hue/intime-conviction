@@ -24,3 +24,10 @@ test('ne modifie ni archives ni liste de départ',()=>{
   presseSansRedite(refs,une);
   assert.deepEqual(refs,original);
 });
+
+test('identifie le sujet de l’article Mediapart même sans nom de la victime dans le titre',()=>{
+  const sujet = 'Un policier condamné à dix ans de prison joue sa dernière chance en appel';
+  const article = {data:{sujetsPresse:['olivio gomes', sujet]}};
+  const references = [{titre:sujet,source:'Mediapart'}, {titre:'Un autre procès en appel devant les assises',source:'Autre média'}];
+  assert.deepEqual(presseSansRedite(references,[article]),references.slice(1));
+});
