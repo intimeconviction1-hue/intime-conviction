@@ -23,11 +23,11 @@ for (const a of articles) {
   parMois.get(m).push(a);
 }
 ---
-<Base titre={`Archives ${annee}`} rubriqueActive="archives">
+<Base titre={`Archives ${annee}`} description={`Consulter les ${articles.length.toLocaleString('fr-FR')} articles publiés par Intime Conviction en ${annee}, classés par mois et par rubrique.`} rubriqueActive="archives">
   <header class="titre-page">
     <p class="etiquette"><a href="/archives/">Archives</a></p>
-    <h1>{annee}</h1>
-    <p class="sous-titre">{articles.length.toLocaleString('fr-FR')} article{articles.length > 1 ? 's' : ''}</p>
+    <h1>Archives {annee}</h1>
+    <p class="sous-titre">{articles.length.toLocaleString('fr-FR')} article{articles.length > 1 ? 's' : ''} publié{articles.length > 1 ? 's' : ''} cette année-là</p>
   </header>
   {[...parMois].map(([mois, liste]) => (
     <section>
@@ -46,4 +46,11 @@ for (const a of articles) {
   .titres { list-style: none; padding: 0; margin: 0; columns: 22rem; column-gap: 2.5rem; }
   .titres li { break-inside: avoid; padding: 0.35rem 0; border-bottom: 1px solid var(--filet); line-height: 1.35; }
   .titres a { text-decoration: none; }
+
+
+.titre-page{border-bottom:2px solid #a12c39}
+.titre-page h1{font:650 clamp(2.3rem,5vw,4rem)/1.12 var(--serif);text-transform:none;letter-spacing:-.035em}
+.titres a:hover{color:#a12c39;text-decoration:underline;text-underline-offset:.18em}
+.titres li{padding:.55rem 0}
+
 </style>
