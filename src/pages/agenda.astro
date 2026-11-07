@@ -1,9 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
-import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,SOURCES_A_COMPLETER,sessionsAvenir,dateLocaleAgenda} from '../lib/agenda-sessions.mjs';
+import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,SOURCES_A_COMPLETER,AUDIENCES_A_RECONFIRMER,sessionsAvenir,dateLocaleAgenda} from '../lib/agenda-sessions.mjs';
 
 const dateDuJour=dateLocaleAgenda();
 const dates=sessionsAvenir(SESSIONS_AGENDA,dateDuJour);
+const audiences=sessionsAvenir(AUDIENCES_A_RECONFIRMER,dateDuJour);
 const formatDate=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(s+'T12:00:00Z'));
 ---
 <Base titre="Agenda des sessions criminelles" description="Dates de sessions publiées par les cours d’appel. Sources officielles identifiées, sans déduire les audiences individuelles ni les décisions." rubriqueActive="annuaire">
@@ -29,6 +30,23 @@ const formatDate=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',
         </li>
       ))}
     </ol>
+  </section>
+  <section class="audiences-indicatives" aria-labelledby="titre-audiences-indicatives">
+    <div class="titre-liste"><h2 id="titre-audiences-indicatives">Audiences à reconfirmer</h2><span>Quimper · Finistère</span></div>
+    <p>Ces dates et qualifications proviennent du calendrier public de la cour d’appel de Rennes, dont la dernière mise à jour affichée remonte au 8 juin 2026. Lors du contrôle du 7 novembre 2026, la page officielle renvoyait une maintenance. <strong>Ces audiences ne sont donc pas confirmées à jour.</strong> Il faut vérifier leur maintien auprès du greffe avant tout déplacement. Les audiences devant la cour d’assises des mineurs ne figurent pas dans cette sélection.</p>
+    {audiences.length === 0 ? <p>Aucune date non échue ne subsiste dans cette sélection.</p> : (
+      <ol>{audiences.map(a=>(
+        <li>
+          <div class="periode"><time datetime={a.debut}>{formatDate(a.debut)}</time><span>au</span><time datetime={a.fin}>{formatDate(a.fin)}</time></div>
+          <div>
+            <p class="localisation">{a.ville} · {a.departement}</p>
+            <h3>{a.juridiction}</h3>
+            <p>Objet mentionné au calendrier : {a.objet}.</p>
+            <a href={a.source} target="_blank" rel="noopener noreferrer">Consulter la page institutionnelle <span class="sr-only">(nouvel onglet)</span></a>
+          </div>
+        </li>
+      ))}</ol>
+    )}
   </section>
   <section class="sources-en-cours" aria-labelledby="titre-sources-en-cours">
     <div class="titre-liste"><h2 id="titre-sources-en-cours">Juridictions à vérifier</h2><span>Aucune date d’audience annoncée ici</span></div>
@@ -82,4 +100,14 @@ const formatDate=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',
 .sources-en-cours a{font:650 .82rem/1.5 var(--sans);text-decoration:underline;text-underline-offset:.2em}
 .sources-en-cours a:hover{color:#96313b}
 @media(max-width:40rem){.sources-en-cours li{flex-direction:column;gap:.5rem}}
+
+.audiences-indicatives{margin:3rem 0;padding:1.5rem;background:#f5f2ed;border-left:3px solid #a12c39}
+.audiences-indicatives>p{font:450 .91rem/1.7 var(--sans);max-width:85ch}
+.audiences-indicatives ol{list-style:none;margin:0;padding:0}
+.audiences-indicatives li{display:grid;grid-template-columns:minmax(11rem,1fr) minmax(0,2fr);gap:1.5rem;padding:1.3rem 0;border-top:1px solid #d9d5cf}
+.audiences-indicatives h3{font:600 clamp(1.3rem,2vw,1.65rem)/1.3 var(--serif);margin:.15rem 0}
+.audiences-indicatives li p:not(.localisation){font:450 .87rem/1.6 var(--sans)}
+.audiences-indicatives li a{font:650 .82rem/1.5 var(--sans);text-decoration:underline;text-underline-offset:.2em}
+.audiences-indicatives li a:hover{color:#96313b}
+@media(max-width:40rem){.audiences-indicatives{padding:1rem}.audiences-indicatives li{grid-template-columns:minmax(0,1fr);gap:.7rem}}
 </style>
