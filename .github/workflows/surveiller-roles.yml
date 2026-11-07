@@ -13,6 +13,7 @@ on:
     paths:
       - ".github/workflows/surveiller-roles.yml"
       - "scripts/surveiller-roles.mjs"
+      - "tests/surveiller-roles.test.mjs"
       - "src/lib/roles-officiels.mjs"
 
 permissions:
