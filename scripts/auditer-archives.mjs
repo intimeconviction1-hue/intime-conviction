@@ -9,10 +9,11 @@
  * Une mention « AFP » ou « SOURCE » ne prouve pas une reprise intégrale ;
  * elle impose seulement une vérification éditoriale de la provenance.
  */
-import { readdir, readFile } from 'node:fs/promises';
-import { join, relative } from 'node:path';
+import { readdir, readFile, mkdir, writeFile } from 'node:fs/promises';
+import { dirname, join, relative } from 'node:path';
 
 const racine = process.env.IC_ARTICLES ?? 'articles-prives/articles';
+const sortie = process.env.IC_AUDIT_OUTPUT;
 const fichiers = [];
 async function parcourir(dossier) {
   for (const entree of await readdir(dossier, { withFileTypes: true })) {
@@ -35,6 +36,7 @@ try {
   process.exitCode = 1;
 }
 
+fichiers.sort((a, b) => a.localeCompare(b, 'fr'));
 for (const chemin of fichiers) {
   let article;
   try { article = JSON.parse(await readFile(chemin, 'utf8')); }
@@ -78,9 +80,23 @@ const ordre = ['erreur','a_verifier'];
 const comptes = Object.fromEntries(ordre.map(k=>[k,findings.filter(f=>f.niveau===k).length]));
 const codes = {};
 for (const f of findings) codes[f.code]=(codes[f.code]??0)+1;
+const rapport = {
+  fichiers:fichiers.length,
+  repartitionParAnnee:Object.fromEntries([...annees].sort((a,b)=>b[0].localeCompare(a[0]))),
+  signalements:comptes, parType:codes,
+  signalementsDetailles:findings,
+  note:'Signalements pour examen humain ; aucune modification des archives.'
+};
+if (sortie) {
+  await mkdir(dirname(sortie), { recursive:true });
+  await writeFile(sortie, JSON.stringify(rapport,null,2)+'\n','utf8');
+  console.log('Rapport complet enregistré : '+sortie);
+}
 console.log(JSON.stringify({
-  fichiers:fichiers.length, repartitionParAnnee:Object.fromEntries([...annees].sort((a,b)=>b[0].localeCompare(a[0]))),
-  signalements:comptes, parType:codes, exemples:findings.slice(0,40),
-  note:'Signalements pour examen humain, jamais des corrections ou des conclusions automatiques.'
+  fichiers:rapport.fichiers,
+  signalements:rapport.signalements,
+  parType:rapport.parType,
+  exemples:findings.slice(0,10),
+  note:rapport.note
 },null,2));
 if (comptes.erreur) process.exitCode=1;
