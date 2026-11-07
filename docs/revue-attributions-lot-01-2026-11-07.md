@@ -48,6 +48,14 @@ Lecture des corps HTML et métadonnées du dépôt privé `intime-conviction-art
 - **Diagnostic** : il s'agit d'une sélection de liens, et non d'un reportage unique ; le titre générique rend la recherche historique moins informative.
 - **Décision** : conserver le texte et les URL ; envisager un libellé de format « sélection de presse » dans l'interface après validation du périmètre des compilations.
 
+## Recherches externes complémentaires, 7 novembre 2026
+
+- **Dalloz Actualité : provenance confirmée** par [la publication originale du 3 novembre 2017](https://www.dalloz-actualite.fr/flash/12-hommes-en-colere-theatre-hebertot-jusqu-au-7-janvier-2018), qui affiche l'auteur Thibault de Ravel d'Esclapon. La consultation du texte public établit une correspondance substantielle avec le corps de l'archive. Elle n'établit pas le statut des droits de reproduction.
+- **Procès d'un mineur, décembre 2009** : [les archives datées du Parisien](https://www.leparisien.fr/archives/2009/10-12-2009/) montrent un sujet portant sur cette condamnation. Cette couverture parallèle ne permet pas de vérifier que l'article Nouvel Obs/Reuters conservé par Intime Conviction provient précisément de ce média ou d'en établir les droits. **Provenance précise non confirmée**.
+- **Affaire Cossarini** : un [article du Parisien publié en février 2006](https://www.leparisien.fr/faits-divers/le-pirate-escroc-acquitte-du-meurtre-des-marins-26-02-2006-2006776047.php) confirme l'existence d'une couverture de la procédure antérieure, mais ne constitue **pas** l'original AFP de mai 2009. Ce rapprochement ne valide donc ni le texte ni son crédit.
+
+Les vérifications externes ci-dessus ne changent pas les conclusions sur les droits ; aucune correction massive des archives ne doit en être déduite.
+
 ## Priorités
 
 1. **Crédits et droits** : commencer par Dalloz Actualité, puis Reuters/Nouvel Obs.
