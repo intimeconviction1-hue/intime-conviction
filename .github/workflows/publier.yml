@@ -46,6 +46,22 @@ jobs:
 
       - run: npm test
 
+      - name: Auditer les archives sans les modifier
+        continue-on-error: true
+        run: npm run audit:archives
+        env:
+          IC_ARTICLES: articles-prives/articles
+          IC_AUDIT_OUTPUT: audit-archives/rapport.json
+
+      - name: Conserver le rapport d’audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-documentaire-archives
+          path: audit-archives/rapport.json
+          if-no-files-found: warn
+          retention-days: 30
+
       - name: Retrouver le dernier relevé d’actualités
         uses: actions/cache@v6
         with:
