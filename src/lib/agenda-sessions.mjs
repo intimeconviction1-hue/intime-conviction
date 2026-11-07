@@ -47,6 +47,19 @@ export function dateLocaleAgenda(instant=new Date()) {
   }).format(instant);
 }
 
+// Sources pertinentes dont les dates précises ne sont PAS publiables dans l'agenda
+// tant que le rôle modificatif ou le PDF n'a pas été effectivement contrôlé.
+export const SOURCES_A_COMPLETER = Object.freeze([
+  {code:'01',ressort:'Ain',statut:'Rôle de décembre 2026 annoncé ; dates non revérifiées',
+    source:'https://www.cours-appel.justice.fr/lyon/la-cour-dassises-de-lain'},
+  {code:'33',ressort:'Gironde',statut:'Publication institutionnelle à contrôler après maintenance',
+    source:'https://www.cours-appel.justice.fr/bordeaux/roles-des-cours-dassises'},
+  {code:'42',ressort:'Loire',statut:'Publication institutionnelle à contrôler après maintenance',
+    source:'https://www.cours-appel.justice.fr/lyon/la-cour-dassises-de-la-loire'},
+  {code:'72',ressort:'Sarthe',statut:'Publication institutionnelle à contrôler après maintenance',
+    source:'https://www.cours-appel.justice.fr/angers/la-cour-dassises-de-la-sarthe'}
+]);
+
 export function sessionsAvenir(sessions, dateISO) {
   return [...sessions].filter(s=>s.fin>=dateISO).sort((a,b)=>a.debut.localeCompare(b.debut)||a.ville.localeCompare(b.ville,'fr'));
 }
