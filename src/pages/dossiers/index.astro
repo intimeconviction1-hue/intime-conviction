@@ -33,6 +33,7 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
     <div><span>LE TEMPS DES PROCÈS / LES DATES RECOUPÉES</span><strong>AU-DELÀ DES TITRES : LES ÉTAPES DE JUSTICE.</strong><p>Ouvertures d’audience, verdicts et procédures d’appel sont consignés à part des alertes de presse, avec la date de l’événement et sa source.</p></div>
     <a href="/chronologie/">EXPLORER LA CHRONOLOGIE JUDICIAIRE <span aria-hidden="true">↗</span></a>
   </aside>
+  <p class="lien-carte-index"><a href="/carte/">SITUER LES JURIDICTIONS DES DOSSIERS SUR LA CARTE <span aria-hidden="true">↗</span></a></p>
   <section class="repertoire" aria-labelledby="titre-repertoire">
     <div class="barre"><h2 id="titre-repertoire">OUVRIR UN DOSSIER</h2><span>{dossiers.length} DOSSIERS DISPONIBLES</span></div>
     <ol class="cartes">
@@ -100,4 +101,4 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
 .lien-chronologie p{font:500 .81rem/1.55 var(--sans);margin:.2rem 0 0}
 .lien-chronologie a{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#ffe100;color:#151718;padding:1rem;font:900 .67rem/1.4 var(--sans);max-width:220px}
 .lien-chronologie a:hover{background:#fff;color:#151718}
-@media(max-width:47.99rem){.lien-chronologie{flex-direction:column;align-items:stretch}.lien-chronologie a{max-width:none;flex-shrink:1}}</style>
+@media(max-width:47.99rem){.lien-chronologie{flex-direction:column;align-items:stretch}.lien-chronologie a{max-width:none;flex-shrink:1}}.lien-carte-index{margin:0 0 1.5rem}.lien-carte-index a{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#ffe100;color:#151718;padding:1.25rem;font:900 .74rem/1.45 var(--sans)}.lien-carte-index a:hover{background:#151718;color:#fff}</style>
