@@ -29,6 +29,10 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
     <h2>CE QU’EST UN DOSSIER.</h2>
     <p>Une sélection de liens vers des médias extérieurs, réunis parce que le <strong>titre</strong> mentionne explicitement le nom ou les mots-clés d’une affaire. Une référence peut seulement évoquer l’affaire sans traiter du même procès. Il ne s’agit ni d’un récit judiciaire rédigé par Intime Conviction, ni d’une chronologie certifiée des faits ou des décisions.</p>
   </section>
+  <aside class="lien-chronologie">
+    <div><span>LE TEMPS DES PROCÈS / LES DATES RECÔUPÉES</span><strong>AU-DELÀ DES TITRES : LES ÉTAPES DE JUSTICE.</strong><p>Ouvertures d’audience, verdicts et procédures d’appel sont consignés à part des alertes de presse, avec la date de l’événement et sa source.</p></div>
+    <a href="/chronologie/">EXPLORER LA CHRONOLOGIE JUDICIAIRE <span aria-hidden="true">↗</span></a>
+  </aside>
   <section class="repertoire" aria-labelledby="titre-repertoire">
     <div class="barre"><h2 id="titre-repertoire">OUVRIR UN DOSSIER</h2><span>{dossiers.length} DOSSIERS DISPONIBLES</span></div>
     <ol class="cartes">
@@ -89,4 +93,11 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
 .pied-repertoire a{display:flex;gap:1rem;justify-content:space-between;align-items:center;background:#ffe100;color:#151718;font:900 .7rem/1.3 var(--sans);padding:1.3rem}
 .pied-repertoire a:hover{background:#fff;color:#151718}
 @media(max-width:48rem){.en-tete-dossiers{padding:2rem 1.2rem}.en-tete-dossiers h1{font-size:clamp(2.5rem,10vw,4.6rem)}.chapo{grid-template-columns:1fr;gap:.8rem}.cartes{grid-template-columns:1fr}.cartes li:nth-child(odd){border-right:0}.cartes a{min-height:280px}.pied-repertoire{grid-template-columns:1fr}.code-dossier{margin-bottom:2rem}}
-</style>
+.lien-chronologie{display:flex;align-items:center;justify-content:space-between;gap:2rem;background:#151718;color:#fff;padding:clamp(1.3rem,3vw,2.3rem);margin:1.5rem 0 2rem;border-left:7px solid #ffe100}
+.lien-chronologie div{display:flex;flex-direction:column;gap:.35rem;max-width:60ch}
+.lien-chronologie div>span{font:900 .67rem/1.4 var(--sans);letter-spacing:.08em;color:#ffe100}
+.lien-chronologie strong{font:900 clamp(1.15rem,2vw,1.8rem)/1.2 var(--sans);letter-spacing:-.03em}
+.lien-chronologie p{font:500 .81rem/1.55 var(--sans);margin:.2rem 0 0}
+.lien-chronologie a{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#ffe100;color:#151718;padding:1rem;font:900 .67rem/1.4 var(--sans);max-width:220px}
+.lien-chronologie a:hover{background:#fff;color:#151718}
+@media(max-width:47.99rem){.lien-chronologie{flex-direction:column;align-items:stretch}.lien-chronologie a{max-width:none;flex-shrink:1}}</style>
