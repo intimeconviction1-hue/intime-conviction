@@ -130,7 +130,7 @@ const total=articles.length.toLocaleString('fr-FR');
         else repere.removeAttribute('aria-current');
       });
       position.textContent = String(actif+1).padStart(2,'0')+' / '+String(diapositives.length).padStart(2,'0');
-      if (defiler) piste.scrollTo({left:diapositives[actif].offsetLeft - piste.offsetLeft,behavior:reduireMouvement()?'instant':'smooth'});
+      if (defiler) piste.scrollTo({left:diapositives[actif].offsetLeft,behavior:reduireMouvement()?'instant':'smooth'});
     };
     carrousel.querySelector('[data-editorial-prev]')?.addEventListener('click',()=>afficher(actif-1));
     carrousel.querySelector('[data-editorial-next]')?.addEventListener('click',()=>afficher(actif+1));
@@ -142,7 +142,7 @@ const total=articles.length.toLocaleString('fr-FR');
         const centre=piste.scrollLeft + piste.clientWidth/2;
         let index=0, distance=Infinity;
         diapositives.forEach((slide,i)=>{
-          const ecart=Math.abs(slide.offsetLeft-piste.offsetLeft+slide.clientWidth/2-centre);
+          const ecart=Math.abs(slide.offsetLeft+slide.clientWidth/2-centre);
           if(ecart<distance){distance=ecart;index=i;}
         });
         afficher(index,false);
