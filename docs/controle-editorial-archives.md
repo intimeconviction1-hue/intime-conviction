@@ -18,3 +18,5 @@ Ce document est une procédure interne, non une page publiée.
 - `articles/2025/tour-de-france-2024.json` : vérification du 7 novembre 2026 ; article recentré sur trois affaires sourcées ; décisions de 2024 et évolutions en appel de 2026 distinguées (Samuel Paty, Eugène Rwamucyo) ; notice sur Nice retirée faute de référence précise. Conserver la version antérieure dans l'historique Git pour toute comparaison.
 
 Le fonds éditorial est stocké dans le dépôt privé `intime-conviction-articles`. Le workflow GitHub Pages du dépôt public reconstruit le site avec ce fonds.
+
+- `articles/2025/fratricide-a-grasse-un-proces-bouleversant-sur-fond-de-violences-familiales.json` : contrôle du 7 novembre 2026. Aucun élément indépendant n'a permis d'identifier avec certitude le procès décrit ; les affirmations non attribuées ont été remplacées par une notice de vérification. Date, slug et URL conservés. Original accessible dans l'historique privé ; rétablir un récit seulement avec des sources identifiables.
