@@ -1,0 +1,92 @@
+---
+import Base from '../../layouts/Base.astro';
+import { lireVeille } from '../../lib/veille.mjs';
+import { DOSSIERS, referencesPourDossier, statistiquesDossier } from '../../lib/dossiers.mjs';
+
+const veille = await lireVeille();
+const dossiers = DOSSIERS
+  .map(d => ({ ...d, ...statistiquesDossier(referencesPourDossier(d, veille.articles)) }))
+  .filter(d => d.total > 0);
+const totalReferences = dossiers.reduce((total, d) => total + d.total, 0);
+const nombre = (n) => n.toLocaleString('fr-FR');
+const date = (s) => new Intl.DateTimeFormat('fr-FR', {
+  day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'
+}).format(new Date(s + 'T12:00:00Z'));
+---
+<Base
+  titre="Les dossiers judiciaires"
+  description="Retrouver les affaires judiciaires dans la revue de presse d’Intime Conviction : sources externes, liens datés et accès aux différentes étapes médiatiques."
+  rubriqueActive="dossiers"
+>
+  <header class="en-tete-dossiers">
+    <p class="code-dossier">IC / LE FONDS DOCUMENTAIRE</p>
+    <p class="en-tete-sur">LES DOSSIERS</p>
+    <h1>UNE AFFAIRE.<br /><span>PLUSIEURS<br />REGARDS.</span></h1>
+    <p class="sous-titre">Les mentions d’une même affaire, retrouvées dans la presse. Les sources restent identifiées. Les dates aussi.</p>
+    <div class="chiffres"><span><strong>{dossiers.length}</strong> dossiers thématiques</span><span><strong>{nombre(totalReferences)}</strong> liens répertoriés</span></div>
+  </header>
+  <section class="chapo" aria-label="Méthode">
+    <h2>CE QU’EST UN DOSSIER.</h2>
+    <p>Une sélection de liens vers des médias extérieurs, réunis parce que le <strong>titre</strong> mentionne explicitement le nom ou les mots-clés d’une affaire. Une référence peut seulement évoquer l’affaire sans traiter du même procès. Il ne s’agit ni d’un récit judiciaire rédigé par Intime Conviction, ni d’une chronologie certifiée des faits ou des décisions.</p>
+  </section>
+  <section class="repertoire" aria-labelledby="titre-repertoire">
+    <div class="barre"><h2 id="titre-repertoire">OUVRIR UN DOSSIER</h2><span>{dossiers.length} DOSSIERS DISPONIBLES</span></div>
+    <ol class="cartes">
+      {dossiers.map((d,i)=>(
+        <li>
+          <a href={'/dossiers/' + d.slug + '/'} aria-label={'Explorer ' + d.titre}>
+            <div class="ligne-haute"><span>DOSSIER Nº {String(i+1).padStart(2,'0')}</span><span class="signe" aria-hidden="true">↗</span></div>
+            <p class="theme">{d.repere}</p>
+            <h3>{d.titre}</h3>
+            <p class="description">{d.presentation}</p>
+            <div class="mesures"><span><strong>{nombre(d.total)}</strong> références</span><span><strong>{d.medias}</strong> médias</span></div>
+            <p class="date-source">DERNIÈRE ALERTE RÉPERTORIÉE : <time datetime={d.fin}>{date(d.fin)}</time></p>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+  <aside class="pied-repertoire">
+    <div><h2>LE FONDS COMPLET<br />RESTE ACCESSIBLE.</h2><p>Les dossiers constituent des portes d’entrée thématiques. Toutes les autres références restent consultables, année par année, dans les archives de la revue de presse.</p></div>
+    <a href="/archives/presse/">EXPLORER LA REVUE DE PRESSE <span aria-hidden="true">↗</span></a>
+  </aside>
+</Base>
+<style>
+.en-tete-dossiers{background:#151718;color:#fff;margin-top:1.5rem;padding:clamp(1.5rem,5vw,5rem);border-top:8px solid #ffe100}
+.code-dossier{font:850 .7rem/1.4 var(--sans);letter-spacing:.1em;color:#ffe100;margin:0 0 3rem}
+.en-tete-sur{font:900 .8rem/1.4 var(--sans);letter-spacing:.1em;margin:0 0 1rem}
+.en-tete-dossiers h1{font:900 clamp(2.7rem,7.8vw,7.5rem)/.94 var(--sans);letter-spacing:-.083em;margin:0 0 2rem;overflow-wrap:normal}
+.en-tete-dossiers h1 span{color:#ffe100}
+.en-tete-dossiers .sous-titre{font:650 clamp(1rem,1.65vw,1.35rem)/1.5 var(--sans);text-transform:uppercase;color:#f1f1ed;max-width:55ch;margin:0 0 2.2rem}
+.chiffres{display:flex;flex-wrap:wrap;gap:1.5rem 4rem;border-top:1px solid #555;padding-top:1rem}
+.chiffres span{font:850 .7rem/1.5 var(--sans);text-transform:uppercase;display:flex;gap:.7rem;align-items:baseline}
+.chiffres strong{font:900 clamp(1.7rem,3vw,2.8rem)/1 var(--sans);color:#ffe100}
+.chapo{display:grid;grid-template-columns:1fr 2fr;gap:2rem;border-bottom:4px solid #151718;padding:2.4rem 0}
+.chapo h2{font:900 clamp(1.35rem,2.6vw,2.4rem)/1.13 var(--sans);letter-spacing:-.055em}
+.chapo p{margin:0;max-width:80ch;font:500 .98rem/1.65 var(--sans)}
+.repertoire{padding-top:2.5rem}
+.repertoire .barre{display:flex;align-items:end;justify-content:space-between;flex-wrap:wrap;gap:1rem;padding:0 0 .9rem;border-bottom:5px solid #151718}
+.repertoire .barre h2{font:900 clamp(1.8rem,4vw,3.2rem)/1 var(--sans);letter-spacing:-.06em;margin:0}
+.repertoire .barre span{font:850 .67rem/1.5 var(--sans)}
+.cartes{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0}
+.cartes li{min-width:0}
+.cartes li:nth-child(odd){border-right:2px solid #151718}
+.cartes a{min-height:370px;height:100%;display:flex;flex-direction:column;gap:.6rem;padding:clamp(1.35rem,2.8vw,2.5rem);border-bottom:2px solid #151718;color:#151718;background:#fff;transition:background-color .15s}
+.cartes li:first-child a{background:#ffe100}
+.cartes a:hover,.cartes li:first-child a:hover{background:#f6e76a;color:#151718}
+.ligne-haute{display:flex;justify-content:space-between;align-items:center;font:900 .67rem/1.5 var(--sans);letter-spacing:.08em}
+.signe{font-size:1.65rem}
+.cartes .theme{margin:1.5rem 0 0;font:850 .68rem/1.4 var(--sans);letter-spacing:.08em}
+.cartes h3{font:900 clamp(1.9rem,3.7vw,3.35rem)/1.07 var(--sans);letter-spacing:-.06em;margin:0}
+.cartes .description{font:500 .9rem/1.55 var(--sans);margin:.35rem 0 1.1rem;max-width:50ch}
+.mesures{display:flex;flex-wrap:wrap;gap:2rem;margin-top:auto;border-top:2px solid #151718;padding-top:.85rem}
+.mesures span{display:flex;align-items:baseline;gap:.5rem;font:850 .68rem/1.4 var(--sans);text-transform:uppercase}
+.mesures strong{font:900 1.6rem/1 var(--sans)}
+.date-source{font:750 .62rem/1.5 var(--sans);margin:.7rem 0 0;letter-spacing:.03em}
+.pied-repertoire{background:#151718;color:white;display:grid;grid-template-columns:1.4fr 1fr;gap:2rem;align-items:end;padding:clamp(1.5rem,4vw,3rem);margin:3rem 0 2rem}
+.pied-repertoire h2{font:900 clamp(1.4rem,2.6vw,2.4rem)/1.1 var(--sans);letter-spacing:-.05em}
+.pied-repertoire p{font:500 .9rem/1.6 var(--sans);max-width:50ch}
+.pied-repertoire a{display:flex;gap:1rem;justify-content:space-between;align-items:center;background:#ffe100;color:#151718;font:900 .7rem/1.3 var(--sans);padding:1.3rem}
+.pied-repertoire a:hover{background:#fff;color:#151718}
+@media(max-width:48rem){.en-tete-dossiers{padding:2rem 1.2rem}.en-tete-dossiers h1{font-size:clamp(2.5rem,10vw,4.6rem)}.chapo{grid-template-columns:1fr;gap:.8rem}.cartes{grid-template-columns:1fr}.cartes li:nth-child(odd){border-right:0}.cartes a{min-height:280px}.pied-repertoire{grid-template-columns:1fr}.code-dossier{margin-bottom:2rem}}
+</style>
