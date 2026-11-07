@@ -45,3 +45,21 @@
 - Ne pas effacer une information requise pour comprendre la présomption d’innocence, l’existence d’un recours ou les limites des sources.
 - Vérifier la compilation et la publication GitHub Pages après toute modification.
 - Coordonner via les commits et les tickets GitHub les changements simultanés de l’autre session.
+
+## Revue complémentaire de l’accueil
+
+Un examen de la page d’accueil a relevé deux blocs successifs qui invitaient à consulter les archives : le bandeau de comptage « Les archives du journal » et le répertoire détaillé « Les archives » avec liens par année. Le premier a été retiré, tandis que le second, réellement navigable, a été conservé. Aucun article ni URL n’est supprimé.
+
+Le compteur de références externes précédemment présenté comme des « nouvelles » dans les rubriques a été reformulé en « références de presse ». Cette distinction évite de confondre les titres de veille répertoriés avec des articles d’actualité publiés par la rédaction.
+
+Commit : `896c7d5c7cd8883224b363f32e9aecb3d78418c2`.
+
+### Analyse des sections restant visibles
+
+- **Accueil, « Explorer le journal »** : conservation provisoire, car ces liens organisent les rubriques en parcours concrets. Risque de répétition avec « Les rubriques du journal » : simplification possible après validation du parcours utilisateur, sans supprimer l’accès à des rubriques.
+- **Accueil, rubrique culturelle** : à conserver lorsqu’elle porte réellement sur les représentations judiciaires.
+- **Annuaire, « Comment trouver une audience »** : conservation, information pratique qui aide le lecteur à utiliser les sources officielles.
+- **Jurisprudence, questions de droit** : conservation provisoire à titre pédagogique ; renforcer le lien avec des décisions précises plutôt que supprimer l’entrée.
+- **Pages légales et ligne éditoriale** : à préserver, même si elles sont peu consultées, en raison de la transparence et des obligations éditoriales.
+
+**Limite :** la revue est un audit éditorial structurel du code source ; elle ne démontre pas la performance UX ou les usages réels sans données de navigation et tests lecteurs.
