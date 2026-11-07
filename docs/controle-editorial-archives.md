@@ -20,3 +20,5 @@ Ce document est une procédure interne, non une page publiée.
 Le fonds éditorial est stocké dans le dépôt privé `intime-conviction-articles`. Le workflow GitHub Pages du dépôt public reconstruit le site avec ce fonds.
 
 - `articles/2025/fratricide-a-grasse-un-proces-bouleversant-sur-fond-de-violences-familiales.json` : contrôle du 7 novembre 2026. Aucun élément indépendant n'a permis d'identifier avec certitude le procès décrit ; les affirmations non attribuées ont été remplacées par une notice de vérification. Date, slug et URL conservés. Original accessible dans l'historique privé ; rétablir un récit seulement avec des sources identifiables.
+
+- `articles/2025/20-ans-pour-le-meurtre-de-son-pere.json` : contrôle du 7 novembre 2026. La condamnation à vingt ans en première instance (24 janvier 2025) a été suivie d'une peine de quinze ans en appel (6 novembre 2026), selon France 3 Pays de la Loire. Sources documentées et anciennes citations non vérifiées retirées. Vérifier l'existence d'un pourvoi éventuel. Date et URL historiques conservées.
