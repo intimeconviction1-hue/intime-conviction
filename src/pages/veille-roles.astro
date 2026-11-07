@@ -14,26 +14,26 @@ for(const r of ROLES_OFFICIELS) {
 const surveillees=[...sources.values()].sort((a,b)=>a.ressorts[0].localeCompare(b.ressorts[0],'fr'));
 const exclus=ROLES_OFFICIELS.filter(r=>r.mode==='information'||r.mode==='sur-place');
 ---
-<Base titre="Veille des rôles d’audience" description="Comment Intime Conviction repère les nouveaux liens vers les rôles de sessions d’assises publiés sur les sites des cours d’appel, sans annoncer d’audiences non vérifiées." rubriqueActive="annuaire">
+<Base titre="Veille des rôles d’audience" description="Revue éditoriale des rôles d’assises publiés par les cours d’appel : sources officielles à consulter et vérification humaine avant toute publication." rubriqueActive="annuaire">
   <header class="entete-veille">
     <p>INTIME CONVICTION / VEILLE DES RÔLES</p>
     <h1>AU RÔLE.<br /><span>À LA SOURCE.</span></h1>
-    <p class="introduction">Une surveillance documentaire des publications officielles. Le principe : repérer les nouveaux liens vers des rôles, sans confondre la mise en ligne d’un PDF avec la confirmation d’une audience.</p>
-    <div class="chiffres"><span><strong>{surveillees.length}</strong> pages institutionnelles suivies</span><span><strong>{new Set(surveillees.flatMap(s=>s.codes)).size}</strong> départements couverts</span><span><strong>0</strong> audience publiée automatiquement</span></div>
+    <p class="introduction">Une revue éditoriale des publications officielles. L’objectif : retrouver les rôles et les mises à jour auprès des cours d’appel, sans confondre la mise en ligne d’un PDF avec la confirmation d’une audience.</p>
+    <div class="chiffres"><span><strong>{surveillees.length}</strong> pages institutionnelles à vérifier</span><span><strong>{new Set(surveillees.flatMap(s=>s.codes)).size}</strong> départements couverts</span><span><strong>0</strong> audience publiée automatiquement</span></div>
   </header>
 
   <section class="fonctionnement">
-    <div class="tete-fonctionnement"><span>LA MÉTHODE / SOUS CONTRÔLE ÉDITORIAL</span><h2>QUATRE FILTRES.<br /><mark>PAS D’AUTOMATISME AVEUGLE.</mark></h2></div>
+    <div class="tete-fonctionnement"><span>LA MÉTHODE / SOUS CONTRÔLE ÉDITORIAL</span><h2>QUATRE CONTRÔLES.<br /><mark>UNE VALIDATION HUMAINE.</mark></h2></div>
     <ol>
-      <li><span>01 / OBSERVER</span><h3>Contrôler la page officielle</h3><p>Une tâche GitHub est programmée les jours ouvrés pour consulter les pages institutionnelles listées ci-dessous. L’exécution peut être retardée ou interrompue.</p></li>
-      <li><span>02 / COMPARER</span><h3>Repérer les liens de documents</h3><p>On compare les adresses et libellés des pièces jointes identifiées. Le contenu des documents PDF n’est ni téléchargé ni analysé.</p></li>
-      <li><span>03 / SIGNALER</span><h3>Ouvrir un signalement à vérifier</h3><p>Un lien ajouté, retiré ou renommé peut déclencher une fiche de vérification dans le dépôt GitHub. Une suppression n’est pas assimilée à une annulation d’audience.</p></li>
+      <li><span>01 / OBSERVER</span><h3>Contrôler la page officielle</h3><p>Une tâche GitHub ouvre une revue éditoriale hebdomadaire. La rédaction consulte directement les pages institutionnelles listées ci-dessous.</p></li>
+      <li><span>02 / COMPARER</span><h3>Repérer les liens de documents</h3><p>La rédaction compare les adresses et intitulés des pièces jointes avec les informations déjà vérifiées. Le contrôleur GitHub ne peut actuellement pas lire leur liste sur le site officiel.</p></li>
+      <li><span>03 / SIGNALER</span><h3>Consigner les modifications vérifiées</h3><p>Un ticket de revue est ouvert sur GitHub et reste accessible jusqu’à sa clôture. La rédaction note les changements qu’elle a effectivement contrôlés. Une suppression de lien n’est pas assimilée à une annulation d’audience.</p></li>
       <li><span>04 / RECROISER</span><h3>Vérifier avant de publier</h3><p>Pour annoncer une audience ou un report, la rédaction doit confirmer le programme auprès de la source compétente. Aucun calendrier de procès n’est créé automatiquement.</p></li>
     </ol>
   </section>
 
   <section class="sources" aria-labelledby="titre-sources">
-    <div class="tete-sources"><span>LE PÉRIMÈTRE / SOURCES OFFICIELLES</span><h2 id="titre-sources">LES PAGES<br /><mark>OBSERVÉES.</mark></h2><p>Les pages regroupant plusieurs départements ne constituent pas des rôles distincts pour chacun. Chaque lien mène directement à l’autorité qui publie ou présente les sessions.</p></div>
+    <div class="tete-sources"><span>LE PÉRIMÈTRE / SOURCES OFFICIELLES</span><h2 id="titre-sources">LES PAGES<br /><mark>OBSERVÉES.</mark></h2><p>Les pages regroupant plusieurs départements ne constituent pas des rôles distincts pour chacun. Chaque lien mène à l’autorité qui publie ou présente les sessions. L’accès automatique depuis GitHub renvoie actuellement un HTML dépourvu de documents ; leur consultation reste humaine.</p></div>
     <ol class="grille-sources">{surveillees.map((s,i)=>(
       <li>
         <div class="source-haute"><span>{String(i+1).padStart(2,'0')} / SOURCE OFFICIELLE</span><span>{s.codes.join(' · ')}</span></div>
@@ -45,7 +45,7 @@ const exclus=ROLES_OFFICIELS.filter(r=>r.mode==='information'||r.mode==='sur-pla
     ))}</ol>
   </section>
   <aside class="exclusion"><span>CE QUE NOUS NE SURVEILLONS PAS AUTOMATIQUEMENT</span><h2>LES INFORMATIONS NON PUBLIÉES.</h2><p>Les rôles consultables uniquement au greffe, notamment pour la Seine-Maritime et l’Eure, ne sont pas collectés. Les simples pages d’information générale ne valent pas publication d’une session. Le périmètre n’est ni complet pour les 101 départements, ni une garantie de fraîcheur des audiences.</p></aside>
-  <footer class="suite"><a href="/annuaire/">REVENIR À L’ANNUAIRE NATIONAL <span aria-hidden="true">↗</span></a><a href="https://github.com/intimeconviction1-hue/intime-conviction/actions/workflows/surveiller-roles.yml" target="_blank" rel="noopener noreferrer">VOIR LES CONTRÔLES SUR GITHUB <span aria-hidden="true">↗</span></a></footer>
+  <footer class="suite"><a href="/annuaire/">REVENIR À L’ANNUAIRE NATIONAL <span aria-hidden="true">↗</span></a><a href="https://github.com/intimeconviction1-hue/intime-conviction/issues" target="_blank" rel="noopener noreferrer">VOIR LES REVUES ÉDITORIALES SUR GITHUB <span aria-hidden="true">↗</span></a></footer>
 </Base>
 <style>
 .entete-veille{background:#151718;color:#fff;margin:1.5rem 0 0;padding:clamp(1.4rem,4vw,4rem);border-top:8px solid #ffe100}
