@@ -1,7 +1,7 @@
 ---
 import { couvertureParMois } from '../lib/chronologie-judiciaire.mjs';
-const { references = [], maximum = 18 } = Astro.props;
-const mois = couvertureParMois(references);
+const { references = [], moisDonnes = null, maximum = 18 } = Astro.props;
+const mois = moisDonnes ?? couvertureParMois(references);
 const selection = mois.slice(0, maximum);
 const plusGrand = Math.max(...selection.map(m => m.nombre), 1);
 const formatterMois = (s) => new Intl.DateTimeFormat('fr-FR', {
