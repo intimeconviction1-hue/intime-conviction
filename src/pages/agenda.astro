@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,sessionsAvenir,dateLocaleAgenda} from '../lib/agenda-sessions.mjs';
+import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,SOURCES_A_COMPLETER,sessionsAvenir,dateLocaleAgenda} from '../lib/agenda-sessions.mjs';
 
 const dateDuJour=dateLocaleAgenda();
 const dates=sessionsAvenir(SESSIONS_AGENDA,dateDuJour);
@@ -29,6 +29,15 @@ const formatDate=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',
         </li>
       ))}
     </ol>
+  </section>
+  <section class="sources-en-cours" aria-labelledby="titre-sources-en-cours">
+    <div class="titre-liste"><h2 id="titre-sources-en-cours">Juridictions à vérifier</h2><span>Aucune date d’audience annoncée ici</span></div>
+    <p>Les pages suivantes ont été repérées, mais la période exacte des sessions n’a pas encore été confirmée. Elles ne figurent donc pas dans l’agenda daté.</p>
+    <ul>
+      {SOURCES_A_COMPLETER.map(s=>(
+        <li><div><strong>{s.ressort}</strong><span>{s.statut}</span></div><a href={s.source} target="_blank" rel="noopener noreferrer">Voir la source officielle <span class="sr-only">(nouvel onglet)</span></a></li>
+      ))}
+    </ul>
   </section>
   <aside class="precautions">
     <h2>Avant de se déplacer</h2>
@@ -62,4 +71,15 @@ const formatDate=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 @media(max-width:40rem){.sessions li{grid-template-columns:minmax(0,1fr);gap:.7rem}.periode{flex-direction:row;flex-wrap:wrap;gap:.4rem}.tete-agenda{margin-top:1.1rem}.tete-agenda h1{overflow-wrap:anywhere}}
 .agenda-vide{padding:1.4rem 0;font:450 .95rem/1.7 var(--sans);max-width:65ch}
+
+.sources-en-cours{margin:3rem 0}
+.sources-en-cours>p{font:450 .91rem/1.65 var(--sans);max-width:76ch;margin:1rem 0}
+.sources-en-cours ul{padding:0;margin:0;list-style:none}
+.sources-en-cours li{display:flex;justify-content:space-between;gap:1.25rem;align-items:baseline;padding:1rem 0;border-bottom:1px solid #d9d5cf}
+.sources-en-cours li>div{display:flex;flex-direction:column;gap:.25rem}
+.sources-en-cours strong{font:650 1rem/1.5 var(--sans)}
+.sources-en-cours li span{font:450 .82rem/1.55 var(--sans);color:#596066}
+.sources-en-cours a{font:650 .82rem/1.5 var(--sans);text-decoration:underline;text-underline-offset:.2em}
+.sources-en-cours a:hover{color:#96313b}
+@media(max-width:40rem){.sources-en-cours li{flex-direction:column;gap:.5rem}}
 </style>
