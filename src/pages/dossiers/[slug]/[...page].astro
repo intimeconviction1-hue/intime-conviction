@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import { lireVeille } from '../../../lib/veille.mjs';
 import { DOSSIERS, referencesPourDossier, statistiquesDossier } from '../../../lib/dossiers.mjs';
 import { reperesPourDossier, couvertureParMois, VERIFICATION_AU } from '../../../lib/chronologie-judiciaire.mjs';
+import { juridictionsPourDossier } from '../../../lib/juridictions.mjs';
 import ChronologieEvenements from '../../../components/ChronologieEvenements.astro';
 import CouvertureMensuelle from '../../../components/CouvertureMensuelle.astro';
 
@@ -23,6 +24,7 @@ export async function getStaticPaths({ paginate }) {
 
 const { page, dossier, statistiques, moisCouverture } = Astro.props;
 const reperes = reperesPourDossier(dossier.slug);
+const lieux = juridictionsPourDossier(dossier.slug);
 const nombre = (n) => n.toLocaleString('fr-FR');
 const date = (s) => new Intl.DateTimeFormat('fr-FR', {
   day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'
@@ -47,6 +49,7 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
     </div>
   </header>
 
+  <aside class="lieux-en-tete" aria-label="Villes où sont situées les juridictions associées"><div><strong>OÙ SE SITUENT LES JURIDICTIONS ?</strong><p>{lieux.map(l=>l.ville).join(" / ")}. Ces villes sont celles des tribunaux, pas nécessairement celles des faits.</p></div><a href="/carte/">VOIR SUR LA CARTE <span aria-hidden="true">↗</span></a></aside>
   <div class="separation">
     <div class="methode">
       <h2>CE QUE CONTIENT CE DOSSIER</h2>
@@ -178,4 +181,4 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
 .retour-frise{margin:2rem 0;background:#ffe100;color:#151718;padding:1.1rem;font:700 .84rem/1.55 var(--sans)}
 .retour-frise a{text-decoration:underline}
 @media(max-width:48rem){.tete-reperes{grid-template-columns:1fr}.tete-reperes>p{grid-column:auto}.tete-reperes h2{font-size:2.5rem}}
-</style>
+.lieux-en-tete{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;background:#ffe100;color:#151718;padding:1.3rem 1.7rem;margin:1rem 0 2rem}.lieux-en-tete strong{font:900 .75rem/1.4 var(--sans)}.lieux-en-tete p{font:650 .8rem/1.55 var(--sans);margin:.35rem 0 0}.lieux-en-tete a{border:2px solid #151718;padding:.85rem;font:900 .69rem/1.4 var(--sans);flex-shrink:0}.lieux-en-tete a:hover{background:#151718;color:#fff}@media(max-width:48rem){.lieux-en-tete{flex-direction:column;align-items:stretch}.lieux-en-tete a{flex-shrink:1}}</style>
