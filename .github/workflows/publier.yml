@@ -79,6 +79,9 @@ jobs:
           IC_VEILLE: articles-prives/veille-alertes.json
           IC_VEILLE_AJOUTS: articles-prives/veille-alertes-ajouts.json
 
+      - name: Contrôler le texte destiné au public
+        run: node scripts/controle-publication.mjs dist
+
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
