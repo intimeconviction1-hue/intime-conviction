@@ -1,0 +1,39 @@
+---
+import { couvertureParMois } from '../lib/chronologie-judiciaire.mjs';
+const { references = [], maximum = 18 } = Astro.props;
+const mois = couvertureParMois(references);
+const selection = mois.slice(0, maximum);
+const plusGrand = Math.max(...selection.map(m => m.nombre), 1);
+const formatterMois = (s) => new Intl.DateTimeFormat('fr-FR', {
+  month:'short',year:'numeric',timeZone:'Europe/Paris'
+}).format(new Date(s + '-01T12:00:00Z'));
+---
+{mois.length > 0 && (
+  <section class="rythme-presse" aria-labelledby="titre-rythme">
+    <div class="titre-rythme"><p>DEUXIÈME HORLOGE / LA VEILLE MÉDIATIQUE</p><h2 id="titre-rythme">LE RYTHME<br /><span>DES ALERTES.</span></h2></div>
+    <p class="methode-rythme">Comptage mensuel des <strong>alertes Google</strong> dont les titres mentionnent l’affaire. Chaque barre correspond à un mois d’alerte, et non à un mois d’audiences ou de décisions. {selection.length} mois avec des références sont affichés, sur {mois.length} mois recensés.</p>
+    <ol class="histogramme" aria-label="Nombre de mentions dans les alertes par mois">
+      {selection.map((m) => (
+        <li><time datetime={m.mois}>{formatterMois(m.mois)}</time><span class="piste" aria-hidden="true"><span class="barre" style={'width:' + Math.max(2, Math.round(m.nombre / plusGrand * 100)) + '%'}></span></span><strong>{m.nombre.toLocaleString('fr-FR')}</strong></li>
+      ))}
+    </ol>
+    <p class="note">Seuls les mois contenant au moins une référence apparaissent. Les titres peuvent seulement évoquer l’affaire sans concerner la même procédure. <a href="/archives/presse/">Archives intégrales de la presse ↗</a></p>
+  </section>
+)}
+<style>
+.rythme-presse{background:#efefeb;color:#151718;border:2px solid #151718;padding:clamp(1.2rem,3.6vw,2.6rem);margin:3rem 0}
+.titre-rythme p{font:900 .67rem/1.4 var(--sans);letter-spacing:.08em;margin:0 0 1rem}
+.titre-rythme h2{font:900 clamp(2rem,4.4vw,4.2rem)/.97 var(--sans);letter-spacing:-.07em;margin:0}
+.titre-rythme h2 span{background:#ffe100}
+.methode-rythme{max-width:75ch;font:500 .9rem/1.6 var(--sans);margin:1.2rem 0 1.8rem}
+.histogramme{display:grid;gap:.65rem;list-style:none;padding:0;margin:0;border-top:3px solid #151718;padding-top:1.3rem}
+.histogramme li{display:grid;grid-template-columns:100px minmax(0,1fr) 42px;align-items:center;gap:.7rem}
+.histogramme time{font:800 .71rem/1.4 var(--sans);text-transform:uppercase}
+.piste{display:block;background:#d9dad5;height:15px;min-width:0}
+.barre{display:block;background:#151718;height:100%}
+.histogramme li:nth-child(1) .barre{background:#b49c00}
+.histogramme strong{font:900 .73rem/1.4 var(--sans);text-align:right;font-variant-numeric:tabular-nums}
+.note{font:600 .72rem/1.55 var(--sans);margin:1.4rem 0 0}
+.note a{text-decoration:underline}
+@media(max-width:47.99rem){.rythme-presse{padding:1.2rem}.histogramme li{grid-template-columns:72px minmax(0,1fr) 30px;gap:.45rem}.histogramme time{font-size:.61rem}}
+</style>
