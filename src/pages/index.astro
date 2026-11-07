@@ -20,6 +20,7 @@ const rubriques = RUBRIQUES.map(r=>{
 });
 const nouvellesOuverture=(fil?.articles??[]).filter(n=>n.rubrique==='cours-du-jour').slice(0,6);
 const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
+const dossierOuverture = dossiersMisEnAvant[0];
 const total=articles.length.toLocaleString('fr-FR');
 const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',timeZone:'Europe/Paris'});
 ---
@@ -27,30 +28,28 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
   <div slot="fond" class="fond-page" aria-hidden="true"><Image src={fronton} alt="" width={500} loading="eager" fetchpriority="high" /></div>
   <section class="ouverture" aria-labelledby="titre-journal">
     <div class="cadre ouverture-interieur">
-      <div class="edition"><p>PROCÈS CRIMINELS · AUDIENCES · VERDICTS · DÉCRYPTAGES</p></div>
       <div class="une-grille">
         <article class="grand-angle">
           <Image src={fronton} alt="" width={900} loading="eager" fetchpriority="high" />
           <div class="grand-angle-voile"></div>
           <div class="grand-angle-texte">
-            <p class="cartouche">INTIME CONVICTION</p>
-            <h1 id="titre-journal">Ce qui se joue devant les cours d’assises</h1>
-            <p class="grand-angle-description">Les procès, leurs acteurs et leurs décisions. Suivre les débats, comprendre la procédure et retrouver les affaires dans leur contexte.</p>
+            <p class="cartouche">DOSSIER À DÉCOUVRIR</p>
+            <h1 id="titre-journal">{dossierOuverture?.titre ?? 'Les dossiers judiciaires'}</h1>
+            <p class="grand-angle-description">{dossierOuverture ? `${dossierOuverture.nombre.toLocaleString('fr-FR')} références de presse réunies autour de cette affaire, à consulter avec leurs sources.` : 'Les affaires et leurs sources, réunies dans les dossiers du journal.'}</p>
             <div class="grand-angle-actions">
-              <a class="une-lire" href="/rubrique/cours-du-jour/">SUIVRE LES PROCÈS <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a>
-              <a class="une-lire secondaire" href="/dossiers/">CONSULTER LES DOSSIERS <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a>
+              <a class="une-lire" href={dossierOuverture ? `/dossiers/${dossierOuverture.slug}/` : '/dossiers/'}>OUVRIR LE DOSSIER <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a>
             </div>
           </div>
-          <p class="credit-photo">Photographie d’illustration : fronton d’une cour d’assises</p>
+          <p class="credit-photo">Photographie d’illustration, sans lien avec l’affaire présentée</p>
         </article>
         <aside class="ouverture-fil" aria-labelledby="titre-fil-ouverture">
-          <div class="fil-entete"><h2 id="titre-fil-ouverture">À la une</h2><span class="fil-label">REVUE DE PRESSE</span></div>
+          <div class="fil-entete"><h2 id="titre-fil-ouverture">Dans la presse</h2><span class="fil-label">SÉLECTION RÉCENTE</span></div>
           {nouvellesOuverture.length>0 ? <ol>{nouvellesOuverture.map((n,i)=><li><span class="fil-numero" aria-hidden="true">0{i+1}</span><div><p>{n.source}<time datetime={n.date}>{n.dateAlerte ? 'Référence du ' : ''}{datePresse.format(new Date(n.date))}</time></p><h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> (nouvel onglet)</span></a></h3></div></li>)}</ol>:<p>Consulter <a href="/rubrique/cours-du-jour/">Cours du Jour</a> pour les publications du journal et les références de presse.</p>}
           <a class="tout-le-fil" href="/rubrique/cours-du-jour/">Consulter Cours du Jour <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v16m-6-6 6 6 6-6" /></svg></a>
           
         </aside>
       </div>
-      <div class="parcours"><span>ACCÈS DIRECTS</span><a href="/agenda/">Sessions criminelles à venir <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/comprendre/">Comprendre le procès <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/annuaire/">Trouver une cour <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/dossiers/">Dossiers judiciaires <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/archives/">{total} articles d’archives <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a></div>
+      <div class="parcours"><span>REPÈRES</span><a href="/agenda/">Sessions criminelles à venir <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/comprendre/">Comprendre le procès <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/annuaire/">Trouver une cour <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/dossiers/">Dossiers judiciaires <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/archives/">{total} articles d’archives <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a></div>
       <form class="accueil-recherche" action="/recherche/" method="get" role="search" aria-label="Rechercher dans les archives">
         <label for="recherche-accueil"><span>RECHERCHE DOCUMENTAIRE</span><strong>Retrouver un article ou une affaire</strong></label>
         <div class="accueil-recherche-champs"><input id="recherche-accueil" type="search" name="q" placeholder="Nom, affaire, mot-clé..." autocomplete="off" /><button type="submit">RECHERCHER <span aria-hidden="true">↗</span></button></div>
@@ -507,4 +506,10 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
 .archives-passerelle a:hover{color:#943440}
 @media(max-width:63.99rem){.une-grille{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}.grand-angle{min-height:440px}}
 @media(max-width:47.99rem){.une-grille{grid-template-columns:minmax(0,1fr)}.grand-angle{min-height:425px}.grand-angle h1,.grand-angle-texte h1{font-size:clamp(2.25rem,8vw,3.15rem)}.ouverture-fil{padding:1rem 1.15rem}.archives-passerelle{flex-direction:column;align-items:stretch;gap:1rem}.archives-passerelle>div:last-child{min-width:0}}
+
+/* Accueil : la une présente un vrai dossier et non une seconde présentation du site. */
+.ouverture-interieur{padding-top:1.25rem}
+.grand-angle h1,.grand-angle-texte h1{max-width:24ch;text-wrap:balance}
+.grand-angle-description{max-width:42ch}
+@media(max-width:47.99rem){.ouverture-interieur{padding-top:.9rem}}
 </style>
