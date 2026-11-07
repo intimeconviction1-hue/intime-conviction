@@ -24,3 +24,9 @@
 - Article d'annonce du procès Piaget à Paris du 9 novembre, vérifié par dépêche AFP et Le Parisien ; commit privé `1d81e385`. URL : `/piaget-le-braqueur-au-borsalino-revient-devant-les-assises/11/2026/`.
 - Ces trois articles sont les trois publications les plus récentes du fonds privé au 8 novembre ; ils remplacent les anciens articles de 2025 dans le carrousel de l'accueil sans toucher aux archives.
 - Aucun récit n'affirme une présence de la rédaction à l'audience ni ne préjuge d'une décision à venir.
+
+## 8 novembre 2026 : Jurés d'assises, dossier pédagogique
+
+- Réécriture intégrale de l'article existant `jures-en-mai` de 2022 : « Un nom tiré au sort, une vie devant les assises » (1 244 mots), révision datée du 8 novembre 2026. L'URL historique et le classement dans « Le Banc des Jurés » sont préservés.
+- Sources : Toulouse (2026), Sète (2020), Saint-Rémy, Tarare et Orange (2022), Service-Public et Code de procédure pénale. Références Saint-Dizier et Tours conservées mais sans leur prêter de détails non vérifiés.
+- Reconstruction du site pour publication de la version mise à jour dans le dépôt éditorial privé (`aafd253b`).
