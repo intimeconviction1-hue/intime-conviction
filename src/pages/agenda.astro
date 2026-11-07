@@ -49,7 +49,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
     <p id="resultats-agenda" role="status" aria-live="polite">Affichage de toutes les périodes répertoriées.</p>
   </form>
   <section class="sessions" aria-labelledby="titre-sessions">
-    <div class="titre-liste"><h2 id="titre-sessions">Sessions non terminées</h2><span>{dates.length} période{dates.length > 1 ? 's' : ''} répertoriée{dates.length > 1 ? 's' : ''}</span></div>
+    <div class="titre-liste"><h2 id="titre-sessions">Sessions non terminées</h2><span id="compteur-sessions">{dates.length} période{dates.length > 1 ? 's' : ''} répertoriée{dates.length > 1 ? 's' : ''}</span></div>
     {dates.length === 0 && <p class="agenda-vide">Aucune session future ou en cours ne figure dans notre sélection actuellement vérifiée. Consultez les rôles officiels pour les nouvelles dates.</p>}
     <ol>
       {dates.map(s=>(
@@ -103,21 +103,35 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
   const periode=document.querySelector<HTMLSelectElement>('#filtre-mois');
   const message=document.querySelector<HTMLElement>('#resultats-agenda');
   const lignes=[...document.querySelectorAll<HTMLElement>('[data-agenda-ligne]')];
+  const aujourdhuiParis=()=>new Intl.DateTimeFormat('en-CA',{
+    year:'numeric',month:'2-digit',day:'2-digit',timeZone:'Europe/Paris'
+  }).format(new Date());
   function afficherSelection(){
     const departement=territoire?.value??'';
     const mois=periode?.value??'';
     const debutMois=mois?mois+'-01':'';
     const finMois=mois?mois+'-31':'';
+    const aujourdHui=aujourdhuiParis();
     let visibles=0;
+    let encoreActuelles=0;
     for(const ligne of lignes){
+      const nonTerminee=(ligne.dataset.fin??'')>=aujourdHui;
       const memeDepartement=!departement||ligne.dataset.departement===departement;
       const memePeriode=!mois||(ligne.dataset.debut!<=finMois&&ligne.dataset.fin!>=debutMois);
-      ligne.hidden=!(memeDepartement&&memePeriode);
+      ligne.hidden=!(nonTerminee&&memeDepartement&&memePeriode);
+      if(nonTerminee)encoreActuelles++;
       if(!ligne.hidden)visibles++;
     }
-    if(message)message.textContent=visibles===0
-      ?'Aucune période répertoriée ne correspond à ces filtres.'
+    if(message)message.textContent=encoreActuelles===0
+      ?'Toutes les périodes répertoriées sont terminées. Consulter les rôles officiels pour les prochaines sessions.'
+      :visibles===0
+      ?'Aucune période non terminée ne correspond à ces filtres.'
       :visibles+' période'+(visibles>1?'s':'')+' affichée'+(visibles>1?'s':'')+'.';
+    const compteurSessions=document.querySelector<HTMLElement>('#compteur-sessions');
+    if(compteurSessions){
+      const n=lignes.filter(l=>l.closest('.sessions')&&!l.hidden).length;
+      compteurSessions.textContent=n+' période'+(n>1?'s':'')+' répertoriée'+(n>1?'s':'');
+    }
   }
   const params=new URLSearchParams(window.location.search);
   const departementDemande=params.get('departement');
@@ -131,8 +145,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
   afficherSelection();
   const alerte=document.querySelector<HTMLElement>('#alerte-actualite');
   if(alerte){
-    const maintenant=new Date();
-    const aujourdhui=new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'2-digit',day:'2-digit',timeZone:'Europe/Paris'}).format(maintenant);
+    const aujourdhui=aujourdhuiParis();
     const conversion=(v:string)=>Date.parse(v+'T12:00:00Z');
     const dateVerification=alerte.dataset.dateVerification??'';
     const dateGeneration=alerte.dataset.dateGeneration??'';
