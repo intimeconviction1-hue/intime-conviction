@@ -74,10 +74,12 @@ for (const chemin of fichiers) {
     if (String(article.auteur ?? '').trim().toLowerCase() === 'intime conviction') {
       avis('a_verifier','attribution_a_controler',chemin,'Signature générique et source extérieure mentionnée : vérifier les crédits');
       const source = /^\s*(AFP|AP|Reuters|SOURCE|NOUVELOBS\.COM|CLICANOO\.COM)\b/i.exec(debutTexte)?.[1] ?? 'Agence ou source à identifier';
-      const lienSource = [...html.matchAll(/<a\s+[^>]*href=["'](https?:\/\/[^"']+)["']/gi)]
+      const premierLienDuCorps = [...html.matchAll(/<a\s+[^>]*href=["'](https?:\/\/[^"']+)["']/gi)]
         .map(m => m[1].replace(/&amp;/g, '&'))[0] ?? '';
-      const lienExterne = Boolean(lienSource);
+      // Le premier lien n'est pas nécessairement un lien vers la source du texte.
+      const lienExterne = Boolean(premierLienDuCorps);
       const sourceNommee = /^(?:AFP|AP|Reuters|NOUVELOBS\.COM|CLICANOO\.COM)$/i.test(source);
+      // Priorité de contrôle humain, sans préjuger de la provenance.
       const priorite = sourceNommee && lienExterne ? 'P1' :
         sourceNommee ? 'P2' : lienExterne ? 'P3' : 'P4';
       const categorie = sourceNommee ? 'Source nommée dans le texte' :
@@ -89,7 +91,7 @@ for (const chemin of fichiers) {
         date:String(article.date ?? ''),
         signature:String(article.auteur ?? ''),
         indiceSource:source,
-        lienSource,
+        premierLienDuCorps,
         priorite,
         categorie,
         extraitInitial:debutTexte.slice(0,180),
@@ -108,7 +110,7 @@ for (const f of findings) codes[f.code]=(codes[f.code]??0)+1;
 revueAttributions.sort((a,b) => a.priorite.localeCompare(b.priorite) || a.fichier.localeCompare(b.fichier, 'fr'));
 const priorites = {};
 for (const ligne of revueAttributions) priorites[ligne.priorite]=(priorites[ligne.priorite]??0)+1;
-const champs = ['priorite','categorie','fichier','urlArticle','titre','date','signature','indiceSource','lienSource','extraitInitial','statut','commentaire'];
+const champs = ['priorite','categorie','fichier','urlArticle','titre','date','signature','indiceSource','premierLienDuCorps','extraitInitial','statut','commentaire'];
 // Protège l'import dans un tableur contre l'interprétation d'une valeur comme formule.
 function celluleCSV(valeur) {
   let v = String(valeur ?? '').replace(/[\r\n\t]+/g,' ').trim();
