@@ -229,3 +229,52 @@ button:hover{background:#dfc500;color:#131516}
   .pied>.cadre{grid-template-columns:minmax(0,1fr)}
   .pied-nom{font-size:clamp(3rem,13vw,6rem)}
 }
+
+
+/* Harmonisation transversale : les couleurs et la navigation du journal.
+   Ces règles corrigent l'ancien thème noir/jaune sans toucher aux contenus. */
+:root{
+  --papier:#faf9f6;
+  --papier-2:#f0eee9;
+  --encre:#202529;
+  --encre-2:#575b5e;
+  --filet:#d9d5cf;
+  --filet-fort:#383b3d;
+  --rouge:#a12c39;
+  --action:#a12c39;
+  --action-survol:#842631;
+  --sur-action:#fff;
+  --pied:#202529;
+  --pied-texte:#f9f8f5;
+  --pied-2:#c8c9c7;
+  --pied-survol:#f0d5d4;
+  --serif:'Newsreader Variable',Georgia,'Times New Roman',serif;
+  --sans:'Libre Franklin Variable','Helvetica Neue',Arial,sans-serif;
+}
+.entete,.avec-fond .entete{background:#f7f5f0;color:#202529;border-bottom:1px solid #d9d5cf}
+.marque-intime{color:#202529}
+.marque-conviction{background:#a12c39;color:#fff}
+.marque-point{color:#fff}
+.signature,.avec-fond .signature{color:#575b5e}
+.recherche-lien{color:#a12c39;border-color:#a12c39}
+.recherche-lien:hover,.avec-fond .entete .recherche-lien:hover{background:#a12c39;color:#fff!important}
+.rubriques-nav,.avec-fond .rubriques-nav{background:#f7f5f0;border-top:1px solid #d9d5cf;border-bottom:1px solid #d9d5cf}
+.rubriques-nav a,.avec-fond .rubriques-nav a{color:#303539;font-weight:750;letter-spacing:.035em}
+.rubriques-nav a:hover,.avec-fond .rubriques-nav a:hover{color:#a12c39}
+.rubriques-nav a[aria-current='page'],.avec-fond .rubriques-nav a[aria-current='page']{background:#ede4e1;color:#842631;box-shadow:inset 0 -2px #a12c39}
+.rubriques-nav a::after{background:#a12c39!important}
+.pied{background:#202529;border-top:3px solid #a12c39}
+.pied-nom span{color:#f0d5d4}
+.pied a:hover{color:#f0d5d4}
+:focus-visible{outline:3px solid #a12c39;outline-offset:3px}
+.evitement:focus-visible{position:fixed;left:1rem;top:.75rem;background:#fff;color:#202529;z-index:1000;outline:3px solid #a12c39}
+.rubriques-nav ul{scrollbar-width:thin;scrollbar-color:#b2aaa4 #eeeae4;overscroll-behavior-x:contain}
+.rubriques-nav a:focus-visible{outline-offset:-4px}
+@media(max-width:47.99rem){
+  .rubriques-nav ul{scroll-snap-type:x proximity;padding-bottom:2px}
+  .rubriques-nav li{scroll-snap-align:start}
+  .rubriques-nav a{min-height:48px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
