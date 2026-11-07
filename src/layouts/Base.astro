@@ -32,6 +32,7 @@ const annee = new Date().getFullYear();
     <meta property="og:site_name" content="Intime Conviction" />
     <meta property="og:type" content={article ? 'article' : 'website'} />
     {article && <meta property="article:published_time" content={article.datePublished} />}
+    {article?.dateModified && <meta property="article:modified_time" content={article.dateModified} />}
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonique} />
     <meta property="og:locale" content="fr_FR" />
@@ -43,6 +44,7 @@ const annee = new Date().getFullYear();
       headline:article.headline,
       description,
       datePublished:article.datePublished,
+      ...(article.dateModified ? { dateModified:article.dateModified } : {}),
       ...(article.author ? { author:{'@type':'Person',name:article.author} } : {}),
       publisher:{'@type':'Organization',name:'Intime Conviction',url:'https://www.intimeconviction.fr/'},
       mainEntityOfPage:canonique.href,
