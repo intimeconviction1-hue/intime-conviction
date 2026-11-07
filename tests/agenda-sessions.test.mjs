@@ -5,7 +5,7 @@ import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,SOURCES_A_COMPLETER,sessionsAvenir,
 test('les périodes publiées ont une source institutionnelle et des dates cohérentes',()=>{
   assert.equal(verifierSessions(),true);
   assert.equal(DATE_CONTROLE_AGENDA,'2026-11-07');
-  assert.ok(SESSIONS_AGENDA.length>=5);
+  assert.ok(SESSIONS_AGENDA.length>=6);
 });
 test('une date passée ne suffit pas à créer une audience fictive',()=>{
   assert.equal(sessionsAvenir(SESSIONS_AGENDA,'2027-01-01').length,0);
@@ -32,4 +32,13 @@ test('les sources sans date vérifiée restent hors de l’agenda daté',()=>{
   assert.ok(!('debut' in s)&&!('fin' in s));
  }
  assert.equal(new Set(SOURCES_A_COMPLETER.map(s=>s.code)).size,SOURCES_A_COMPLETER.length);
+});
+
+test('session du Doubs : dates officielles conservées sans audience individuelle inventée',()=>{
+ const session=SESSIONS_AGENDA.find(s=>s.id==='besancon-ccd-2026-12-07');
+ assert.ok(session);
+ assert.equal(session.debut,'2026-12-07');
+ assert.equal(session.fin,'2026-12-18');
+ assert.equal(session.juridiction,'Cour criminelle départementale du Doubs');
+ assert.equal(session.source,'https://www.cours-appel.justice.fr/besancon/prochaines-sessions');
 });
