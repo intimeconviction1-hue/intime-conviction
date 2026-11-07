@@ -39,6 +39,14 @@ export const SESSIONS_AGENDA = Object.freeze([
   }
 ]);
 
+// Date civile dans le fuseau où se trouvent les juridictions métropolitaines.
+// Calculée à la construction de la page, indépendamment de la date de contrôle des sources.
+export function dateLocaleAgenda(instant=new Date()) {
+  return new Intl.DateTimeFormat('en-CA', {
+    year:'numeric',month:'2-digit',day:'2-digit',timeZone:'Europe/Paris'
+  }).format(instant);
+}
+
 export function sessionsAvenir(sessions, dateISO) {
   return [...sessions].filter(s=>s.fin>=dateISO).sort((a,b)=>a.debut.localeCompare(b.debut)||a.ville.localeCompare(b.ville,'fr'));
 }
