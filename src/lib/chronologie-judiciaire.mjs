@@ -29,9 +29,9 @@ export const REPERES_JUDICIAIRES = Object.freeze([
     titre: 'Ouverture du procès de Cédric Jubillar à Albi',
     description: 'Début des débats devant la cour d’assises du Tarn dans le dossier de la disparition de Delphine Jubillar.',
     juridiction: 'Cour d’assises du Tarn, Albi',
-    source: 'Le Monde',
-    urlSource: 'https://www.lemonde.fr/proces-jubillar/',
-    dateSource: '2025-09-23',
+    source: 'TF1 Info / AFP',
+    urlSource: 'https://www.tf1info.fr/justice-faits-divers/en-direct-proces-de-cedric-jubillar-meurtre-femme-delphine-les-derniers-mots-de-l-accuse-et-le-verdict-ce-vendredi-17-octobre-2400999.html',
+    dateSource: '2025-10-17',
   },
   {
     id: 'jubillar-verdict-2025',
@@ -134,8 +134,8 @@ export const REPERES_JUDICIAIRES = Object.freeze([
     description: 'Les parents d’Inass Touloub comparaissent devant la cour d’assises du Loir-et-Cher. L’ouverture des débats est rapportée par la source citée. Aucun verdict n’est inscrit dans cette sélection au 7 novembre 2026.',
     juridiction: 'Cour d’assises du Loir-et-Cher, Blois',
     source: 'Le Monde',
-    urlSource: 'https://www.lemonde.fr/societe/article/2026/11/01/l-inconnue-de-l-a10-de-l-abandon-d-une-enfant-suppliciee-au-proces-de-ses-parents-trois-decennies-de-secret-de-famille_6804513_3224.html',
-    dateSource: '2026-11-01',
+    urlSource: 'https://www.lemonde.fr/societe/article/2026/11/03/au-premier-jour-du-proces-de-la-petite-inconnue-de-l-a10-monsieur-vous-m-entendez-madame-vous-etes-la_6805486_3224.html',
+    dateSource: '2026-11-03',
   },
   {
     id: 'inass-suspension-2026',

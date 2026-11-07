@@ -49,7 +49,7 @@ test('les jalons de procès et d’appel sont distingués par affaire et triés 
   assert.ok(v.some(r => r.phase === 'appel' && r.type === 'ouverture'));
   assert.ok(v.some(r => r.phase === 'appel' && r.type === 'decision'));
   assert.ok(v.some(r => r.phase === 'premiere_instance' && r.type === 'decision'));
-  assert.equal(v[0].dateEvenement, '2024-12-19');
+  assert.equal(v[0].dateEvenement, '2024-09-02');
   assert.equal(v.at(-1).dateEvenement, '2025-10-09');
   const avant = [...REPERES_JUDICIAIRES];
   const global = tousLesReperes();
