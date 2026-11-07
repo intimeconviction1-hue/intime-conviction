@@ -19,20 +19,10 @@ const exclus=ROLES_OFFICIELS.filter(r=>r.mode==='information'||r.mode==='sur-pla
     <p>INTIME CONVICTION / VEILLE DES RÔLES</p>
     <h1>LES RÔLES<br /><span>D’AUDIENCE.</span></h1>
     <p class="introduction">Une revue éditoriale des publications officielles. L’objectif : retrouver les rôles et les mises à jour auprès des cours d’appel, sans confondre la mise en ligne d’un PDF avec la confirmation d’une audience.</p>
-    <div class="chiffres"><span><strong>{surveillees.length}</strong> pages institutionnelles à vérifier</span><span><strong>{new Set(surveillees.flatMap(s=>s.codes)).size}</strong> départements couverts</span><span><strong>0</strong> audience publiée sans vérification</span></div>
+    <div class="chiffres"><span><strong>{surveillees.length}</strong> pages institutionnelles à vérifier</span><span><strong>{new Set(surveillees.flatMap(s=>s.codes)).size}</strong> départements couverts</span></div>
   </header>
 
   <aside class="acces-agenda"><div><strong>Agenda des sessions criminelles</strong><p>Consultez les périodes de sessions identifiées dans les publications institutionnelles. Les dates ne constituent pas une annonce de procès individuel.</p></div><a href="/agenda/">Voir les sessions annoncées</a></aside>
-
-  <section class="fonctionnement">
-    <div class="tete-fonctionnement"><span>LA MÉTHODE / SOUS CONTRÔLE ÉDITORIAL</span><h2>PROCÉDURE DE VÉRIFICATION<br /><mark>DES SOURCES OFFICIELLES.</mark></h2></div>
-    <ol>
-      <li><span>01 / OBSERVER</span><h3>Contrôler la page officielle</h3><p>Une revue hebdomadaire permet à la rédaction de consulter les publications institutionnelles répertoriées ci-dessous.</p></li>
-      <li><span>02 / COMPARER</span><h3>Repérer les liens de documents</h3><p>La rédaction compare les adresses et intitulés des pièces jointes avec les informations déjà vérifiées. L’accès aux documents reste soumis aux modalités de publication de chaque juridiction.</p></li>
-      <li><span>03 / SIGNALER</span><h3>Consigner les modifications vérifiées</h3><p>Un suivi éditorial consigne les vérifications effectuées. La rédaction note les changements qu’elle a effectivement contrôlés. Une suppression de lien n’est pas assimilée à une annulation d’audience.</p></li>
-      <li><span>04 / RECROISER</span><h3>Vérifier avant de publier</h3><p>Pour annoncer une audience ou un report, la rédaction doit confirmer le programme auprès de la source compétente. Aucun calendrier de procès n’est créé automatiquement.</p></li>
-    </ol>
-  </section>
 
   <section class="sources" aria-labelledby="titre-sources">
     <div class="tete-sources"><span>LE PÉRIMÈTRE / SOURCES OFFICIELLES</span><h2 id="titre-sources">LES SOURCES<br /><mark>OFFICIELLES.</mark></h2><p>Les pages regroupant plusieurs départements ne constituent pas des rôles distincts pour chacun. Chaque lien mène à l’autorité qui publie ou présente les sessions. Les documents doivent être consultés et vérifiés auprès des juridictions concernées.</p></div>
@@ -47,7 +37,7 @@ const exclus=ROLES_OFFICIELS.filter(r=>r.mode==='information'||r.mode==='sur-pla
     ))}</ol>
   </section>
   <aside class="exclusion"><span>CE QUE NOUS NE SURVEILLONS PAS AUTOMATIQUEMENT</span><h2>LES INFORMATIONS NON PUBLIÉES.</h2><p>Les rôles consultables uniquement au greffe, notamment pour la Seine-Maritime et l’Eure, ne sont pas collectés. Les simples pages d’information générale ne valent pas publication d’une session. Le périmètre n’est ni complet pour les 101 départements, ni une garantie de fraîcheur des audiences.</p></aside>
-  <footer class="suite"><a href="/annuaire/">REVENIR À L’ANNUAIRE NATIONAL <span aria-hidden="true">↗</span></a><a href="https://github.com/intimeconviction1-hue/intime-conviction/issues" target="_blank" rel="noopener noreferrer">VOIR LES REVUES ÉDITORIALES SUR GITHUB <span aria-hidden="true">↗</span></a></footer>
+  <footer class="suite"><a href="/annuaire/">REVENIR À L’ANNUAIRE NATIONAL <span aria-hidden="true">↗</span></a><a href="/agenda/">CONSULTER LES SESSIONS À VENIR <span aria-hidden="true">↗</span></a></footer>
 </Base>
 <style>
 .entete-veille{background:#151718;color:#fff;margin:1.5rem 0 0;padding:clamp(1.4rem,4vw,4rem);border-top:8px solid #ffe100}
