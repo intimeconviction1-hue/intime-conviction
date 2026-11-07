@@ -109,3 +109,12 @@ analyses et décryptages → L’Exposé ; œuvres et critiques → Le Greffe.
 Sans indice de genre suffisamment explicite, la nouvelle reste dans Cours du Jour.
 Les caches existants sont reclassés à la lecture. Ce mécanisme ne modifie
 aucun des anciens articles du dépôt privé.
+
+## Publication après correction des articles
+
+Les textes et métadonnées des articles résident dans le dépôt privé
+`intime-conviction-articles`. Une modification de ce dépôt ne déclenche pas à elle
+seule le workflow du dépôt public. Pour la rendre visible, relancer « Publier le
+site » depuis GitHub Actions ou attendre la prochaine exécution programmée.
+Le workflow relit le dépôt privé, exécute les tests et construit le site avant
+de publier son artefact sur GitHub Pages. Contrôler ensuite les pages publiques.
