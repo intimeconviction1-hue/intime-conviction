@@ -51,9 +51,9 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
           <p class="credit-photo">Photographie d’illustration : fronton d’une cour d’assises</p>
         </article>
         <aside class="ouverture-fil" aria-labelledby="titre-fil-ouverture">
-          <div class="fil-entete"><h2 id="titre-fil-ouverture">L’actualité<span>.</span></h2><span class="fil-label">REVUE DE PRESSE</span></div>
+          <div class="fil-entete"><h2 id="titre-fil-ouverture">Cours du Jour<span>.</span></h2><span class="fil-label">REVUE DE PRESSE</span></div>
           {nouvellesOuverture.length>0 ? <ol>{nouvellesOuverture.map((n,i)=><li><span class="fil-numero" aria-hidden="true">0{i+1}</span><div><p>{n.source}<time datetime={n.date}>{n.dateAlerte ? 'Référence du ' : ''}{datePresse.format(new Date(n.date))}</time></p><h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> (nouvel onglet)</span></a></h3></div></li>)}</ol>:<p>Retrouvez les récits d’audience dans <a href="/rubrique/cours-du-jour/">Cours du Jour</a>.</p>}
-          <a class="tout-le-fil" href="#actualites">Tout le fil d’audience <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v16m-6-6 6 6 6-6" /></svg></a>
+          <a class="tout-le-fil" href="#actualites">Voir les autres titres <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v16m-6-6 6 6 6-6" /></svg></a>
           
         </aside>
       </div>
@@ -66,7 +66,7 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
   </section>
 
   <div class="surface-lecture"><div class="cadre journal-corps">
-    <Actualites debut={nouvellesOuverture.length} limite={5} compacte />
+    <Actualites debut={nouvellesOuverture.length} limite={5} titre="Cours du Jour : la suite" compacte />
     <AgendaEnBref />
 
 
