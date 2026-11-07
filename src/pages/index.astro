@@ -38,6 +38,7 @@ const total=articles.length.toLocaleString('fr-FR');
               <span data-editorial-position aria-live="polite">01 / {String(articlesCarrousel.length).padStart(2,'0')}</span>
               <button type="button" data-editorial-prev aria-label="Article précédent">←</button>
               <button type="button" data-editorial-next aria-label="Article suivant">→</button>
+              <button type="button" data-editorial-toggle aria-label="Mettre le défilement automatique en pause" aria-pressed="false" title="Mettre en pause">Ⅱ</button>
             </div>
           </div>
           <div class="articles-carrousel-piste" data-editorial-track tabindex="0" aria-label="Articles de la rédaction à faire défiler">
@@ -121,8 +122,16 @@ const total=articles.length.toLocaleString('fr-FR');
     const diapositives = [...piste.querySelectorAll('.article-redaction-une')];
     const reperes = [...carrousel.querySelectorAll('[data-editorial-dot]')];
     const position = carrousel.querySelector('[data-editorial-position]');
-    const reduireMouvement = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const boutonPause = carrousel.querySelector('[data-editorial-toggle]');
+    const mouvementReduit = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const DELAI = 8000;
     let actif = 0;
+    let minuteur = null;
+    let suspenduSurvol = false;
+    let suspenduFocus = false;
+    let suspenduToucher = false;
+    let pauseDemandee = mouvementReduit.matches;
+
     const afficher = (index, defiler = true) => {
       actif = (index + diapositives.length) % diapositives.length;
       reperes.forEach((repere,i) => {
@@ -130,11 +139,49 @@ const total=articles.length.toLocaleString('fr-FR');
         else repere.removeAttribute('aria-current');
       });
       position.textContent = String(actif+1).padStart(2,'0')+' / '+String(diapositives.length).padStart(2,'0');
-      if (defiler) piste.scrollTo({left:diapositives[actif].offsetLeft,behavior:reduireMouvement()?'instant':'smooth'});
+      if (defiler) piste.scrollTo({
+        left:diapositives[actif].offsetLeft,
+        behavior:mouvementReduit.matches?'instant':'smooth'
+      });
     };
-    carrousel.querySelector('[data-editorial-prev]')?.addEventListener('click',()=>afficher(actif-1));
-    carrousel.querySelector('[data-editorial-next]')?.addEventListener('click',()=>afficher(actif+1));
-    reperes.forEach((repere,i)=>repere.addEventListener('click',()=>afficher(i)));
+
+    const actualiserBouton = () => {
+      const enPause = pauseDemandee || mouvementReduit.matches;
+      boutonPause.setAttribute('aria-pressed',String(enPause));
+      boutonPause.setAttribute('aria-label',enPause?'Relancer le défilement automatique':'Mettre le défilement automatique en pause');
+      boutonPause.title = enPause?'Relancer le défilement':'Mettre en pause';
+      boutonPause.textContent = enPause?'▶':'Ⅱ';
+    };
+    const arreter = () => {
+      if (minuteur !== null) { window.clearInterval(minuteur); minuteur = null; }
+    };
+    const synchroniser = () => {
+      arreter();
+      actualiserBouton();
+      if (diapositives.length < 2 || pauseDemandee || mouvementReduit.matches ||
+          suspenduSurvol || suspenduFocus || suspenduToucher || document.hidden) return;
+      minuteur = window.setInterval(() => afficher(actif+1), DELAI);
+    };
+    const naviguer = index => { afficher(index); synchroniser(); };
+
+    carrousel.querySelector('[data-editorial-prev]')?.addEventListener('click',()=>naviguer(actif-1));
+    carrousel.querySelector('[data-editorial-next]')?.addEventListener('click',()=>naviguer(actif+1));
+    reperes.forEach((repere,i)=>repere.addEventListener('click',()=>naviguer(i)));
+    boutonPause.addEventListener('click',()=>{pauseDemandee=!pauseDemandee;synchroniser();});
+
+    carrousel.addEventListener('mouseenter',()=>{suspenduSurvol=true;synchroniser();});
+    carrousel.addEventListener('mouseleave',()=>{suspenduSurvol=false;synchroniser();});
+    carrousel.addEventListener('focusin',()=>{suspenduFocus=true;synchroniser();});
+    carrousel.addEventListener('focusout',event=>{
+      if (event.relatedTarget instanceof Node && carrousel.contains(event.relatedTarget)) return;
+      suspenduFocus=false;synchroniser();
+    });
+    piste.addEventListener('touchstart',()=>{suspenduToucher=true;synchroniser();},{passive:true});
+    piste.addEventListener('touchend',()=>{suspenduToucher=false;synchroniser();},{passive:true});
+    piste.addEventListener('touchcancel',()=>{suspenduToucher=false;synchroniser();},{passive:true});
+    document.addEventListener('visibilitychange',synchroniser);
+    mouvementReduit.addEventListener('change',event=>{pauseDemandee=event.matches;synchroniser();});
+
     let raf=0;
     piste.addEventListener('scroll',()=>{
       cancelAnimationFrame(raf);
@@ -149,6 +196,7 @@ const total=articles.length.toLocaleString('fr-FR');
       });
     },{passive:true});
     afficher(0,false);
+    synchroniser();
   }
 </script>
 <style>
@@ -642,4 +690,7 @@ const total=articles.length.toLocaleString('fr-FR');
 .articles-carrousel-piste:focus-visible{outline:3px solid #a12c39;outline-offset:3px}
 @media(max-width:47.99rem){.articles-carrousel-piste .article-redaction-une{min-height:400px}.articles-carrousel-tete p{font-size:.62rem}}
 @media(prefers-reduced-motion:reduce){.articles-carrousel-piste{scroll-behavior:auto}}
+
+.articles-carrousel-outils [data-editorial-toggle]{font-size:1rem;min-width:44px}
+.articles-carrousel-outils button:focus-visible,.articles-carrousel-reperes button:focus-visible{outline:3px solid #a12c39;outline-offset:2px}
 </style>
