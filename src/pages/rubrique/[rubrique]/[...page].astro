@@ -52,6 +52,14 @@ const liensRubrique = ressources[r.slug] ?? [];
       <ul>{liensRubrique.map(l => <li><a href={l.url}>{l.titre} <span aria-hidden="true">↗</span></a></li>)}</ul>
     </nav>
   )}
+  {page.currentPage === 1 && r.slug === 'le-banc-des-jures' && (
+    <aside class="lecture-jures" aria-labelledby="lecture-jures-titre">
+      <p class="lecture-jures-surtitre">LE BANC DES JURÉS / À LIRE</p>
+      <h2 id="lecture-jures-titre"><a href="/jures-en-mai/05/2022/">Un nom tiré au sort, une vie devant les assises</a></h2>
+      <p>De la liste électorale au verdict : comment un citoyen peut être appelé à juger un crime. Une enquête de synthèse nourrie des tirages municipaux et des règles officielles.</p>
+      <a class="lecture-jures-action" href="/jures-en-mai/05/2022/">Lire le récit <span aria-hidden="true">↗</span></a>
+    </aside>
+  )}
   {page.currentPage === 1 && r.slug === 'cours-du-jour' && <Actualites rubriqueSlug="cours-du-jour" limite={24} titre="Dans la presse" lienRubrique={false} />}
   {page.currentPage === 1 && r.slug === 'le-greffe' && <Culture titre="À lire, à voir" />}
   <div class="titre-section"><h2>Les articles d’Intime Conviction</h2></div>
@@ -69,4 +77,11 @@ const liensRubrique = ressources[r.slug] ?? [];
   .ressources-rubrique a{display:inline-flex;align-items:center;min-height:44px;padding:.65rem .85rem;border:1px solid var(--filet);font-family:var(--sans);font-size:.8rem;font-weight:600;text-decoration:none}
   .ressources-rubrique a:hover,.ressources-rubrique a:focus-visible{border-color:var(--rouge);color:var(--rouge)}
   .ressources-rubrique a span{margin-left:.6rem}
+
+  .lecture-jures{background:#17191a;color:#fff;padding:clamp(1.4rem,4vw,3rem);margin:2rem 0 3rem;border-left:8px solid #ffe100}
+  .lecture-jures-surtitre{font:800 .7rem/1.4 var(--sans);letter-spacing:.08em;color:#ffe100;margin:0 0 1rem}
+  .lecture-jures h2{font:800 clamp(1.8rem,3.1vw,3.2rem)/1.1 var(--serif);letter-spacing:-.025em;max-width:24ch;margin:0 0 1rem}
+  .lecture-jures h2 a:hover,.lecture-jures h2 a:focus-visible{color:#ffe100}
+  .lecture-jures>p:not(.lecture-jures-surtitre){font:450 1.02rem/1.65 var(--sans);max-width:70ch;color:#e0e0df}
+  .lecture-jures-action{display:inline-flex;align-items:center;min-height:44px;padding-bottom:.4rem;margin-top:.4rem;border-bottom:3px solid #ffe100;font:800 .75rem/1.3 var(--sans);text-transform:uppercase;letter-spacing:.05em}
 </style>
