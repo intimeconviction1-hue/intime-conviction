@@ -1,7 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import { DEPARTEMENTS_ASSISES, ANNUAIRE_OFFICIEL, NOTICE_DATE, validerAnnuaire } from '../lib/guide-assises.mjs';
+import { ROLES_OFFICIELS, MODES_ROLES, roleParDepartement, dossiersParDepartement, validerRoles, VERIFIE_LE } from '../lib/roles-officiels.mjs';
 validerAnnuaire();
+validerRoles(DEPARTEMENTS_ASSISES);
 const nombreDepartements = DEPARTEMENTS_ASSISES.length;
 const nombreOutreMer = DEPARTEMENTS_ASSISES.filter(d=>d.outreMer).length;
 const troisEntrees = [
@@ -18,6 +20,7 @@ const troisEntrees = [
     <div class="stats"><span><strong>{nombreDepartements}</strong> départements référencés</span><span><strong>{nombreOutreMer}</strong> départements d’outre-mer</span><span><strong>01</strong> annuaire officiel à consulter</span></div>
   </header>
   <section class="notice" aria-labelledby="titre-notice"><h2 id="titre-notice">L’ANNUAIRE NE FAIT PAS LE RÔLE.</h2><p>Les villes ci-dessous servent de <strong>repères d’orientation</strong>, pas de preuve de la tenue d’une audience aujourd’hui. La cour de la Haute-Saône et du Territoire de Belfort est commune aux deux départements et siège à Vesoul. D’autres collectivités françaises ont une organisation judiciaire spécifique qui ne figure pas dans cette liste départementale. Les adresses, téléphones et horaires sont à vérifier dans le répertoire officiel.</p><a href={ANNUAIRE_OFFICIEL} target="_blank" rel="noopener noreferrer">OUVRIR L’ANNUAIRE DU MINISTÈRE <span aria-hidden="true">↗</span></a></section>
+  <aside class="signal-roles"><div><span>RÔLES DES AUDIENCES / LIENS OFFICIELS</span><strong>{ROLES_OFFICIELS.length} départements reliés à une page institutionnelle</strong><p>Ces liens mènent aux pages des cours d’appel, pas à un calendrier certifié en temps réel. Certains proposent des PDF publics, d’autres une information de ressort ou une consultation sur place réservée aux journalistes.</p></div><a href="/assister/">COMMENT ASSISTER À UNE AUDIENCE ? <span aria-hidden="true">↗</span></a></aside>
   <section class="methode"><h2>EN TROIS GESTES.</h2><ol>{troisEntrees.map(x=><li><strong>{x.n}</strong><div><h3>{x.titre}</h3><p>{x.texte}</p></div></li>)}</ol></section>
   <section id="repertoire" class="liste-repertoire" aria-labelledby="titre-repertoire">
     <div class="intro-liste"><p>LE FONDS / MÉTROPOLE & OUTRE-MER</p><h2 id="titre-repertoire">TROUVER<br /><mark>UNE COUR.</mark></h2></div>
@@ -46,10 +49,26 @@ const troisEntrees = [
         <a class="lien-officiel" href={d.courPartagee?'https://www.justice.gouv.fr/annuaire/fiche/cour-d-assises-de-la-haute-saone-et-du-territoire-de-belfort':ANNUAIRE_OFFICIEL} target="_blank" rel="noopener noreferrer" aria-label={'Vérifier la juridiction de ' + d.departement + ' dans l’annuaire du ministère de la Justice'}>
           VÉRIFIER <span aria-hidden="true">↗</span>
         </a>
+        <div class="ressources-departement">
+          {roleParDepartement(d.code) ? (
+            <div class="acces-role">
+              <div><span class="type-role">{MODES_ROLES[roleParDepartement(d.code).mode]}</span>
+                <p>{roleParDepartement(d.code).note}</p></div>
+              <a href={roleParDepartement(d.code).url} target="_blank" rel="noopener noreferrer" aria-label={'Consulter la page officielle : '+roleParDepartement(d.code).titre}>CONSULTER LA SOURCE <span aria-hidden="true">↗</span></a>
+            </div>
+          ) : (
+            <p class="role-absent">Aucun rôle officiel en ligne identifié dans notre sélection pour ce département. Vérifier auprès du greffe.</p>
+          )}
+          <div class="liens-archives">
+            <a href={'/recherche/?q='+encodeURIComponent(d.ville)} title={'Chercher '+d.ville+' dans les articles originaux du journal'}>ARTICLES DU JOURNAL <span aria-hidden="true">↗</span></a>
+            <a href={'/archives/presse/rechercher/?q='+encodeURIComponent(d.ville)} title={'Chercher '+d.ville+' parmi les titres de presse'}>TITRES DE PRESSE <span aria-hidden="true">↗</span></a>
+            {dossiersParDepartement(d.code).map(x=><a class="dossier-lie" href={'/dossiers/'+x.slug+'/'}>{x.titre} <span aria-hidden="true">↗</span></a>)}
+          </div>
+        </div>
       </li>)}
     </ol>
     <p id="aucun" class="aucun" hidden>Aucune correspondance. Essayez le nom d’une ville ou le numéro du département.</p>
-    <p class="note-maj">Répertoire géographique d’orientation établi le <time datetime={NOTICE_DATE}>7 novembre 2026</time>. Certains sièges dérogatoires sont expressément fixés par <a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000045459417/2026-02-21" target="_blank" rel="noopener noreferrer">l’article R. 41 du Code de procédure pénale</a>. Les lieux d’audience peuvent varier selon les sessions et les procédures. Informations institutionnelles à confirmer avant tout déplacement.</p>
+    <p class="note-maj">Répertoire géographique d’orientation établi le <time datetime={NOTICE_DATE}>7 novembre 2026</time>. Relevé des pages de rôles vérifié le <time datetime={VERIFIE_LE}>7 novembre 2026</time>. Certains sièges dérogatoires sont expressément fixés par <a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000045459417/2026-02-21" target="_blank" rel="noopener noreferrer">l’article R. 41 du Code de procédure pénale</a>. Les lieux d’audience peuvent varier selon les sessions et les procédures. Informations institutionnelles à confirmer avant tout déplacement.</p>
   </section>
   <aside class="cours-repertoire"><p class="surtitre">À PARTIR D’UNE AFFAIRE</p><h2>LE PROCÈS<br />AUSSI SE DÉPLACE.</h2><p>Une première instance et un appel peuvent se tenir devant des juridictions différentes. Consultez notre carte des dossiers déjà documentés pour visualiser les villes concernées.</p><a href="/carte/">VOIR NOTRE CARTE DES DOSSIERS <span aria-hidden="true">↗</span></a></aside>
   <div class="suite-annuaire"><a href="/assister/">ASSISTER À UNE AUDIENCE <span aria-hidden="true">↗</span></a><a href="/comprendre/">COMPRENDRE LES ASSISES <span aria-hidden="true">↗</span></a></div>
@@ -84,4 +103,23 @@ const troisEntrees = [
 </script>
 <style>
 .annuaire-head{margin-top:1.5rem;padding:clamp(1.5rem,5vw,5rem);background:#151718;color:#fff;border-top:9px solid #ffe100}.surtitre{font:900 .68rem/1.4 var(--sans);letter-spacing:.08em;color:#ffe100;margin:0 0 2rem}.annuaire-head h1{font:900 clamp(2.7rem,7.8vw,7.4rem)/.96 var(--sans);letter-spacing:-.08em;margin:0}.annuaire-head h1 span{color:#ffe100}.accroche{font:650 clamp(1rem,1.7vw,1.34rem)/1.55 var(--sans);max-width:65ch;margin:2rem 0}.stats{border-top:1px solid #777;padding-top:1rem;display:flex;flex-wrap:wrap;gap:1rem 3rem}.stats span{font:900 .68rem/1.5 var(--sans);text-transform:uppercase;display:flex;align-items:baseline;gap:.65rem}.stats strong{font:900 2rem/1 var(--sans);color:#ffe100}.notice{margin:2rem 0;display:grid;grid-template-columns:1fr 2fr;gap:1.3rem 2.4rem;align-items:center;padding:1.5rem;border:2px solid #151718}.notice h2{font:900 clamp(1.4rem,2.5vw,2.2rem)/1.16 var(--sans);letter-spacing:-.04em;margin:0}.notice p{font:540 .88rem/1.65 var(--sans);margin:0}.notice a{grid-column:1/-1;background:#ffe100;color:#151718;padding:1rem;font:900 .71rem/1.4 var(--sans);display:flex;justify-content:space-between;gap:1rem}.notice a:hover{background:#151718;color:#fff}.methode{margin:3.5rem 0}.methode h2{font:900 1.4rem/1.2 var(--sans);border-bottom:4px solid #151718;padding-bottom:.7rem}.methode ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.methode li{border:1px solid var(--filet);padding:1.2rem}.methode li>strong{font:900 2.3rem/1 var(--sans);color:var(--encre-2)}.methode h3{font:900 1.16rem/1.2 var(--sans);margin:1rem 0 .5rem}.methode p{font:500 .8rem/1.6 var(--sans);margin:0}.intro-liste{border-top:8px solid #151718;padding:1.4rem 0}.intro-liste p{font:900 .69rem/1.4 var(--sans);letter-spacing:.06em}.intro-liste h2{font:900 clamp(2.5rem,5.5vw,5rem)/.96 var(--sans);letter-spacing:-.065em;margin:.9rem 0}.intro-liste mark{background:#ffe100;color:#151718}.formulaire{display:grid;grid-template-columns:2.5fr 1.2fr auto;gap:.8rem;background:#ffe100;color:#151718;padding:1.3rem;align-items:end}.formulaire label{display:flex;flex-direction:column;gap:.4rem;font:900 .68rem/1.4 var(--sans)}.formulaire input,.formulaire select{min-height:50px;border:2px solid #151718;background:#fff;color:#151718;border-radius:0;padding:.75rem;font:650 .86rem/1.45 var(--sans);width:100%}.formulaire button{min-height:50px;background:#151718;color:#fff;border:2px solid #151718;padding:0 1rem;font:900 .65rem/1.4 var(--sans);cursor:pointer}.formulaire button:hover{background:#fff;color:#151718}.compteur{font:900 .72rem/1.5 var(--sans);text-transform:uppercase;border-bottom:3px solid #151718;margin:1.5rem 0 0;padding:0 0 1rem}.juridictions{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 1.4rem}.juridictions li{display:grid;grid-template-columns:69px minmax(0,1fr) auto;gap:.9rem;align-items:center;padding:1.1rem 0;border-bottom:1px solid var(--filet);min-width:0}.juridictions li[hidden],.aucun[hidden]{display:none}.fiche-code{background:#151718;color:#fff;min-height:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem}.fiche-code strong{font:900 1.5rem/1 var(--sans)}.fiche-code span{font:750 .37rem/1.3 var(--sans);text-align:center}.fiche-texte{min-width:0}.fiche-texte .departement{font:900 .66rem/1.4 var(--sans);text-transform:uppercase;color:var(--encre-2);margin:0}.fiche-texte h3{font:900 clamp(1.05rem,1.7vw,1.4rem)/1.17 var(--sans);letter-spacing:-.035em;margin:.25rem 0}.fiche-texte .indice{font:500 .65rem/1.4 var(--sans);margin:0;color:var(--encre-2)}.lien-officiel{background:#ffe100;color:#151718;padding:.75rem .55rem;font:900 .6rem/1.4 var(--sans);display:flex;gap:.6rem;align-items:center}.lien-officiel:hover{background:#151718;color:#fff}.note-maj{font:550 .72rem/1.65 var(--sans);color:var(--encre-2);margin:1.3rem 0}.aucun{padding:1.2rem;background:#ffe100;font:750 .92rem/1.5 var(--sans)}.cours-repertoire{background:#151718;color:#fff;padding:clamp(1.5rem,4vw,3rem);margin:3rem 0;display:grid;grid-template-columns:1fr 1.2fr;gap:1rem 2rem}.cours-repertoire .surtitre{grid-column:1/-1;margin:0}.cours-repertoire h2{font:900 clamp(1.9rem,3.3vw,3rem)/1.06 var(--sans);letter-spacing:-.05em;margin:.8rem 0}.cours-repertoire p:not(.surtitre){font:500 .9rem/1.6 var(--sans)}.cours-repertoire a{grid-column:1/-1;display:flex;justify-content:space-between;gap:1rem;background:#ffe100;color:#151718;padding:1rem;font:900 .72rem/1.45 var(--sans)}.cours-repertoire a:hover{background:#fff;color:#151718}.suite-annuaire{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:2rem 0 4rem}.suite-annuaire a{display:flex;justify-content:space-between;gap:1rem;border:2px solid #151718;padding:1.1rem;font:900 .71rem/1.4 var(--sans)}.suite-annuaire a:hover{background:#ffe100;color:#151718}@media(max-width:70rem){.juridictions{grid-template-columns:1fr}}@media(max-width:48rem){.annuaire-head{padding:2rem 1.2rem}.annuaire-head h1{font-size:clamp(2.5rem,11vw,4.5rem)}.notice,.cours-repertoire,.formulaire,.methode ol,.suite-annuaire{grid-template-columns:1fr}.notice a,.cours-repertoire .surtitre,.cours-repertoire a{grid-column:auto}.juridictions li{grid-template-columns:55px minmax(0,1fr) auto;gap:.6rem}.fiche-code{min-height:60px}.fiche-code strong{font-size:1.3rem}.fiche-texte h3{font-size:1.05rem}.lien-officiel{font-size:.54rem;padding:.7rem .4rem}.formulaire{padding:1rem}}
-</style>
+.signal-roles{display:grid;grid-template-columns:2fr 1fr;align-items:end;gap:2rem;background:#151718;color:#fff;padding:clamp(1.2rem,3vw,2.3rem);margin:2rem 0;border-left:7px solid #ffe100}
+.signal-roles>div>span{font:900 .65rem/1.4 var(--sans);color:#ffe100;letter-spacing:.07em}
+.signal-roles strong{font:900 clamp(1.25rem,2vw,1.9rem)/1.15 var(--sans);display:block;margin:.8rem 0}
+.signal-roles p{font:500 .82rem/1.55 var(--sans);margin:0}
+.signal-roles>a{display:flex;justify-content:space-between;gap:.8rem;background:#ffe100;color:#151718;padding:1.1rem;font:900 .7rem/1.4 var(--sans)}
+.signal-roles>a:hover{background:#fff;color:#151718}
+.ressources-departement{grid-column:1/-1;display:flex;flex-direction:column;gap:.7rem;padding-top:.8rem;border-top:1px dashed var(--filet)}
+.acces-role{background:#edeee8;color:#151718;padding:.8rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.acces-role>div{flex:1}
+.type-role{font:900 .65rem/1.3 var(--sans);letter-spacing:.025em}
+.acces-role p{font:500 .72rem/1.5 var(--sans);margin:.35rem 0 0}
+.acces-role>a{background:#151718;color:#fff;flex-shrink:0;padding:.8rem;font:900 .61rem/1.35 var(--sans);display:flex;gap:.4rem;align-items:center}
+.acces-role>a:hover{background:#ffe100;color:#151718}
+.role-absent{margin:0;color:var(--encre-2);font:650 .69rem/1.45 var(--sans)}
+.liens-archives{display:flex;gap:.35rem;flex-wrap:wrap}
+.liens-archives a{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--filet);padding:.55rem .7rem;font:900 .59rem/1.45 var(--sans);color:var(--encre)}
+.liens-archives a:hover{background:#ffe100;color:#151718}
+.liens-archives .dossier-lie{background:#ffe100;color:#151718;border-color:#151718}
+@media(max-width:70rem){.signal-roles{grid-template-columns:1fr}}
+@media(max-width:48rem){.acces-role{flex-direction:column;align-items:stretch}.acces-role>a{align-self:flex-start;flex-shrink:1}.liens-archives{gap:.3rem}.liens-archives a{font-size:.56rem}}</style>
