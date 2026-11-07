@@ -8,7 +8,7 @@ import frontonAssises from '../assets/fronton-cour-dassises.jpg';
 import policeSans from '@fontsource-variable/libre-franklin/files/libre-franklin-latin-wght-normal.woff2?url';
 import { RUBRIQUES } from '../lib/rubriques.mjs';
 
-const { titre, description = "Intime Conviction, journal consacré aux procès criminels : actualité des audiences, verdicts, analyses et archives judiciaires.", rubriqueActive, accueil = false, image, article, imageAlt = "Image d'Intime Conviction" } = Astro.props;
+const { titre, description = "Intime Conviction, journal consacré aux procès criminels : actualité des audiences, verdicts, analyses et archives judiciaires.", rubriqueActive, accueil = false, noindex = false, image, article, imageAlt = "Image d'Intime Conviction" } = Astro.props;
 // Le nom du journal est le titre principal (h1) de la seule page d'accueil ;
 // ailleurs c'est un paragraphe, le h1 revenant au titre de la page.
 const Marque = 'p';
@@ -26,7 +26,7 @@ const annee = new Date().getFullYear();
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{titreComplet}</title>
     <meta name="description" content={description} />
-    <meta name="robots" content="max-image-preview:large" />
+    <meta name="robots" content={noindex ? "noindex,follow" : "max-image-preview:large"} />
     <link rel="canonical" href={canonique} />
     <meta property="og:title" content={titreComplet} />
     <meta property="og:site_name" content="Intime Conviction" />
