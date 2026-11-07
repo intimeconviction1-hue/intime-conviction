@@ -1,87 +1,79 @@
-# Observe les mises à jour des pages officielles de rôles d'assises.
-# Les liens détectés sont soumis à validation éditoriale dans une issue GitHub.
-# Aucun rôle ou événement judiciaire n'est publié automatiquement sur le site.
-name: Surveiller les rôles officiels
+# Revue éditoriale planifiée des rôles officiels.
+# Les pages des cours d'appel opposent une page HTML sans documents aux requêtes
+# GitHub Actions (constaté 2026-11-07). Ne prétend donc PAS détecter les PDF.
+# Le travail humain est tracé en issue GitHub, sans publication automatique.
+name: Revue éditoriale des rôles
 
 on:
   schedule:
-    # Jours ouvrés à 07:15 UTC. GitHub peut décaler le déclenchement.
-    - cron: "15 7 * * 1-5"
+    # Chaque lundi, sans répétition si une issue de vérification reste ouverte.
+    - cron: "25 8 * * 1"
   workflow_dispatch:
   push:
     branches: [main]
     paths:
       - ".github/workflows/surveiller-roles.yml"
-      - "scripts/surveiller-roles.mjs"
-      - "tests/surveiller-roles.test.mjs"
-      - "src/lib/roles-officiels.mjs"
 
 permissions:
-  contents: write
+  contents: read
   issues: write
 
 concurrency:
-  group: veille-roles-officiels
+  group: revue-editoriale-roles
   cancel-in-progress: false
 
 jobs:
-  comparer:
+  revue:
     runs-on: ubuntu-24.04
-    timeout-minutes: 14
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v7
-        with:
-          persist-credentials: true
-
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: npm
-
-      - name: Tester les règles de surveillance
-        run: node --test tests/surveiller-roles.test.mjs
-
-      - name: Comparer les documents officiels
-        run: node scripts/surveiller-roles.mjs
-
-      - name: Présenter le relevé
-        run: |
-          node --input-type=module <<'JS' >> "$GITHUB_STEP_SUMMARY"
-          import {readFileSync} from 'node:fs';
-          const r=JSON.parse(readFileSync('.cache/roles-surveillance-report.json','utf8'));
-          console.log('## Surveillance des rôles');
-          console.log('- Pages officielles visées : '+r.sourcesVisees);
-          console.log('- Pages effectivement consultées : '+r.sourcesLues);
-          console.log('- Liens de documents reconnus : '+r.liensDocuments);
-          console.log('- Pages sans document identifié : '+r.sourcesSansDocuments.length);
-          console.log('- Sources initialisées (sans alerte) : '+r.initialisees);
-          console.log('- Sources dont les documents ont changé : '+r.modifications.length);
-          console.log('- Pages à contrôler manuellement pour erreur technique : '+r.erreurs.length);
-          console.log('');
-          console.log('Aucune audience ni date judiciaire n’est publiée automatiquement.');
-          JS
-
-      - name: Créer une alerte de vérification éditoriale
+      - name: Préparer un contrôle humain sans lire les documents protégés
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if node --input-type=module -e "import fs from 'node:fs';const r=JSON.parse(fs.readFileSync('.cache/roles-surveillance-report.json','utf8'));process.exit(r.modifications.length ? 0 : 1)"; then
-            gh issue create \
-              --repo "$GITHUB_REPOSITORY" \
-              --title "Veille des rôles : documents officiels modifiés à vérifier" \
-              --body-file .cache/roles-surveillance-issue.md
-          else
-            echo "Aucun changement de lien documentaire nécessitant une issue."
-          fi
-
-      - name: Conserver le dernier index documentaire
-        run: |
-          if git ls-files --error-unmatch .github/roles-surveillance-state.json >/dev/null 2>&1 && git diff --quiet -- .github/roles-surveillance-state.json; then
-            echo "Relevé inchangé."
+          TITLE="Revue des rôles d’assises : vérifier les sources officielles"
+          if gh issue list --repo "$GITHUB_REPOSITORY" --state open --limit 100 --json title --jq '.[].title' | grep -Fxq "$TITLE"; then
+            echo "Une revue éditoriale est déjà ouverte : pas de doublon." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .github/roles-surveillance-state.json
-          git commit -m "chore: actualiser la veille des rôles [skip ci]"
-          git push origin HEAD:main
+          node --input-type=module <<'JS'
+          import {writeFileSync} from 'node:fs';
+          import {ROLES_OFFICIELS} from './src/lib/roles-officiels.mjs';
+          const source=new Map();
+          for(const r of ROLES_OFFICIELS){
+            if(r.mode==='sur-place'||r.mode==='information')continue;
+            const prev=source.get(r.url)??{url:r.url,codes:[],description:r.titre};
+            if(!prev.codes.includes(r.code))prev.codes.push(r.code);
+            source.set(r.url,prev);
+          }
+          const now=new Date().toISOString().slice(0,10);
+          const lines=[
+            '# Vérification éditoriale des rôles de cours d’assises',
+            '',
+            'Date de création : '+now+'. Action requise : consulter directement les sites officiels ci-dessous.',
+            '',
+            '> **Important** : la collecte automatique des PDF sur ces pages est indisponible depuis GitHub Actions. Ce ticket est un contrôle **humain**, pas une alerte de changement détecté.',
+            '',
+            '## Contrôles à effectuer',
+            '',
+            '- [ ] Pour chaque source, relever la date de mise à jour de la page et les nouveaux rôles ou rôles modificatifs.',
+            '- [ ] Comparer les documents avec la dernière revue, lorsque des éléments vérifiés sont conservés.',
+            '- [ ] Confirmer auprès de la juridiction tout report, déplacement ou changement sensible.',
+            '- [ ] Vérifier les informations légales et le caractère public des données avant rédaction.',
+            '- [ ] N’ajouter aux dossiers d’Intime Conviction que les faits recoupés et sourcés.',
+            '',
+            '## Pages officielles à consulter',
+            '',
+          ];
+          for(const r of [...source.values()].sort((a,b)=>a.codes.join().localeCompare(b.codes.join()))) {
+            lines.push('- **'+r.codes.join(', ')+'** : '+r.description+'  '+r.url);
+          }
+          lines.push('','Les rôles accessibles seulement sur place, notamment Rouen, ne sont pas collectés automatiquement. Ce ticket peut être fermé une fois les vérifications consignées. La prochaine revue ne sera créée que si aucun ticket du même titre n’est ouvert.');
+          writeFileSync('role-revue.md',lines.join('\n')+'\n');
+          JS
+          gh issue create --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body-file role-revue.md
+          echo "Une revue officielle est à vérifier manuellement. Aucun rôle n’a été publié automatiquement." >> "$GITHUB_STEP_SUMMARY"
