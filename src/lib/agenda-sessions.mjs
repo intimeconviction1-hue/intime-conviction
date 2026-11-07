@@ -68,6 +68,8 @@ export function dateLocaleAgenda(instant=new Date()) {
 // Sources pertinentes dont les dates précises ne sont PAS publiables dans l'agenda
 // tant que le rôle modificatif ou le PDF n'a pas été effectivement contrôlé.
 export const SOURCES_A_COMPLETER = Object.freeze([
+  {code:'19-23-87',ressort:'Ressort de Limoges (Corrèze, Creuse, Haute-Vienne)',statut:'Deux rôles d’assises d’octobre 2026, initial et modificatif, référencés. PDF non lus : différences et dates d’audience non établies.',
+    source:'https://www.cours-appel.justice.fr/limoges/activite-des-cours-dassises-et-des-cours-criminelles-departementales'},
   {code:'01',ressort:'Ain',statut:'Rôle de décembre 2026 disponible ; dates exactes à relever dans le document',
     source:'https://www.cours-appel.justice.fr/lyon/la-cour-dassises-de-lain'},
   {code:'33',ressort:'Gironde',statut:'Rôle publié ; dates exactes à relever dans le document',
