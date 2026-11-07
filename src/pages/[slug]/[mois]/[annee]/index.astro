@@ -2,6 +2,7 @@
 import Base from '../../../../layouts/Base.astro';
 import ListeArticles from '../../../../components/ListeArticles.astro';
 import { rubrique } from '../../../../lib/rubriques.mjs';
+import { provenanceVerifiee } from '../../../../lib/provenance-archives.mjs';
 import { tousLesArticles, dateLongue, minutesDeLecture } from '../../../../lib/articles.mjs';
 
 // L'adresse est celle de l'ancien WordPress, /titre/mois/année/, pour que les
@@ -30,10 +31,11 @@ export async function getStaticPaths() {
 const { article, voisins } = Astro.props;
 const { data } = article;
 const r = rubrique(data.rubrique);
+const provenance = provenanceVerifiee(data.chemin);
 const signatureArchive = String(data.auteur ?? '').trim();
 // Le nom du journal provient d'un champ WordPress importé et ne suffit pas
 // à identifier la personne qui a rédigé un texte historique.
-const auteurIdentifie = signatureArchive.toLocaleLowerCase('fr') === 'intime conviction' ? null : (signatureArchive || null);
+const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCase('fr') === 'intime conviction' ? null : (signatureArchive || null));
 ---
 <Base titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} noindex={data.verificationEnCours === true} article={{ headline:data.titre,datePublished:data.date.toISOString(),dateModified:data.dateMiseAJour?.toISOString(),author:auteurIdentifie }}>
   <script type="application/ld+json" set:html={JSON.stringify({
@@ -58,6 +60,12 @@ const auteurIdentifie = signatureArchive.toLocaleLowerCase('fr') === 'intime con
       {auteurIdentifie && <> · {auteurIdentifie}</>}
       · {minutesDeLecture(data.mots)} min de lecture
     </p>
+    {provenance && (
+      <aside class="credit-archive" aria-label="Provenance de cette archive">
+        <strong>Provenance de l’article</strong>
+        <p>Texte publié initialement par <a href={provenance.url} rel="noopener noreferrer" target="_blank">{provenance.media}<span class="sr-only"> (nouvel onglet)</span></a>, signé {provenance.auteur}, le <time datetime={provenance.publieLe}>{dateLongue(new Date(provenance.publieLe + 'T12:00:00Z'))}</time>.</p>
+      </aside>
+    )}
     <div class="outils-lecture"><span>Confort de lecture</span><button id="taille-texte" type="button" aria-pressed="false">Agrandir le texte</button><button id="copier-lien" type="button">Copier le lien</button><span id="partage-statut" role="status"></span></div>
     <div class="corps" set:html={data.html} />
   </article>
@@ -93,4 +101,10 @@ function progression(){const r=article.getBoundingClientRect();barre.style.width
 .fil-ariane a:hover{background:transparent;color:#a12c39}
 .outils-lecture button:focus-visible{outline:3px solid #a12c39}
 
+
+.credit-archive{margin:1.25rem 0;padding:1rem 1.2rem;border-left:3px solid #a12c39;background:#f0eee9;color:#202529}
+.credit-archive strong{font:700 .77rem/1.5 var(--sans)}
+.credit-archive p{font:450 .9rem/1.65 var(--sans);margin:.35rem 0 0}
+.credit-archive a{text-decoration:underline;text-underline-offset:.17em}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 </style>
