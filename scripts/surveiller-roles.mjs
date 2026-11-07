@@ -55,7 +55,7 @@ export function extraireDocuments(html, baseUrl, mode='publication') {
     try{nom=decodeURIComponent(url.pathname.split('/').at(-1) || 'Document');}catch{nom=url.pathname.split('/').at(-1)||'Document';}
     const libelle=texteHumain(match[2]);
     if(mode!=='publication' && !MOTS_DOCUMENT.test(libelle+' '+nom))continue;
-    let titre=libelle && !/^(téléchargement|telechargement|download|pdf|voir|lien)$/i.test(libelle) ? libelle:nom;
+    let titre=libelle && !/^(téléchargement|telechargement|download|pdf|voir|lien)(?:\\s|$)/i.test(libelle) ? libelle:nom;
     titre=titre.replace(/[\r\n\t]/g,' ').replace(/\s+/g,' ').trim().slice(0,160);
     if(!titre)titre='Document de session';
     // Deux liens vers un même document ne sont pas deux nouvelles audiences.
