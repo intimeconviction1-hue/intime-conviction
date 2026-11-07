@@ -9,10 +9,10 @@ import { tousLesArticles, dateLongue, minutesDeLecture } from '../lib/articles.m
 
 const articles = await tousLesArticles();
 const veille = await lireVeille();
-const [une,...suite] = articles;
-const [archiveUne,...archivesSuite] = suite;
+const articlesCarrousel = articles.slice(0, 3);
+const [archiveUne,...archivesSuite] = articles.slice(3);
 const derniers = archivesSuite.slice(0,3);
-const vus = new Set([une,archiveUne,...derniers].filter(Boolean).map(a=>a.data.slug));
+const vus = new Set([...articlesCarrousel,archiveUne,...derniers].filter(Boolean).map(a=>a.data.slug));
 const rubriques = RUBRIQUES.map(r=>{
   const archives=articles.filter(a=>a.data.rubrique===r.slug);
   return {...r,total:archives.length,titres:archives.filter(a=>!vus.has(a.data.slug)).slice(0,2)};
@@ -30,16 +30,33 @@ const total=articles.length.toLocaleString('fr-FR');
         </div>
         <a class="une-news-lien" href="/rubrique/cours-du-jour/">Toute la rubrique <span aria-hidden="true">↗</span></a>
       </header>
-      {une && (
-        <article class="article-redaction-une" aria-labelledby="article-redaction-titre">
-          <div class="article-redaction-une-texte">
-            <p class="article-redaction-une-kicker">LE JOURNAL / DERNIER ARTICLE DE LA RÉDACTION</p>
-            <p class="article-redaction-une-date"><time datetime={une.data.date.toISOString()}>{dateLongue(une.data.date)}</time> · {rubrique(une.data.rubrique).nom}</p>
-            <h2 id="article-redaction-titre"><a href={une.data.chemin}>{une.data.titre}</a></h2>
-            <p class="article-redaction-une-extrait">{une.data.extrait}</p>
-            <a class="article-redaction-une-lien" href={une.data.chemin}>Lire notre article <span aria-hidden="true">↗</span></a>
+      {articlesCarrousel.length > 0 && (
+        <section class="articles-carrousel" aria-label="Trois articles à la une" data-editorial-carousel>
+          <div class="articles-carrousel-tete">
+            <p>LES ARTICLES D’INTIME CONVICTION</p>
+            <div class="articles-carrousel-outils" aria-label="Navigation dans les articles">
+              <span data-editorial-position aria-live="polite">01 / {String(articlesCarrousel.length).padStart(2,'0')}</span>
+              <button type="button" data-editorial-prev aria-label="Article précédent">←</button>
+              <button type="button" data-editorial-next aria-label="Article suivant">→</button>
+            </div>
           </div>
-        </article>
+          <div class="articles-carrousel-piste" data-editorial-track tabindex="0" aria-label="Articles de la rédaction à faire défiler">
+            {articlesCarrousel.map(({data},i) => (
+              <article class="article-redaction-une" aria-label={`Article ${i+1} sur ${articlesCarrousel.length}`}>
+                <div class="article-redaction-une-texte">
+                  <p class="article-redaction-une-kicker">LE JOURNAL / {String(i+1).padStart(2,'0')}</p>
+                  <p class="article-redaction-une-date"><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time> · {rubrique(data.rubrique).nom}</p>
+                  <h2><a href={data.chemin}>{data.titre}</a></h2>
+                  <p class="article-redaction-une-extrait">{data.extrait}</p>
+                  <a class="article-redaction-une-lien" href={data.chemin}>Lire l’article <span aria-hidden="true">↗</span></a>
+                </div>
+              </article>
+            ))}
+          </div>
+          <div class="articles-carrousel-reperes" aria-label="Choisir un article">
+            {articlesCarrousel.map((_,i)=><button type="button" data-editorial-dot={i} aria-label={`Afficher l’article ${i+1}`} aria-current={i===0?'true':undefined}>{String(i+1).padStart(2,'0')}</button>)}
+          </div>
+        </section>
       )}
       <div class="parcours"><span>REPÈRES</span><a href="/agenda/">Sessions criminelles à venir <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/comprendre/">Comprendre le procès <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/annuaire/">Trouver une cour <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/dossiers/">Dossiers judiciaires <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/archives/">{total} articles d’archives <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a></div>
       <form class="accueil-recherche" action="/recherche/" method="get" role="search" aria-label="Rechercher dans les archives">
@@ -98,17 +115,40 @@ const total=articles.length.toLocaleString('fr-FR');
   </div></div>
 </Base>
 <script>
-  const piste = document.querySelector('[data-news-track]');
-  const avant = document.querySelector('[data-news-prev]');
-  const apres = document.querySelector('[data-news-next]');
-  if (piste instanceof HTMLElement) {
-    const defiler = (sens) => {
-      const largeurCarte = piste.querySelector('.une-defile-carte')?.getBoundingClientRect().width ?? 300;
-      const reduire = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      piste.scrollBy({ left: sens * (largeurCarte + 16), behavior: reduire ? 'instant' : 'smooth' });
+  const carrousel = document.querySelector('[data-editorial-carousel]');
+  if (carrousel) {
+    const piste = carrousel.querySelector('[data-editorial-track]');
+    const diapositives = [...piste.querySelectorAll('.article-redaction-une')];
+    const reperes = [...carrousel.querySelectorAll('[data-editorial-dot]')];
+    const position = carrousel.querySelector('[data-editorial-position]');
+    const reduireMouvement = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let actif = 0;
+    const afficher = (index, defiler = true) => {
+      actif = (index + diapositives.length) % diapositives.length;
+      reperes.forEach((repere,i) => {
+        if (i === actif) repere.setAttribute('aria-current','true');
+        else repere.removeAttribute('aria-current');
+      });
+      position.textContent = String(actif+1).padStart(2,'0')+' / '+String(diapositives.length).padStart(2,'0');
+      if (defiler) piste.scrollTo({left:diapositives[actif].offsetLeft - piste.offsetLeft,behavior:reduireMouvement()?'instant':'smooth'});
     };
-    avant?.addEventListener('click', () => defiler(-1));
-    apres?.addEventListener('click', () => defiler(1));
+    carrousel.querySelector('[data-editorial-prev]')?.addEventListener('click',()=>afficher(actif-1));
+    carrousel.querySelector('[data-editorial-next]')?.addEventListener('click',()=>afficher(actif+1));
+    reperes.forEach((repere,i)=>repere.addEventListener('click',()=>afficher(i)));
+    let raf=0;
+    piste.addEventListener('scroll',()=>{
+      cancelAnimationFrame(raf);
+      raf=requestAnimationFrame(()=>{
+        const centre=piste.scrollLeft + piste.clientWidth/2;
+        let index=0, distance=Infinity;
+        diapositives.forEach((slide,i)=>{
+          const ecart=Math.abs(slide.offsetLeft-piste.offsetLeft+slide.clientWidth/2-centre);
+          if(ecart<distance){distance=ecart;index=i;}
+        });
+        afficher(index,false);
+      });
+    },{passive:true});
+    afficher(0,false);
   }
 </script>
 <style>
@@ -584,4 +624,22 @@ const total=articles.length.toLocaleString('fr-FR');
 .presse-section-intro h2{font:800 clamp(1.35rem,2.1vw,2rem)/1.2 var(--sans);margin:0}
 .presse-section-intro p{font:500 .85rem/1.5 var(--sans);margin:0;color:var(--encre-2)}
 @media(max-width:48rem){.article-redaction-une{margin:1rem 0 1.7rem}.article-redaction-une h2{font-size:clamp(1.8rem,7vw,2.5rem)}}
+
+/* Une éditoriale : trois publications distinctes, navigation explicite et tactile. */
+.articles-carrousel{margin:1.35rem 0 2rem;min-width:0}
+.articles-carrousel-tete{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 0;border-top:1px solid #8b8881}
+.articles-carrousel-tete p{font:800 .75rem/1.4 var(--sans);letter-spacing:.08em;margin:0}
+.articles-carrousel-outils{display:flex;align-items:center;gap:.6rem}
+.articles-carrousel-outils span{font:750 .75rem/1.2 var(--sans);min-width:4rem;text-align:center;font-variant-numeric:tabular-nums}
+.articles-carrousel-outils button{width:44px;height:44px;border:1px solid #272727;color:#17191a;background:transparent;font:700 1.3rem/1 var(--sans);cursor:pointer}
+.articles-carrousel-outils button:hover,.articles-carrousel-outils button:focus-visible{background:#17191a;color:white}
+.articles-carrousel-piste{position:relative;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;gap:0}
+.articles-carrousel-piste::-webkit-scrollbar{display:none}
+.articles-carrousel-piste .article-redaction-une{flex:0 0 100%;scroll-snap-align:start;min-width:0;margin:0;min-height:340px;display:flex;align-items:center}
+.articles-carrousel-reperes{display:flex;gap:.4rem;justify-content:center;margin-top:.85rem}
+.articles-carrousel-reperes button{border:0;border-bottom:3px solid #9c9b95;background:transparent;min-width:58px;min-height:44px;font:800 .7rem var(--sans);color:#333;cursor:pointer}
+.articles-carrousel-reperes button[aria-current="true"]{border-color:#a12c39;color:#a12c39}
+.articles-carrousel-piste:focus-visible{outline:3px solid #a12c39;outline-offset:3px}
+@media(max-width:47.99rem){.articles-carrousel-piste .article-redaction-une{min-height:400px}.articles-carrousel-tete p{font-size:.62rem}}
+@media(prefers-reduced-motion:reduce){.articles-carrousel-piste{scroll-behavior:auto}}
 </style>
