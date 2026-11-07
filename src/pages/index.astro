@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Actualites from '../components/Actualites.astro';
+import AgendaEnBref from '../components/AgendaEnBref.astro';
 import Culture from '../components/Culture.astro';
 import ParcoursEditorial from '../components/ParcoursEditorial.astro';
 import { lireActualites, lireVeille } from '../lib/veille.mjs';
@@ -66,6 +67,7 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
 
   <div class="surface-lecture"><div class="cadre journal-corps">
     <Actualites debut={nouvellesOuverture.length} limite={5} compacte />
+    <AgendaEnBref />
 
 
     <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
