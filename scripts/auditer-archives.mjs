@@ -59,8 +59,18 @@ for (const chemin of fichiers) {
   }
   if (Number(article.mots) < 100) avis('a_verifier','contenu_court',chemin,String(article.mots ?? '?')+' mots annoncés');
   if (!html.trim()) avis('erreur','contenu_vide',chemin,'Champ HTML vide');
-  if (/^\s*(?:<p>)?\s*(?:AFP|AP|Reuters|SOURCE)\b/i.test(html))
-    avis('a_verifier','provenance_source',chemin,'Début du contenu : mention de source ou agence');
+  // Une signature issue de l'import WordPress n'établit pas nécessairement
+  // la paternité d'une dépêche ou d'un texte cité. Aucun changement automatique.
+  const debutTexte = html.slice(0, 900)
+    .replace(/<[^>]*>/g, ' ').replace(/&(?:nbsp|amp|quot|#\d+);/gi, ' ')
+    .replace(/\s+/g, ' ').trim().slice(0, 300);
+  const sourceEnOuverture = /^(?:AFP|AP|Reuters|SOURCE\b|NOUVELOBS\.COM|CLICANOO\.COM)\b/i.test(debutTexte)
+    || /^\s*<p>\s*(?:AFP|AP|Reuters)\b/i.test(html);
+  if (sourceEnOuverture) {
+    avis('a_verifier','provenance_source',chemin,'Une source extérieure apparaît au début du texte');
+    if (String(article.auteur ?? '').trim().toLowerCase() === 'intime conviction')
+      avis('a_verifier','attribution_a_controler',chemin,'Signature générique et source extérieure mentionnée : vérifier les crédits');
+  }
   if (!String(article.auteur ?? '').trim()) avis('a_verifier','signature_absente',chemin,'Aucun auteur renseigné');
 }
 
