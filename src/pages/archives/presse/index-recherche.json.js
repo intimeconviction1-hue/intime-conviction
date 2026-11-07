@@ -1,4 +1,4 @@
-import { lireVeille } from '../../../../lib/veille.mjs';
+import { lireVeille } from '../../../lib/veille.mjs';
 
 // Export purement public: titre, source, URL canonique et date d'ALERTE.
 // Les corps des courriels, leurs expéditeurs et les pièces jointes sont exclus.
