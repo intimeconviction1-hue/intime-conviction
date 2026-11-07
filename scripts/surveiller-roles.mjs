@@ -149,11 +149,14 @@ export async function executer({sources=sourcesSurveillees(),lire=chargerPage,
   try {etat=JSON.parse(await readFile(etatChemin,'utf8'));}catch(e){if(e.code!=='ENOENT')throw e;}
   if(etat.version!==1 || !etat.pages || typeof etat.pages!=='object')throw Error('Format du relevé précédent invalide');
   const suivant={version:1,pages:{...etat.pages}};
-  const modifications=[],erreurs=[];let init=0,reussis=0;
+  const modifications=[],erreurs=[];let init=0,reussis=0,liensDocuments=0;
+  const sourcesSansDocuments=[];
   for(const source of sources) {
     try {
       const {html,urlFinale}=await lire(source.url);
       const documents=extraireDocuments(html,urlFinale,source.mode);
+      liensDocuments+=documents.length;
+      if(!documents.length)sourcesSansDocuments.push({url:source.url,codes:source.codes});
       const precedents=etat.pages[source.url];
       if(precedents && precedents.length>0 && documents.length===0) {
         // Mise en page changée, barrière anti-bot ou panne : ne jamais annoncer
@@ -169,13 +172,14 @@ export async function executer({sources=sourcesSurveillees(),lire=chargerPage,
     }catch(e){erreurs.push({url:source.url,codes:source.codes,raison:String(e.message||e).slice(0,230)});}
   }
   if(reussis===0)throw Error('Aucune source officielle accessible : ne pas modifier le relevé.');
+  if(liensDocuments===0 && sources.length>1)throw Error('Aucun lien vers un rôle reconnu sur les pages consultées : réviser l’extracteur.');
   await mkdir(resolve(rapportChemin,'..'),{recursive:true});
-  const rapport={version:1,verifieLe:new Date().toISOString(),sourcesVisees:sources.length,sourcesLues:reussis,initialisees:init,modifications,erreurs};
+  const rapport={version:1,verifieLe:new Date().toISOString(),sourcesVisees:sources.length,sourcesLues:reussis,liensDocuments,sourcesSansDocuments,initialisees:init,modifications,erreurs};
   await writeFile(rapportChemin,JSON.stringify(rapport,null,2)+'\n');
   await writeFile(issueChemin,creerRapportMarkdown(modifications,erreurs)+'\n');
   await mkdir(resolve(etatChemin,'..'),{recursive:true});
   await writeFile(etatChemin,JSON.stringify(suivant,null,2)+'\n');
-  console.log(JSON.stringify({sources:sources.length,lues:reussis,initialisees:init,changements:modifications.length,erreurs:erreurs.length}));
+  console.log(JSON.stringify({sources:sources.length,lues:reussis,liensDocuments,sansDocuments:sourcesSansDocuments.length,initialisees:init,changements:modifications.length,erreurs:erreurs.length}));
   if(erreurs.length)console.warn('Certains sites officiels sont indisponibles ou ont changé de structure ; voir le rapport.');
   return rapport;
 }
