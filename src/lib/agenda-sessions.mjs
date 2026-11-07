@@ -76,8 +76,8 @@ export const SOURCES_A_COMPLETER = Object.freeze([
 ]);
 
 // Dates d'affaires mentionnées dans le calendrier HTML de la cour d'appel de Rennes
-// (Finistère, mise à jour institutionnelle indiquée : 08/06/2026).
-// Au contrôle du 07/11/2026, la page directe renvoie une maintenance :
+// (Finistère, MAJ indiquée 08/06/2026 ; Ille-et-Vilaine, 16/09/2026).
+// Au contrôle du 07/11/2026, les pages directes renvoient une maintenance :
 // NE PAS présenter ces audiences comme reconfirmées auprès du greffe.
 // Sélection excluant les audiences de la cour d'assises des mineurs.
 export const AUDIENCES_A_RECONFIRMER = Object.freeze([
@@ -93,6 +93,18 @@ export const AUDIENCES_A_RECONFIRMER = Object.freeze([
     ville:'Quimper',departement:'Finistère',juridiction:'Cour statuant en appel',
     objet:'Viol commis par une personne étant ou ayant été conjoint, concubin ou partenaire',
     source:'https://www.cours-appel.justice.fr/rennes/cour-dassises-et-cour-criminelle-departementale-du-finistere'},
+  {id:'ille-et-vilaine-2026-11-24',debut:'2026-11-24',fin:'2026-11-26',
+    ville:'Rennes',departement:'Ille-et-Vilaine',juridiction:'Cour criminelle départementale',
+    objet:'Viol incestueux commis sur mineur de 15 ans par un ascendant majeur',
+    source:'https://www.cours-appel.justice.fr/rennes/cour-dassises-et-la-cour-criminelle-departementale-dille-et-vilaine'},
+  {id:'ille-et-vilaine-2026-11-27',debut:'2026-11-27',fin:'2026-11-30',
+    ville:'Rennes',departement:'Ille-et-Vilaine',juridiction:'Cour d’assises',
+    objet:'Viol incestueux commis sur mineur de 15 ans par un ascendant ou une personne ayant autorité',
+    source:'https://www.cours-appel.justice.fr/rennes/cour-dassises-et-la-cour-criminelle-departementale-dille-et-vilaine'},
+  {id:'ille-et-vilaine-2026-12-01',debut:'2026-12-01',fin:'2026-12-04',
+    ville:'Rennes',departement:'Ille-et-Vilaine',juridiction:'Cour d’assises',
+    objet:'Viol commis sur mineur de 15 ans par un ascendant',
+    source:'https://www.cours-appel.justice.fr/rennes/cour-dassises-et-la-cour-criminelle-departementale-dille-et-vilaine'},
   {id:'finistere-2026-12-17',debut:'2026-12-17',fin:'2026-12-18',
     ville:'Quimper',departement:'Finistère',juridiction:'Cour statuant en appel',
     objet:'Viol commis sur un mineur de 15 ans et corruption de mineur',
