@@ -26,17 +26,17 @@ const cartouche="CARTE ÉDITORIALE / FRANCE MÉTROPOLITAINE";
 >
   <header class="carte-intro">
     <p class="surtitre">INTIME CONVICTION / GÉOGRAPHIE JUDICIAIRE</p>
-    <h1>LA JUSTICE<br /><span>A UNE ADRESSE.</span></h1>
+    <h1>CARTE DES<br /><span>JURIDICTIONS.</span></h1>
     <p>Du palais de justice aux audiences d’appel : cinq villes et quatre affaires pour commencer à parcourir la France des procès criminels.</p>
     <div class="intro-chiffres"><span><strong>{JURIDICTIONS.length}</strong> lieux d’audience associés</span><span><strong>{dossiers.length}</strong> affaires documentées</span><span><strong>{new Set(JURIDICTIONS.map(j=>j.departement)).size}</strong> départements</span></div>
   </header>
   <section class="methode-carte" aria-label="Comprendre la carte">
-    <h2>CE QUE MONTRE LA CARTE.</h2>
+    <h2>Périmètre de la carte</h2>
     <p>Les points indiquent les <strong>villes des juridictions</strong> associées aux étapes judiciaires déjà documentées, pas le lieu où les faits se seraient déroulés. Le dessin est une <strong>carte schématique</strong> de la France métropolitaine. Les coordonnées sont celles des centres-villes, pas celles des salles d’audience. Les adresses institutionnelles et les liens officiels figurent sous la carte.</p>
   </section>
 
   <section class="carte-section" aria-labelledby="titre-carte">
-    <div class="carto-head"><div><span>{cartouche}</span><h2 id="titre-carte">LES LIEUX<br /><mark>DES PROCÈS.</mark></h2></div><p>Choisis une affaire pour mettre ses juridictions en évidence. Les mêmes affaires peuvent apparaître dans plusieurs villes lorsque la procédure comporte un appel.</p></div>
+    <div class="carto-head"><div><span>{cartouche}</span><h2 id="titre-carte">LES JURIDICTIONS<br /><mark>PAR AFFAIRE.</mark></h2></div><p>Sélectionnez une affaire pour afficher les juridictions correspondantes. Les mêmes affaires peuvent apparaître dans plusieurs villes lorsque la procédure comporte un appel.</p></div>
     <div class="filtres-lieux" role="group" aria-label="Filtrer la carte par affaire">
       <button type="button" class="f-active" data-choix="tous" aria-pressed="true">TOUTES LES AFFAIRES</button>
       {dossiers.map(d=><button type="button" data-choix={d.slug} aria-pressed="false">{d.titre}</button>)}
@@ -81,7 +81,7 @@ const cartouche="CARTE ÉDITORIALE / FRANCE MÉTROPOLITAINE";
   </section>
 
   <section class="fiches-juridictions" aria-labelledby="titre-fiches">
-    <div class="fiches-head"><p>LE RÉPERTOIRE / JURIDICTIONS</p><h2 id="titre-fiches">DES LIEUX.<br /><span>DES PROCÉDURES.</span></h2></div>
+    <div class="fiches-head"><p>LE RÉPERTOIRE / JURIDICTIONS</p><h2 id="titre-fiches">FICHES DES<br /><span>JURIDICTIONS.</span></h2></div>
     <div class="fiches-grille">
       {points.map(p=>(
         <article class="fiche" id={'lieu-'+p.id} data-dossier={p.dossier}>
