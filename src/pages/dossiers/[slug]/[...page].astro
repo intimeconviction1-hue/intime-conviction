@@ -45,7 +45,7 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
     <div class="compteurs">
       <div><strong>{nombre(statistiques.total)}</strong><span>RÉFÉRENCES</span></div>
       <div><strong>{nombre(statistiques.medias)}</strong><span>MÉDIAS CITÉS</span></div>
-      <div><strong>{statistiques.annees.length}</strong><span>ANNÉES D’ALERTES</span></div>
+      <div><strong>{statistiques.annees.length}</strong><span>ANNÉES DE VEILLE</span></div>
     </div>
   </header>
 
@@ -58,8 +58,8 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
     </div>
     <aside class="periode">
       <h2>REPÈRES DANS LE FONDS</h2>
-      <p><span>PREMIÈRE ALERTE CONSERVÉE</span><strong>{date(statistiques.debut)}</strong></p>
-      <p><span>DERNIÈRE ALERTE CONSERVÉE</span><strong>{date(statistiques.fin)}</strong></p>
+      <p><span>Début de la période couverte</span><strong><time datetime={statistiques.debut}>{date(statistiques.debut)}</time></strong></p>
+      <p><span>Fin de la période couverte</span><strong><time datetime={statistiques.fin}>{date(statistiques.fin)}</time></strong></p>
     </aside>
   </div>
 
@@ -87,7 +87,7 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
   )}
 
   <section class="couverture" aria-labelledby="titre-periode">
-    <h2 id="titre-periode">DANS LES ARCHIVES <span>PAR ANNÉE</span></h2>
+    <h2 id="titre-periode">La presse <span>par année</span></h2>
     <ul>
       {statistiques.annees.map(([annee, n]) => (
         <li><a href={'/archives/presse/' + annee + '/'} title={'Voir toute la revue de presse de ' + annee}><strong>{annee}</strong><span>{nombre(n)} mentions dans ce dossier</span><span aria-hidden="true">↗</span></a></li>
@@ -98,13 +98,13 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
 
   <section class="references" aria-labelledby="titre-references">
     <div class="titre-references">
-      <div><p>LES SOURCES / PAGE {page.currentPage} SUR {page.lastPage}</p><h2 id="titre-references">LA REVUE<br /><span>DES TITRES.</span></h2></div>
+      <div><p>Références de presse · page {page.currentPage} sur {page.lastPage}</p><h2 id="titre-references">Les articles <span>répertoriés</span></h2></div>
       <span>{page.data.length} références affichées sur {nombre(statistiques.total)}</span>
     </div>
     <ol class="liste-references" start={(page.currentPage - 1) * page.size + 1}>
       {page.data.map((reference) => (
         <li>
-          <div class="ligne-meta"><span class="source">{reference.source}</span><span>ALERTE DU <time datetime={reference.dateAlerte}>{date(reference.dateAlerte)}</time></span></div>
+          <div class="ligne-meta"><span class="source">{reference.source}</span><span>Repéré le <time datetime={reference.dateAlerte}>{date(reference.dateAlerte)}</time></span></div>
           <h3><a href={reference.lien} rel="noopener noreferrer" target="_blank">{reference.titre} <span class="sr-only">(site externe, nouvel onglet)</span><span class="sortie" aria-hidden="true">↗</span></a></h3>
         </li>
       ))}
@@ -194,4 +194,43 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
 .fonds-distincts p{margin:0;max-width:65ch;font:500 .85rem/1.6 var(--sans);color:var(--encre-2)}
 .fonds-distincts a{font:700 .85rem/1.5 var(--sans);text-decoration:underline;text-underline-offset:.2em;white-space:normal}
 .fonds-distincts a:hover{color:#a12c39}
+
+/* Dossiers : lecture sobre, distinction entre source et date du relevé. */
+.entete-dossier{background:#f5f2ed;color:#202427;border-top:3px solid #a12c39}
+.en-tete-annotation{color:#596066;font-weight:650}
+.repere{color:#96313b;font-weight:700;margin-top:2rem}
+.entete-dossier h1{font:650 clamp(2.7rem,6vw,5.2rem)/1.05 var(--serif);letter-spacing:-.045em;max-width:18ch}
+.entete-dossier .point{color:#a12c39}
+.entete-dossier .description{color:#3b4145;font:450 clamp(1rem,1.6vw,1.16rem)/1.65 var(--sans);text-transform:none}
+.compteurs{border-top:1px solid #c8c3bd}
+.compteurs strong{color:#96313b;font-weight:650}
+.compteurs span{color:#51565a}
+.periode{background:#f3f0eb;border-left:2px solid #a12c39}
+.periode p{border-top:1px solid #d2cbc4}
+.periode p span{font:650 .76rem/1.5 var(--sans);letter-spacing:0;text-transform:none}
+.periode p strong{font:650 1.05rem/1.4 var(--sans)}
+.titre-references{border-top:3px solid #a12c39;border-bottom:1px solid #c8c3bd}
+.titre-references p{font:650 .8rem/1.5 var(--sans);letter-spacing:0;text-transform:none;color:#596066}
+.titre-references h2{font:650 clamp(2rem,4vw,3.5rem)/1.1 var(--serif);letter-spacing:-.035em}
+.titre-references h2 span{background:transparent;color:#96313b}
+.titre-references>span{font:500 .82rem/1.5 var(--sans);color:#596066}
+.liste-references li{grid-template-columns:minmax(9rem,1fr) minmax(0,2.6fr);gap:1rem 2rem;padding:1.2rem 0}
+.ligne-meta{font:600 .76rem/1.5 var(--sans);text-transform:none;letter-spacing:0;gap:.25rem}
+.ligne-meta .source{color:#96313b;font-weight:700;overflow-wrap:anywhere}
+.ligne-meta span:last-child{color:#596066}
+.liste-references h3{font:600 clamp(1.08rem,1.7vw,1.45rem)/1.4 var(--sans);letter-spacing:-.018em;overflow-wrap:anywhere}
+.liste-references h3 a{text-decoration:none}
+.liste-references h3 a:hover{background:transparent;color:#96313b;text-decoration:underline;text-underline-offset:.22em}
+.liste-references h3 a:focus-visible,.pagination-dossiers a:focus-visible{outline:3px solid #a12c39;outline-offset:3px}
+.sortie{color:#96313b}
+.pagination-dossiers{border-bottom:1px solid #c8c3bd;font-weight:650}
+.pagination-dossiers a{background:#f4f0eb;border:1px solid #bdb5ad;color:#202427}
+.pagination-dossiers a:hover{background:#202427;color:#fff}
+@media(max-width:48rem){
+ .entete-dossier h1{font-size:clamp(2.5rem,9vw,4rem);overflow-wrap:anywhere}
+ .liste-references li{grid-template-columns:minmax(0,1fr);gap:.55rem}
+ .ligne-meta{flex-direction:row;align-items:baseline;justify-content:flex-start;gap:.4rem 1rem}
+ .pagination-dossiers{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:.4rem;font-size:.7rem}
+ .pagination-dossiers a{padding:.7rem .45rem;overflow-wrap:anywhere}
+}
 </style>
