@@ -35,7 +35,7 @@ const signatureArchive = String(data.auteur ?? '').trim();
 // à identifier la personne qui a rédigé un texte historique.
 const auteurIdentifie = signatureArchive.toLocaleLowerCase('fr') === 'intime conviction' ? null : (signatureArchive || null);
 ---
-<Base titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} article={{ headline:data.titre,datePublished:data.date.toISOString(),author:auteurIdentifie }}>
+<Base titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} noindex={data.verificationEnCours === true} article={{ headline:data.titre,datePublished:data.date.toISOString(),dateModified:data.dateMiseAJour?.toISOString(),author:auteurIdentifie }}>
   <script type="application/ld+json" set:html={JSON.stringify({
     '@context':'https://schema.org',
     '@type':'BreadcrumbList',
@@ -54,6 +54,7 @@ const auteurIdentifie = signatureArchive.toLocaleLowerCase('fr') === 'intime con
     <h1>{data.titre}</h1>
     <p class="meta">
       <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
+      {data.dateMiseAJour && <> · Mis à jour le <time datetime={data.dateMiseAJour.toISOString()}>{dateLongue(data.dateMiseAJour)}</time></>}
       {auteurIdentifie && <> · {auteurIdentifie}</>}
       · {minutesDeLecture(data.mots)} min de lecture
     </p>
