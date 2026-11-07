@@ -28,14 +28,14 @@ const regards = [
       <h2>Trois engagements, une même exigence</h2>
       <p><strong>Raconter</strong> : restituer le procès avec sa chronologie, ses contradictions et ses voix. <strong>Expliquer</strong> : rendre intelligibles la procédure, la place des jurés, le doute et le verdict. <strong>Transmettre</strong> : conserver les archives datées, remettre les récits en contexte et ouvrir la réflexion sans fabriquer de certitudes.</p>
       <h2>Ce que vous lisez sur le site</h2>
-      <p>La revue de presse rassemble automatiquement des titres de médias, avec leur source, leur date et un lien vers l’article d’origine. Elle se distingue des textes du fonds d’Intime Conviction et ne constitue pas une couverture de terrain réalisée par notre rédaction.</p>
+      <p>Le site distingue les articles du journal des références à la presse extérieure. Pour chaque référence de presse, le titre renvoie à son média d’origine et à la date de publication disponible.</p>
       <p>Les archives conservent leur date de publication. Elles témoignent d’un moment et peuvent décrire des situations ou des pratiques qui ont évolué depuis.</p>
     </div>
     <section class="regards" aria-labelledby="regards-titre">
       <h2 id="regards-titre">Six rubriques pour explorer la justice</h2>
       <dl>{RUBRIQUES.map((r,i)=><div><dt><a href={'/rubrique/'+r.slug+'/'}>{r.nom}</a></dt><dd>{regards[i]}</dd></div>)}</dl>
     </section>
-    <a class="retour" href="/#actualites">Lire Cours du Jour</a>
+    <a class="retour" href="/rubrique/cours-du-jour/">Lire Cours du Jour</a>
   </article>
 </Base>
 <style>
