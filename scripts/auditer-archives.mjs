@@ -76,6 +76,12 @@ for (const chemin of fichiers) {
       const source = /^\s*(AFP|AP|Reuters|SOURCE|NOUVELOBS\.COM|CLICANOO\.COM)\b/i.exec(debutTexte)?.[1] ?? 'Agence ou source à identifier';
       const lienSource = [...html.matchAll(/<a\s+[^>]*href=["'](https?:\/\/[^"']+)["']/gi)]
         .map(m => m[1].replace(/&amp;/g, '&'))[0] ?? '';
+      const lienExterne = Boolean(lienSource);
+      const sourceNommee = /^(?:AFP|AP|Reuters|NOUVELOBS\.COM|CLICANOO\.COM)$/i.test(source);
+      const priorite = sourceNommee && lienExterne ? 'P1' :
+        sourceNommee ? 'P2' : lienExterne ? 'P3' : 'P4';
+      const categorie = sourceNommee ? 'Source nommée dans le texte' :
+        lienExterne ? 'Mention de source et lien externe à qualifier' : 'Mention générique à qualifier';
       revueAttributions.push({
         fichier:relative(racine,chemin),
         urlArticle:url,
@@ -84,6 +90,8 @@ for (const chemin of fichiers) {
         signature:String(article.auteur ?? ''),
         indiceSource:source,
         lienSource,
+        priorite,
+        categorie,
         extraitInitial:debutTexte.slice(0,180),
         statut:'A vérifier',
         commentaire:''
@@ -97,7 +105,10 @@ const ordre = ['erreur','a_verifier'];
 const comptes = Object.fromEntries(ordre.map(k=>[k,findings.filter(f=>f.niveau===k).length]));
 const codes = {};
 for (const f of findings) codes[f.code]=(codes[f.code]??0)+1;
-const champs = ['fichier','urlArticle','titre','date','signature','indiceSource','lienSource','extraitInitial','statut','commentaire'];
+revueAttributions.sort((a,b) => a.priorite.localeCompare(b.priorite) || a.fichier.localeCompare(b.fichier, 'fr'));
+const priorites = {};
+for (const ligne of revueAttributions) priorites[ligne.priorite]=(priorites[ligne.priorite]??0)+1;
+const champs = ['priorite','categorie','fichier','urlArticle','titre','date','signature','indiceSource','lienSource','extraitInitial','statut','commentaire'];
 // Protège l'import dans un tableur contre l'interprétation d'une valeur comme formule.
 function celluleCSV(valeur) {
   let v = String(valeur ?? '').replace(/[\r\n\t]+/g,' ').trim();
@@ -110,6 +121,7 @@ const rapport = {
   repartitionParAnnee:Object.fromEntries([...annees].sort((a,b)=>b[0].localeCompare(a[0]))),
   signalements:comptes, parType:codes,
   revueAttributionsCount:revueAttributions.length,
+  revueAttributionsParPriorite:priorites,
   signalementsDetailles:findings,
   note:'Signalements pour examen humain ; aucune modification des archives.'
 };
@@ -125,6 +137,7 @@ console.log(JSON.stringify({
   fichiers:rapport.fichiers,
   signalements:rapport.signalements,
   parType:rapport.parType,
+  revueAttributionsParPriorite:priorites,
   exemples:findings.slice(0,10),
   note:rapport.note
 },null,2));
