@@ -34,12 +34,7 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
   <div slot="fond" class="fond-page" aria-hidden="true"><Image src={fronton} alt="" width={500} loading="eager" fetchpriority="high" /></div>
   <section class="ouverture" aria-labelledby="titre-journal">
     <div class="cadre ouverture-interieur">
-      <div class="edition"><p><span class="point-rouge" aria-hidden="true"></span> LE JOURNAL DES COURS D’ASSISES</p><p>PROCÈS CRIMINELS · AUDIENCES · VERDICTS · ANALYSES</p></div>
-      <div class="manifeste-accueil">
-        <div class="manifeste-enquete"><span class="manifeste-index">LE JOURNAL</span><p>PROCÈS CRIMINELS ET COURS D’ASSISES</p><span class="manifeste-balise" aria-hidden="true"></span></div>
-        <h2>ACTUALITÉ JUDICIAIRE<br /><span>ET ANALYSES.</span></h2>
-        <a href="/ligne-editoriale/">NOTRE LIGNE ÉDITORIALE <span aria-hidden="true">↗</span></a>
-      </div>
+      <div class="edition"><p>PROCÈS CRIMINELS · AUDIENCES · VERDICTS · ANALYSES</p></div>
       <div class="une-grille">
         <article class="grand-angle">
           <Image src={fronton} alt="" width={900} loading="eager" fetchpriority="high" />
@@ -57,7 +52,7 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
         </article>
         <aside class="ouverture-fil" aria-labelledby="titre-fil-ouverture">
           <div class="fil-entete"><h2 id="titre-fil-ouverture">L’actualité<span>.</span></h2><span class="fil-label">REVUE DE PRESSE</span></div>
-          {nouvellesOuverture.length>0 ? <ol>{nouvellesOuverture.map((n,i)=><li><span class="fil-numero" aria-hidden="true">0{i+1}</span><div><p>{n.source}<time datetime={n.date}>{datePresse.format(new Date(n.date))}</time></p><h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> (nouvel onglet)</span></a></h3></div></li>)}</ol>:<p>Retrouvez les récits d’audience dans <a href="/rubrique/cours-du-jour/">Cours du Jour</a>.</p>}
+          {nouvellesOuverture.length>0 ? <ol>{nouvellesOuverture.map((n,i)=><li><span class="fil-numero" aria-hidden="true">0{i+1}</span><div><p>{n.source}<time datetime={n.date}>{n.dateAlerte ? 'Référence du ' : ''}{datePresse.format(new Date(n.date))}</time></p><h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> (nouvel onglet)</span></a></h3></div></li>)}</ol>:<p>Retrouvez les récits d’audience dans <a href="/rubrique/cours-du-jour/">Cours du Jour</a>.</p>}
           <a class="tout-le-fil" href="#actualites">Tout le fil d’audience <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v16m-6-6 6 6 6-6" /></svg></a>
           
         </aside>
@@ -72,10 +67,7 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
 
   <div class="surface-lecture"><div class="cadre journal-corps">
     <Actualites debut={nouvellesOuverture.length} limite={5} compacte />
-<section class="conviction-editoriale" aria-labelledby="titre-conviction">
-      <h2 id="titre-conviction">COMPRENDRE<br /><span>LES PROCÈS<br />CRIMINELS.</span></h2>
-      <div><p>Intime Conviction couvre les audiences criminelles, les décisions de justice et les questions de procédure.</p><p>Le journal propose des récits, des analyses et des archives judiciaires. Sa revue de presse répertorie séparément les publications des médias sources.</p><a class="lire-article" href="/ligne-editoriale/">LIRE NOTRE LIGNE ÉDITORIALE <span aria-hidden="true">↗</span></a></div>
-    </section>
+
 
     <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
       <div class="accueil-dossiers-entete">
