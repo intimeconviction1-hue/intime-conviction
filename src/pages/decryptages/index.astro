@@ -1,0 +1,116 @@
+---
+import Base from '../../layouts/Base.astro';
+import { DECRYPTAGES, ANGLES_A_CREUSER, DATE_REVISION, validerDecryptages } from '../../lib/decryptages.mjs';
+import { DOSSIERS } from '../../lib/dossiers.mjs';
+import { lireVeille } from '../../lib/veille.mjs';
+import { referencesPourDossier, statistiquesDossier } from '../../lib/dossiers.mjs';
+
+validerDecryptages(DECRYPTAGES, ANGLES_A_CREUSER, DOSSIERS);
+const veille = await lireVeille();
+const dossiers = new Map(DOSSIERS.map(d => [d.slug, {
+  ...d,
+  ...statistiquesDossier(referencesPourDossier(d, veille.articles))
+}]));
+const date = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'}).format(new Date(DATE_REVISION+'T12:00:00Z'));
+---
+<Base titre="Décryptages judiciaires" description="Comprendre les règles du procès criminel avec des analyses originales, des sources institutionnelles et des pistes éditoriales clairement distinguées des articles achevés." rubriqueActive="decryptages">
+  <header class="decryp-une">
+    <div class="ligne-une"><span>INTIME CONVICTION / LA MÉTHODE ET LE REGARD</span><span>LE JOURNAL QUI EXPLIQUE</span></div>
+    <h1>AU-DELÀ<br />DU <span>VERDICT.</span></h1>
+    <p>Un procès ne tient pas dans un titre. Il faut démêler les procédures, comprendre les voix qui s’expriment et retrouver le sens des mots. Ici, on prend le temps.</p>
+    <div class="mesures"><span><strong>{DECRYPTAGES.length}</strong> décryptages rédigés</span><span><strong>{ANGLES_A_CREUSER.length}</strong> angles à approfondir</span><span><strong>{DOSSIERS.length}</strong> affaires reliées</span></div>
+  </header>
+
+  <section class="manifeste" aria-label="Méthode éditoriale">
+    <strong>DES EXPLICATIONS.<br />PAS DES COPIES.</strong>
+    <p>Ces textes sont des synthèses originales fondées sur les ressources officielles indiquées en bas de chaque article. Ils expliquent des mécanismes judiciaires généraux et ne remplacent ni les décisions de justice ni le suivi actuel d’une affaire. Les questions à enquêter sont identifiées à part. Aucun article n’est généré automatiquement à partir des courriels de veille.</p>
+  </section>
+
+  <section class="articles-expliques" aria-labelledby="titre-articles">
+    <div class="haut-section"><div><span>01 / COMPRENDRE</span><h2 id="titre-articles">LE PROCÈS<br /><mark>EXPLIQUÉ.</mark></h2></div><p>Quatre lectures pour démêler ce que signifie vraiment une audience, un verdict, un appel ou une alerte de presse.</p></div>
+    <ol class="grille-articles">
+      {DECRYPTAGES.map((a,i) => (
+        <li>
+          <a href={'/decryptages/'+a.slug+'/'} aria-label={'Lire : '+a.titre}>
+            <div class="sommet-article"><span>DÉCRYPTAGE / {a.numero}</span><span aria-hidden="true" class="fleche">↗</span></div>
+            <p class="thematique">{a.thematique}</p>
+            <h3>{a.titre}</h3>
+            <p class="chapo">{a.chapô}</p>
+            <div class="meta-article"><span>LECTURE · {a.lectureMinutes} MIN</span><span>{a.sources.length} SOURCES INSTITUTIONNELLES</span></div>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="pistes" aria-labelledby="titre-pistes">
+    <div class="haut-pistes"><div><span>02 / CHANTIERS DE LA RÉDACTION</span><h2 id="titre-pistes">LES QUESTIONS<br /><mark>À CREUSER.</mark></h2></div><p>Il s’agit de pistes, pas d’enquêtes achevées. Leur développement exige la lecture des sources et, selon le sujet, des documents judiciaires ou un travail de terrain.</p></div>
+    <ol class="liste-pistes">
+      {ANGLES_A_CREUSER.map((angle,i) => (
+        <li>
+          <span class="index-angle">{String(i+1).padStart(2,'0')}</span>
+          <div><h3>{angle.titre}</h3><p>{angle.question}</p>
+            <div class="liens-angle">
+              <a href={'/decryptages/'+angle.decryp+'/'}>LIRE L’EXPLICATION <span aria-hidden="true">↗</span></a>
+              {angle.dossiers.map(slug=><a href={'/dossiers/'+slug+'/'}>{dossiers.get(slug)?.titre}<span aria-hidden="true"> ↗</span></a>)}
+            </div>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <aside class="pied-decryp">
+    <div><span>LES SOURCES / LES DATES / LES FAITS</span><h2>UN TITRE ALERTE.<br /><em>UNE ENQUÊTE VÉRIFIE.</em></h2><p>Dernière révision éditoriale : <time datetime={DATE_REVISION}>{date}</time>. Les décryptages sont indépendants de la revue de presse et ne présentent aucun statut judiciaire automatisé.</p></div>
+    <a href="/chronologie/">EXPLORER LES ÉTAPES JUDICIAIRES <span aria-hidden="true">↗</span></a>
+  </aside>
+</Base>
+<style>
+.decryp-une{background:#17191a;color:#fff;margin-top:1.5rem;padding:clamp(1.5rem,5vw,5rem);border-top:8px solid #ffe100}
+.ligne-une{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font:900 .68rem/1.5 var(--sans);letter-spacing:.09em;color:#ffe100;margin:0 0 3rem}
+.decryp-une h1{font:900 clamp(3rem,8vw,8rem)/.94 var(--sans);letter-spacing:-.085em;margin:0 0 2.5rem}
+.decryp-une h1 span{color:#ffe100}
+.decryp-une>p{font:650 clamp(1.04rem,1.6vw,1.3rem)/1.55 var(--sans);max-width:64ch;margin:0 0 2.4rem}
+.mesures{display:flex;flex-wrap:wrap;gap:1.5rem 3rem;border-top:1px solid #636565;padding-top:1.3rem}
+.mesures span{display:flex;align-items:baseline;gap:.6rem;font:900 .69rem/1.4 var(--sans);text-transform:uppercase}
+.mesures strong{font:900 2.3rem/1 var(--sans);color:#ffe100}
+.manifeste{display:grid;grid-template-columns:1fr 2fr;gap:2.5rem;padding:2.2rem 0;border-bottom:4px solid #17191a}
+.manifeste strong{font:900 clamp(1.45rem,2.6vw,2.4rem)/1.13 var(--sans);letter-spacing:-.05em}
+.manifeste p{font:500 .95rem/1.7 var(--sans);margin:0;max-width:84ch}
+.articles-expliques{margin:3rem 0}
+.haut-section,.haut-pistes{display:grid;grid-template-columns:1.2fr 1fr;gap:2rem;align-items:end;border-bottom:5px solid #17191a;padding:1rem 0}
+.haut-section span,.haut-pistes span{font:900 .69rem/1.5 var(--sans);letter-spacing:.09em}
+.haut-section h2,.haut-pistes h2{font:900 clamp(2.5rem,5.4vw,5rem)/.96 var(--sans);letter-spacing:-.075em;margin:1rem 0}
+.haut-section mark,.haut-pistes mark{background:#ffe100;color:#17191a}
+.haut-section p,.haut-pistes p{font:600 .96rem/1.65 var(--sans);max-width:53ch}
+.grille-articles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));list-style:none;padding:0;margin:0}
+.grille-articles li:nth-child(odd){border-right:2px solid #17191a}
+.grille-articles li{border-bottom:2px solid #17191a}
+.grille-articles li>a{display:flex;flex-direction:column;min-height:355px;padding:clamp(1.3rem,2.7vw,2.3rem);background:#f2f2ef;color:#17191a}
+.grille-articles li:first-child a{background:#ffe100}
+.grille-articles li a:hover{background:#e4e4df;color:#17191a}
+.grille-articles li:first-child a:hover{background:#f4e25f}
+.sommet-article{display:flex;justify-content:space-between;align-items:center;font:900 .68rem/1.4 var(--sans);letter-spacing:.07em}
+.fleche{font-size:1.6rem}
+.thematique{font:900 .69rem/1.4 var(--sans);margin:2rem 0 .7rem}
+.grille-articles h3{font:900 clamp(1.8rem,3.2vw,3.05rem)/1.1 var(--sans);letter-spacing:-.065em;margin:0}
+.chapo{font:500 .89rem/1.65 var(--sans);max-width:53ch;margin:1rem 0 1.5rem}
+.meta-article{display:flex;justify-content:space-between;gap:.9rem;flex-wrap:wrap;margin-top:auto;padding-top:1rem;border-top:2px solid #17191a;font:850 .64rem/1.4 var(--sans)}
+.pistes{margin:5rem 0}
+.liste-pistes{padding:0;margin:0;list-style:none}
+.liste-pistes li{display:grid;grid-template-columns:80px minmax(0,1fr);gap:2rem;border-bottom:2px solid #17191a;padding:2rem 0}
+.index-angle{font:900 3.4rem/1 var(--sans);letter-spacing:-.07em;color:var(--encre-2)}
+.liste-pistes h3{font:900 clamp(1.45rem,2.7vw,2.4rem)/1.16 var(--sans);letter-spacing:-.045em;margin:0 0 .65rem}
+.liste-pistes p{font:500 .95rem/1.6 var(--sans);max-width:75ch;margin:0 0 1rem}
+.liens-angle{display:flex;gap:.45rem;flex-wrap:wrap}
+.liens-angle a{padding:.65rem .8rem;background:#efefeb;color:#17191a;border:1px solid #17191a;font:850 .62rem/1.4 var(--sans);text-transform:uppercase}
+.liens-angle a:hover{background:#ffe100}
+.pied-decryp{background:#17191a;color:#fff;padding:clamp(1.5rem,4vw,3rem);margin-bottom:3rem;display:grid;grid-template-columns:1.5fr 1fr;gap:2rem;align-items:end}
+.pied-decryp span{font:900 .67rem/1.5 var(--sans);color:#ffe100}
+.pied-decryp h2{font:900 clamp(1.6rem,3vw,2.7rem)/1.15 var(--sans);letter-spacing:-.04em}
+.pied-decryp h2 em{font-style:normal;color:#ffe100}
+.pied-decryp p{font:500 .89rem/1.6 var(--sans);max-width:53ch}
+.pied-decryp a{background:#ffe100;color:#17191a;padding:1.2rem;font:900 .73rem/1.4 var(--sans);display:flex;justify-content:space-between;gap:1rem}
+.pied-decryp a:hover{background:#fff;color:#17191a}
+@media(max-width:47.99rem){.decryp-une{padding:2rem 1.2rem}.decryp-une h1{font-size:clamp(2.7rem,10vw,4.5rem)}.manifeste,.haut-section,.haut-pistes,.pied-decryp{grid-template-columns:1fr}.grille-articles{grid-template-columns:1fr}.grille-articles li:nth-child(odd){border-right:0}.liste-pistes li{grid-template-columns:45px minmax(0,1fr);gap:1rem}.index-angle{font-size:2.7rem}.grille-articles li>a{min-height:0}.ligne-une{margin-bottom:2rem}}
+</style>
