@@ -53,6 +53,14 @@ try {
       const total=await lignes.count();
       if(total===0)throw Error('Agenda sans périodes : vérifier les données avant de tester les filtres.');
       if(disponibles.length===0)throw Error('Aucun département proposé dans l’agenda.');
+      // Une période achevée doit être occultée même si la page HTML est ancienne.
+      const ancienne=page.locator('[data-agenda-ligne]').first();
+      const ancienneFin=await ancienne.getAttribute('data-fin');
+      await ancienne.evaluate(el=>{el.dataset.fin='2001-01-01';});
+      await departement.selectOption(disponibles[0]);
+      if(await ancienne.isVisible())throw Error('Une période expirée reste visible.');
+      await ancienne.evaluate((el,fin)=>{el.dataset.fin=fin;},ancienneFin);
+      await departement.selectOption('');
       const choix=disponibles[0];
       await departement.selectOption(choix);
       const horsDepartement=await page.locator('[data-agenda-ligne]:not([hidden])').evaluateAll((rows,dep)=>rows.filter(row=>row.dataset.departement!==dep).length,choix);
