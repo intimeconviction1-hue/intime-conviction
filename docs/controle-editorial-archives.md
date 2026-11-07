@@ -15,6 +15,6 @@ Ce document est une procédure interne, non une page publiée.
 ## Premier contrôle : janvier 2025
 - `articles/2025/cours-du-jour-17-janvier-2025.json` : titre clarifié ; fragments de navigation WordPress retirés ; références contemporaines ajoutées pour les quatre affaires. Vérifier ultérieurement les décisions judiciaires et l'état des recours.
 - `articles/2025/cours-du-jour-6-janvier-2025.json` : titre clarifié ; contrôle des sources et des informations encore nécessaire.
-- `articles/2025/tour-de-france-2024.json` : titre clarifié ; les quatre dossiers et leurs décisions restent à contrôler auprès de sources documentaires fiables.
+- `articles/2025/tour-de-france-2024.json` : vérification du 7 novembre 2026 ; article recentré sur trois affaires sourcées ; décisions de 2024 et évolutions en appel de 2026 distinguées (Samuel Paty, Eugène Rwamucyo) ; notice sur Nice retirée faute de référence précise. Conserver la version antérieure dans l'historique Git pour toute comparaison.
 
 Le fonds éditorial est stocké dans le dépôt privé `intime-conviction-articles`. Le workflow GitHub Pages du dépôt public reconstruit le site avec ce fonds.
