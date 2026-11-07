@@ -7,11 +7,11 @@ import frontonAssises from '../assets/fronton-cour-dassises.jpg';
 import policeSans from '@fontsource-variable/libre-franklin/files/libre-franklin-latin-wght-normal.woff2?url';
 import { RUBRIQUES } from '../lib/rubriques.mjs';
 
-const { titre, description = "Intime Conviction, le site des cours d'assises : suivre les audiences, comprendre les procès criminels, retrouver les verdicts et les récits d'assises.", rubriqueActive, accueil = false, image, article, imageAlt = "Image d'Intime Conviction" } = Astro.props;
+const { titre, description = "Intime Conviction, journal consacré aux procès criminels : actualité des audiences, verdicts, analyses et archives judiciaires.", rubriqueActive, accueil = false, image, article, imageAlt = "Image d'Intime Conviction" } = Astro.props;
 // Le nom du journal est le titre principal (h1) de la seule page d'accueil ;
 // ailleurs c'est un paragraphe, le h1 revenant au titre de la page.
 const Marque = 'p';
-const titreComplet = titre ? `${titre} · Intime Conviction` : "Intime Conviction | Le site des cours d'assises";
+const titreComplet = titre ? `${titre} · Intime Conviction` : "Intime Conviction | Le journal des cours d'assises";
 const canonique = new URL(Astro.url.pathname, Astro.site);
 // À l'accueil, une image éditoriale propre au journal ; chaque article pourra
 // fournir sa propre photographie sans illustration trompeuse.
@@ -51,7 +51,7 @@ const annee = new Date().getFullYear();
     <meta name="twitter:title" content={titreComplet} />
     <meta name="twitter:description" content={description} />
     {imagePartage && <meta name="twitter:image" content={imagePartage} />}
-    {accueil && <script type="application/ld+json" set:html={JSON.stringify({ '@context':'https://schema.org', '@type':'WebSite', name:'Intime Conviction', alternateName:'Le site des cours d’assises', url:'https://www.intimeconviction.fr/', description, inLanguage:'fr-FR' })} />}
+    {accueil && <script type="application/ld+json" set:html={JSON.stringify({ '@context':'https://schema.org', '@type':'WebSite', name:'Intime Conviction', alternateName:'Le journal des cours d’assises', url:'https://www.intimeconviction.fr/', description, inLanguage:'fr-FR' })} />}
     <meta name="theme-color" content="#121314" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap.xml" />
@@ -63,7 +63,7 @@ const annee = new Date().getFullYear();
     <header class="entete">
       <div class="barre cadre">
         <Marque class="marque"><a href="/" aria-label="Intime Conviction, accueil"><span class="marque-mot"><span class="marque-intime">INTIME</span><span class="marque-conviction">CONVICTION<span class="marque-point">.</span></span></span></a></Marque>
-        <p class="signature">LE SITE DES COURS D’ASSISES<br />AUDIENCES · PROCÈS · VERDICTS</p>
+        <p class="signature">LE JOURNAL DES COURS D’ASSISES<br />PROCÈS · AUDIENCES · VERDICTS</p>
         <a class="recherche-lien" href="/recherche/" aria-label="Rechercher dans les articles"><span>Rechercher</span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>
       </div>
       <nav class="rubriques-nav" aria-label="Rubriques">
@@ -80,7 +80,7 @@ const annee = new Date().getFullYear();
 
     <footer class="pied">
       <div class="cadre">
-        <div class="pied-intro"><a class="pied-nom" href="/">INTIME<br /><span>CONVICTION.</span></a><p>Le site des cours d’assises. Suivre les audiences, comprendre le procès, regarder la justice à hauteur humaine.</p></div>
+        <div class="pied-intro"><a class="pied-nom" href="/">INTIME<br /><span>CONVICTION.</span></a><p>Le journal des cours d’assises. Actualité des procès criminels, analyses judiciaires et archives.</p></div>
         <nav aria-label="Les rubriques du journal"><ul>{RUBRIQUES.map(r=><li><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></li>)}<li><a href="/archives/">Archives</a></li><li><a href="/dossiers/">Dossiers judiciaires</a></li><li><a href="/chronologie/">Chronologie judiciaire</a></li><li><a href="/carte/">Carte des juridictions</a></li><li><a href="/annuaire/">Annuaire des cours d’assises</a></li><li><a href="/veille-roles/">Veille des rôles officiels</a></li><li><a href="/comprendre/">Comprendre les assises</a></li><li><a href="/assister/">Assister à une audience</a></li><li><a href="/jurisprudence/">Jurisprudence criminelle</a></li><li><a href="/recherche/">Rechercher un article</a></li><li><a href="/archives/presse/">Archives de presse</a></li><li><a href="/archives/presse/rechercher/">Rechercher dans la presse</a></li><li><a href="/ligne-editoriale/">Notre ligne éditoriale</a></li></ul></nav>
         <div class="pied-bas"><span>Intime Conviction · {annee}</span><a href="https://x.com/IntimeConv" rel="noopener">@IntimeConv sur X</a><a href="#contenu">Retour en haut <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
       </div>
