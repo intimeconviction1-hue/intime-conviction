@@ -9,6 +9,8 @@ const controles = [
   { nom:'dossiers-ordinateur', url:'/dossiers/', viewport:{width:1440,height:900} },
   { nom:'dossiers-mobile', url:'/dossiers/', viewport:{width:390,height:844}, isMobile:true },
   { nom:'affaire-mobile', url:'/dossiers/affaire-jubillar/', viewport:{width:390,height:844}, isMobile:true },
+  { nom:'archives-mobile', url:'/archives/', viewport:{width:390,height:844}, isMobile:true },
+  { nom:'lecture-mobile', url:'/12-hommes-en-colere-theatre-hebertot-jusquau-7-janvier-2018/11/2017/', viewport:{width:390,height:844}, isMobile:true },
 ];
 const resultats=[];
 try {
@@ -20,9 +22,19 @@ try {
     await page.evaluate(() => document.fonts.ready);
     const mesure = await page.evaluate(() => {
       const doc=document.documentElement;
+      // Les liens d'évitement volontairement masqués et les éléments d'un
+      // carrousel/navigation à défilement horizontal ne sont pas des débordements.
+      const defilementHorizontal = (el) => {
+        for(let parent=el.parentElement;parent;parent=parent.parentElement) {
+          const style=getComputedStyle(parent);
+          if (/(auto|scroll|hidden|clip)/.test(style.overflowX)) return true;
+        }
+        return false;
+      };
       const rects=[...document.querySelectorAll('body *')].filter(el=>{
         const st=getComputedStyle(el);
-        return st.position!=='fixed'&&st.display!=='none'&&st.visibility!=='hidden';
+        return st.position!=='fixed'&&st.display!=='none'&&st.visibility!=='hidden'&&
+          !el.classList.contains('evitement')&&!defilementHorizontal(el);
       }).map(el=>({el,rect:el.getBoundingClientRect()}));
       const fautifs=rects.filter(({rect})=>rect.width>0&&(rect.right>innerWidth+2||rect.left< -2))
         .slice(0,8).map(({el,rect})=>({balise:el.tagName.toLowerCase(),classe:String(el.className||'').slice(0,90),gauche:Math.round(rect.left),droite:Math.round(rect.right)}));
@@ -32,7 +44,7 @@ try {
     });
     await page.screenshot({path:`${dossier}/${c.nom}.png`,fullPage:true});
     const okHttp=response?.ok()??false;
-    const okLargeur=mesure.largeurDocument<=c.viewport.width+2;
+    const okLargeur=mesure.largeurDocument<=c.viewport.width+2 && mesure.debordements.length===0;
     const resultat={page:c.nom,url,statutHTTP:response?.status()??null,okHttp,okLargeur,...mesure};
     resultats.push(resultat);
     console.log(JSON.stringify(resultat));
