@@ -1,0 +1,84 @@
+# Observe les mises à jour des pages officielles de rôles d'assises.
+# Les liens détectés sont soumis à validation éditoriale dans une issue GitHub.
+# Aucun rôle ou événement judiciaire n'est publié automatiquement sur le site.
+name: Surveiller les rôles officiels
+
+on:
+  schedule:
+    # Jours ouvrés à 07:15 UTC. GitHub peut décaler le déclenchement.
+    - cron: "15 7 * * 1-5"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/surveiller-roles.yml"
+      - "scripts/surveiller-roles.mjs"
+      - "src/lib/roles-officiels.mjs"
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: veille-roles-officiels
+  cancel-in-progress: false
+
+jobs:
+  comparer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: true
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Tester les règles de surveillance
+        run: node --test tests/surveiller-roles.test.mjs
+
+      - name: Comparer les documents officiels
+        run: node scripts/surveiller-roles.mjs
+
+      - name: Présenter le relevé
+        run: |
+          node --input-type=module <<'JS' >> "$GITHUB_STEP_SUMMARY"
+          import {readFileSync} from 'node:fs';
+          const r=JSON.parse(readFileSync('.cache/roles-surveillance-report.json','utf8'));
+          console.log('## Surveillance des rôles');
+          console.log('- Pages officielles visées : '+r.sourcesVisees);
+          console.log('- Pages effectivement consultées : '+r.sourcesLues);
+          console.log('- Sources initialisées (sans alerte) : '+r.initialisees);
+          console.log('- Sources dont les documents ont changé : '+r.modifications.length);
+          console.log('- Pages à contrôler manuellement pour erreur technique : '+r.erreurs.length);
+          console.log('');
+          console.log('Aucune audience ni date judiciaire n’est publiée automatiquement.');
+          JS
+
+      - name: Créer une alerte de vérification éditoriale
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if node --input-type=module -e "import fs from 'node:fs';const r=JSON.parse(fs.readFileSync('.cache/roles-surveillance-report.json','utf8'));process.exit(r.modifications.length ? 0 : 1)"; then
+            gh issue create \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "Veille des rôles : documents officiels modifiés à vérifier" \
+              --body-file .cache/roles-surveillance-issue.md
+          else
+            echo "Aucun changement de lien documentaire nécessitant une issue."
+          fi
+
+      - name: Conserver le dernier index documentaire
+        run: |
+          if git diff --quiet -- .github/roles-surveillance-state.json && [ -f .github/roles-surveillance-state.json ]; then
+            echo "Relevé inchangé."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/roles-surveillance-state.json
+          git commit -m "chore: actualiser la veille des rôles [skip ci]"
+          git push origin HEAD:main
