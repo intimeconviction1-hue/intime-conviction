@@ -1,6 +1,6 @@
 // Sitemap des pages publiques réellement générées par Astro.
-// Les redirections, les URL de recherche avec paramètres et les ressources
-// externes ne sont pas indexées ici.
+// Les redirections, les pages des moteurs de recherche internes et les
+// ressources externes ne sont pas proposées dans ce sitemap.
 import { lireVeille } from '../lib/veille.mjs';
 import { CULTURE } from '../lib/culture.mjs';
 import { DOSSIERS, referencesPourDossier } from '../lib/dossiers.mjs';
@@ -12,8 +12,8 @@ const PAR_PAGE_PRESSE = 60;
 const PAR_PAGE_DOSSIER = 42;
 
 const PAGES_STATIQUES = [
-  '/', '/archives/', '/archives/presse/', '/archives/presse/rechercher/',
-  '/recherche/', '/ligne-editoriale/', '/comprendre/', '/annuaire/',
+  '/', '/archives/', '/archives/presse/',
+  '/ligne-editoriale/', '/comprendre/', '/annuaire/',
   '/assister/', '/jurisprudence/', '/veille-roles/', '/carte/',
   '/chronologie/', '/dossiers/'
 ];
