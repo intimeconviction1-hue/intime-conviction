@@ -68,5 +68,18 @@ Ces statistiques comptent les signalements, non les erreurs établies ni les art
 
 Aucune modification automatique des articles n'est autorisée par cet audit.
 
+### Grille de contrôle des attributions
+
+Le fichier `attributions-a-verifier.csv` produit par GitHub Actions est trié pour une **revue humaine**, et non selon une présomption d'erreur.
+
+- **P1** : une agence ou un média est explicitement nommé au début du texte et au moins un lien existe dans le corps.
+- **P2** : une agence ou un média est explicitement nommé au début, sans lien dans le corps.
+- **P3** : la mention générique « SOURCE » apparaît et un lien est présent ; vérifier à quoi renvoie réellement ce lien.
+- **P4** : mention générique ou source non identifiée sans lien exploitable.
+
+Les colonnes « indiceSource » et « premierLienDuCorps » sont des **indices** : le premier lien n'est pas nécessairement le lien vers la publication originale.
+
+Pour chaque dossier, examiner l'archive et les références d'origine, distinguer citation, reprise sous licence, synthèse et rédaction originale, puis seulement décider si la signature, la mention de source ou la présentation mérite une correction. Documenter la justification et conserver les anciennes URL. Aucun classement automatique ne détermine les droits d'auteur, le caractère original d'un texte ou l'existence d'une faute.
+
 ## Suite du chantier
 Lancer `IC_ARTICLES=articles-prives/articles npm run audit:archives` sur le fonds complet ; rapprocher les anomalies détectées des fichiers d'origine ; établir une liste de corrections validées, puis tester les éventuelles améliorations de présentation.
