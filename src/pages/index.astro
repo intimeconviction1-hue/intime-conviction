@@ -29,7 +29,6 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
         <div>
           <p class="une-news-surtitre">ACTUALITÉ JUDICIAIRE</p>
           <h1 id="titre-cours-du-jour">Cours du Jour</h1>
-          <p>Les procès criminels dans l’actualité. Une sélection de titres publiés par des médias identifiés.</p>
         </div>
         <a class="une-news-lien" href="/rubrique/cours-du-jour/">Toute la rubrique <span aria-hidden="true">↗</span></a>
       </header>
@@ -38,14 +37,9 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
           <div class="une-info-contenu">
             <p class="une-info-source"><span>{nouvellePrincipale.source}</span> <time datetime={nouvellePrincipale.date}>{datePresse.format(new Date(nouvellePrincipale.date))}</time></p>
             <h2><a href={nouvellePrincipale.lien} target="_blank" rel="noopener noreferrer">{nouvellePrincipale.titre}<span class="sr-only"> (site externe, nouvel onglet)</span></a></h2>
-            <p class="une-info-precision">Revue de presse. Lire l’article sur le site du média d’origine.</p>
             <a class="une-info-action" href={nouvellePrincipale.lien} target="_blank" rel="noopener noreferrer">Lire l’article <span aria-hidden="true">↗</span></a>
           </div>
-          <aside class="une-info-reperes">
-            <span class="une-info-index">01</span>
-            <strong>En ce moment</strong>
-            <p>Les titres sont présentés avec leur source. Ils ne constituent pas des comptes rendus d’audience réalisés par notre rédaction.</p>
-          </aside>
+
         </article>
       ) : (
         <div class="une-info-vide"><h2>Suivre les procès criminels</h2><p>La sélection de presse n’est pas disponible. Retrouvez les articles et les ressources déjà publiés dans Cours du Jour.</p><a href="/rubrique/cours-du-jour/">Ouvrir Cours du Jour ↗</a></div>
@@ -53,7 +47,7 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
       {autresNouvelles.length > 0 && (
         <section class="une-defile" aria-labelledby="une-defile-titre">
           <div class="une-defile-barre">
-            <div><h2 id="une-defile-titre">Les autres titres</h2><p>Revue de presse · Faites défiler la sélection</p></div>
+            <div><h2 id="une-defile-titre">Les autres titres</h2></div>
             <div class="une-defile-commandes">
               <button type="button" class="une-defile-bouton" data-news-prev aria-label="Voir les titres précédents">←</button>
               <button type="button" class="une-defile-bouton" data-news-next aria-label="Voir les titres suivants">→</button>
@@ -84,8 +78,8 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
 
     <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
       <div class="accueil-dossiers-entete">
-        <div><p class="accueil-dossiers-kicker">DOSSIERS JUDICIAIRES</p><h2 id="titre-dossiers-accueil">LES AFFAIRES<br /><span>ET LEURS SOURCES.</span></h2></div>
-        <p>Des références de presse réunies par affaire, avec les étapes de procédure documentées. Ces dossiers ne sont pas des enquêtes originales.</p>
+        <div><p class="accueil-dossiers-kicker">DOSSIERS JUDICIAIRES</p><h2 id="titre-dossiers-accueil">Dossiers judiciaires</h2></div>
+        
       </div>
       <ul class="accueil-dossiers-grille">
         {dossiersMisEnAvant.map((d,i)=><li><a href={`/dossiers/${d.slug}/`}><span class="accueil-dossiers-num">DOSSIER {String(i+1).padStart(2,'0')} <span aria-hidden="true">↗</span></span><h3>{d.titre}</h3><p>{d.nombre.toLocaleString('fr-FR')} références de presse</p></a></li>)}
@@ -556,7 +550,7 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
 .une-news-entete h1{margin:0;font:650 clamp(2.8rem,5.2vw,5.7rem)/1.02 var(--serif);letter-spacing:-.04em;text-transform:none;max-width:none}
 .une-news-entete p:not(.une-news-surtitre){font:450 1rem/1.6 var(--sans);max-width:68ch;margin:.75rem 0 0;color:#52585a}
 .une-news-lien{white-space:nowrap;font:700 .78rem/1.5 var(--sans);border-bottom:1px solid #943440;padding:.4rem 0}
-.une-info-principale{display:grid;grid-template-columns:minmax(0,1.85fr) minmax(12rem,.65fr);background:#23272a;color:#fcfaf7;min-height:345px}
+.une-info-principale{display:grid;grid-template-columns:minmax(0,1fr);background:#23272a;color:#fcfaf7;min-height:305px}
 .une-info-contenu{padding:clamp(1.6rem,3vw,3.2rem);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1rem}
 .une-info-source{display:flex;align-items:center;flex-wrap:wrap;gap:.6rem 1rem;margin:0;font:700 .72rem/1.4 var(--sans)}
 .une-info-source span{color:#fff;border-bottom:2px solid #c4777c;padding-bottom:.25rem}
@@ -565,10 +559,10 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
 .une-info-principale h2 a:hover,.une-info-principale h2 a:focus-visible{color:#ffdbdc;text-decoration:underline;text-underline-offset:.12em}
 .une-info-precision{font:450 .8rem/1.5 var(--sans);margin:0;color:#dbd7d1}
 .une-info-action{font:700 .8rem/1.5 var(--sans);border-bottom:1px solid #eee6df;min-height:40px;display:inline-flex;align-items:center;gap:1rem}
-.une-info-reperes{background:#f0ece5;color:#2b3031;padding:2rem 1.5rem;display:flex;flex-direction:column;justify-content:flex-end;gap:.65rem}
+
 .une-info-index{font:650 clamp(3.5rem,5vw,5.6rem)/1 var(--serif);color:#8d303a}
-.une-info-reperes strong{font:700 1.05rem/1.3 var(--sans)}
-.une-info-reperes p{font:450 .83rem/1.65 var(--sans);color:#4a4d50;max-width:34ch;margin:0}
+
+
 .une-info-vide{padding:2rem;background:#ece8e1}
 .une-info-vide h2{font:650 2rem/1.1 var(--serif);margin:0 0 .75rem}
 .une-info-vide p{max-width:70ch}
@@ -588,7 +582,7 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
 .une-defile-carte h3 a:hover,.une-defile-carte h3 a:focus-visible{color:#943440;text-decoration:underline}
 .une-defile-numero{font:650 .75rem/1.2 var(--sans);color:#8c8f90;margin-top:auto}
 .parcours{margin-top:1.3rem}
-@media(max-width:63.99rem){.une-info-principale{grid-template-columns:minmax(0,1fr) minmax(10rem,.55fr)}.une-defile-carte{flex-basis:42%}}
+@media(max-width:63.99rem){.une-info-principale{grid-template-columns:minmax(0,1fr)}.une-defile-carte{flex-basis:42%}}
 @media(max-width:47.99rem){
  .ouverture-interieur{padding-top:1.1rem}
  .une-news-entete{align-items:start;flex-direction:column;gap:.5rem}
