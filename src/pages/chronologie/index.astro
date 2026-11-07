@@ -70,6 +70,7 @@ const date = s => new Intl.DateTimeFormat('fr-FR', {
     <p id="aucun-evenement" hidden>Aucun repère ne correspond à cette combinaison de filtres. Retirez un filtre pour élargir la sélection.</p>
   </section>
 
+  <aside class="carto-liens"><strong>LES DATES ONT UNE GÉOGRAPHIE.</strong><p>Albi, Besançon, Blois, Avignon ou Nîmes : retrouve les lieux des juridictions et distingue la première instance de l’appel.</p><a href="/carte/">OUVRIR LA CARTE JUDICIAIRE <span aria-hidden="true">↗</span></a></aside>
   <section class="temps-presse" aria-labelledby="temps-presse">
     <div class="presse-entete"><span>LE REGISTRE / VEILLE DE PRESSE</span><h2 id="temps-presse">L’ÉCHO<br /><span>DES AUDIENCES.</span></h2><p>Ces chiffres proviennent exclusivement des alertes collectées. Un nombre élevé de mentions ne signifie ni davantage d’audiences ni davantage de faits établis.</p></div>
     <div class="tableau-couverture">
@@ -174,4 +175,4 @@ const date = s => new Intl.DateTimeFormat('fr-FR', {
 .tout-presse:hover{background:#151718;color:#fff}
 @media(max-width:63.99rem){.filtres{grid-template-columns:repeat(2,minmax(0,1fr))}.filtres button{grid-column:2}}
 @media(max-width:47.99rem){.chronologie-une{padding:2rem 1.2rem}.chronologie-une h1{font-size:clamp(2.4rem,9vw,4.5rem)}.marque-une{margin-bottom:1.7rem}.horloges,.entete-frise,.presse-entete{grid-template-columns:1fr}.horloges article:first-child{border-right:0;border-bottom:2px solid #151718}.entete-frise{gap:1.2rem}.presse-entete>span{grid-column:auto}.filtres{grid-template-columns:1fr;padding:1rem}.filtres button{grid-column:auto}.millesime span{font-size:3.4rem}.totaux{gap:1.5rem}}
-</style>
+.carto-liens{background:#151718;color:#fff;margin:3rem 0;padding:2rem;display:grid;grid-template-columns:1fr 1.4fr;gap:1rem 2rem;align-items:end;border-left:7px solid #ffe100}.carto-liens strong{font:900 1.8rem/1.1 var(--sans);letter-spacing:-.04em}.carto-liens p{font:500 .9rem/1.55 var(--sans)}.carto-liens a{background:#ffe100;color:#151718;grid-column:1/-1;padding:1rem;font:900 .72rem/1.45 var(--sans);display:flex;justify-content:space-between}.carto-liens a:hover{background:#fff;color:#151718}@media(max-width:48rem){.carto-liens{grid-template-columns:1fr}}</style>
