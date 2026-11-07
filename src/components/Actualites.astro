@@ -9,7 +9,7 @@ const fil = await lireActualites();
 const candidates = (fil?.articles ?? []).filter(n=>n.rubrique === rubriqueSlug).slice(debut);
 // Les flux peuvent livrer des titres déjà abrégés : privilégier les titres complets
 // sur l'accueil, sans reconstituer ni altérer le libellé de la source.
-const titreAbrege = (n) => /(?:\\.\\.\\.|…)(?:\\s*[—–-]\\s*[^—–]+)?\\s*$/.test(n.titre);
+const titreAbrege = (n) => /(?:\.\.\.|…)(?:\s*[—–-]\s*[^—–]+)?\s*$/.test(n.titre);
 const nouvelles = compacte
   ? [...candidates.filter(n=>!titreAbrege(n)),...candidates.filter(titreAbrege)].slice(0,limite)
   : candidates.slice(0,limite);
