@@ -5,7 +5,7 @@ import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,SOURCES_A_COMPLETER,sessionsAvenir,
 test('les périodes publiées ont une source institutionnelle et des dates cohérentes',()=>{
   assert.equal(verifierSessions(),true);
   assert.equal(DATE_CONTROLE_AGENDA,'2026-11-07');
-  assert.ok(SESSIONS_AGENDA.length>=6);
+  assert.ok(SESSIONS_AGENDA.length>=7);
 });
 test('une date passée ne suffit pas à créer une audience fictive',()=>{
   assert.equal(sessionsAvenir(SESSIONS_AGENDA,'2027-01-01').length,0);
@@ -41,4 +41,19 @@ test('session du Doubs : dates officielles conservées sans audience individuell
  assert.equal(session.fin,'2026-12-18');
  assert.equal(session.juridiction,'Cour criminelle départementale du Doubs');
  assert.equal(session.source,'https://www.cours-appel.justice.fr/besancon/prochaines-sessions');
+});
+
+test('Savoie : session annoncée du 16 au 27 novembre 2026',()=>{
+ const session=SESSIONS_AGENDA.find(s=>s.id==='chambery-assises-2026-11-16');
+ assert.ok(session);
+ assert.equal(session.debut,'2026-11-16');
+ assert.equal(session.fin,'2026-11-27');
+ assert.equal(session.source,'https://www.cours-appel.justice.fr/chambery/la-cour-dassises-de-la-savoie');
+});
+test('Sarthe : un rôle modificatif sans dates vérifiées reste une source non datée',()=>{
+ const source=SOURCES_A_COMPLETER.find(s=>s.code==='72');
+ assert.ok(source);
+ assert.match(source.statut,/dates non confirmées/);
+ assert.equal('debut' in source,false);
+ assert.equal('fin' in source,false);
 });
