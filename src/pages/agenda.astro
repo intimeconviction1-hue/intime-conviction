@@ -32,8 +32,8 @@ const formatDate=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',
     </ol>
   </section>
   <section class="audiences-indicatives" aria-labelledby="titre-audiences-indicatives">
-    <div class="titre-liste"><h2 id="titre-audiences-indicatives">Audiences à reconfirmer</h2><span>Quimper · Finistère</span></div>
-    <p>Ces dates et qualifications proviennent du calendrier public de la cour d’appel de Rennes, dont la dernière mise à jour affichée remonte au 8 juin 2026. Lors du contrôle du 7 novembre 2026, la page officielle renvoyait une maintenance. <strong>Ces audiences ne sont donc pas confirmées à jour.</strong> Il faut vérifier leur maintien auprès du greffe avant tout déplacement. Les audiences devant la cour d’assises des mineurs ne figurent pas dans cette sélection.</p>
+    <div class="titre-liste"><h2 id="titre-audiences-indicatives">Audiences à reconfirmer</h2><span>Quimper et Rennes · Bretagne</span></div>
+    <p>Ces dates et qualifications proviennent de calendriers publics de la cour d’appel de Rennes. Dernières mises à jour affichées : 8 juin 2026 pour le Finistère et 16 septembre 2026 pour l’Ille-et-Vilaine. Lors du contrôle du 7 novembre 2026, leurs pages directes renvoyaient une maintenance. <strong>Le maintien de ces audiences n’est donc pas reconfirmé.</strong> Avant tout déplacement, consulter le greffe. Les audiences devant la cour d’assises des mineurs sont exclues de cette sélection ; une audience évoquant des victimes mineures ne relève pas nécessairement de cette juridiction.</p>
     {audiences.length === 0 ? <p>Aucune date non échue ne subsiste dans cette sélection.</p> : (
       <ol>{audiences.map(a=>(
         <li>
