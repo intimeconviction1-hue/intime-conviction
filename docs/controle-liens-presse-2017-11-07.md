@@ -24,3 +24,14 @@ Deux archives privées : `articles/2017/13329-2.json` et `articles/2017/13366-2.
 Aucun lien d'origine n'a été supprimé. Deux adresses ouvertes avec succès sont désormais proposées en HTTPS, sur le même chemin historique. La distinction entre condamnation en première instance et recours annoncé a été ajoutée à partir du contenu de presse consultable. Les liens restants nécessitent un examen individuel avant toute correction. Les URL internes des archives du journal sont inchangées.
 
 Les gabarits et mécanismes de publication contrôlés par l'autre session ne sont pas concernés.
+
+## Complément : liens et qualifications du 7 novembre 2026
+
+- Le Dauphiné Libéré, 31 janvier 2017, Vaucluse : la page est consultable, malgré un espace d'abonnement. Elle indique explicitement **dix ans de réclusion prononcés** à 17 h 30 et **quinze ans requis** à 12 h 30. Le libellé du fonds a été clarifié et l'URL est passée en HTTPS, avec le même chemin historique.
+- Var-Matin, dossier évoquant une accusation de viol : accès bloqué par le site au navigateur de vérification. L'ancien libellé « Six ans » n'a pas pu être rattaché avec certitude à une décision judiciaire. Il a été remplacé par « audience rapportée (peine non vérifiée) », sans supprimer le lien.
+- Ouest-France, procès de trois anciens skinheads à Rennes : l'URL de presse n'est pas accessible au navigateur utilisé. Son intitulé historique évoque des personnes « jugées » mais ne certifie pas des peines de « 4 et 5 ans avec sursis ». Les chiffres non vérifiés ont été retirés du libellé, avec le lien conservé.
+- Paris Match, article de 2017 sur le « tueur aux mocassins » : consultation bloquée ; aucune conclusion d'indisponibilité permanente ni remplacement inventé.
+
+Correction de ces trois libellés dans le dépôt privé : `40f927c7e99d4b8a37fde87ec9d368383e01a429`. Les URL de la revue de presse et les liens externes non vérifiés sont préservés.
+
+**Limite du contrôle :** un échec de consultation, une restriction robots ou un abonnement ne prouvent pas qu'un article a disparu. Les 26 destinations n'ont pas toutes été validées une par une ; les conclusions portent uniquement sur les entrées examinées.
