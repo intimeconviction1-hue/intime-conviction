@@ -19,7 +19,16 @@ const rubriques = RUBRIQUES.map(r=>{
   const archives=articles.filter(a=>a.data.rubrique===r.slug);
   return {...r,total:archives.length,presse:(fil?.articles??[]).filter(n=>n.rubrique===r.slug),titres:archives.filter(a=>!vus.has(a.data.slug)).slice(0,2)};
 });
-const nouvellesOuverture=hierarchiserPresse(presseSansRedite((fil?.articles??[]).filter(n=>n.rubrique==='cours-du-jour'), une ? [une] : [])).slice(0,6);
+// Éviter la répétition des affaires déjà traitées récemment dans le journal,
+// même si la une éditoriale change au fil des nouveaux articles.
+const articlesRecentsEnUne = articles.filter(a =>
+  a.data.sujetsPresse?.length &&
+  a.data.date.getTime() >= Date.now() - 14 * 86_400_000
+);
+const nouvellesOuverture=hierarchiserPresse(presseSansRedite(
+  (fil?.articles??[]).filter(n=>n.rubrique==='cours-du-jour'),
+  articlesRecentsEnUne
+)).slice(0,6);
 const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
 const [nouvellePrincipale, ...autresNouvelles] = nouvellesOuverture;
 const total=articles.length.toLocaleString('fr-FR');
