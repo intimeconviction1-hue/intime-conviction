@@ -76,6 +76,18 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
       <div><p>Intime Conviction couvre les audiences criminelles, les décisions de justice et les questions de procédure.</p><p>Le journal propose des récits, des analyses et des archives judiciaires. Sa revue de presse répertorie séparément les publications des médias sources.</p><a class="lire-article" href="/ligne-editoriale/">LIRE NOTRE LIGNE ÉDITORIALE <span aria-hidden="true">↗</span></a></div>
     </section>
 
+    <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
+      <div class="accueil-dossiers-entete">
+        <div><p class="accueil-dossiers-kicker">DOSSIERS JUDICIAIRES</p><h2 id="titre-dossiers-accueil">LES GRANDES<br /><span>AFFAIRES JUDICIAIRES.</span></h2></div>
+        <p>Retrouvez, pour chaque affaire, les articles de presse répertoriés et les principales étapes judiciaires documentées.</p>
+      </div>
+      <ul class="accueil-dossiers-grille">
+        {dossiersMisEnAvant.map((d,i)=><li><a href={`/dossiers/${d.slug}/`}><span class="accueil-dossiers-num">DOSSIER {String(i+1).padStart(2,'0')} <span aria-hidden="true">↗</span></span><h3>{d.titre}</h3><p>{d.nombre.toLocaleString('fr-FR')} références de presse</p></a></li>)}
+      </ul>
+      <div class="accueil-dossiers-liens"><a href="/dossiers/">EXPLORER TOUS LES DOSSIERS <span aria-hidden="true">↗</span></a><a href="/chronologie/">VOIR LA CHRONOLOGIE JUDICIAIRE <span aria-hidden="true">↗</span></a></div>
+    </section>
+
+
     <section class="selection" aria-labelledby="titre-selection">
       <div class="titre-section"><h2 id="titre-selection">Dans les archives du journal</h2><a href="/archives/">Le fonds d’Intime Conviction <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></div>
       <div class="selection-grille">
@@ -91,16 +103,6 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
 
     <section class="bandeau-archives" aria-label="Explorer les archives"><div><span class="bandeau-kicker">LES ARCHIVES DU JOURNAL</span><strong>{total}</strong><p>articles conservés dans les archives éditoriales du journal.</p></div><a href="/archives/">Consulter les archives <span aria-hidden="true">↗</span></a></section>
 
-    <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
-      <div class="accueil-dossiers-entete">
-        <div><p class="accueil-dossiers-kicker">DOSSIERS JUDICIAIRES</p><h2 id="titre-dossiers-accueil">LES GRANDES<br /><span>AFFAIRES JUDICIAIRES.</span></h2></div>
-        <p>Retrouvez, pour chaque affaire, les articles de presse répertoriés et les principales étapes judiciaires documentées.</p>
-      </div>
-      <ul class="accueil-dossiers-grille">
-        {dossiersMisEnAvant.map((d,i)=><li><a href={`/dossiers/${d.slug}/`}><span class="accueil-dossiers-num">DOSSIER {String(i+1).padStart(2,'0')} <span aria-hidden="true">↗</span></span><h3>{d.titre}</h3><p>{d.nombre.toLocaleString('fr-FR')} références de presse</p></a></li>)}
-      </ul>
-      <div class="accueil-dossiers-liens"><a href="/dossiers/">EXPLORER TOUS LES DOSSIERS <span aria-hidden="true">↗</span></a><a href="/chronologie/">VOIR LA CHRONOLOGIE JUDICIAIRE <span aria-hidden="true">↗</span></a></div>
-    </section>
 
     <ParcoursEditorial />
 
@@ -363,4 +365,123 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
   .grand-angle-actions .secondaire{color:#e2e2e2}
   .grand-angle-texte h1{max-width:25ch;text-transform:none;letter-spacing:-.045em;line-height:1.12}
   @media(max-width:47.99rem){.grand-angle-actions{gap:.4rem 1.2rem}.grand-angle-texte h1{font-size:clamp(1.85rem,7vw,2.8rem)}}
+
+/* Direction artistique de la une : composition de presse, retenue et lisibilité. */
+.ouverture{background:#f7f5f0;color:#1b2024}
+.ouverture-interieur{padding-top:0}
+.edition{color:#50545a;border-bottom:1px solid #d8d4cc;padding:1rem 0;font:600 .63rem/1.5 var(--sans);letter-spacing:.055em}
+.edition p+p{color:#666a6d}
+.point-rouge{background:#a72a35;width:6px;height:6px}
+.manifeste-accueil{background:transparent;color:#171c20;display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:end;padding:2.3rem 0 2rem;border:0}
+.manifeste-enquete{grid-column:1;display:block}
+.manifeste-index{background:transparent;color:#a02f39;font:750 .64rem/1.5 var(--sans);padding:0}
+.manifeste-accueil p{max-width:none;color:#555a5d;font:650 .7rem/1.5 var(--sans);letter-spacing:.04em;margin:.4rem 0 0}
+.manifeste-balise{display:none}
+.manifeste-accueil h2{grid-column:1;grid-row:2;color:#171c20;text-transform:none;font:650 clamp(2.2rem,4.2vw,4.7rem)/1.06 var(--serif);letter-spacing:-.035em;max-width:22ch}
+.manifeste-accueil h2 span{background:none;color:#171c20;padding:0}
+.manifeste-accueil>a{grid-column:2;grid-row:2;justify-self:end;align-self:end;color:#252a2c;border:0;border-bottom:1px solid #a72a35;padding:.6rem 0;font:700 .7rem/1.4 var(--sans);letter-spacing:0}
+.manifeste-accueil>a:hover{background:transparent;color:#a72a35;border-color:#a72a35}
+.une-grille{grid-template-columns:minmax(0,1.65fr) minmax(0,.95fr);gap:1.6rem;border:0}
+.grand-angle{border:0;min-height:clamp(27rem,43vw,38rem);background:#22282b}
+.grand-angle>img{filter:grayscale(1) contrast(1.08) brightness(.72);object-position:center 38%}
+.grand-angle-voile{background:linear-gradient(180deg,#1015160a 10%,#10151670 50%,#101516f2 100%)}
+.grand-angle-texte{padding:clamp(1.6rem,3vw,3rem);padding-bottom:3.4rem}
+.grand-angle .cartouche{background:#f2eee6;color:#262a2d;font:700 .65rem/1.4 var(--sans);letter-spacing:.04em;padding:.38rem .6rem;margin-bottom:1.35rem}
+.grand-angle h1,.grand-angle-texte h1{font:650 clamp(2rem,3.4vw,3.75rem)/1.08 var(--serif);letter-spacing:-.032em;text-transform:none;max-width:24ch}
+.grand-angle-description{font:450 clamp(.95rem,1.2vw,1.08rem)/1.55 var(--sans);color:#efefec;max-width:45ch}
+.grand-angle-actions .une-lire{border-bottom:1px solid #e4ded6;font:700 .67rem/1.5 var(--sans);letter-spacing:.01em;padding-bottom:.4rem}
+.grand-angle-actions .une-lire:hover{color:#fff;border-color:#fff}
+.credit-photo{font:450 .57rem/1.4 var(--sans);letter-spacing:0;text-transform:none;color:#e2e2e1}
+.ouverture-fil{background:#fff;color:#22272a;border:1px solid #d6d2cb;border-top:3px solid #a72a35;border-left:1px solid #d6d2cb;padding:1.25rem 1.45rem}
+.fil-entete{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem;border-bottom:1px solid #d6d2cb;padding-bottom:.9rem}
+.fil-entete h2{font:650 clamp(1.75rem,2.5vw,2.4rem)/1.1 var(--serif);letter-spacing:-.025em;text-transform:none}
+.fil-entete h2 span{color:#a72a35}
+.fil-label{color:#626669;font:700 .58rem/1.5 var(--sans);letter-spacing:.025em}
+.ouverture-fil li{grid-template-columns:1.6rem minmax(0,1fr);padding:1.1rem 0;border-bottom:1px solid #dedbd5}
+.fil-numero{font:550 1.1rem/1.4 var(--serif);color:#a72a35}
+.ouverture-fil li p{font:650 .64rem/1.6 var(--sans);color:#666a6d;letter-spacing:0;text-transform:none}
+.ouverture-fil time{color:#73777a}
+.ouverture-fil h3{font:650 clamp(1.02rem,1.38vw,1.3rem)/1.27 var(--serif);letter-spacing:-.012em}
+.ouverture-fil a:hover{color:#a72a35}
+.tout-le-fil{color:#323638;border-top:0;margin-top:.7rem;font:700 .67rem/1.5 var(--sans);text-transform:none}
+.parcours{color:#313739;border-top:1px solid #d6d2cc;border-bottom:1px solid #d6d2cc;margin-top:1.5rem;padding:.8rem 0}
+.parcours>span{color:#9d303c;font:700 .62rem/1.4 var(--sans)}
+.parcours a{font:650 .7rem/1.5 var(--sans);text-transform:none}
+.parcours a:hover{color:#a72a35}
+.accueil-recherche{border-color:#d6d2cc;margin-top:0;padding:1.3rem 0 1.7rem}
+.accueil-recherche label span{color:#9d303c}
+.accueil-recherche label strong{color:#202529;font:650 clamp(1.05rem,1.6vw,1.4rem)/1.3 var(--serif);letter-spacing:0}
+.accueil-recherche input{border:1px solid #c9c7c2;border-right:0;background:#fff}
+.accueil-recherche button{background:#a72a35;color:#fff;border:1px solid #a72a35;font-weight:700;letter-spacing:0}
+.accueil-recherche button:hover{background:#83232d;color:#fff;border-color:#83232d}
+.accueil-recherche input:focus{outline:2px solid #a72a35}
+.surface-lecture{background:#faf9f6}
+.journal-corps{padding-top:1.5rem}
+.journal-corps :global(.titre-section){border-top:1px solid #b9b7b1;margin-top:3.3rem;padding-top:1.2rem}
+.conviction-editoriale{background:#eae7df;color:#232629;border-left:3px solid #a72a35;grid-template-columns:1fr 1.2fr;gap:2.5rem;padding:2.5rem;margin-top:3rem}
+.conviction-editoriale::before{content:none}
+.conviction-editoriale h2{font:650 clamp(2rem,3.4vw,3.25rem)/1.1 var(--serif);letter-spacing:-.03em;text-transform:none;margin:0}
+.conviction-editoriale h2 span{color:#242729}
+.conviction-editoriale p{font:450 1rem/1.7 var(--sans);color:#414548}
+.conviction-editoriale .lire-article{font:700 .7rem/1.5 var(--sans);border-bottom:1px solid #a72a35;color:#252a2c;letter-spacing:0}
+.conviction-editoriale .lire-article:hover{color:#a72a35}
+.accueil-dossiers{background:#f0eee9;color:#1d2224;border:1px solid #d6d2cb;border-top:3px solid #a72a35;margin:3rem 0 0;padding:2rem}
+.accueil-dossiers-entete{border-bottom:1px solid #c6c1ba;grid-template-columns:1fr 1fr}
+.accueil-dossiers-kicker{color:#99303c;font:700 .66rem/1.4 var(--sans);letter-spacing:.04em}
+.accueil-dossiers-entete h2{font:650 clamp(2rem,3.5vw,3.4rem)/1.09 var(--serif);letter-spacing:-.025em}
+.accueil-dossiers-entete h2 span{color:#1d2224}
+.accueil-dossiers-entete>p{color:#53565a;font:450 .94rem/1.7 var(--sans)}
+.accueil-dossiers-grille{border:0;gap:1px;background:#c9c5be}
+.accueil-dossiers-grille li{background:#fff;color:#212629}
+.accueil-dossiers-grille a{min-height:185px;padding:1.2rem;gap:1rem}
+.accueil-dossiers-grille a:hover,.accueil-dossiers-grille a:focus-visible{background:#e7e2d8;color:#1d2224}
+.accueil-dossiers-grille h3{font:650 clamp(1.15rem,1.9vw,1.55rem)/1.2 var(--serif);letter-spacing:-.02em}
+.accueil-dossiers-num{font:700 .6rem/1.5 var(--sans);color:#9d303c}
+.accueil-dossiers-grille p{font:650 .63rem/1.4 var(--sans);text-transform:none}
+.accueil-dossiers-liens a{color:#33393c;border-bottom:1px solid #a72a35;font:700 .67rem/1.5 var(--sans)}
+.accueil-dossiers-liens a:hover{color:#a72a35}
+.article-principal h3{font:650 clamp(2rem,3.4vw,3.3rem)/1.14 var(--serif);letter-spacing:-.02em;text-transform:none}
+.article-principal{border-color:#d4d0c9}
+.selection-suite{color:#222729}
+.selection-suite li{border-color:#ddd9d2}
+.selection-suite li::before{color:#9d303c;font:600 1.2rem var(--serif)}
+.selection-suite h3{font:600 1.18rem/1.32 var(--serif);letter-spacing:0}
+.article-principal h3 a:hover,.selection-suite h3 a:hover{background:transparent;color:#a72a35}
+.chapeau{font:450 1rem/1.7 var(--sans)}
+.bandeau-archives{background:#e9e5dc;color:#24292b;border-top:1px solid #cec9c0}
+.bandeau-archives::after{content:none}
+.bandeau-archives strong{font:650 clamp(4rem,8vw,7rem)/1 var(--serif);letter-spacing:-.05em}
+.bandeau-kicker{font:700 .66rem/1.5 var(--sans);letter-spacing:.03em}
+.bandeau-archives p{font:500 1rem/1.6 var(--sans);text-transform:none}
+.bandeau-archives>a{font:700 .7rem/1.5 var(--sans);color:#252b2d}
+@media(max-width:63.99rem){
+ .manifeste-accueil{grid-template-columns:1fr auto}
+ .manifeste-accueil h2{font-size:clamp(2.2rem,4.8vw,3.8rem)}
+ .une-grille{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:1rem}
+ .grand-angle{min-height:32rem}
+ .ouverture-fil{padding:1.05rem}
+}
+@media(max-width:47.99rem){
+ .edition p+p{display:none}
+ .manifeste-accueil{grid-template-columns:1fr;padding:1.6rem 0 1.4rem;gap:.55rem}
+ .manifeste-enquete{grid-column:1}
+ .manifeste-accueil h2{grid-column:1;grid-row:auto;font-size:clamp(2.1rem,8vw,3.2rem);margin:.3rem 0 .7rem}
+ .manifeste-accueil>a{grid-column:1;grid-row:auto;justify-self:start}
+ .une-grille{grid-template-columns:1fr;gap:1rem}
+ .grand-angle{min-height:27rem}
+ .grand-angle-texte{padding:1.2rem 1.2rem 3rem}
+ .grand-angle h1{font-size:clamp(2rem,8vw,2.9rem)}
+ .ouverture-fil{margin-top:0;padding:1.2rem;border-left:1px solid #d6d2cb}
+ .fil-entete h2{font-size:1.9rem}
+ .parcours{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .parcours a{font-size:.7rem}
+ .accueil-recherche{padding:1.4rem 0}
+ .conviction-editoriale{grid-template-columns:1fr;gap:1rem;padding:1.5rem;border-left-width:3px}
+ .conviction-editoriale h2{font-size:2.3rem}
+ .accueil-dossiers{padding:1.3rem}
+ .accueil-dossiers-entete{grid-template-columns:1fr}
+ .accueil-dossiers-grille{grid-template-columns:1fr}
+ .accueil-dossiers-grille a{min-height:135px}
+ .article-principal h3{font-size:clamp(1.9rem,7vw,2.7rem)}
+}
 </style>
