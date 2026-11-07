@@ -76,11 +76,15 @@ const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCas
     )}
     <div class="outils-lecture"><span>Confort de lecture</span><button id="taille-texte" type="button" aria-pressed="false">Agrandir le texte</button><button id="copier-lien" type="button">Copier le lien</button><span id="partage-statut" role="status"></span></div>
     <div class="corps" set:html={data.html} />
+    <nav class="retour-archives" aria-label="Parcourir les archives">
+      <a href={`/archives/${data.date.getFullYear()}/`}>Tous les articles de {data.date.getFullYear()}</a>
+      <a href="/archives/presse/">Archives de presse</a>
+    </nav>
   </article>
 
   {voisins.length > 0 && (
     <aside class="voisins" aria-labelledby="voisins">
-      <div class="titre-section"><h2 id="voisins">À lire également dans {r.nom}</h2></div>
+      <div class="titre-section"><h2 id="voisins">Autres articles de la rubrique {r.nom}</h2></div>
       <ListeArticles articles={voisins} rubriqueVisible={false} extraits={false} />
     </aside>
   )}
@@ -119,4 +123,8 @@ function progression(){const r=article.getBoundingClientRect();barre.style.width
 .format-archive{margin:1.2rem 0;padding:1rem 1.2rem;background:#f3f0eb;border-left:3px solid #77726b;color:#252a2d}
 .format-archive strong{font:700 .82rem/1.5 var(--sans)}
 .format-archive p{font:450 .91rem/1.65 var(--sans);margin:.35rem 0 0}
+
+.retour-archives{display:flex;flex-wrap:wrap;gap:.65rem 1.5rem;border-top:1px solid var(--filet);margin-top:2rem;padding-top:1.15rem;font:650 .83rem/1.5 var(--sans)}
+.retour-archives a{text-decoration:underline;text-underline-offset:.2em}
+.retour-archives a:hover{color:#a12c39}
 </style>
