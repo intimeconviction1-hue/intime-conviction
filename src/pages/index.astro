@@ -11,8 +11,9 @@ import { tousLesArticles, dateLongue, minutesDeLecture } from '../lib/articles.m
 const articles = await tousLesArticles();
 const [fil, veille] = await Promise.all([lireActualites(), lireVeille()]);
 const [une,...suite] = articles;
-const derniers = suite.slice(0,3);
-const vus = new Set([une,...derniers].map(a=>a.data.slug));
+const [archiveUne,...archivesSuite] = suite;
+const derniers = archivesSuite.slice(0,3);
+const vus = new Set([une,archiveUne,...derniers].filter(Boolean).map(a=>a.data.slug));
 const rubriques = RUBRIQUES.map(r=>{
   const archives=articles.filter(a=>a.data.rubrique===r.slug);
   return {...r,total:archives.length,presse:(fil?.articles??[]).filter(n=>n.rubrique===r.slug),titres:archives.filter(a=>!vus.has(a.data.slug)).slice(0,2)};
@@ -33,6 +34,18 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
         </div>
         <a class="une-news-lien" href="/rubrique/cours-du-jour/">Toute la rubrique <span aria-hidden="true">↗</span></a>
       </header>
+      {une && (
+        <article class="article-redaction-une" aria-labelledby="article-redaction-titre">
+          <div class="article-redaction-une-texte">
+            <p class="article-redaction-une-kicker">LE JOURNAL / DERNIER ARTICLE DE LA RÉDACTION</p>
+            <p class="article-redaction-une-date"><time datetime={une.data.date.toISOString()}>{dateLongue(une.data.date)}</time> · {rubrique(une.data.rubrique).nom}</p>
+            <h2 id="article-redaction-titre"><a href={une.data.chemin}>{une.data.titre}</a></h2>
+            <p class="article-redaction-une-extrait">{une.data.extrait}</p>
+            <a class="article-redaction-une-lien" href={une.data.chemin}>Lire notre article <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+      )}
+      <div class="presse-section-intro"><h2>Dans la presse</h2><p>Les articles publiés par d’autres médias, à consulter à leur source.</p></div>
       {nouvellePrincipale ? (
         <article class="une-info-principale">
           <div class="une-info-contenu">
@@ -89,22 +102,18 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
     </section>
 
 
-    <section class="selection" aria-labelledby="titre-selection">
+    {archiveUne && <section class="selection" aria-labelledby="titre-selection">
       <div class="titre-section"><h2 id="titre-selection">À relire dans nos archives</h2><a href="/archives/">Toutes les archives <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></div>
       <div class="selection-grille">
         <article class="article-principal">
-          <p class="meta"><span class="etiquette">{rubrique(une.data.rubrique).nom}</span><time datetime={une.data.date.toISOString()}>{dateLongue(une.data.date)}</time></p>
-          <h3><a href={une.data.chemin}>{une.data.titre}</a></h3>
-          <p class="chapeau">{une.data.extrait}</p>
-          <a class="lire-article" href={une.data.chemin}>Lire l’article <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg><span class="meta">{minutesDeLecture(une.data.mots)} min</span></a>
+          <p class="meta"><span class="etiquette">{rubrique(archiveUne.data.rubrique).nom}</span><time datetime={archiveUne.data.date.toISOString()}>{dateLongue(archiveUne.data.date)}</time></p>
+          <h3><a href={archiveUne.data.chemin}>{archiveUne.data.titre}</a></h3>
+          <p class="chapeau">{archiveUne.data.extrait}</p>
+          <a class="lire-article" href={archiveUne.data.chemin}>Lire l’article <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg><span class="meta">{minutesDeLecture(archiveUne.data.mots)} min</span></a>
         </article>
         <ul class="selection-suite">{derniers.map(({data})=><li><p class="meta"><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time></p><h3><a href={data.chemin}>{data.titre}</a></h3></li>)}</ul>
       </div>
-    </section>
-
-    
-
-
+    </section>}
 
     <Culture />
 
@@ -597,4 +606,19 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
  .une-defile-carte{flex-basis:min(82vw,320px)}
  .une-defile-barre h2{font-size:1.15rem}
 }
+
+/* Le dernier article du journal précède la revue de presse externe. */
+.article-redaction-une{margin:1.4rem 0 2.5rem;border:1px solid #a9a49c;border-top:5px solid #a12c39;background:#fff;color:#181b1c;padding:clamp(1.35rem,3vw,2.8rem);max-width:100%}
+.article-redaction-une-texte{max-width:83ch}
+.article-redaction-une-kicker{font:850 .72rem/1.45 var(--sans);color:#8f2734;letter-spacing:.08em;margin:0 0 .9rem}
+.article-redaction-une-date{font:650 .76rem/1.4 var(--sans);color:#565b5e;margin:0 0 1rem}
+.article-redaction-une h2{font:750 clamp(1.75rem,3.3vw,3.25rem)/1.08 var(--sans);letter-spacing:-.045em;margin:0 0 1rem}
+.article-redaction-une h2 a:hover{text-decoration:underline;text-decoration-color:#a12c39;text-underline-offset:.13em}
+.article-redaction-une-extrait{font:460 clamp(.96rem,1.2vw,1.13rem)/1.62 var(--sans);margin:0 0 1.2rem;max-width:75ch}
+.article-redaction-une-lien{display:inline-flex;gap:1.8rem;align-items:center;background:#161819;color:#fff;padding:.85rem 1.05rem;font:750 .8rem/1.4 var(--sans)}
+.article-redaction-une-lien:hover{background:#a12c39;color:#fff}
+.presse-section-intro{border-top:1px solid #a9a49c;padding:1.1rem 0 .8rem;display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
+.presse-section-intro h2{font:800 clamp(1.35rem,2.1vw,2rem)/1.2 var(--sans);margin:0}
+.presse-section-intro p{font:500 .85rem/1.5 var(--sans);margin:0;color:var(--encre-2)}
+@media(max-width:48rem){.article-redaction-une{margin:1rem 0 1.7rem}.article-redaction-une h2{font-size:clamp(1.8rem,7vw,2.5rem)}}
 </style>
