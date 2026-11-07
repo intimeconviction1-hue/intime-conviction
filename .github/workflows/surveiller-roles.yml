@@ -52,6 +52,8 @@ jobs:
           console.log('## Surveillance des rôles');
           console.log('- Pages officielles visées : '+r.sourcesVisees);
           console.log('- Pages effectivement consultées : '+r.sourcesLues);
+          console.log('- Liens de documents reconnus : '+r.liensDocuments);
+          console.log('- Pages sans document identifié : '+r.sourcesSansDocuments.length);
           console.log('- Sources initialisées (sans alerte) : '+r.initialisees);
           console.log('- Sources dont les documents ont changé : '+r.modifications.length);
           console.log('- Pages à contrôler manuellement pour erreur technique : '+r.erreurs.length);
@@ -74,7 +76,7 @@ jobs:
 
       - name: Conserver le dernier index documentaire
         run: |
-          if git diff --quiet -- .github/roles-surveillance-state.json && [ -f .github/roles-surveillance-state.json ]; then
+          if git ls-files --error-unmatch .github/roles-surveillance-state.json >/dev/null 2>&1 && git diff --quiet -- .github/roles-surveillance-state.json; then
             echo "Relevé inchangé."
             exit 0
           fi
