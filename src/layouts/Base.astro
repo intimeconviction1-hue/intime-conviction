@@ -18,6 +18,12 @@ const canonique = new URL(Astro.url.pathname, Astro.site);
 // fournir sa propre photographie sans illustration trompeuse.
 const imagePartage = image ? new URL(image, Astro.site).href : (accueil ? new URL(frontonAssises.src, Astro.site).href : null);
 const annee = new Date().getFullYear();
+// Les pages-outils restent à leur adresse historique, mais relèvent d'une rubrique.
+const rattachement = {
+  comprendre: 'le-banc-des-jures', annuaire: 'le-banc-des-jures', carte: 'le-banc-des-jures',
+  dossiers: 'l-expose', chronologie: 'l-expose'
+};
+const rubriqueCourante = rattachement[rubriqueActive] ?? rubriqueActive;
 ---
 <!doctype html>
 <html lang="fr">
@@ -67,12 +73,13 @@ const annee = new Date().getFullYear();
       <div class="barre cadre">
         <Marque class="marque"><a href="/" aria-label="Intime Conviction, accueil"><span class="marque-mot"><span class="marque-intime">INTIME</span><span class="marque-conviction">CONVICTION<span class="marque-point">.</span></span></span></a></Marque>
         <p class="signature">LE JOURNAL DES COURS D’ASSISES<br />PROCÈS · AUDIENCES · VERDICTS</p>
+        <a class="journal-lien" href="/ligne-editoriale/">Le Journal</a>
         <a class="recherche-lien" href="/recherche/" aria-label="Rechercher dans les articles"><span>Rechercher</span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>
       </div>
       <nav class="rubriques-nav" aria-label="Rubriques">
         <ul class="cadre">
-          {RUBRIQUES.map(r=><li><a href={`/rubrique/${r.slug}/`} aria-current={rubriqueActive===r.slug?'page':undefined}>{r.nom}</a></li>)}
-          <li><a href="/comprendre/" aria-current={rubriqueActive==='comprendre'?'page':undefined}>Comprendre</a></li><li><a href="/annuaire/" aria-current={rubriqueActive==='annuaire'?'page':undefined}>Annuaire</a></li><li><a href="/dossiers/" aria-current={rubriqueActive==='dossiers'?'page':undefined}>Dossiers</a></li><li><a href="/chronologie/" aria-current={rubriqueActive==='chronologie'?'page':undefined}>Chronologie</a></li><li><a href="/carte/" aria-current={rubriqueActive==='carte'?'page':undefined}>La carte</a></li><li><a href="/archives/" aria-current={rubriqueActive==='archives'?'page':undefined}>Archives</a></li>
+          {RUBRIQUES.map(r=><li><a href={`/rubrique/${r.slug}/`} aria-current={rubriqueCourante===r.slug?'page':undefined}>{r.nom}</a></li>)}
+
         </ul>
       </nav>
     </header>
@@ -88,5 +95,10 @@ const annee = new Date().getFullYear();
         <div class="pied-bas"><span>Intime Conviction · {annee}</span><a href="https://x.com/IntimeConv" rel="noopener">@IntimeConv sur X</a><a href="#contenu">Retour en haut <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
       </div>
     </footer>
+  <style is:global>
+    .journal-lien{display:inline-flex;align-items:center;min-height:44px;margin-left:auto;padding:.5rem .8rem;font-family:var(--sans);font-size:.7rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+    .journal-lien:hover,.journal-lien:focus-visible{color:#a12c39}
+    @media(max-width:47.99rem){.journal-lien{margin-left:auto;font-size:.65rem;padding:.4rem}.recherche-lien{margin-left:.2rem}}
+  </style>
   </body>
 </html>
