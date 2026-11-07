@@ -30,8 +30,12 @@ export async function getStaticPaths() {
 const { article, voisins } = Astro.props;
 const { data } = article;
 const r = rubrique(data.rubrique);
+const signatureArchive = String(data.auteur ?? '').trim();
+// Le nom du journal provient d'un champ WordPress importé et ne suffit pas
+// à identifier la personne qui a rédigé un texte historique.
+const auteurIdentifie = signatureArchive.toLocaleLowerCase('fr') === 'intime conviction' ? null : (signatureArchive || null);
 ---
-<Base titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} article={{ headline:data.titre,datePublished:data.date.toISOString(),author:data.auteur || null }}>
+<Base titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} article={{ headline:data.titre,datePublished:data.date.toISOString(),author:auteurIdentifie }}>
   <script type="application/ld+json" set:html={JSON.stringify({
     '@context':'https://schema.org',
     '@type':'BreadcrumbList',
@@ -50,7 +54,7 @@ const r = rubrique(data.rubrique);
     <h1>{data.titre}</h1>
     <p class="meta">
       <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
-      {data.auteur && <> · {data.auteur}</>}
+      {auteurIdentifie && <> · {auteurIdentifie}</>}
       · {minutesDeLecture(data.mots)} min de lecture
     </p>
     <div class="outils-lecture"><span>Confort de lecture</span><button id="taille-texte" type="button" aria-pressed="false">Agrandir le texte</button><button id="copier-lien" type="button">Copier le lien</button><span id="partage-statut" role="status"></span></div>
