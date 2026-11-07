@@ -24,6 +24,14 @@ export const SESSIONS_AGENDA = Object.freeze([
     source:'https://www.cours-appel.justice.fr/toulouse/roles-des-cours-dassises-et-de-la-cour-criminelle-departementale-de-la-haute-garonne'
   },
   {
+    id:'chambery-assises-2026-11-16',
+    ville:'Chambéry',departement:'Savoie',
+    juridiction:'Cour d’assises de la Savoie',
+    debut:'2026-11-16',fin:'2026-11-27',
+    libelle:'Session d’assises du 16 au 27 novembre 2026, annoncée sur la page de la juridiction',
+    source:'https://www.cours-appel.justice.fr/chambery/la-cour-dassises-de-la-savoie'
+  },
+  {
     id:'besancon-ccd-2026-12-07',ville:'Besançon',departement:'Doubs',
     juridiction:'Cour criminelle départementale du Doubs',
     debut:'2026-12-07',fin:'2026-12-18',
