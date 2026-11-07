@@ -6,7 +6,13 @@ const { rubriqueSlug = 'cours-du-jour', limite = 8, titre, lienRubrique = true, 
 const r = rubrique(rubriqueSlug);
 const titreAffiche = titre ?? r.nom;
 const fil = await lireActualites();
-const nouvelles = (fil?.articles ?? []).filter(n=>n.rubrique === rubriqueSlug).slice(debut,debut+limite);
+const candidates = (fil?.articles ?? []).filter(n=>n.rubrique === rubriqueSlug).slice(debut);
+// Les flux peuvent livrer des titres déjà abrégés : privilégier les titres complets
+// sur l'accueil, sans reconstituer ni altérer le libellé de la source.
+const titreAbrege = (n) => /(?:\\.\\.\\.|…)(?:\\s*[—–-]\\s*[^—–]+)?\\s*$/.test(n.titre);
+const nouvelles = compacte
+  ? [...candidates.filter(n=>!titreAbrege(n)),...candidates.filter(titreAbrege)].slice(0,limite)
+  : candidates.slice(0,limite);
 const afficher = nouvelles.length > 0 || rubriqueSlug === 'cours-du-jour';
 const formatDate = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'});
 ---
