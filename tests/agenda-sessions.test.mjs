@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,SOURCES_A_COMPLETER,sessionsAvenir,verifierSessions,dateLocaleAgenda} from '../src/lib/agenda-sessions.mjs';
+import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,SOURCES_A_COMPLETER,AUDIENCES_A_RECONFIRMER,sessionsAvenir,verifierSessions,dateLocaleAgenda} from '../src/lib/agenda-sessions.mjs';
 
 test('les périodes publiées ont une source institutionnelle et des dates cohérentes',()=>{
   assert.equal(verifierSessions(),true);
@@ -56,4 +56,14 @@ test('Sarthe : un rôle modificatif sans dates vérifiées reste une source non 
  assert.match(source.statut,/dates non confirmées/);
  assert.equal('debut' in source,false);
  assert.equal('fin' in source,false);
+});
+
+test('Finistère : seules les audiences non-mineurs sont consignées comme dates à reconfirmer',()=>{
+ assert.equal(AUDIENCES_A_RECONFIRMER.length,4);
+ assert.equal(new Set(AUDIENCES_A_RECONFIRMER.map(a=>a.id)).size,4);
+ assert.ok(AUDIENCES_A_RECONFIRMER.every(a=>a.ville==='Quimper'));
+ assert.ok(AUDIENCES_A_RECONFIRMER.every(a=>!a.juridiction.toLowerCase().includes('mineurs')));
+ assert.ok(AUDIENCES_A_RECONFIRMER.every(a=>a.debut<=a.fin));
+ assert.ok(AUDIENCES_A_RECONFIRMER.every(a=>new URL(a.source).hostname==='www.cours-appel.justice.fr'));
+ assert.ok(sessionsAvenir(AUDIENCES_A_RECONFIRMER,'2027-01-01').length===0);
 });
