@@ -12,7 +12,7 @@ const index = articles.map(({data:d})=>({
 const annees = [...new Set(index.map(a=>a.annee))].sort((a,b)=>b-a);
 const total=articles.length.toLocaleString('fr-FR');
 ---
-<Base titre="Rechercher dans les archives" description="Retrouvez une affaire, un procès ou un sujet parmi les articles d’Intime Conviction, grâce à la recherche par pertinence et aux filtres par rubrique et année.">
+<Base noindex titre="Rechercher dans les archives" description="Retrouvez une affaire, un procès ou un sujet parmi les articles d’Intime Conviction, grâce à la recherche par pertinence et aux filtres par rubrique et année.">
   <header class="titre-page recherche-intro">
     <p class="etiquette">LE FONDS / INTIME CONVICTION</p>
     <h1>RETROUVER<br /><span>UNE AFFAIRE.</span></h1>
