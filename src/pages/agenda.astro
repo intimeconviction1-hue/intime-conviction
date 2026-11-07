@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,SOURCES_A_COMPLETER,AUDIENCES_A_RECONFIRMER,sessionsAvenir,dateLocaleAgenda} from '../lib/agenda-sessions.mjs';
+import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,SOURCES_A_COMPLETER,AUDIENCES_A_RECONFIRMER,PROVENANCE_AGENDA,provenancePeriode,sessionsAvenir,dateLocaleAgenda} from '../lib/agenda-sessions.mjs';
 
 const dateDuJour=dateLocaleAgenda();
 const dates=sessionsAvenir(SESSIONS_AGENDA,dateDuJour);
@@ -59,6 +59,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
             <p class="localisation">{s.ville} · {s.departement}</p>
             <h3>{s.juridiction}</h3>
             <p>{s.libelle}</p>
+            <p class="provenance-entree"><strong>{provenancePeriode(s).niveau}.</strong> Source institutionnelle examinée le <time datetime={PROVENANCE_AGENDA.dateExamen}>{formatDate(PROVENANCE_AGENDA.dateExamen)}</time>. Date de publication du rôle non renseignée. Cette période ne confirme pas la tenue d’une audience individuelle.</p>
             <a href={s.source} target="_blank" rel="noopener noreferrer">Consulter la page officielle <span class="sr-only">(nouvel onglet)</span><span aria-hidden="true">↗</span></a>
           </div>
         </li>
@@ -76,6 +77,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
             <p class="localisation">{a.ville} · {a.departement}</p>
             <h3>{a.juridiction}</h3>
             <p>Objet mentionné au calendrier : {a.objet}.</p>
+            <p class="provenance-entree"><strong>{provenancePeriode(a).niveau}.</strong> Dernière mise à jour affichée par la cour : <time datetime={provenancePeriode(a).publicationSource}>{formatDate(provenancePeriode(a).publicationSource)}</time>. Signalement examiné le <time datetime={PROVENANCE_AGENDA.dateExamen}>{formatDate(PROVENANCE_AGENDA.dateExamen)}</time>.</p>
             <a href={a.source} target="_blank" rel="noopener noreferrer">Consulter la page institutionnelle <span class="sr-only">(nouvel onglet)</span></a>
           </div>
         </li>
@@ -217,4 +219,6 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
 .sessions li[hidden],.audiences-indicatives li[hidden]{display:none!important}
 @media(max-width:40rem){.filtres-agenda{padding:1rem}.filtres-agenda button{width:100%}}
 .alerte-actualite:not([hidden]){display:block;margin:1rem 0;padding:1rem;background:#fff4dc;border-left:4px solid #98631b;color:#272521;font:650 .85rem/1.6 var(--sans)}
+.provenance-entree{border-left:2px solid #bdb7ad;padding-left:.75rem;font-size:.77rem!important;line-height:1.65!important;color:#51565a;margin:.7rem 0!important}
+.provenance-entree strong{font-weight:650;color:#383b3d}
 </style>
