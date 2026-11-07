@@ -1,19 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ChronologieEvenements from '../../components/ChronologieEvenements.astro';
-import { lireVeille } from '../../lib/veille.mjs';
-import { DOSSIERS, referencesPourDossier, statistiquesDossier } from '../../lib/dossiers.mjs';
+import { DOSSIERS } from '../../lib/dossiers.mjs';
 import { REPERES_JUDICIAIRES, TYPES_REPERE, PHASES_REPERE, VERIFICATION_AU,
   tousLesReperes, validerReperes } from '../../lib/chronologie-judiciaire.mjs';
 
 validerReperes(REPERES_JUDICIAIRES, DOSSIERS);
-const veille = await lireVeille();
 const reperes = tousLesReperes();
-const dossiers = DOSSIERS.map(d => ({
-  ...d,
-  ...statistiquesDossier(referencesPourDossier(d, veille.articles)),
-  evenements: reperes.filter(r => r.dossier === d.slug).length,
-}));
+const dossiers = DOSSIERS;
 const groupes = [...new Set(reperes.map(r => r.dateEvenement.slice(0, 4)))]
   .sort((a, b) => Number(b) - Number(a))
   .map(annee => ({ annee, evenements: reperes.filter(r => r.dateEvenement.startsWith(annee)) }));
@@ -71,25 +65,6 @@ const date = s => new Intl.DateTimeFormat('fr-FR', {
   </section>
 
   <aside class="carto-liens"><strong>LES DATES ONT UNE GÉOGRAPHIE.</strong><p>Albi, Besançon, Blois, Avignon ou Nîmes : retrouve les lieux des juridictions et distingue la première instance de l’appel.</p><a href="/carte/">OUVRIR LA CARTE JUDICIAIRE <span aria-hidden="true">↗</span></a></aside>
-  <section class="temps-presse" aria-labelledby="temps-presse">
-    <div class="presse-entete"><span>LE REGISTRE / VEILLE DE PRESSE</span><h2 id="temps-presse">L’ÉCHO<br /><span>DES AUDIENCES.</span></h2><p>Ces chiffres proviennent exclusivement des alertes collectées. Un nombre élevé de mentions ne signifie ni davantage d’audiences ni davantage de faits établis.</p></div>
-    <div class="tableau-couverture">
-      {dossiers.map(d => (
-        <article>
-          <div class="tete-couverture"><h3><a href={'/dossiers/' + d.slug + '/'}>{d.titre}<span aria-hidden="true"> ↗</span></a></h3><span>{nombre(d.total)} liens de presse · {d.evenements} repères judiciaires documentés</span></div>
-          <div class="annees-couverture">
-            {d.annees.map(([annee,n]) => (
-              <a href={'/archives/presse/' + annee + '/'} title={'Explorer les archives générales de ' + annee}>
-                <strong>{annee}</strong><span>{nombre(n)} mentions</span>
-              </a>
-            ))}
-          </div>
-        </article>
-      ))}
-    </div>
-    <p class="note-presse">Les liens par année mènent à l’ensemble de la revue de presse de l’année concernée, sans filtre automatique sur une affaire précise. Les mentions par dossier sont comptées à partir des titres, sans analyse du texte intégral.</p>
-    <a class="tout-presse" href="/archives/presse/">CONSULTER TOUTES LES ARCHIVES DE PRESSE <span aria-hidden="true">↗</span></a>
-  </section>
 </Base>
 <script>
   const form = document.querySelector<HTMLFormElement>('#filtres-chronologie');
