@@ -1,0 +1,87 @@
+---
+import Base from '../layouts/Base.astro';
+import {ROLES_OFFICIELS,MODES_ROLES} from '../lib/roles-officiels.mjs';
+
+const sources=new Map();
+for(const r of ROLES_OFFICIELS) {
+  if(r.mode==='information'||r.mode==='sur-place')continue;
+  const s=sources.get(r.url)??{url:r.url,ressorts:[],codes:[],mode:r.mode,titre:r.titre};
+  if(!s.codes.includes(r.code))s.codes.push(r.code);
+  if(!s.ressorts.includes(r.ressort))s.ressorts.push(r.ressort);
+  if(r.mode==='publication')s.mode='publication';
+  sources.set(r.url,s);
+}
+const surveillees=[...sources.values()].sort((a,b)=>a.ressorts[0].localeCompare(b.ressorts[0],'fr'));
+const exclus=ROLES_OFFICIELS.filter(r=>r.mode==='information'||r.mode==='sur-place');
+---
+<Base titre="Veille des rôles d’audience" description="Comment Intime Conviction repère les nouveaux liens vers les rôles de sessions d’assises publiés sur les sites des cours d’appel, sans annoncer d’audiences non vérifiées." rubriqueActive="annuaire">
+  <header class="entete-veille">
+    <p>INTIME CONVICTION / VEILLE DES RÔLES</p>
+    <h1>AU RÔLE.<br /><span>À LA SOURCE.</span></h1>
+    <p class="introduction">Une surveillance documentaire des publications officielles. Le principe : repérer les nouveaux liens vers des rôles, sans confondre la mise en ligne d’un PDF avec la confirmation d’une audience.</p>
+    <div class="chiffres"><span><strong>{surveillees.length}</strong> pages institutionnelles suivies</span><span><strong>{new Set(surveillees.flatMap(s=>s.codes)).size}</strong> départements couverts</span><span><strong>0</strong> audience publiée automatiquement</span></div>
+  </header>
+
+  <section class="fonctionnement">
+    <div class="tete-fonctionnement"><span>LA MÉTHODE / SOUS CONTRÔLE ÉDITORIAL</span><h2>QUATRE FILTRES.<br /><mark>PAS D’AUTOMATISME AVEUGLE.</mark></h2></div>
+    <ol>
+      <li><span>01 / OBSERVER</span><h3>Contrôler la page officielle</h3><p>Une tâche GitHub est programmée les jours ouvrés pour consulter les pages institutionnelles listées ci-dessous. L’exécution peut être retardée ou interrompue.</p></li>
+      <li><span>02 / COMPARER</span><h3>Repérer les liens de documents</h3><p>On compare les adresses et libellés des pièces jointes identifiées. Le contenu des documents PDF n’est ni téléchargé ni analysé.</p></li>
+      <li><span>03 / SIGNALER</span><h3>Ouvrir un signalement à vérifier</h3><p>Un lien ajouté, retiré ou renommé peut déclencher une fiche de vérification dans le dépôt GitHub. Une suppression n’est pas assimilée à une annulation d’audience.</p></li>
+      <li><span>04 / RECROISER</span><h3>Vérifier avant de publier</h3><p>Pour annoncer une audience ou un report, la rédaction doit confirmer le programme auprès de la source compétente. Aucun calendrier de procès n’est créé automatiquement.</p></li>
+    </ol>
+  </section>
+
+  <section class="sources" aria-labelledby="titre-sources">
+    <div class="tete-sources"><span>LE PÉRIMÈTRE / SOURCES OFFICIELLES</span><h2 id="titre-sources">LES PAGES<br /><mark>OBSERVÉES.</mark></h2><p>Les pages regroupant plusieurs départements ne constituent pas des rôles distincts pour chacun. Chaque lien mène directement à l’autorité qui publie ou présente les sessions.</p></div>
+    <ol class="grille-sources">{surveillees.map((s,i)=>(
+      <li>
+        <div class="source-haute"><span>{String(i+1).padStart(2,'0')} / SOURCE OFFICIELLE</span><span>{s.codes.join(' · ')}</span></div>
+        <h3>{s.titre}</h3>
+        <p class="source-type">{MODES_ROLES[s.mode]}</p>
+        <p class="source-departements">DÉPARTEMENTS : {s.codes.join(' / ')}</p>
+        <a href={s.url} target="_blank" rel="noopener noreferrer">CONSULTER LA PUBLICATION <span aria-hidden="true">↗</span></a>
+      </li>
+    ))}</ol>
+  </section>
+  <aside class="exclusion"><span>CE QUE NOUS NE SURVEILLONS PAS AUTOMATIQUEMENT</span><h2>LES INFORMATIONS NON PUBLIÉES.</h2><p>Les rôles consultables uniquement au greffe, notamment pour la Seine-Maritime et l’Eure, ne sont pas collectés. Les simples pages d’information générale ne valent pas publication d’une session. Le périmètre n’est ni complet pour les 101 départements, ni une garantie de fraîcheur des audiences.</p></aside>
+  <footer class="suite"><a href="/annuaire/">REVENIR À L’ANNUAIRE NATIONAL <span aria-hidden="true">↗</span></a><a href="https://github.com/intimeconviction1-hue/intime-conviction/actions/workflows/surveiller-roles.yml" target="_blank" rel="noopener noreferrer">VOIR LES CONTRÔLES SUR GITHUB <span aria-hidden="true">↗</span></a></footer>
+</Base>
+<style>
+.entete-veille{background:#151718;color:#fff;margin:1.5rem 0 0;padding:clamp(1.4rem,4vw,4rem);border-top:8px solid #ffe100}
+.entete-veille>p:first-child{font:900 .66rem/1.45 var(--sans);letter-spacing:.09em;color:#ffe100;margin:0 0 2.8rem}
+.entete-veille h1{font:900 clamp(2.8rem,7.5vw,7rem)/.95 var(--sans);letter-spacing:-.07em;margin:0}
+.entete-veille h1 span{color:#ffe100}
+.entete-veille .introduction{font:600 clamp(.98rem,1.6vw,1.3rem)/1.55 var(--sans);max-width:72ch;margin:1.8rem 0 2.3rem}
+.chiffres{display:flex;gap:1.4rem 3rem;flex-wrap:wrap;border-top:1px solid #5a5a5a;padding-top:1.2rem}
+.chiffres span{font:900 .67rem/1.4 var(--sans);text-transform:uppercase;display:flex;align-items:baseline;gap:.7rem}
+.chiffres strong{font:900 2rem/1 var(--sans);color:#ffe100}
+.fonctionnement,.sources{margin:4rem 0}
+.tete-fonctionnement,.tete-sources{border-top:7px solid #151718;padding:1.5rem 0 1.8rem}
+.tete-fonctionnement>span,.tete-sources>span{font:900 .65rem/1.4 var(--sans);letter-spacing:.07em}
+.tete-fonctionnement h2,.tete-sources h2{font:900 clamp(2rem,4.3vw,4rem)/.99 var(--sans);letter-spacing:-.065em;margin:.9rem 0}
+.tete-fonctionnement mark,.tete-sources mark{background:#ffe100;color:#151718}
+.fonctionnement ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin:0;padding:0;list-style:none;border-top:2px solid #151718}
+.fonctionnement li{padding:1.5rem;border-bottom:1px solid var(--filet)}
+.fonctionnement li:nth-child(odd){border-right:1px solid var(--filet)}
+.fonctionnement li>span{font:900 .69rem/1.4 var(--sans)}
+.fonctionnement h3{font:900 clamp(1.3rem,2.3vw,2rem)/1.13 var(--sans);margin:1rem 0 .6rem}
+.fonctionnement li p{font:500 .9rem/1.6 var(--sans);margin:0;max-width:60ch}
+.tete-sources p{font:550 .9rem/1.55 var(--sans);max-width:72ch}
+.grille-sources{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
+.grille-sources li{display:flex;flex-direction:column;gap:.7rem;border:2px solid #151718;padding:1.5rem;background:#f0f0eb;color:#151718;min-width:0}
+.source-haute{display:flex;justify-content:space-between;gap:1rem;font:900 .65rem/1.4 var(--sans)}
+.grille-sources h3{font:900 clamp(1.2rem,2vw,1.7rem)/1.17 var(--sans);letter-spacing:-.035em;margin:1rem 0 .3rem}
+.source-type{font:900 .75rem/1.4 var(--sans);margin:0;background:#ffe100;align-self:start;padding:.35rem .5rem}
+.source-departements{font:750 .67rem/1.45 var(--sans);margin:0}
+.grille-sources a{margin-top:auto;padding:1rem .3rem 0;border-top:2px solid #151718;display:flex;justify-content:space-between;gap:1rem;font:900 .68rem/1.45 var(--sans)}
+.grille-sources a:hover{color:#b08e00}
+.exclusion{background:#151718;color:#fff;padding:clamp(1.4rem,3vw,3rem);border-left:7px solid #ffe100}
+.exclusion span{font:900 .68rem/1.4 var(--sans);color:#ffe100}
+.exclusion h2{font:900 clamp(1.5rem,3vw,2.6rem)/1.15 var(--sans);letter-spacing:-.04em;margin:1.1rem 0}
+.exclusion p{font:500 .92rem/1.6 var(--sans);max-width:88ch}
+.suite{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:2rem 0 4rem}
+.suite a{display:flex;justify-content:space-between;gap:1rem;padding:1.1rem;background:#ffe100;color:#151718;font:900 .7rem/1.4 var(--sans)}
+.suite a:hover{background:#151718;color:#fff}
+@media(max-width:48rem){.entete-veille{padding:2rem 1.2rem}.entete-veille h1{font-size:clamp(2.5rem,10vw,4.2rem)}.fonctionnement ol,.grille-sources,.suite{grid-template-columns:1fr}.fonctionnement li:nth-child(odd){border-right:0}}
+</style>
