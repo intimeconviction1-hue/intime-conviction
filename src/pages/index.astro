@@ -6,6 +6,7 @@ import Culture from '../components/Culture.astro';
 import ParcoursEditorial from '../components/ParcoursEditorial.astro';
 import { lireActualites, lireVeille } from '../lib/veille.mjs';
 import { RUBRIQUES, rubrique } from '../lib/rubriques.mjs';
+import { DOSSIERS, referencesPourDossier } from '../lib/dossiers.mjs';
 import { tousLesArticles, dateLongue, minutesDeLecture } from '../lib/articles.mjs';
 import fronton from '../assets/fronton-cour-dassises.jpg';
 
@@ -24,6 +25,7 @@ const parAnneePresse=new Map();
 for(const a of veille.articles){const an=Number(a.dateAlerte.slice(0,4));if(an>=2009)parAnneePresse.set(an,(parAnneePresse.get(an)??0)+1);}
 const annees=[...new Set([...parAnnee.keys(),...parAnneePresse.keys()])].sort((a,b)=>b-a).map(an=>({an,articles:parAnnee.get(an)??0,presse:parAnneePresse.get(an)??0}));
 const nouvellesOuverture=(fil?.articles??[]).filter(n=>n.rubrique==='cours-du-jour').slice(0,3);
+const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
 const total=articles.length.toLocaleString('fr-FR');
 const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',timeZone:'Europe/Paris'});
 const dateEdition=fil?.releveLe ? new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'}).format(new Date(fil.releveLe)) : null;
@@ -89,6 +91,17 @@ const releveRetarde=fil?.releveLe ? Date.now()-Date.parse(fil.releveLe)>6*60*60*
     </section>
 
     <section class="bandeau-archives" aria-label="Explorer les archives"><div><span class="bandeau-kicker">LES ARCHIVES / LE FONDS INTIME CONVICTION</span><strong>{total}</strong><p>récits, audiences et archives pour comprendre les procès criminels.</p></div><a href="/archives/">Entrer dans les archives <span aria-hidden="true">↗</span></a></section>
+
+    <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
+      <div class="accueil-dossiers-entete">
+        <div><p class="accueil-dossiers-kicker">LE FONDS DOCUMENTAIRE / AFFAIRES</p><h2 id="titre-dossiers-accueil">UNE AFFAIRE.<br /><span>PLUSIEURS REGARDS.</span></h2></div>
+        <p>Des références de presse identifiées, classées par affaire, sans confusion entre dates d’alerte, événements judiciaires et commentaires. Chaque dossier rassemble des liens vers les sources d’origine.</p>
+      </div>
+      <ul class="accueil-dossiers-grille">
+        {dossiersMisEnAvant.map((d,i)=><li><a href={`/dossiers/${d.slug}/`}><span class="accueil-dossiers-num">DOSSIER {String(i+1).padStart(2,'0')} <span aria-hidden="true">↗</span></span><h3>{d.titre}</h3><p>{d.nombre.toLocaleString('fr-FR')} références de presse</p></a></li>)}
+      </ul>
+      <div class="accueil-dossiers-liens"><a href="/dossiers/">EXPLORER TOUS LES DOSSIERS <span aria-hidden="true">↗</span></a><a href="/chronologie/">VOIR LA CHRONOLOGIE JUDICIAIRE <span aria-hidden="true">↗</span></a></div>
+    </section>
 
     <ParcoursEditorial />
 
@@ -322,4 +335,25 @@ const releveRetarde=fil?.releveLe ? Date.now()-Date.parse(fil.releveLe)>6*60*60*
 @media(max-width:63.99rem){.accueil-recherche{grid-template-columns:1fr;gap:1rem}}
 @media(max-width:47.99rem){.accueil-recherche{padding:1.5rem 0}.accueil-recherche label strong{font-size:1.4rem}.accueil-recherche-champs{min-height:54px}.accueil-recherche input{font-size:.84rem;padding:.7rem}.accueil-recherche button{padding:0 .85rem;font-size:.69rem}.accueil-recherche button span{margin-left:.25rem}}
 
+
+  /* Dossiers : des affaires documentées prennent leur place avant les archives secondaires. */
+  .accueil-dossiers{margin:4rem 0 0;padding:2.2rem;background:#17191a;color:#fff;border-top:8px solid #ffe100}
+  .accueil-dossiers-entete{display:grid;grid-template-columns:1.3fr 1fr;gap:2rem;align-items:end;border-bottom:1px solid #606263;padding-bottom:1.7rem}
+  .accueil-dossiers-kicker{color:#ffe100;font:850 .7rem/1.4 var(--sans);letter-spacing:.09em;margin:0 0 1rem}
+  .accueil-dossiers-entete h2{font:900 clamp(2rem,4vw,4.2rem)/1.02 var(--sans);letter-spacing:-.065em;margin:0}
+  .accueil-dossiers-entete h2 span{color:#ffe100}
+  .accueil-dossiers-entete>p{font:500 .93rem/1.65 var(--sans);color:#dadada;margin:0;max-width:55ch}
+  .accueil-dossiers-grille{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;list-style:none;margin:1.5rem 0 0;padding:0;background:#676868;border:1px solid #676868}
+  .accueil-dossiers-grille li{min-width:0;background:#f5f4f0;color:#17191a}
+  .accueil-dossiers-grille a{display:flex;flex-direction:column;min-height:215px;padding:1.3rem;gap:1.4rem;height:100%}
+  .accueil-dossiers-grille a:hover,.accueil-dossiers-grille a:focus-visible{background:#ffe100;color:#17191a}
+  .accueil-dossiers-num{display:flex;justify-content:space-between;gap:.5rem;font:850 .66rem/1.4 var(--sans);letter-spacing:.06em}
+  .accueil-dossiers-num span{font-size:1.3rem}
+  .accueil-dossiers-grille h3{font:850 clamp(1.2rem,2vw,1.8rem)/1.14 var(--sans);letter-spacing:-.045em;margin:0;overflow-wrap:anywhere}
+  .accueil-dossiers-grille p{font:750 .67rem/1.45 var(--sans);margin:auto 0 0;text-transform:uppercase}
+  .accueil-dossiers-liens{display:flex;gap:1rem 2rem;flex-wrap:wrap;margin-top:1.4rem}
+  .accueil-dossiers-liens a{display:inline-flex;gap:1.2rem;align-items:center;border-bottom:2px solid #ffe100;padding:.6rem 0;font:850 .68rem/1.5 var(--sans)}
+  .accueil-dossiers-liens a:hover{color:#ffe100}
+  @media(max-width:64rem){.accueil-dossiers-grille{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:48rem){.accueil-dossiers{padding:1.3rem;margin-top:2.5rem}.accueil-dossiers-entete{grid-template-columns:1fr;gap:1rem}.accueil-dossiers-grille{grid-template-columns:1fr}.accueil-dossiers-grille a{min-height:145px}.accueil-dossiers-grille h3{font-size:1.55rem}}
 </style>
