@@ -1,0 +1,177 @@
+---
+import Base from '../../layouts/Base.astro';
+import ChronologieEvenements from '../../components/ChronologieEvenements.astro';
+import { lireVeille } from '../../lib/veille.mjs';
+import { DOSSIERS, referencesPourDossier, statistiquesDossier } from '../../lib/dossiers.mjs';
+import { REPERES_JUDICIAIRES, TYPES_REPERE, PHASES_REPERE, VERIFICATION_AU,
+  tousLesReperes, validerReperes } from '../../lib/chronologie-judiciaire.mjs';
+
+validerReperes(REPERES_JUDICIAIRES, DOSSIERS);
+const veille = await lireVeille();
+const reperes = tousLesReperes();
+const dossiers = DOSSIERS.map(d => ({
+  ...d,
+  ...statistiquesDossier(referencesPourDossier(d, veille.articles)),
+  evenements: reperes.filter(r => r.dossier === d.slug).length,
+}));
+const groupes = [...new Set(reperes.map(r => r.dateEvenement.slice(0, 4)))]
+  .sort((a, b) => Number(b) - Number(a))
+  .map(annee => ({ annee, evenements: reperes.filter(r => r.dateEvenement.startsWith(annee)) }));
+const typesActifs = Object.keys(TYPES_REPERE).filter(type => reperes.some(r => r.type === type));
+const nombre = n => n.toLocaleString('fr-FR');
+const date = s => new Intl.DateTimeFormat('fr-FR', {
+  day:'numeric', month:'long', year:'numeric', timeZone:'Europe/Paris'
+}).format(new Date(s + 'T12:00:00Z'));
+---
+<Base
+  titre="Chronologie judiciaire"
+  description="Les étapes judiciaires documentées des dossiers d’Intime Conviction : dates d’audience, décisions et appels, avec les sources. Distinctes des dates des alertes de presse."
+  rubriqueActive="chronologie"
+>
+  <header class="chronologie-une">
+    <p class="marque-une">INTIME CONVICTION / MÉMOIRE JUDICIAIRE</p>
+    <h1>LES DATES.<br /><span>LES SOURCES.</span><br />LES PROCÉDURES.</h1>
+    <p>Une affaire se déroule en plusieurs temps. Cette chronologie présente des étapes judiciaires <strong>identifiées dans des sources de presse consultables</strong>, et non des dates supposées à partir des alertes Google.</p>
+    <div class="totaux"><span><strong>{nombre(reperes.length)}</strong> jalons documentés</span><span><strong>{dossiers.length}</strong> dossiers suivis</span><span><strong>{groupes.length}</strong> années d’événements</span></div>
+  </header>
+
+  <section class="deux-horloges" aria-labelledby="deux-horloges">
+    <h2 id="deux-horloges">NE PAS CONFONDRE DEUX DATES.</h2>
+    <div class="horloges">
+      <article><span>01 / LE TEMPS JUDICIAIRE</span><h3>LE JOUR DE L’ÉVÉNEMENT.</h3><p>Une audience s’ouvre. Une décision est rendue. Une cour d’appel examine une condamnation. Les jalons ci-dessous sont datés à partir d’articles explicitement cités et identifient la procédure concernée.</p></article>
+      <article><span>02 / LE TEMPS MÉDIATIQUE</span><h3>LE JOUR DE L’ALERTE.</h3><p>Un message de veille repère un titre de presse. Sa date est celle de l’alerte, pas nécessairement celle du fait rapporté ni celle de l’article. Ce second fonds reste accessible par année, sans prétention de validation judiciaire.</p></article>
+    </div>
+    <p class="verification">SÉLECTION NON EXHAUSTIVE · SOURCES CONSULTÉES JUSQU’AU <time datetime={VERIFICATION_AU}>{date(VERIFICATION_AU)}</time> · UNE DÉCISION DE PREMIÈRE INSTANCE NE SIGNIFIE PAS NÉCESSAIREMENT UNE CONDAMNATION DÉFINITIVE.</p>
+  </section>
+
+  <section class="temps-judiciaire" aria-labelledby="liste-dates">
+    <div class="entete-frise"><div><span>LE REGISTRE / ÉTAPES DOCUMENTÉES</span><h2 id="liste-dates">CHRONOLOGIE<br /><mark>DES PROCÉDURES.</mark></h2></div><p>Chaque repère renvoie à une source externe, avec sa date de publication. Le site ne déduit jamais le résultat d’un procès d’un simple titre d’alerte.</p></div>
+    <form id="filtres-chronologie" class="filtres" role="search">
+      <label>LE DOSSIER
+        <select id="filtre-dossier"><option value="">Toutes les affaires</option>{dossiers.map(d=><option value={d.slug}>{d.titre}</option>)}</select>
+      </label>
+      <label>LA PROCÉDURE
+        <select id="filtre-phase"><option value="">Toutes les procédures</option>{Object.entries(PHASES_REPERE).map(([key,nom])=><option value={key}>{nom}</option>)}</select>
+      </label>
+      <label>L’ÉTAPE
+        <select id="filtre-type"><option value="">Toutes les étapes</option>{typesActifs.map(type=><option value={type}>{TYPES_REPERE[type]}</option>)}</select>
+      </label>
+      <button type="reset">TOUT AFFICHER</button>
+    </form>
+    <p class="resultat-filtre" id="nombre-visibles" role="status" aria-live="polite">{reperes.length} repères documentés</p>
+    <div id="annees-evenements">
+      {groupes.map(g => (
+        <section class="annee-judiciaire" data-annee={g.annee} aria-label={'Événements judiciaires de ' + g.annee}>
+          <h3 class="millesime"><span>{g.annee}</span><small>{g.evenements.length} REPÈRES</small></h3>
+          <ChronologieEvenements reperes={g.evenements} annee={g.annee} />
+        </section>
+      ))}
+    </div>
+    <p id="aucun-evenement" hidden>Aucun repère ne correspond à cette combinaison de filtres. Retirez un filtre pour élargir la sélection.</p>
+  </section>
+
+  <section class="temps-presse" aria-labelledby="temps-presse">
+    <div class="presse-entete"><span>LE REGISTRE / VEILLE DE PRESSE</span><h2 id="temps-presse">L’ÉCHO<br /><span>DES AUDIENCES.</span></h2><p>Ces chiffres proviennent exclusivement des alertes collectées. Un nombre élevé de mentions ne signifie ni davantage d’audiences ni davantage de faits établis.</p></div>
+    <div class="tableau-couverture">
+      {dossiers.map(d => (
+        <article>
+          <div class="tete-couverture"><h3><a href={'/dossiers/' + d.slug + '/'}>{d.titre}<span aria-hidden="true"> ↗</span></a></h3><span>{nombre(d.total)} liens de presse · {d.evenements} repères judiciaires documentés</span></div>
+          <div class="annees-couverture">
+            {d.annees.map(([annee,n]) => (
+              <a href={'/archives/presse/' + annee + '/'} title={'Explorer les archives générales de ' + annee}>
+                <strong>{annee}</strong><span>{nombre(n)} mentions</span>
+              </a>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+    <p class="note-presse">Les liens par année mènent à l’ensemble de la revue de presse de l’année concernée, sans filtre automatique sur une affaire précise. Les mentions par dossier sont comptées à partir des titres, sans analyse du texte intégral.</p>
+    <a class="tout-presse" href="/archives/presse/">CONSULTER TOUTES LES ARCHIVES DE PRESSE <span aria-hidden="true">↗</span></a>
+  </section>
+</Base>
+<script>
+  const form = document.querySelector<HTMLFormElement>('#filtres-chronologie');
+  const dossier = document.querySelector<HTMLSelectElement>('#filtre-dossier');
+  const phase = document.querySelector<HTMLSelectElement>('#filtre-phase');
+  const type = document.querySelector<HTMLSelectElement>('#filtre-type');
+  const bilan = document.querySelector<HTMLElement>('#nombre-visibles');
+  const aucun = document.querySelector<HTMLElement>('#aucun-evenement');
+
+  function filtrer() {
+    let n = 0;
+    for (const groupe of document.querySelectorAll<HTMLElement>('.annee-judiciaire')) {
+      let visibles = 0;
+      for (const li of groupe.querySelectorAll<HTMLElement>('.frise-evenements > li')) {
+        const ok = (!dossier.value || li.dataset.dossier === dossier.value)
+          && (!phase.value || li.dataset.phase === phase.value)
+          && (!type.value || li.dataset.type === type.value);
+        li.hidden = !ok;
+        if (ok) { n++; visibles++; }
+      }
+      groupe.hidden = visibles === 0;
+    }
+    bilan.textContent = n + ' repère' + (n > 1 ? 's' : '') + ' documenté' + (n > 1 ? 's' : '');
+    aucun.hidden = n !== 0;
+  }
+  form?.addEventListener('change', filtrer);
+  form?.addEventListener('reset', () => { dossier.value = ''; phase.value = ''; type.value = ''; filtrer(); });
+  filtrer();
+</script>
+<style>
+.chronologie-une{background:#151718;color:#fff;padding:clamp(1.5rem,5vw,5rem);margin-top:1.5rem;border-top:9px solid #ffe100}
+.marque-une{font:900 .66rem/1.45 var(--sans);color:#ffe100;letter-spacing:.1em;margin:0 0 3rem}
+.chronologie-une h1{font:900 clamp(2.6rem,7.4vw,7.2rem)/.95 var(--sans);letter-spacing:-.08em;margin:0 0 2rem}
+.chronologie-une h1 span{color:#ffe100}
+.chronologie-une>p:not(.marque-une){font:600 clamp(.98rem,1.5vw,1.25rem)/1.6 var(--sans);max-width:69ch;color:#e5e6e2}
+.totaux{display:flex;gap:1.5rem 3rem;flex-wrap:wrap;border-top:1px solid #676967;margin-top:2rem;padding-top:1.2rem}
+.totaux span{display:flex;align-items:baseline;gap:.6rem;font:900 .7rem/1.5 var(--sans);text-transform:uppercase}
+.totaux strong{font:900 2.2rem/1 var(--sans);color:#ffe100}
+.deux-horloges{margin:3rem 0 4rem}
+.deux-horloges h2{font:900 clamp(1.7rem,3vw,2.8rem)/1.1 var(--sans);letter-spacing:-.055em;border-bottom:4px solid #151718;padding-bottom:.8rem}
+.horloges{display:grid;grid-template-columns:1fr 1fr;gap:0;border:2px solid #151718}
+.horloges article{padding:clamp(1.3rem,2.8vw,2.2rem);background:#efefeb;color:#151718}
+.horloges article:first-child{background:#ffe100;border-right:2px solid #151718}
+.horloges article>span{font:900 .7rem/1.35 var(--sans);letter-spacing:.06em}
+.horloges h3{font:900 clamp(1.4rem,2.5vw,2.2rem)/1.1 var(--sans);margin:1.2rem 0;letter-spacing:-.05em}
+.horloges p{font:500 .93rem/1.55 var(--sans);margin:0;max-width:50ch}
+.verification{font:850 .68rem/1.6 var(--sans);text-transform:uppercase;color:var(--encre-2);max-width:100ch;margin:1rem 0}
+.entete-frise{display:grid;grid-template-columns:1.25fr 1fr;gap:3rem;align-items:end;border-top:7px solid #151718;padding:1.5rem 0 2rem}
+.entete-frise div>span,.presse-entete>span{font:900 .69rem/1.45 var(--sans);letter-spacing:.08em}
+.entete-frise h2,.presse-entete h2{font:900 clamp(2.3rem,5.5vw,5rem)/.96 var(--sans);letter-spacing:-.065em;margin:.8rem 0 0}
+.entete-frise mark{background:#ffe100;color:#151718}
+.entete-frise>p,.presse-entete>p{font:550 .93rem/1.6 var(--sans);max-width:55ch;margin:0}
+.filtres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:.7rem;padding:1.4rem;background:#f0f0eb;color:#151718;border:2px solid #151718;align-items:end}
+.filtres label{font:900 .65rem/1.4 var(--sans);display:flex;flex-direction:column;gap:.45rem}
+.filtres select{appearance:auto;width:100%;min-height:48px;background:#fff;color:#151718;border:2px solid #151718;border-radius:0;font:650 .8rem/1.45 var(--sans);padding:.6rem}
+.filtres button{min-height:48px;background:#151718;color:#fff;border:2px solid #151718;font:900 .68rem/1.45 var(--sans);cursor:pointer}
+.filtres button:hover{background:#ffe100;color:#151718}
+.resultat-filtre{font:900 .7rem/1.5 var(--sans);text-transform:uppercase;letter-spacing:.04em;margin:1.5rem 0}
+.annee-judiciaire{margin:0 0 3rem}
+.annee-judiciaire[hidden],#aucun-evenement[hidden]{display:none}
+.millesime{border-bottom:6px solid #151718;display:flex;justify-content:space-between;align-items:end;padding-bottom:1rem;margin-bottom:0;gap:1rem}
+.millesime span{font:900 clamp(3rem,7vw,6rem)/1 var(--sans);letter-spacing:-.07em}
+.millesime small{font:850 .71rem/1.4 var(--sans)}
+#aucun-evenement{padding:2rem;font:700 1rem/1.55 var(--sans);background:#f2f2ef}
+.temps-presse{margin:5rem 0 3rem;padding-top:2rem;border-top:8px solid #151718}
+.presse-entete{display:grid;grid-template-columns:1.1fr 1fr;gap:1rem 3rem;align-items:end;margin-bottom:2rem}
+.presse-entete>span{grid-column:1/-1}
+.presse-entete h2{margin:0}
+.presse-entete h2 span{background:#ffe100;color:#151718}
+.tableau-couverture{border-top:2px solid #151718}
+.tableau-couverture article{padding:1.3rem 0 1.7rem;border-bottom:2px solid #151718}
+.tete-couverture{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.tete-couverture h3{font:900 clamp(1.3rem,2.5vw,2rem)/1.2 var(--sans);letter-spacing:-.035em;margin:0}
+.tete-couverture h3 a:hover{background:#ffe100;color:#151718}
+.tete-couverture>span{font:750 .68rem/1.4 var(--sans);text-transform:uppercase;color:var(--encre-2)}
+.annees-couverture{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:1rem}
+.annees-couverture a{display:flex;flex-direction:column;gap:.1rem;background:#f0f0eb;color:#151718;border:1px solid #151718;padding:.7rem .85rem;min-width:92px}
+.annees-couverture a:hover{background:#ffe100;color:#151718}
+.annees-couverture strong{font:900 1.25rem/1.15 var(--sans)}
+.annees-couverture span{font:700 .63rem/1.4 var(--sans)}
+.note-presse{font:650 .76rem/1.65 var(--sans);color:var(--encre-2);max-width:92ch}
+.tout-presse{display:flex;justify-content:space-between;gap:1rem;background:#ffe100;color:#151718;padding:1.3rem;margin:2rem 0 0;font:900 .74rem/1.4 var(--sans)}
+.tout-presse:hover{background:#151718;color:#fff}
+@media(max-width:63.99rem){.filtres{grid-template-columns:repeat(2,minmax(0,1fr))}.filtres button{grid-column:2}}
+@media(max-width:47.99rem){.chronologie-une{padding:2rem 1.2rem}.chronologie-une h1{font-size:clamp(2.4rem,9vw,4.5rem)}.marque-une{margin-bottom:1.7rem}.horloges,.entete-frise,.presse-entete{grid-template-columns:1fr}.horloges article:first-child{border-right:0;border-bottom:2px solid #151718}.entete-frise{gap:1.2rem}.presse-entete>span{grid-column:auto}.filtres{grid-template-columns:1fr;padding:1rem}.filtres button{grid-column:auto}.millesime span{font-size:3.4rem}.totaux{gap:1.5rem}}
+</style>
