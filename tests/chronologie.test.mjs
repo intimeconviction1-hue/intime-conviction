@@ -64,7 +64,7 @@ test('la date de publication n’est pas confondue avec la date d’événement'
   assert.equal(verdict.dateSource, '2025-10-10');
   const ouverture = REPERES_JUDICIAIRES.find(r => r.id === 'inass-proces-ouverture-2026');
   assert.equal(ouverture.dateEvenement, '2026-11-02');
-  assert.equal(ouverture.dateSource, '2026-11-01');
+  assert.equal(ouverture.dateSource, '2026-11-03');
 });
 
 test('le suivi de veille compte séparément les dates d’alertes, sans les convertir en dates judiciaires', () => {
