@@ -19,20 +19,20 @@ const date = s => new Intl.DateTimeFormat('fr-FR', {
 ---
 <Base
   titre="Chronologie judiciaire"
-  description="Les étapes judiciaires documentées des dossiers d’Intime Conviction : dates d’audience, décisions et appels, avec les sources. Distinctes des dates des alertes de presse."
+  description="Les étapes judiciaires documentées des dossiers d’Intime Conviction : dates d’audience, décisions et appels, avec les sources. À distinguer des dates de repérage des articles de presse."
   rubriqueActive="chronologie"
 >
   <header class="chronologie-une">
     <p class="marque-une">INTIME CONVICTION / MÉMOIRE JUDICIAIRE</p>
     <h1>CHRONOLOGIE<br /><span>JUDICIAIRE.</span></h1>
-    <p>Une affaire se déroule en plusieurs temps. Cette chronologie présente des étapes judiciaires <strong>identifiées dans des sources de presse consultables</strong>, et non des dates supposées à partir des alertes Google.</p>
+    <p>Une affaire se déroule en plusieurs temps. Cette chronologie présente des étapes judiciaires <strong>identifiées dans des sources de presse consultables</strong>, et non des dates déduites de la simple mention d’une affaire dans la presse.</p>
     <div class="totaux"><span><strong>{nombre(reperes.length)}</strong> jalons documentés</span><span><strong>{dossiers.length}</strong> dossiers suivis</span><span><strong>{groupes.length}</strong> années d’événements</span></div>
   </header>
 
   <p class="verification">Sélection non exhaustive, vérifiée le <time datetime={VERIFICATION_AU}>{date(VERIFICATION_AU)}</time>. Les dates sont celles des événements judiciaires sourcés, et non celles de leur mention dans la presse. Les recours et le caractère définitif des décisions doivent être vérifiés pour chaque affaire.</p>
 
   <section class="temps-judiciaire" aria-labelledby="liste-dates">
-    <div class="entete-frise"><div><span>LE REGISTRE / ÉTAPES DOCUMENTÉES</span><h2 id="liste-dates">CHRONOLOGIE<br /><mark>DES PROCÉDURES.</mark></h2></div><p>Chaque repère renvoie à une source externe, avec sa date de publication. Le site ne déduit jamais le résultat d’un procès d’un simple titre d’alerte.</p></div>
+    <div class="entete-frise"><div><span>LE REGISTRE / ÉTAPES DOCUMENTÉES</span><h2 id="liste-dates">CHRONOLOGIE<br /><mark>DES PROCÉDURES.</mark></h2></div><p>Chaque repère renvoie à une source externe, avec sa date de publication. Le résultat d’un procès ne peut pas être déduit d’un simple titre de presse.</p></div>
     <form id="filtres-chronologie" class="filtres" role="search">
       <label>LE DOSSIER
         <select id="filtre-dossier"><option value="">Toutes les affaires</option>{dossiers.map(d=><option value={d.slug}>{d.titre}</option>)}</select>
