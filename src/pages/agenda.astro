@@ -6,6 +6,21 @@ const dateDuJour=dateLocaleAgenda();
 const dates=sessionsAvenir(SESSIONS_AGENDA,dateDuJour);
 const audiences=sessionsAvenir(AUDIENCES_A_RECONFIRMER,dateDuJour);
 const formatDate=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(s+'T12:00:00Z'));
+const toutesLesPeriodes=[...dates,...audiences];
+const departements=[...new Set(toutesLesPeriodes.map(a=>a.departement))].sort((a,b)=>a.localeCompare(b,'fr'));
+const tousLesMois=new Set();
+for(const entree of toutesLesPeriodes){
+  const [annee,mois]=entree.debut.split('-').map(Number);
+  const [finAnnee,finMois]=entree.fin.split('-').map(Number);
+  for(let an=annee,m=mois;an<finAnnee || (an===finAnnee && m<=finMois);){
+    tousLesMois.add(`${an}-${String(m).padStart(2,'0')}`);
+    if(++m>12){m=1;an++;}
+  }
+}
+const moisDisponibles=[...tousLesMois].sort().map(value=>({
+  value,
+  label:new Intl.DateTimeFormat('fr-FR',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(value+'-01T12:00:00Z'))
+}));
 ---
 <Base titre="Agenda des sessions criminelles" description="Dates de sessions publiées par les cours d’appel. Sources officielles identifiées, sans déduire les audiences individuelles ni les décisions." rubriqueActive="annuaire">
   <header class="tete-agenda">
@@ -14,12 +29,30 @@ const formatDate=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',
     <p>Les périodes ci-dessous proviennent des intitulés de rôles publiés par les cours d’appel. Une période de session ne confirme ni la tenue d’un procès particulier ni l’accès du public à chaque audience.</p>
     <p class="date-controle">Sources vérifiées le <time datetime={DATE_CONTROLE_AGENDA}>{formatDate(DATE_CONTROLE_AGENDA)}</time>. Sessions non terminées au <time datetime={dateDuJour}>{formatDate(dateDuJour)}</time>, date de génération de cette page.</p>
   </header>
+  <form class="filtres-agenda" id="filtres-agenda" aria-label="Filtrer les sessions et audiences">
+    <div>
+      <label for="filtre-departement">Département</label>
+      <select id="filtre-departement" name="departement">
+        <option value="">Tous les départements</option>
+        {departements.map(n=><option value={n}>{n}</option>)}
+      </select>
+    </div>
+    <div>
+      <label for="filtre-mois">Période</label>
+      <select id="filtre-mois" name="mois">
+        <option value="">Toutes les périodes</option>
+        {moisDisponibles.map(m=><option value={m.value}>{m.label}</option>)}
+      </select>
+    </div>
+    <button type="reset">Effacer les filtres</button>
+    <p id="resultats-agenda" role="status" aria-live="polite">Affichage de toutes les périodes répertoriées.</p>
+  </form>
   <section class="sessions" aria-labelledby="titre-sessions">
     <div class="titre-liste"><h2 id="titre-sessions">Sessions non terminées</h2><span>{dates.length} période{dates.length > 1 ? 's' : ''} répertoriée{dates.length > 1 ? 's' : ''}</span></div>
     {dates.length === 0 && <p class="agenda-vide">Aucune session future ou en cours ne figure dans notre sélection actuellement vérifiée. Consultez les rôles officiels pour les nouvelles dates.</p>}
     <ol>
       {dates.map(s=>(
-        <li>
+        <li data-agenda-ligne data-departement={s.departement} data-debut={s.debut} data-fin={s.fin}>
           <div class="periode"><time datetime={s.debut}>{formatDate(s.debut)}</time><span>au</span><time datetime={s.fin}>{formatDate(s.fin)}</time></div>
           <div class="contenu">
             <p class="localisation">{s.ville} · {s.departement}</p>
@@ -36,7 +69,7 @@ const formatDate=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',
     <p>Ces dates et qualifications proviennent de calendriers publics de la cour d’appel de Rennes. Dernières mises à jour affichées : 8 juin 2026 pour le Finistère et 16 septembre 2026 pour l’Ille-et-Vilaine. Lors du contrôle du 7 novembre 2026, leurs pages directes renvoyaient une maintenance. <strong>Le maintien de ces audiences n’est donc pas reconfirmé.</strong> Avant tout déplacement, consulter le greffe. Les audiences devant la cour d’assises des mineurs sont exclues de cette sélection ; une audience évoquant des victimes mineures ne relève pas nécessairement de cette juridiction.</p>
     {audiences.length === 0 ? <p>Aucune date non échue ne subsiste dans cette sélection.</p> : (
       <ol>{audiences.map(a=>(
-        <li>
+        <li data-agenda-ligne data-departement={a.departement} data-debut={a.debut} data-fin={a.fin}>
           <div class="periode"><time datetime={a.debut}>{formatDate(a.debut)}</time><span>au</span><time datetime={a.fin}>{formatDate(a.fin)}</time></div>
           <div>
             <p class="localisation">{a.ville} · {a.departement}</p>
@@ -63,6 +96,31 @@ const formatDate=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',
     <a href="/veille-roles/">Consulter toutes les sources officielles répertoriées</a>
   </aside>
 </Base>
+<script>
+  const filtres=document.querySelector<HTMLFormElement>('#filtres-agenda');
+  const territoire=document.querySelector<HTMLSelectElement>('#filtre-departement');
+  const periode=document.querySelector<HTMLSelectElement>('#filtre-mois');
+  const message=document.querySelector<HTMLElement>('#resultats-agenda');
+  const lignes=[...document.querySelectorAll<HTMLElement>('[data-agenda-ligne]')];
+  function afficherSelection(){
+    const departement=territoire?.value??'';
+    const mois=periode?.value??'';
+    const debutMois=mois?mois+'-01':'';
+    const finMois=mois?mois+'-31':'';
+    let visibles=0;
+    for(const ligne of lignes){
+      const memeDepartement=!departement||ligne.dataset.departement===departement;
+      const memePeriode=!mois||(ligne.dataset.debut!<=finMois&&ligne.dataset.fin!>=debutMois);
+      ligne.hidden=!(memeDepartement&&memePeriode);
+      if(!ligne.hidden)visibles++;
+    }
+    if(message)message.textContent=visibles===0
+      ?'Aucune période répertoriée ne correspond à ces filtres.'
+      :visibles+' période'+(visibles>1?'s':'')+' affichée'+(visibles>1?'s':'')+'.';
+  }
+  filtres?.addEventListener('change',afficherSelection);
+  filtres?.addEventListener('reset',()=>requestAnimationFrame(afficherSelection));
+</script>
 <style>
 .tete-agenda{margin:2rem 0 2.5rem;padding:clamp(1.5rem,4vw,3rem);background:#f3f0eb;border-top:3px solid #a12c39;color:#202529}
 .sur-titre{margin:0 0 1rem;font:650 .8rem/1.5 var(--sans);color:#96313b}
@@ -110,4 +168,14 @@ const formatDate=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',
 .audiences-indicatives li a{font:650 .82rem/1.5 var(--sans);text-decoration:underline;text-underline-offset:.2em}
 .audiences-indicatives li a:hover{color:#96313b}
 @media(max-width:40rem){.audiences-indicatives{padding:1rem}.audiences-indicatives li{grid-template-columns:minmax(0,1fr);gap:.7rem}}
+
+.filtres-agenda{display:flex;flex-wrap:wrap;align-items:end;gap:.9rem 1.2rem;padding:1.2rem;margin:1.8rem 0 2rem;background:#f3f0eb;border-top:2px solid #a12c39;font:500 .86rem/1.5 var(--sans)}
+.filtres-agenda>div{display:flex;flex-direction:column;gap:.35rem;flex:1 1 190px;min-width:0}
+.filtres-agenda label{font-weight:650;color:#202529}
+.filtres-agenda select{font:500 .93rem/1.4 var(--sans);padding:.7rem .65rem;border:1px solid #aaa39d;border-radius:0;min-height:44px;max-width:100%;background:#fff;color:#202529}
+.filtres-agenda button{font:650 .8rem/1.4 var(--sans);text-transform:none;letter-spacing:0;background:#fff;color:#202529;border:1px solid #a12c39;border-radius:0;padding:.75rem .9rem;min-height:44px;cursor:pointer}
+.filtres-agenda button:hover{background:#a12c39;color:#fff}
+.filtres-agenda #resultats-agenda{flex-basis:100%;margin:0;color:#555b5f;font-size:.81rem}
+.sessions li[hidden],.audiences-indicatives li[hidden]{display:none!important}
+@media(max-width:40rem){.filtres-agenda{padding:1rem}.filtres-agenda button{width:100%}}
 </style>
