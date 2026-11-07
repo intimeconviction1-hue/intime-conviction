@@ -18,6 +18,7 @@ const sources=[
     <a href="#juridictions">QUI JUGE QUOI ? <span aria-hidden="true">↘</span></a>
     <a href="#etapes">LE DÉROULEMENT <span aria-hidden="true">↘</span></a>
     <a href="#acteurs">LES ACTEURS <span aria-hidden="true">↘</span></a>
+    <a href="#jures">ÊTRE JURÉ <span aria-hidden="true">↘</span></a>
     <a href="#lexique">LE LEXIQUE <span aria-hidden="true">↘</span></a>
   </nav>
   <section id="juridictions" class="blocs" aria-labelledby="titre-juridictions">
@@ -38,8 +39,31 @@ const sources=[
     <div class="head-section"><p>03 / QUI PARLE ? QUI DÉCIDE ?</p><h2 id="titre-acteurs">LES VISAGES<br /><mark>DE L’AUDIENCE.</mark></h2></div>
     <div class="grille-acteurs">{ACTEURS_ASSISES.map((a,i)=><article><p class="indice">RÔLE {String(i+1).padStart(2,'0')}</p><h3>{a.nom}</h3><p>{a.fonction}</p></article>)}</div>
   </section>
+  <section id="jures" class="jures-guide" aria-labelledby="titre-jures">
+    <div class="head-section"><p>04 / PARTICIPER À LA JUSTICE</p><h2 id="titre-jures">ÊTRE JURÉ<br /><mark>D’ASSISES.</mark></h2></div>
+    <p class="jures-intro">Des citoyens tirés au sort participent au jugement aux côtés des magistrats professionnels. Leur rôle commence par l’écoute des débats et se poursuit jusqu’au délibéré.</p>
+    <div class="jures-grille">
+      <article>
+        <h3>La désignation</h3>
+        <p>Les jurés sont tirés au sort à partir des listes électorales, sous réserve des conditions légales d’aptitude et des règles d’incapacité ou d’incompatibilité. Un nouveau tirage au sort intervient pour chaque affaire.</p>
+      </article>
+      <article>
+        <h3>La mission</h3>
+        <p>Les jurés prêtent serment, assistent aux débats et participent aux décisions avec les magistrats. Ils doivent faire preuve d’impartialité et garder le secret du délibéré.</p>
+      </article>
+      <article>
+        <h3>Les droits</h3>
+        <p>La participation est une obligation légale lorsqu’on est désigné, sauf dispense admise. Des indemnités peuvent couvrir le temps consacré à la mission et certains frais.</p>
+      </article>
+    </div>
+    <div class="jures-faits">
+      <div><strong>6</strong><span>jurés en première instance</span></div>
+      <div><strong>9</strong><span>jurés en appel</span></div>
+      <a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F1540" target="_blank" rel="noopener noreferrer">Conditions, dispenses et indemnités : informations officielles <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
   <section id="lexique" class="lexique" aria-labelledby="titre-lexique">
-    <div class="head-section"><p>04 / LE DROIT EN MOTS SIMPLES</p><h2 id="titre-lexique">LES MOTS<br /><mark>DU PRÉTOIRE.</mark></h2></div>
+    <div class="head-section"><p>05 / LE DROIT EN MOTS SIMPLES</p><h2 id="titre-lexique">LES MOTS<br /><mark>DU PRÉTOIRE.</mark></h2></div>
     <div class="aide-lexique"><p>Un glossaire original et volontairement bref. Les définitions générales n’effacent pas les subtilités propres à chaque procédure.</p><label for="chercher-mot">CHERCHER UN MOT <input id="chercher-mot" type="search" autocomplete="off" placeholder="Ex. appel, juré, huis clos..." /></label></div>
     <dl class="entrees" id="entrees-lexique">{LEXIQUE_ASSISES.map(([mot,definition])=><div data-terme={mot}><dt>{mot}</dt><dd>{definition}</dd></div>)}</dl>
     <p class="absence" id="rien" hidden>Aucun terme correspondant. Essaie un autre mot.</p>
@@ -67,10 +91,10 @@ const sources=[
 .stats{display:flex;flex-wrap:wrap;gap:1rem 3.5rem;border-top:1px solid #777;padding-top:1rem}
 .stats span{display:flex;align-items:baseline;gap:.7rem;font:900 .7rem/1.5 var(--sans);text-transform:uppercase}
 .stats strong{font:900 2.2rem/1 var(--sans);color:#ffe100}
-.sommaire{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.3rem;margin:0 0 4rem;background:#151718;padding:.35rem}
+.sommaire{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.3rem;margin:0 0 4rem;background:#151718;padding:.35rem}
 .sommaire a{display:flex;justify-content:space-between;align-items:center;gap:.6rem;background:#ffe100;color:#151718;min-height:60px;padding:.8rem;font:900 .68rem/1.3 var(--sans)}
 .sommaire a:hover{background:#fff;color:#151718}
-.blocs,.etapes,.acteurs,.lexique{scroll-margin-top:2rem;margin:4.5rem 0}
+.blocs,.etapes,.acteurs,.jures-guide,.lexique{scroll-margin-top:2rem;margin:4.5rem 0}
 .head-section{border-top:7px solid #151718;padding-top:1.6rem;display:grid;grid-template-columns:1.3fr 1fr;gap:1.4rem 2rem;align-items:end;margin-bottom:1.6rem}
 .head-section>p{grid-column:1/-1;font:900 .7rem/1.4 var(--sans);letter-spacing:.06em;margin:0}
 .head-section h2{font:900 clamp(2.3rem,5vw,4.8rem)/.98 var(--sans);letter-spacing:-.067em;margin:0}
@@ -116,4 +140,17 @@ const sources=[
 .footer-ressources a{display:flex;justify-content:space-between;gap:.7rem;padding:1rem 0;font:900 .76rem/1.45 var(--sans)}
 .footer-ressources a:hover{color:#ffe100}
 @media(max-width:48rem){.ouverture{padding:2rem 1.2rem}.ouverture h1{font-size:clamp(3.1rem,11vw,5rem)}.sommaire{grid-template-columns:repeat(2,minmax(0,1fr))}.head-section,.comparateur,.aide-lexique,.footer-ressources{grid-template-columns:1fr}.head-section>p{grid-column:auto}.timeline li{grid-template-columns:50px 1fr;gap:1rem}.grille-acteurs,.entrees{grid-template-columns:1fr}.grille-acteurs article:nth-child(odd),.entrees>div:nth-child(odd){border-right:0}}
+
+.jures-intro{font:500 clamp(1rem,1.5vw,1.18rem)/1.65 var(--sans);max-width:73ch;margin:0 0 1.75rem;color:var(--encre-2)}
+.jures-grille{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.jures-grille article{border:1px solid var(--filet-fort);border-top:3px solid var(--encre);padding:1.5rem;background:var(--papier)}
+.jures-grille h3{font:750 1.35rem/1.2 var(--sans);margin:0 0 .8rem}
+.jures-grille p{font:450 .94rem/1.6 var(--sans);margin:0}
+.jures-faits{display:flex;flex-wrap:wrap;align-items:center;gap:1.5rem 2.5rem;border-block:1px solid var(--filet);padding:1.1rem 0;margin-top:1.25rem}
+.jures-faits div{display:flex;align-items:baseline;gap:.55rem}
+.jures-faits strong{font:650 2.6rem/1 var(--serif)}
+.jures-faits span{font:600 .78rem/1.45 var(--sans)}
+.jures-faits a{margin-left:auto;font:700 .76rem/1.4 var(--sans);text-decoration:underline;text-underline-offset:.25rem}
+@media(max-width:63.99rem){.jures-grille{grid-template-columns:1fr 1fr}.sommaire{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:47.99rem){.jures-grille{grid-template-columns:1fr}.jures-faits{align-items:flex-start;flex-direction:column;gap:.8rem}.jures-faits a{margin-left:0}.sommaire{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
