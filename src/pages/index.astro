@@ -20,14 +20,7 @@ const rubriques = RUBRIQUES.map(r=>{
 });
 const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
 const total=articles.length.toLocaleString('fr-FR');
-const PHOTOS_RUBRIQUES = {
-  'cours-du-jour': {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Palais-de-justice-paris.jpg?width=960',alt:"Façade du palais de justice de Paris",credit:"Nitot",page:'https://commons.wikimedia.org/wiki/File:Palais-de-justice-paris.jpg'},
-  'le-banc-des-jures': {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Palais_de_Justice_(Paris).jpg?width=960',alt:"Palais de justice de Paris",credit:"Wikimedia Commons",page:'https://commons.wikimedia.org/wiki/File:Palais_de_Justice_(Paris).jpg'},
-  'la-cour-se-leve': {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Palais_de_justice_de_Paris%2C_juin_2026_04.jpg?width=960',alt:"Façade du palais de justice de Paris",credit:"Ibex73",page:'https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris%2C_juin_2026_04.jpg'},
-  'delibere': {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Palais_de_justice_de_Paris%2C_juin_2026_06.jpg?width=960',alt:"Statue La Vérité, palais de justice de Paris",credit:"Ibex73",page:'https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris%2C_juin_2026_06.jpg'},
-  'l-expose': {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Palais_de_justice_de_Paris%2C_juin_2026_01.jpg?width=960',alt:"Statue La Vérité, palais de justice de Paris",credit:"Ibex73",page:'https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris%2C_juin_2026_01.jpg'},
-  'le-greffe': {src:'https://commons.wikimedia.org/wiki/Special:FilePath/Fa%C3%A7ade_du_Palais_de_Justice_sur_la_place_Dauphine%2C_vue_de_trois_quarts%2C_1er_arrondissement%2C_Paris%2C_PH77876.jpg?width=960',alt:"Photographie historique du palais de justice de Paris",credit:"Hippolyte Blancard / Musée Carnavalet",page:'https://commons.wikimedia.org/wiki/File:Fa%C3%A7ade_du_Palais_de_Justice_sur_la_place_Dauphine%2C_vue_de_trois_quarts%2C_1er_arrondissement%2C_Paris%2C_PH77876.jpg'},
-};
+
 
 ---
 <Base accueil>
@@ -40,20 +33,6 @@ const PHOTOS_RUBRIQUES = {
         </div>
         <a class="une-news-lien" href="/rubrique/cours-du-jour/">Toute la rubrique <span aria-hidden="true">↗</span></a>
       </header>
-      <section class="accueil-mosaique" aria-label="Découvrir la justice en images">
-        <figure class="accueil-photo-reportage accueil-visuel-majeur">
-          <img src={frontonAssises.src} width={frontonAssises.width} height={frontonAssises.height} alt="Fronton d'une cour d'assises" fetchpriority="high" decoding="async" />
-          <figcaption><span>LES LIEUX DE JUSTICE</span><span>Dans les palais de justice</span></figcaption>
-        </figure>
-        <a class="accueil-visuel-secondaire" href="/rubrique/le-banc-des-jures/">
-          <img src={PHOTOS_RUBRIQUES['le-banc-des-jures'].src} alt={PHOTOS_RUBRIQUES['le-banc-des-jures'].alt} width="960" height="600" loading="eager" decoding="async" onerror="this.onerror=null;this.src='/illustrations/le-banc-des-jures.svg'" />
-          <span class="accueil-visuel-legende"><small>COMPRENDRE</small>Le Banc des Jurés <span aria-hidden="true">↗</span></span>
-        </a>
-        <a class="accueil-visuel-secondaire" href="/rubrique/la-cour-se-leve/">
-          <img src={PHOTOS_RUBRIQUES['la-cour-se-leve'].src} alt={PHOTOS_RUBRIQUES['la-cour-se-leve'].alt} width="960" height="600" loading="eager" decoding="async" onerror="this.onerror=null;this.src='/illustrations/la-cour-se-leve.svg'" />
-          <span class="accueil-visuel-legende"><small>RACONTER</small>La Cour se Lève <span aria-hidden="true">↗</span></span>
-        </a>
-      </section>
       {articlesCarrousel.length > 0 && (
         <section class="articles-carrousel" aria-label="Trois articles à la une" data-editorial-carousel>
           <div class="articles-carrousel-tete">
@@ -68,6 +47,10 @@ const PHOTOS_RUBRIQUES = {
           <div class="articles-carrousel-piste" data-editorial-track tabindex="0" aria-label="Articles de la rédaction à faire défiler">
             {articlesCarrousel.map(({data},i) => (
               <article class="article-redaction-une" aria-label={`Article ${i+1} sur ${articlesCarrousel.length}`}>
+                <a class="article-redaction-visuel" href={data.chemin} tabindex="-1" aria-hidden="true">
+                  <img src={data.rubrique === 'cours-du-jour' ? frontonAssises.src : `/illustrations/${data.rubrique}.svg`} alt="" width="640" height="520" loading={i===0?'eager':'lazy'} decoding="async" />
+                  <span>Illustration</span>
+                </a>
                 <div class="article-redaction-une-texte">
                   <p class="article-redaction-une-kicker">LE JOURNAL / {String(i+1).padStart(2,'0')}</p>
                   <p class="article-redaction-une-date"><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time> · {rubrique(data.rubrique).nom}</p>
@@ -111,6 +94,10 @@ const PHOTOS_RUBRIQUES = {
       <div class="titre-section"><h2 id="titre-selection">À relire dans nos archives</h2><a href="/archives/">Toutes les archives <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></div>
       <div class="selection-grille">
         <article class="article-principal">
+          <a class="article-archive-visuel" href={archiveUne.data.chemin} tabindex="-1" aria-hidden="true">
+            <img src={`/illustrations/${archiveUne.data.rubrique}.svg`} alt="" width="640" height="520" loading="lazy" decoding="async" />
+            <span>Illustration</span>
+          </a>
           <p class="meta"><span class="etiquette">{rubrique(archiveUne.data.rubrique).nom}</span><time datetime={archiveUne.data.date.toISOString()}>{dateLongue(archiveUne.data.date)}</time></p>
           <h3><a href={archiveUne.data.chemin}>{archiveUne.data.titre}</a></h3>
           <p class="chapeau">{archiveUne.data.extrait}</p>
@@ -125,10 +112,6 @@ const PHOTOS_RUBRIQUES = {
     <section class="univers" aria-labelledby="titre-rubriques">
       <div class="titre-section"><h2 id="titre-rubriques">LES SIX RUBRIQUES <span>DU JOURNAL.</span></h2></div>
       <ul class="rubriques">{rubriques.map(r=><li>
-        <figure class="rubrique-photo">
-          <a class="rubrique-visuel" href={`/rubrique/${r.slug}/`} aria-label={`Découvrir ${r.nom}`}><img src={PHOTOS_RUBRIQUES[r.slug].src} alt={PHOTOS_RUBRIQUES[r.slug].alt} width="960" height="600" loading="lazy" decoding="async" /></a>
-          <figcaption>Photo : <a href={PHOTOS_RUBRIQUES[r.slug].page} target="_blank" rel="noopener noreferrer">{PHOTOS_RUBRIQUES[r.slug].credit}</a> · Wikimedia Commons</figcaption>
-        </figure>
         <div class="rubrique-entete"><h3><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></h3><a class="ouvrir-rubrique" href={`/rubrique/${r.slug}/`} aria-label={`Ouvrir ${r.nom}`}><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div>
         <p class="sous-titre">{r.sousTitre}</p>
         <ul class="titres">{r.titres.map(({data})=><li><a href={data.chemin}>{data.titre}</a><span class="meta source-presse">Intime Conviction · archive</span></li>)}</ul>
@@ -754,4 +737,13 @@ const PHOTOS_RUBRIQUES = {
   .accueil-visuel-legende span{font-size:1rem}
   .accueil-visuel-secondaire:focus-visible{outline:3px solid #92253a;outline-offset:3px}
   @media(max-width:720px){.accueil-mosaique{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:275px 145px;height:auto;gap:8px}.accueil-mosaique .accueil-photo-reportage{grid-column:1/3;grid-row:1}.accueil-visuel-legende{left:.7rem;right:.7rem;bottom:.7rem;font-size:.95rem}.accueil-visuel-legende small{font-size:.56rem}}
+
+  /* Les images accompagnent les ARTICLES, sans section autonome. */
+  .articles-carrousel .article-redaction-une{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(1rem,2.5vw,2.5rem);align-items:center}
+  .articles-carrousel .article-redaction-visuel,.selection .article-archive-visuel{position:relative;display:block;overflow:hidden;background:#e8e0d5;align-self:stretch}
+  .articles-carrousel .article-redaction-visuel{min-height:285px;aspect-ratio:5/4}
+  .articles-carrousel .article-redaction-visuel img,.selection .article-archive-visuel img{display:block;width:100%;height:100%;object-fit:cover}
+  .articles-carrousel .article-redaction-visuel span,.selection .article-archive-visuel span{position:absolute;bottom:.65rem;right:.65rem;background:#f7f5f0e8;color:#34312c;font:600 .6rem/1.4 var(--sans);padding:.18rem .45rem}
+  .selection .article-archive-visuel{aspect-ratio:16/9;margin-bottom:1.25rem}
+  @media(max-width:720px){.articles-carrousel .article-redaction-une{grid-template-columns:1fr;gap:1rem}.articles-carrousel .article-redaction-visuel{min-height:0;aspect-ratio:16/9}}
 </style>
