@@ -1,5 +1,4 @@
 ---
-import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import AgendaEnBref from '../components/AgendaEnBref.astro';
 import Culture from '../components/Culture.astro';
@@ -7,7 +6,6 @@ import { lireActualites, lireVeille } from '../lib/veille.mjs';
 import { RUBRIQUES, rubrique } from '../lib/rubriques.mjs';
 import { DOSSIERS, referencesPourDossier } from '../lib/dossiers.mjs';
 import { tousLesArticles, dateLongue, minutesDeLecture } from '../lib/articles.mjs';
-import fronton from '../assets/fronton-cour-dassises.jpg';
 
 const articles = await tousLesArticles();
 const [fil, veille] = await Promise.all([lireActualites(), lireVeille()]);
@@ -20,35 +18,58 @@ const rubriques = RUBRIQUES.map(r=>{
 });
 const nouvellesOuverture=(fil?.articles??[]).filter(n=>n.rubrique==='cours-du-jour').slice(0,6);
 const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
-const dossierOuverture = dossiersMisEnAvant[0];
+const [nouvellePrincipale, ...autresNouvelles] = nouvellesOuverture;
 const total=articles.length.toLocaleString('fr-FR');
 const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',timeZone:'Europe/Paris'});
 ---
 <Base accueil>
-  <div slot="fond" class="fond-page" aria-hidden="true"><Image src={fronton} alt="" width={500} loading="eager" fetchpriority="high" /></div>
-  <section class="ouverture" aria-labelledby="titre-journal">
+  <section class="ouverture" aria-labelledby="titre-cours-du-jour">
     <div class="cadre ouverture-interieur">
-      <div class="une-grille">
-        <article class="grand-angle">
-          <Image src={fronton} alt="" width={900} loading="eager" fetchpriority="high" />
-          <div class="grand-angle-voile"></div>
-          <div class="grand-angle-texte">
-            <p class="cartouche">DOSSIER À DÉCOUVRIR</p>
-            <h1 id="titre-journal">{dossierOuverture?.titre ?? 'Les dossiers judiciaires'}</h1>
-            <p class="grand-angle-description">{dossierOuverture ? `${dossierOuverture.nombre.toLocaleString('fr-FR')} références de presse réunies autour de cette affaire, à consulter avec leurs sources.` : 'Les affaires et leurs sources, réunies dans les dossiers du journal.'}</p>
-            <div class="grand-angle-actions">
-              <a class="une-lire" href={dossierOuverture ? `/dossiers/${dossierOuverture.slug}/` : '/dossiers/'}>OUVRIR LE DOSSIER <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a>
+      <header class="une-news-entete">
+        <div>
+          <p class="une-news-surtitre">ACTUALITÉ JUDICIAIRE</p>
+          <h1 id="titre-cours-du-jour">Cours du Jour</h1>
+          <p>Les procès criminels dans l’actualité. Une sélection de titres publiés par des médias identifiés.</p>
+        </div>
+        <a class="une-news-lien" href="/rubrique/cours-du-jour/">Toute la rubrique <span aria-hidden="true">↗</span></a>
+      </header>
+      {nouvellePrincipale ? (
+        <article class="une-info-principale">
+          <div class="une-info-contenu">
+            <p class="une-info-source"><span>{nouvellePrincipale.source}</span> <time datetime={nouvellePrincipale.date}>{datePresse.format(new Date(nouvellePrincipale.date))}</time></p>
+            <h2><a href={nouvellePrincipale.lien} target="_blank" rel="noopener noreferrer">{nouvellePrincipale.titre}<span class="sr-only"> (site externe, nouvel onglet)</span></a></h2>
+            <p class="une-info-precision">Revue de presse. Lire l’article sur le site du média d’origine.</p>
+            <a class="une-info-action" href={nouvellePrincipale.lien} target="_blank" rel="noopener noreferrer">Lire l’article <span aria-hidden="true">↗</span></a>
+          </div>
+          <aside class="une-info-reperes">
+            <span class="une-info-index">01</span>
+            <strong>En ce moment</strong>
+            <p>Les titres sont présentés avec leur source. Ils ne constituent pas des comptes rendus d’audience réalisés par notre rédaction.</p>
+          </aside>
+        </article>
+      ) : (
+        <div class="une-info-vide"><h2>Suivre les procès criminels</h2><p>La sélection de presse n’est pas disponible. Retrouvez les articles et les ressources déjà publiés dans Cours du Jour.</p><a href="/rubrique/cours-du-jour/">Ouvrir Cours du Jour ↗</a></div>
+      )}
+      {autresNouvelles.length > 0 && (
+        <section class="une-defile" aria-labelledby="une-defile-titre">
+          <div class="une-defile-barre">
+            <div><h2 id="une-defile-titre">Les autres titres</h2><p>Revue de presse · Faites défiler la sélection</p></div>
+            <div class="une-defile-commandes">
+              <button type="button" class="une-defile-bouton" data-news-prev aria-label="Voir les titres précédents">←</button>
+              <button type="button" class="une-defile-bouton" data-news-next aria-label="Voir les titres suivants">→</button>
             </div>
           </div>
-          <p class="credit-photo">Photographie d’illustration, sans lien avec l’affaire présentée</p>
-        </article>
-        <aside class="ouverture-fil" aria-labelledby="titre-fil-ouverture">
-          <div class="fil-entete"><h2 id="titre-fil-ouverture">Dans la presse</h2><span class="fil-label">SÉLECTION RÉCENTE</span></div>
-          {nouvellesOuverture.length>0 ? <ol>{nouvellesOuverture.map((n,i)=><li><span class="fil-numero" aria-hidden="true">0{i+1}</span><div><p>{n.source}<time datetime={n.date}>{n.dateAlerte ? 'Référence du ' : ''}{datePresse.format(new Date(n.date))}</time></p><h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> (nouvel onglet)</span></a></h3></div></li>)}</ol>:<p>Consulter <a href="/rubrique/cours-du-jour/">Cours du Jour</a> pour les publications du journal et les références de presse.</p>}
-          <a class="tout-le-fil" href="/rubrique/cours-du-jour/">Consulter Cours du Jour <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v16m-6-6 6 6 6-6" /></svg></a>
-          
-        </aside>
-      </div>
+          <div class="une-defile-piste" data-news-track tabindex="0" role="region" aria-label="Titres de presse à faire défiler">
+            {autresNouvelles.map((n,i) => (
+              <article class="une-defile-carte">
+                <p class="une-defile-meta"><span>{n.source}</span><time datetime={n.date}>{datePresse.format(new Date(n.date))}</time></p>
+                <h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> (site externe, nouvel onglet)</span></a></h3>
+                <span class="une-defile-numero">{String(i+2).padStart(2,'0')}</span>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
       <div class="parcours"><span>REPÈRES</span><a href="/agenda/">Sessions criminelles à venir <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/comprendre/">Comprendre le procès <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/annuaire/">Trouver une cour <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/dossiers/">Dossiers judiciaires <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/archives/">{total} articles d’archives <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a></div>
       <form class="accueil-recherche" action="/recherche/" method="get" role="search" aria-label="Rechercher dans les archives">
         <label for="recherche-accueil"><span>RECHERCHE DOCUMENTAIRE</span><strong>Retrouver un article ou une affaire</strong></label>
@@ -109,6 +130,20 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
 
   </div></div>
 </Base>
+<script>
+  const piste = document.querySelector('[data-news-track]');
+  const avant = document.querySelector('[data-news-prev]');
+  const apres = document.querySelector('[data-news-next]');
+  if (piste instanceof HTMLElement) {
+    const defiler = (sens) => {
+      const largeurCarte = piste.querySelector('.une-defile-carte')?.getBoundingClientRect().width ?? 300;
+      const reduire = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      piste.scrollBy({ left: sens * (largeurCarte + 16), behavior: reduire ? 'instant' : 'smooth' });
+    };
+    avant?.addEventListener('click', () => defiler(-1));
+    apres?.addEventListener('click', () => defiler(1));
+  }
+</script>
 <style>
   .fond-page{position:fixed;inset:0;z-index:-1;pointer-events:none;background:#1b1b1b}.fond-page img{width:100%;height:100%;object-fit:cover;filter:grayscale(1);opacity:.32}.fond-page::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#10101055,#101010dd)}
   .ouverture{background:var(--papier);color:var(--encre);padding-top:0}.ouverture-interieur{padding-top:1.1rem;padding-bottom:0}.edition{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;padding-bottom:1.1rem;font:600 .62rem/1.5 var(--sans);letter-spacing:.09em}.edition p{margin:0;display:flex;align-items:center;gap:.55rem}.edition p+p{color:var(--encre-2);font-weight:400;letter-spacing:0}.point-rouge{width:7px;height:7px;background:var(--action);display:inline-block}
@@ -512,4 +547,59 @@ const datePresse=new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',tim
 .grand-angle h1,.grand-angle-texte h1{max-width:24ch;text-wrap:balance}
 .grand-angle-description{max-width:42ch}
 @media(max-width:47.99rem){.ouverture-interieur{padding-top:.9rem}}
+
+/* Accueil 2026 : l'actualité est l'unique une. Défilement manuel sans autoplay. */
+.ouverture{background:#f7f5f0}
+.ouverture-interieur{padding-top:2.1rem}
+.une-news-entete{display:flex;align-items:end;justify-content:space-between;gap:2rem;margin:0 0 1.5rem;border-bottom:1px solid #c9c3bc;padding-bottom:1.4rem}
+.une-news-surtitre{margin:0 0 .6rem;font:750 .67rem/1.4 var(--sans);letter-spacing:.1em;color:#943440}
+.une-news-entete h1{margin:0;font:650 clamp(2.8rem,5.2vw,5.7rem)/1.02 var(--serif);letter-spacing:-.04em;text-transform:none;max-width:none}
+.une-news-entete p:not(.une-news-surtitre){font:450 1rem/1.6 var(--sans);max-width:68ch;margin:.75rem 0 0;color:#52585a}
+.une-news-lien{white-space:nowrap;font:700 .78rem/1.5 var(--sans);border-bottom:1px solid #943440;padding:.4rem 0}
+.une-info-principale{display:grid;grid-template-columns:minmax(0,1.85fr) minmax(12rem,.65fr);background:#23272a;color:#fcfaf7;min-height:345px}
+.une-info-contenu{padding:clamp(1.6rem,3vw,3.2rem);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1rem}
+.une-info-source{display:flex;align-items:center;flex-wrap:wrap;gap:.6rem 1rem;margin:0;font:700 .72rem/1.4 var(--sans)}
+.une-info-source span{color:#fff;border-bottom:2px solid #c4777c;padding-bottom:.25rem}
+.une-info-source time{font-weight:500;color:#dedbd6}
+.une-info-principale h2{margin:0;font:650 clamp(1.85rem,3vw,3.3rem)/1.16 var(--serif);letter-spacing:-.02em;max-width:32ch}
+.une-info-principale h2 a:hover,.une-info-principale h2 a:focus-visible{color:#ffdbdc;text-decoration:underline;text-underline-offset:.12em}
+.une-info-precision{font:450 .8rem/1.5 var(--sans);margin:0;color:#dbd7d1}
+.une-info-action{font:700 .8rem/1.5 var(--sans);border-bottom:1px solid #eee6df;min-height:40px;display:inline-flex;align-items:center;gap:1rem}
+.une-info-reperes{background:#f0ece5;color:#2b3031;padding:2rem 1.5rem;display:flex;flex-direction:column;justify-content:flex-end;gap:.65rem}
+.une-info-index{font:650 clamp(3.5rem,5vw,5.6rem)/1 var(--serif);color:#8d303a}
+.une-info-reperes strong{font:700 1.05rem/1.3 var(--sans)}
+.une-info-reperes p{font:450 .83rem/1.65 var(--sans);color:#4a4d50;max-width:34ch;margin:0}
+.une-info-vide{padding:2rem;background:#ece8e1}
+.une-info-vide h2{font:650 2rem/1.1 var(--serif);margin:0 0 .75rem}
+.une-info-vide p{max-width:70ch}
+.une-defile{margin:1.55rem 0 0}
+.une-defile-barre{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.75rem}
+.une-defile-barre h2{margin:0;font:700 1.3rem/1.2 var(--sans);letter-spacing:-.02em}
+.une-defile-barre p{margin:.25rem 0 0;font:450 .75rem/1.4 var(--sans);color:#62676a}
+.une-defile-commandes{display:flex;gap:.35rem}
+.une-defile-bouton{display:grid;place-items:center;width:40px;height:40px;border:1px solid #a7a19a;background:#f7f5f0;color:#2c3032;cursor:pointer;font:700 1.1rem var(--sans)}
+.une-defile-bouton:hover,.une-defile-bouton:focus-visible{background:#2c3032;color:#fff}
+.une-defile-piste{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-inline:contain;padding:0 0 .8rem;scrollbar-width:thin}
+.une-defile-piste:focus-visible{outline:2px solid #943440;outline-offset:3px}
+.une-defile-carte{flex:0 0 clamp(225px,29%,360px);min-width:0;background:#fff;border:1px solid #d5d0c9;padding:1.2rem 1.25rem;min-height:185px;scroll-snap-align:start;display:flex;flex-direction:column;gap:.7rem}
+.une-defile-meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:.3rem .65rem;margin:0;font:700 .65rem/1.4 var(--sans);color:#943440}
+.une-defile-meta time{font-weight:450;color:#666a6e}
+.une-defile-carte h3{font:600 1.15rem/1.29 var(--serif);margin:0}
+.une-defile-carte h3 a:hover,.une-defile-carte h3 a:focus-visible{color:#943440;text-decoration:underline}
+.une-defile-numero{font:650 .75rem/1.2 var(--sans);color:#8c8f90;margin-top:auto}
+.parcours{margin-top:1.3rem}
+@media(max-width:63.99rem){.une-info-principale{grid-template-columns:minmax(0,1fr) minmax(10rem,.55fr)}.une-defile-carte{flex-basis:42%}}
+@media(max-width:47.99rem){
+ .ouverture-interieur{padding-top:1.1rem}
+ .une-news-entete{align-items:start;flex-direction:column;gap:.5rem}
+ .une-news-entete h1{font-size:clamp(2.65rem,12vw,4.3rem)}
+ .une-info-principale{grid-template-columns:1fr;min-height:0}
+ .une-info-contenu{padding:1.6rem 1.25rem}
+ .une-info-principale h2{font-size:clamp(1.85rem,7.5vw,2.65rem)}
+ .une-info-reperes{padding:1rem 1.25rem}
+ .une-info-index{display:none}
+ .une-info-reperes p{max-width:none}
+ .une-defile-carte{flex-basis:min(82vw,320px)}
+ .une-defile-barre h2{font-size:1.15rem}
+}
 </style>
