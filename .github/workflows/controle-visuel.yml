@@ -1,0 +1,44 @@
+name: Contrôle visuel des dossiers
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/pages/dossiers/**'
+      - 'src/styles/global.css'
+      - 'scripts/controle-visuel.mjs'
+      - '.github/workflows/controle-visuel.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  navigateur:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Installer Playwright
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.58.2
+          npx playwright install --with-deps chromium
+
+      - name: Capturer les pages et contrôler les débordements
+        run: node scripts/controle-visuel.mjs
+        env:
+          IC_VISUAL_BASE_URL: https://www.intimeconviction.fr
+
+      - name: Conserver les captures et les résultats
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: controle-visuel-dossiers
+          path: controle-visuel/
+          if-no-files-found: warn
+          retention-days: 14
