@@ -22,6 +22,8 @@ const exclus=ROLES_OFFICIELS.filter(r=>r.mode==='information'||r.mode==='sur-pla
     <div class="chiffres"><span><strong>{surveillees.length}</strong> pages institutionnelles à vérifier</span><span><strong>{new Set(surveillees.flatMap(s=>s.codes)).size}</strong> départements couverts</span><span><strong>0</strong> audience publiée sans vérification</span></div>
   </header>
 
+  <aside class="acces-agenda"><div><strong>Agenda des sessions criminelles</strong><p>Consultez les périodes de sessions identifiées dans les publications institutionnelles. Les dates ne constituent pas une annonce de procès individuel.</p></div><a href="/agenda/">Voir les sessions annoncées</a></aside>
+
   <section class="fonctionnement">
     <div class="tete-fonctionnement"><span>LA MÉTHODE / SOUS CONTRÔLE ÉDITORIAL</span><h2>PROCÉDURE DE VÉRIFICATION<br /><mark>DES SOURCES OFFICIELLES.</mark></h2></div>
     <ol>
@@ -84,4 +86,11 @@ const exclus=ROLES_OFFICIELS.filter(r=>r.mode==='information'||r.mode==='sur-pla
 .suite a{display:flex;justify-content:space-between;gap:1rem;padding:1.1rem;background:#ffe100;color:#151718;font:900 .7rem/1.4 var(--sans)}
 .suite a:hover{background:#151718;color:#fff}
 @media(max-width:48rem){.entete-veille{padding:2rem 1.2rem}.entete-veille h1{font-size:clamp(2.5rem,10vw,4.2rem)}.fonctionnement ol,.grille-sources,.suite{grid-template-columns:1fr}.fonctionnement li:nth-child(odd){border-right:0}}
+
+.acces-agenda{margin:1.5rem 0 2rem;padding:1.4rem 1.7rem;display:flex;justify-content:space-between;align-items:center;gap:1.4rem;background:#f3f0eb;border-left:3px solid #a12c39;color:#202529}
+.acces-agenda strong{font:650 1.45rem/1.2 var(--serif)}
+.acces-agenda p{font:450 .9rem/1.6 var(--sans);max-width:65ch;margin:.45rem 0 0}
+.acces-agenda a{font:650 .84rem/1.5 var(--sans);text-decoration:underline;text-underline-offset:.2em;flex-shrink:0}
+.acces-agenda a:hover{color:#96313b}
+@media(max-width:48rem){.acces-agenda{flex-direction:column;align-items:stretch}.acces-agenda a{flex-shrink:1}}
 </style>
