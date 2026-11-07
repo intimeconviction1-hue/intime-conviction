@@ -30,16 +30,16 @@ const date = s => new Intl.DateTimeFormat('fr-FR', {
 >
   <header class="chronologie-une">
     <p class="marque-une">INTIME CONVICTION / MÉMOIRE JUDICIAIRE</p>
-    <h1>LES DATES.<br /><span>LES SOURCES.</span><br />LES PROCÉDURES.</h1>
+    <h1>CHRONOLOGIE<br /><span>JUDICIAIRE.</span></h1>
     <p>Une affaire se déroule en plusieurs temps. Cette chronologie présente des étapes judiciaires <strong>identifiées dans des sources de presse consultables</strong>, et non des dates supposées à partir des alertes Google.</p>
     <div class="totaux"><span><strong>{nombre(reperes.length)}</strong> jalons documentés</span><span><strong>{dossiers.length}</strong> dossiers suivis</span><span><strong>{groupes.length}</strong> années d’événements</span></div>
   </header>
 
   <section class="deux-horloges" aria-labelledby="deux-horloges">
-    <h2 id="deux-horloges">NE PAS CONFONDRE DEUX DATES.</h2>
+    <h2 id="deux-horloges">DISTINGUER LES DATES</h2>
     <div class="horloges">
-      <article><span>01 / LE TEMPS JUDICIAIRE</span><h3>LE JOUR DE L’ÉVÉNEMENT.</h3><p>Une audience s’ouvre. Une décision est rendue. Une cour d’appel examine une condamnation. Les jalons ci-dessous sont datés à partir d’articles explicitement cités et identifient la procédure concernée.</p></article>
-      <article><span>02 / LE TEMPS MÉDIATIQUE</span><h3>LE JOUR DE L’ALERTE.</h3><p>Un message de veille repère un titre de presse. Sa date est celle de l’alerte, pas nécessairement celle du fait rapporté ni celle de l’article. Ce second fonds reste accessible par année, sans prétention de validation judiciaire.</p></article>
+      <article><span>01 / LE TEMPS JUDICIAIRE</span><h3>DATE DE L’ÉVÉNEMENT JUDICIAIRE</h3><p>Une audience s’ouvre. Une décision est rendue. Une cour d’appel examine une condamnation. Les jalons ci-dessous sont datés à partir d’articles explicitement cités et identifient la procédure concernée.</p></article>
+      <article><span>02 / LE TEMPS MÉDIATIQUE</span><h3>DATE DE LA RÉFÉRENCE DE PRESSE</h3><p>Un message de veille repère un titre de presse. Sa date est celle de l’alerte, pas nécessairement celle du fait rapporté ni celle de l’article. Ce second fonds reste accessible par année, sans prétention de validation judiciaire.</p></article>
     </div>
     <p class="verification">SÉLECTION NON EXHAUSTIVE · SOURCES CONSULTÉES JUSQU’AU <time datetime={VERIFICATION_AU}>{date(VERIFICATION_AU)}</time> · UNE DÉCISION DE PREMIÈRE INSTANCE NE SIGNIFIE PAS NÉCESSAIREMENT UNE CONDAMNATION DÉFINITIVE.</p>
   </section>
