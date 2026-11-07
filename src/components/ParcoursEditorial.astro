@@ -3,8 +3,8 @@ const parcours = [
   {
     numero: '01',
     titre: 'Raconter.',
-    accroche: 'Une audience ne tient pas dans un verdict.',
-    detail: 'Les paroles, les gestes, les silences. Restituer ce qui se passe à la barre, sans effacer les personnes derrière les faits.',
+    accroche: 'Le déroulement des audiences et les décisions de justice.',
+    detail: 'Des comptes rendus d’audience et des chroniques pour suivre les débats judiciaires et les décisions rendues.',
     liens: [
       { texte: 'Suivre les audiences', href: '/rubrique/cours-du-jour/' },
       { texte: 'Lire les chroniques', href: '/rubrique/la-cour-se-leve/' }
@@ -13,8 +13,8 @@ const parcours = [
   {
     numero: '02',
     titre: 'Expliquer.',
-    accroche: 'Comprendre comment la justice juge.',
-    detail: 'Le rôle des jurés, les droits des parties, la place du doute. Donner des clés sans réduire le procès à des formules.',
+    accroche: 'Les règles et les acteurs du procès criminel.',
+    detail: 'Des explications sur la procédure, les jurés, les droits des parties et les voies de recours.',
     liens: [
       { texte: 'Les règles du procès', href: '/rubrique/le-banc-des-jures/' },
       { texte: 'Les décryptages', href: '/rubrique/l-expose/' }
@@ -23,8 +23,8 @@ const parcours = [
   {
     numero: '03',
     titre: 'Transmettre.',
-    accroche: 'La justice a une mémoire.',
-    detail: 'Relire les affaires, les réflexions et les œuvres qui interrogent notre manière de juger. Garder le passé accessible, avec ses dates et son contexte.',
+    accroche: 'Les affaires et les décisions dans leur contexte historique.',
+    detail: 'Accéder aux publications antérieures du journal et aux références conservées dans ses archives.',
     liens: [
       { texte: 'Réflexions et opinions', href: '/rubrique/delibere/' },
       { texte: 'Explorer les archives', href: '/archives/' }
@@ -35,10 +35,10 @@ const parcours = [
 <section class="parcours-editoriaux" aria-labelledby="parcours-editoriaux-titre">
   <header class="parcours-editoriaux-intro">
     <div>
-      <p class="sur-titre">LE JOURNAL / MODE D’EMPLOI</p>
-      <h2 id="parcours-editoriaux-titre">RACONTER. EXPLIQUER.<br /><span>TRANSMETTRE.</span></h2>
+      <p class="sur-titre">LES CONTENUS DU JOURNAL</p>
+      <h2 id="parcours-editoriaux-titre">NOS DOMAINES<br /><span>DE COUVERTURE.</span></h2>
     </div>
-    <p>Les audiences, les règles, les archives. Trois accès directs à notre fonds.</p>
+    <p>Suivre les audiences, comprendre les procédures et consulter les archives du journal.</p>
   </header>
   <div class="parcours-editoriaux-grille">
     {parcours.map((p) => <article class="parcours-editorial">
@@ -51,7 +51,7 @@ const parcours = [
       </nav>
     </article>)}
   </div>
-  <p class="note">Nos textes et nos archives sont distincts de la revue de presse : les titres de médias tiers restent attribués à leurs sources.</p>
+  <p class="note">Les articles du journal et les publications des médias référencés sont présentés séparément.</p>
 </section>
 <style>
   .parcours-editoriaux{margin-top:4.5rem;border-top:5px solid var(--encre);padding-top:1.5rem}
