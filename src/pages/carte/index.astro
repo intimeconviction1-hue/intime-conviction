@@ -1,0 +1,190 @@
+---
+import Base from '../../layouts/Base.astro';
+import { DOSSIERS } from '../../lib/dossiers.mjs';
+import { JURIDICTIONS, coordonneesPlan, validerJuridictions } from '../../lib/juridictions.mjs';
+import { REPERES_JUDICIAIRES, reperesPourDossier } from '../../lib/chronologie-judiciaire.mjs';
+
+validerJuridictions(JURIDICTIONS, DOSSIERS);
+const dossiers = DOSSIERS.map(d => ({ ...d, lieux: JURIDICTIONS.filter(j => j.dossier === d.slug) }));
+const points = JURIDICTIONS.map(j => ({ ...j, ...coordonneesPlan(j.lat, j.lon), dossierTitre:DOSSIERS.find(d => d.slug === j.dossier)?.titre, jalons:reperesPourDossier(j.dossier).filter(r => r.juridiction.toLowerCase().includes(j.ville.toLowerCase())).length }));
+// Contour simplifié : schéma géographique, pas limite administrative.
+const limites = [
+  [-5.2,48.4],[-4.7,48.6],[-4.2,48.4],[-3.6,48.7],[-2.0,48.5],[-1.8,49.6],[-1.1,49.7],
+  [0.4,49.9],[1.6,50.9],[2.9,50.7],[4.0,49.9],[4.9,49.9],[5.5,49.6],
+  [6.4,49.1],[7.6,48.9],[7.6,47.7],[6.8,47.5],[6.8,46.2],[6.3,46.0],
+  [7.1,45.1],[7.5,43.8],[6.6,43.3],[5.5,43.1],[4.1,43.3],[3.1,42.4],
+  [1.5,42.6],[0.8,42.8],[-1.8,43.3],[-1.7,44.5],[-1.3,45.5],[-1.2,46.6],
+  [-2.2,47.0],[-3.4,47.4],[-4.6,47.8]
+];
+const contours=limites.map(([lon,lat],i)=>{const p=coordonneesPlan(lat,lon);return (i?'L':'M')+p.x+','+p.y;}).join(' ')+' Z';
+const cartouche="CARTE ÉDITORIALE / FRANCE MÉTROPOLITAINE";
+---
+<Base
+  titre="Carte des affaires et des juridictions"
+  description="Situer les juridictions des dossiers judiciaires d’Intime Conviction : Albi, Besançon, Avignon, Nîmes et Blois. Carte schématique, sources institutionnelles identifiées."
+  rubriqueActive="carte"
+>
+  <header class="carte-intro">
+    <p class="surtitre">INTIME CONVICTION / GÉOGRAPHIE JUDICIAIRE</p>
+    <h1>LA JUSTICE<br /><span>A UNE ADRESSE.</span></h1>
+    <p>Du palais de justice aux audiences d’appel : cinq villes et quatre affaires pour commencer à parcourir la France des procès criminels.</p>
+    <div class="intro-chiffres"><span><strong>{JURIDICTIONS.length}</strong> lieux d’audience associés</span><span><strong>{dossiers.length}</strong> affaires documentées</span><span><strong>{new Set(JURIDICTIONS.map(j=>j.departement)).size}</strong> départements</span></div>
+  </header>
+  <section class="methode-carte" aria-label="Comprendre la carte">
+    <h2>CE QUE MONTRE LA CARTE.</h2>
+    <p>Les points indiquent les <strong>villes des juridictions</strong> associées aux étapes judiciaires déjà documentées, pas le lieu où les faits se seraient déroulés. Le dessin est une <strong>carte schématique</strong> de la France métropolitaine. Les coordonnées sont celles des centres-villes, pas celles des salles d’audience. Les adresses institutionnelles et les liens officiels figurent sous la carte.</p>
+  </section>
+
+  <section class="carte-section" aria-labelledby="titre-carte">
+    <div class="carto-head"><div><span>{cartouche}</span><h2 id="titre-carte">LES LIEUX<br /><mark>DES PROCÈS.</mark></h2></div><p>Choisis une affaire pour mettre ses juridictions en évidence. Les mêmes affaires peuvent apparaître dans plusieurs villes lorsque la procédure comporte un appel.</p></div>
+    <div class="filtres-lieux" role="group" aria-label="Filtrer la carte par affaire">
+      <button type="button" class="f-active" data-choix="tous" aria-pressed="true">TOUTES LES AFFAIRES</button>
+      {dossiers.map(d=><button type="button" data-choix={d.slug} aria-pressed="false">{d.titre}</button>)}
+    </div>
+    <div class="carto-grille">
+      <div class="carte-dessin">
+        <svg class="france-svg" viewBox="0 0 100 100" role="img" aria-labelledby="titre-svg description-svg">
+          <title id="titre-svg">Carte schématique des juridictions des dossiers</title>
+          <desc id="description-svg">Positions indicatives des villes d’Albi, Besançon, Avignon, Nîmes et Blois. Les cinq lieux sont détaillés dans la liste associée.</desc>
+          <defs>
+            <pattern id="quadrillage" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#dadbd5" stroke-width=".25"/></pattern>
+          </defs>
+          <rect width="100" height="100" fill="#f0f0eb"/>
+          <rect width="100" height="100" fill="url(#quadrillage)"/>
+          <path d={contours} fill="#fff" stroke="#151718" strokeWidth=".85" strokeLinejoin="round"/>
+          <g class="map-points">
+            {points.map((p,i)=>(
+              <a href={'#lieu-'+p.id} data-dossier={p.dossier} class="map-point" aria-label={p.juridiction+', '+p.ville+' ; voir les détails'}>
+                <circle class="halo" cx={p.x} cy={p.y} r="3.6" fill="#ffe100" stroke="#151718" strokeWidth=".32"/>
+                <circle cx={p.x} cy={p.y} r="1.5" fill="#151718"/>
+                <text x={p.x} y={p.y-4.4} fontSize="2.15" textAnchor="middle" fontWeight="900" fill="#151718">{p.ville.toUpperCase()}</text>
+              </a>
+            ))}
+          </g>
+          <text x="2" y="97" fontSize="1.5" fill="#666">POSITIONS INDICATIVES • NON DESTINÉ À LA NAVIGATION</text>
+        </svg>
+        <p class="credit-carte">Carte schématique originale, points de villes approximatifs. Ne représente ni les limites administratives exactes ni les lieux des faits.</p>
+      </div>
+      <div class="index-juridictions" aria-label="Index des cinq juridictions">
+        <div class="tete-index"><span>RÉPERTOIRE / VILLES</span><strong>{points.length.toString().padStart(2,'0')} JURIDICTIONS</strong></div>
+        <ol class="liste-points">
+          {points.map((p,i)=>(
+            <li data-dossier={p.dossier}>
+              <a href={'#lieu-'+p.id}><span class="numero">{String(i+1).padStart(2,'0')}</span><span class="lien-lieu"><strong>{p.ville}</strong><small>{p.departement} / {p.type}</small></span><span aria-hidden="true">↘</span></a>
+            </li>
+          ))}
+        </ol>
+        <p class="precision">La cour criminelle départementale et la cour d’assises ne sont pas interchangeables. La juridiction exacte est indiquée dans chaque fiche.</p>
+      </div>
+    </div>
+    <p class="bilan-carte" id="compte-carte" role="status" aria-live="polite">5 lieux affichés</p>
+  </section>
+
+  <section class="fiches-juridictions" aria-labelledby="titre-fiches">
+    <div class="fiches-head"><p>LE RÉPERTOIRE / JURIDICTIONS</p><h2 id="titre-fiches">DES LIEUX.<br /><span>DES PROCÉDURES.</span></h2></div>
+    <div class="fiches-grille">
+      {points.map(p=>(
+        <article class="fiche" id={'lieu-'+p.id} data-dossier={p.dossier}>
+          <div class="ligne-fiche"><span>{p.departement} / {p.region}</span><span>{p.type}</span></div>
+          <h3>{p.ville}<span aria-hidden="true">.</span></h3>
+          <p class="nom-juridiction">{p.juridiction}</p>
+          <p class="adresse">{p.adresse}</p>
+          <p class="affaire-liee">AFFAIRE ASSOCIÉE : <a href={'/dossiers/'+p.dossier+'/'}>{p.dossierTitre}</a></p>
+          <div class="liens-fiche">
+            <a href={p.urlInstitutionnelle} target="_blank" rel="noopener noreferrer">SOURCE OFFICIELLE <span aria-hidden="true">↗</span><span class="sr-only"> (site externe)</span></a>
+            <a href={'/dossiers/'+p.dossier+'/'}>CONSULTER LE DOSSIER <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+  <aside class="fin-carto"><div><span>NE PAS CONFONDRE</span><strong>LE LIEU DU PROCÈS N’EST PAS LE LIEU DES FAITS.</strong><p>La géographie judiciaire suit des règles de compétence et des choix de procédure. Notre carte ne permet pas de tirer de conclusion sur l’origine géographique d’une affaire ou l’identité de personnes concernées.</p></div><a href="/chronologie/">RETROUVER LES ÉTAPES DES PROCÈS <span aria-hidden="true">↗</span></a></aside>
+</Base>
+<script>
+  const boutons=[...document.querySelectorAll<HTMLButtonElement>('.filtres-lieux button')];
+  const pins=[...document.querySelectorAll<SVGElement>('.map-point')];
+  const lignes=[...document.querySelectorAll<HTMLElement>('.liste-points li')];
+  const fiches=[...document.querySelectorAll<HTMLElement>('.fiche')];
+  const bilan=document.querySelector<HTMLElement>('#compte-carte');
+  function filtrer(choix:string) {
+    for(const bouton of boutons) { const actif=bouton.dataset.choix===choix; bouton.classList.toggle('f-active',actif); bouton.setAttribute('aria-pressed',String(actif)); }
+    let n=0;
+    for(const element of [...pins,...lignes,...fiches]) {
+      const visible=choix==='tous'||element.dataset.dossier===choix;
+      element.classList.toggle('masque',!visible);
+      if(element.classList.contains('fiche')&&visible)n++;
+    }
+    if(bilan)bilan.textContent=n+' lieu'+(n>1?'x':'')+' affiché'+(n>1?'s':'');
+  }
+  for(const bouton of boutons)bouton.addEventListener('click',()=>filtrer(bouton.dataset.choix||'tous'));
+</script>
+<style>
+.carte-intro{margin-top:1.5rem;background:#151718;color:#fff;padding:clamp(1.5rem,5vw,5rem);border-top:8px solid #ffe100}
+.surtitre{font:900 .67rem/1.5 var(--sans);letter-spacing:.08em;color:#ffe100;margin:0 0 2.5rem}
+.carte-intro h1{font:900 clamp(2.8rem,7.6vw,7.2rem)/.94 var(--sans);letter-spacing:-.08em;margin:0 0 2rem}
+.carte-intro h1 span{color:#ffe100}
+.carte-intro>p:not(.surtitre){font:700 clamp(1rem,1.5vw,1.2rem)/1.5 var(--sans);max-width:67ch}
+.intro-chiffres{display:flex;gap:1.3rem 3rem;flex-wrap:wrap;border-top:1px solid #656561;padding-top:1.4rem;margin-top:2rem}
+.intro-chiffres span{font:850 .68rem/1.5 var(--sans);display:flex;align-items:baseline;gap:.7rem;text-transform:uppercase}
+.intro-chiffres strong{font:900 2.4rem/1 var(--sans);color:#ffe100}
+.methode-carte{display:grid;grid-template-columns:1fr 2fr;gap:2rem;border-bottom:4px solid #151718;padding:2.5rem 0}
+.methode-carte h2{font:900 clamp(1.4rem,2.7vw,2.5rem)/1.1 var(--sans);letter-spacing:-.055em;margin:0}
+.methode-carte p{font:500 .93rem/1.65 var(--sans);max-width:85ch;margin:0}
+.carte-section{margin:3rem 0 4rem}
+.carto-head{display:grid;grid-template-columns:1.2fr 1fr;gap:2rem;align-items:end;border-top:7px solid #151718;padding:1.7rem 0}
+.carto-head>div>span{font:900 .68rem/1.4 var(--sans);letter-spacing:.07em}
+.carto-head h2{font:900 clamp(2.5rem,5.4vw,5rem)/.95 var(--sans);letter-spacing:-.07em;margin:1rem 0 0}
+.carto-head mark{background:#ffe100;color:#151718}
+.carto-head p{font:550 .93rem/1.6 var(--sans);max-width:52ch}
+.filtres-lieux{background:#151718;display:flex;gap:.5rem;flex-wrap:wrap;padding:.9rem}
+.filtres-lieux button{background:#fff;color:#151718;padding:.75rem .9rem;border:2px solid #fff;font:900 .67rem/1.4 var(--sans);cursor:pointer}
+.filtres-lieux button:hover{background:#eee}
+.filtres-lieux .f-active{background:#ffe100;border-color:#ffe100}
+.carto-grille{display:grid;grid-template-columns:1.5fr 1fr;min-height:620px;border:3px solid #151718;border-top:0}
+.carte-dessin{background:#f0f0eb;padding:1rem;min-width:0}
+.france-svg{width:100%;max-height:620px;display:block}
+.map-point{cursor:pointer}
+.map-point:focus{outline:none}
+.map-point:focus .halo,.map-point:hover .halo{fill:#ffb300;stroke-width:1}
+.map-point:focus text,.map-point:hover text{font-size:2.8px;text-decoration:underline}
+.masque{display:none!important}
+.credit-carte{font:650 .61rem/1.45 var(--sans);color:#555;margin:0}
+.index-juridictions{background:#fff;border-left:3px solid #151718;padding:1.5rem;display:flex;flex-direction:column}
+.tete-index{display:flex;justify-content:space-between;gap:1rem;font:900 .65rem/1.4 var(--sans);padding-bottom:1rem;border-bottom:5px solid #151718}
+.liste-points{padding:0;margin:0;list-style:none}
+.liste-points li{border-bottom:1px solid #aaa}
+.liste-points a{display:flex;align-items:center;gap:1rem;padding:1.1rem .2rem;color:#151718}
+.liste-points a:hover{background:#ffe100;color:#151718}
+.liste-points .numero{font:900 1.1rem/1 var(--sans);color:#777}
+.lien-lieu{display:flex;flex-direction:column;gap:.2rem;flex:1}
+.lien-lieu strong{font:900 clamp(1.15rem,2vw,1.6rem)/1.1 var(--sans)}
+.lien-lieu small{font:650 .65rem/1.4 var(--sans)}
+.precision{margin-top:auto;font:600 .76rem/1.55 var(--sans);padding-top:1.5rem;color:#555}
+.bilan-carte{font:900 .72rem/1.5 var(--sans);text-align:right;text-transform:uppercase;border-bottom:2px solid #151718;padding:.8rem 0}
+.fiches-head{border-top:7px solid #151718;padding:1.6rem 0}
+.fiches-head p{font:900 .7rem/1.4 var(--sans);letter-spacing:.07em}
+.fiches-head h2{font:900 clamp(2.5rem,5vw,4.5rem)/.98 var(--sans);letter-spacing:-.06em;margin:.7rem 0}
+.fiches-head h2 span{background:#ffe100;color:#151718}
+.fiches-grille{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.fiche{background:#f0f0eb;color:#151718;border:2px solid #151718;padding:clamp(1.2rem,2.5vw,2.1rem);scroll-margin-top:2rem;min-width:0}
+.fiche:target{outline:5px solid #ffe100;outline-offset:0}
+.ligne-fiche{display:flex;justify-content:space-between;gap:1rem;font:900 .65rem/1.45 var(--sans);text-transform:uppercase}
+.fiche h3{font:900 clamp(2.4rem,4vw,3.6rem)/1 var(--sans);letter-spacing:-.07em;margin:1.5rem 0 .75rem}
+.fiche h3 span{color:#d0ad00}
+.nom-juridiction{font:900 1rem/1.3 var(--sans);margin:.5rem 0}
+.adresse{font:550 .87rem/1.5 var(--sans)}
+.affaire-liee{font:800 .68rem/1.55 var(--sans);padding-top:1rem;border-top:1px solid #777;text-transform:uppercase}
+.affaire-liee a{text-decoration:underline}
+.liens-fiche{display:flex;justify-content:space-between;gap:.5rem;flex-wrap:wrap;margin-top:2rem}
+.liens-fiche a{background:#151718;color:#fff;padding:.9rem;font:900 .64rem/1.4 var(--sans)}
+.liens-fiche a:hover{background:#ffe100;color:#151718}
+.fin-carto{background:#151718;color:#fff;display:grid;grid-template-columns:1.4fr 1fr;align-items:end;gap:2rem;padding:clamp(1.5rem,3vw,3rem);margin:3rem 0}
+.fin-carto div>span{font:900 .7rem/1.4 var(--sans);color:#ffe100}
+.fin-carto strong{display:block;font:900 clamp(1.5rem,2.7vw,2.3rem)/1.14 var(--sans);letter-spacing:-.04em;margin:.6rem 0}
+.fin-carto p{font:500 .88rem/1.5 var(--sans);max-width:52ch}
+.fin-carto>a{background:#ffe100;color:#151718;padding:1.2rem;font:900 .7rem/1.45 var(--sans);display:flex;gap:1rem;justify-content:space-between}
+.fin-carto>a:hover{background:#fff;color:#151718}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@media(max-width:63.99rem){.carto-grille{grid-template-columns:1fr}.index-juridictions{border-left:0;border-top:3px solid #151718}.carto-head,.fin-carto{grid-template-columns:1fr}}
+@media(max-width:47.99rem){.carte-intro{padding:2rem 1.2rem}.carte-intro h1{font-size:clamp(2.7rem,9.5vw,4.5rem)}.methode-carte{grid-template-columns:1fr;gap:.7rem}.filtres-lieux button{flex:1}.fiches-grille{grid-template-columns:1fr}.carte-dessin{padding:.5rem}.carto-grille{min-height:0}.tete-index{flex-wrap:wrap}.intro-chiffres{gap:1rem 2rem}}
+</style>
