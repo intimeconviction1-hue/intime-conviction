@@ -75,6 +75,30 @@ export const SOURCES_A_COMPLETER = Object.freeze([
     source:'https://www.cours-appel.justice.fr/angers/la-cour-dassises-de-la-sarthe'}
 ]);
 
+// Dates d'affaires mentionnées dans le calendrier HTML de la cour d'appel de Rennes
+// (Finistère, mise à jour institutionnelle indiquée : 08/06/2026).
+// Au contrôle du 07/11/2026, la page directe renvoie une maintenance :
+// NE PAS présenter ces audiences comme reconfirmées auprès du greffe.
+// Sélection excluant les audiences de la cour d'assises des mineurs.
+export const AUDIENCES_A_RECONFIRMER = Object.freeze([
+  {id:'finistere-2026-11-12',debut:'2026-11-12',fin:'2026-11-13',
+    ville:'Quimper',departement:'Finistère',juridiction:'Cour d’assises',
+    objet:'Viol commis par une personne étant ou ayant été conjoint, concubin ou partenaire',
+    source:'https://www.cours-appel.justice.fr/rennes/cour-dassises-et-cour-criminelle-departementale-du-finistere'},
+  {id:'finistere-2026-11-23',debut:'2026-11-23',fin:'2026-11-24',
+    ville:'Quimper',departement:'Finistère',juridiction:'Cour criminelle départementale',
+    objet:'Non-dénonciation de crime ; viol incestueux commis sur un mineur par un ascendant majeur',
+    source:'https://www.cours-appel.justice.fr/rennes/cour-dassises-et-cour-criminelle-departementale-du-finistere'},
+  {id:'finistere-2026-12-14',debut:'2026-12-14',fin:'2026-12-16',
+    ville:'Quimper',departement:'Finistère',juridiction:'Cour statuant en appel',
+    objet:'Viol commis par une personne étant ou ayant été conjoint, concubin ou partenaire',
+    source:'https://www.cours-appel.justice.fr/rennes/cour-dassises-et-cour-criminelle-departementale-du-finistere'},
+  {id:'finistere-2026-12-17',debut:'2026-12-17',fin:'2026-12-18',
+    ville:'Quimper',departement:'Finistère',juridiction:'Cour statuant en appel',
+    objet:'Viol commis sur un mineur de 15 ans et corruption de mineur',
+    source:'https://www.cours-appel.justice.fr/rennes/cour-dassises-et-cour-criminelle-departementale-du-finistere'}
+]);
+
 export function sessionsAvenir(sessions, dateISO) {
   return [...sessions].filter(s=>s.fin>=dateISO).sort((a,b)=>a.debut.localeCompare(b.debut)||a.ville.localeCompare(b.ville,'fr'));
 }
