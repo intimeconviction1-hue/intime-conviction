@@ -10,7 +10,8 @@
     "import": "node scripts/importer-wordpress.mjs",
     "prebuild": "node scripts/actualites.mjs",
     "actualites": "node scripts/actualites.mjs",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "audit:archives": "node scripts/auditer-archives.mjs"
   },
   "dependencies": {
     "@fontsource-variable/libre-franklin": "5.3.0",
