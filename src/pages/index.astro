@@ -7,7 +7,7 @@ import photoPoissy from '../assets/poissy.webp';
 import photoSalle from '../assets/salle-voltaire.webp';
 import photoTribunal from '../assets/tribunal-paris.webp';
 import AgendaEnBref from '../components/AgendaEnBref.astro';
-import Culture from '../components/Culture.astro';
+import { CULTURE } from '../lib/culture.mjs';
 import { lireVeille } from '../lib/veille.mjs';
 import { RUBRIQUES, rubrique } from '../lib/rubriques.mjs';
 import { DOSSIERS, referencesPourDossier } from '../lib/dossiers.mjs';
@@ -235,7 +235,28 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
       </section>
     )}
 
-    <Culture />
+    <section class="greffe-accueil" aria-labelledby="titre-culture">
+      <div class="greffe-accueil-entete">
+        <div>
+          <p>CINÉMA, LIVRES ET HISTOIRE</p>
+          <h2 id="titre-culture">Le Greffe</h2>
+        </div>
+        <a href="/rubrique/le-greffe/">Explorer Le Greffe <span aria-hidden="true">↗</span></a>
+      </div>
+      <ul class="greffe-accueil-cartes">
+        {CULTURE.map(({slug, genre, auteur, titre, extrait}) => (
+          <li>
+            <a href={`/culture/${slug}/`} aria-labelledby={`greffe-accueil-${slug}`} aria-describedby={`greffe-extrait-${slug}`}>
+              <p class="greffe-accueil-genre">{genre}</p>
+              <h3 id={`greffe-accueil-${slug}`}>{titre}</h3>
+              <p class="greffe-accueil-auteur">{auteur}</p>
+              <p class="greffe-accueil-extrait" id={`greffe-extrait-${slug}`}>{extrait}</p>
+              <span class="greffe-accueil-ouvrir" aria-hidden="true">Lire la fiche <span>↗</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
 
     <section class="univers" aria-labelledby="titre-rubriques">
       <div class="titre-section"><h2 id="titre-rubriques">LES SIX RUBRIQUES <span>DU JOURNAL.</span></h2></div>
@@ -723,5 +744,94 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
   .selection a:focus-visible { outline:2px solid #84323d; outline-offset:3px; }
   @media(max-width:47.99rem) {
     .selection-grille { grid-template-columns:minmax(0,1fr); }
+  }
+  .greffe-accueil {
+    margin-top:2.8rem;
+    padding-top:1.3rem;
+    border-top:2px solid #943440;
+  }
+  .greffe-accueil-entete {
+    display:flex;
+    flex-wrap:wrap;
+    align-items:end;
+    justify-content:space-between;
+    gap:.2rem 1rem;
+    margin-bottom:1rem;
+  }
+  .greffe-accueil-entete p {
+    margin:0 0 .45rem;
+    color:#84323d;
+    font:750 .72rem/1.3 var(--sans);
+    letter-spacing:.08em;
+  }
+  .greffe-accueil h2 {
+    margin:0;
+    font:650 clamp(1.9rem,3.4vw,3rem)/1.05 var(--serif);
+  }
+  .greffe-accueil-entete a {
+    display:inline-flex;
+    align-items:center;
+    gap:.45rem;
+    min-height:44px;
+    color:#84323d;
+    font:750 .82rem/1.4 var(--sans);
+  }
+  .greffe-accueil-entete a:hover { text-decoration:underline; }
+  .greffe-accueil-cartes {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:.75rem;
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+  .greffe-accueil-cartes a {
+    display:flex;
+    flex-direction:column;
+    gap:.5rem;
+    height:100%;
+    padding:clamp(1rem,2vw,1.5rem);
+    border:1px solid #473a3b;
+    color:#faf6f1;
+    background:#241f20;
+  }
+  .greffe-accueil-cartes a:hover {
+    background:#382b2d;
+    color:#faf6f1;
+  }
+  .greffe-accueil-cartes a:hover h3 {
+    text-decoration:underline;
+    text-underline-offset:.13em;
+  }
+  .greffe-accueil-cartes h3 {
+    margin:0;
+    font:650 clamp(1.5rem,2.45vw,2.1rem)/1.12 var(--serif);
+  }
+  .greffe-accueil-genre {
+    margin:0;
+    color:#ffc5ca;
+    font:750 .7rem/1.4 var(--sans);
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+  .greffe-accueil-auteur,.greffe-accueil-extrait {
+    margin:0;
+    color:#e6dcd5;
+    font:500 .86rem/1.55 var(--sans);
+  }
+  .greffe-accueil-extrait { margin:.2rem 0 .5rem; }
+  .greffe-accueil-ouvrir {
+    display:flex;
+    justify-content:space-between;
+    gap:.5rem;
+    margin-top:auto;
+    padding-top:.6rem;
+    border-top:1px solid #68595b;
+    color:#ffc5ca;
+    font:750 .8rem/1.4 var(--sans);
+  }
+  .greffe-accueil a:focus-visible { outline:2px solid #84323d; outline-offset:3px; }
+  @media(max-width:47.99rem) {
+    .greffe-accueil-cartes { grid-template-columns:minmax(0,1fr); gap:.5rem; }
   }
 </style>
