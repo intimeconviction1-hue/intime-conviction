@@ -25,6 +25,13 @@ const rubriques = RUBRIQUES.map(r=>{
 });
 const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
 const total=articles.length.toLocaleString('fr-FR');
+const reperes = [
+  { href: '/agenda/', titre: 'Agenda des sessions' },
+  { href: '/comprendre/', titre: 'Comprendre le procès' },
+  { href: '/annuaire/', titre: 'Trouver une cour' },
+  { href: '/dossiers/', titre: 'Dossiers judiciaires' },
+  { href: '/archives/', titre: `${total} articles d’archives` },
+];
 const photoPalaisBlois = {
   image: photoBlois, lieu: 'Palais de justice de Blois', auteur: 'Chabe01',
   source: 'https://commons.wikimedia.org/wiki/File:Palais_Justice_-_Blois_(FR41)_-_2022-07-16_-_1.jpg',
@@ -128,11 +135,23 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
           </div>
         </section>
       )}
-      <nav class="parcours" aria-label="Repères"><span>REPÈRES</span><a href="/agenda/">Sessions criminelles à venir <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/comprendre/">Comprendre le procès <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/annuaire/">Trouver une cour <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/dossiers/">Dossiers judiciaires <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a><a href="/archives/">{total} articles d’archives <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 18 18 6M6 6h12v12" /></svg></a></nav>
-      <form class="accueil-recherche" action="/recherche/" method="get" role="search" aria-label="Rechercher dans les archives">
-        <label for="recherche-accueil"><span>RECHERCHE DOCUMENTAIRE</span><strong>Retrouver un article ou une affaire</strong></label>
-        <div class="accueil-recherche-champs"><input id="recherche-accueil" type="search" name="q" placeholder="Nom, affaire, mot-clé..." autocomplete="off" /><button type="submit">RECHERCHER <span aria-hidden="true">↗</span></button></div>
-      </form>
+      <div class="outils-accueil">
+        <form class="accueil-recherche" action="/recherche/" method="get" role="search" aria-labelledby="titre-recherche-accueil">
+          <label id="titre-recherche-accueil" for="recherche-accueil">Retrouver un article ou une affaire</label>
+          <div class="accueil-recherche-champs">
+            <input id="recherche-accueil" type="search" name="q" placeholder="Nom ou mot-clé" autocomplete="off" />
+            <button type="submit">Rechercher</button>
+          </div>
+        </form>
+        <nav class="parcours" aria-labelledby="titre-reperes-accueil">
+          <h2 id="titre-reperes-accueil">Repères</h2>
+          <ul>
+            {reperes.map(({href, titre}) => (
+              <li><a href={href}>{titre}<span aria-hidden="true">↗</span></a></li>
+            ))}
+          </ul>
+        </nav>
+      </div>
     </div>
   </section>
 
@@ -274,16 +293,14 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 </script>
 <style>
   .ouverture{background:var(--papier);color:var(--encre);padding-top:0}.ouverture-interieur{padding-top:1.1rem;padding-bottom:0}h1{font-size:clamp(2.15rem,3.6vw,3.25rem);line-height:1.04;font-weight:600;letter-spacing:-.035em;margin:0;max-width:22ch}h1 a:hover{color:#fff;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
-  .parcours{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.4rem 1.5rem;border-bottom:1px solid var(--filet-fort);padding:.65rem 0;margin-top:1rem;font:600 .65rem/1.5 var(--sans)}.parcours>span{color:var(--rouge);font-size:.58rem;letter-spacing:.08em}.parcours a{min-height:38px;display:flex;align-items:center;gap:1.2rem}.parcours a span{font-size:1rem}
   .surface-lecture{background:color-mix(in srgb,var(--papier) 97%,transparent)}.journal-corps{padding-top:.1rem;padding-bottom:4rem}.journal-corps :global(.titre-section){margin-top:3.5rem}
   .selection-grille{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:3rem;padding-top:1rem}.article-principal{padding-right:3rem;border-right:1px solid var(--filet)}.article-principal .meta{display:flex;flex-wrap:wrap;gap:.5rem 1rem}.article-principal h3{font-size:clamp(2.25rem,3.7vw,3.5rem);line-height:1.06;font-weight:600;margin:1rem 0}.chapeau{font-size:1.15rem;color:var(--encre-2);line-height:1.6;margin:0 0 1rem}.lire-article{display:inline-flex;align-items:center;flex-wrap:wrap;gap:1rem;min-height:44px;font:600 .65rem/1.5 var(--sans)}.selection-suite{list-style:none;padding:0;margin:0;counter-reset:selection}.selection-suite li{position:relative;counter-increment:selection;padding:1rem 0 1rem 2.8rem;border-bottom:1px solid var(--filet)}.selection-suite li::before{content:counter(selection,decimal-leading-zero);position:absolute;left:0;top:1.2rem;font:500 1.5rem/1 var(--serif);color:var(--rouge)}.selection-suite .meta{margin:0 0 .4rem}.selection-suite h3{font-weight:600;font-size:1.4rem;line-height:1.15;margin:0}
   .univers h2{font-weight:600}.univers h2 br{display:none}.univers h2 em{font-style:normal}.rubriques{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));counter-reset:rubrique;gap:1rem}.rubriques>li{counter-increment:rubrique;min-width:0;padding:1.5rem;background:var(--papier-2);border-top:3px solid var(--encre)}.rubriques>li::before{content:'0' counter(rubrique);display:block;font:500 .65rem/1 var(--sans);color:var(--rouge);margin-bottom:1.75rem}.rubrique-entete{display:flex;justify-content:space-between;align-items:start;gap:.5rem}.rubrique-entete h3{font-weight:600;font-size:1.9rem;line-height:1.05;margin:0}.ouvrir-rubrique{min-height:44px;min-width:44px;display:flex;align-items:center;justify-content:center}.sous-titre{font:400 .65rem/1.6 var(--sans);color:var(--encre-2);margin:.6rem 0 1.25rem}.titres{list-style:none;padding:0;margin:0}.titres li{border-top:1px solid var(--filet);padding:.75rem 0;font-size:1rem;line-height:1.35}.source-presse{display:block;margin-top:.4rem;font-size:.55rem}.rubrique-volume{display:flex;align-items:center;min-height:44px;font:600 .6rem/1.5 var(--sans);margin-top:.4rem}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
-  @media(max-width:63.99rem){h1{font-size:2.3rem}.rubriques{grid-template-columns:repeat(2,minmax(0,1fr))}.parcours{justify-content:flex-start}}
-  @media(max-width:47.99rem){h1{font-size:2.2rem;max-width:23ch}.parcours{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem;margin-top:1.25rem}.parcours>span{grid-column:1/-1;margin-bottom:.4rem}.parcours a{font-size:.6rem;line-height:1.4;min-height:44px;gap:.5rem;justify-content:space-between}.parcours a:last-child{grid-column:1/-1;border-top:1px solid var(--filet)}.selection-grille{grid-template-columns:1fr;gap:1rem}.article-principal{padding:0 0 1.5rem;border-right:0;border-bottom:1px solid var(--filet)}.rubriques{grid-template-columns:1fr}.rubriques>li{padding:1.25rem}.rubriques>li::before{margin-bottom:1.25rem}.journal-corps :global(.titre-section){margin-top:2.8rem}}
+  @media(max-width:63.99rem){h1{font-size:2.3rem}.rubriques{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:47.99rem){h1{font-size:2.2rem;max-width:23ch}.selection-grille{grid-template-columns:1fr;gap:1rem}.article-principal{padding:0 0 1.5rem;border-right:0;border-bottom:1px solid var(--filet)}.rubriques{grid-template-columns:1fr}.rubriques>li{padding:1.25rem}.rubriques>li::before{margin-bottom:1.25rem}.journal-corps :global(.titre-section){margin-top:2.8rem}}
 
 /* Nouvelle direction artistique : la une des assises */
 .ouverture{background:#f1ede5;color:#171716}
-.parcours{border-top:1px solid #bdb6aa;border-bottom:0;padding:1.2rem 0}
 .surface-lecture{background:#f8f5ef}
 .journal-corps{padding-top:1.5rem}
 .article-principal h3{font-size:clamp(2.7rem,4.5vw,4.8rem);letter-spacing:-.05em}
@@ -298,10 +315,6 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 /* Identite 2026 : vrai contraste noir / jaune, langage de bande-annonce, sans effets decoratifs gratuits. */
 .ouverture{background:#111314;color:#fff}
 .ouverture-interieur{padding-top:0}
-.parcours{border-top:1px solid #666;border-bottom:0;color:#fff;padding:1.25rem 0;margin-top:1.6rem}
-.parcours>span{color:#ffe100;font-size:.65rem;font-weight:900}
-.parcours a{font-size:.7rem;font-weight:850;text-transform:uppercase}
-.parcours a:hover{color:#ffe100}
 .surface-lecture{background:#f4f4f1}
 .journal-corps{padding-top:2rem}
 .journal-corps :global(.titre-section){border-top:7px solid #111314;margin-top:4.5rem}
@@ -323,9 +336,6 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 .rubriques .titres li{font:650 .9rem/1.45 var(--sans)}
 .rubrique-volume{font-size:.7rem;font-weight:850;text-transform:uppercase;margin-top:1rem}
 @media(max-width:47.99rem){
-.parcours{display:grid;grid-template-columns:1fr 1fr}
-.parcours>span{grid-column:1/-1}
-.parcours a:last-child{border-color:#555}
 .selection-grille{grid-template-columns:1fr;gap:1rem}
 .article-principal{padding:0 0 1.5rem;border:0;border-bottom:2px solid #ccc}
 .article-principal h3{font-size:clamp(2.2rem,8vw,3.5rem)}
@@ -333,22 +343,6 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 .rubriques>li{min-height:0;padding:1.5rem}
 .rubriques>li::before{margin-bottom:1.3rem}
 }
-
-
-/* Navigation intentionnelle : le lecteur reste au sein du journal. */
-.accueil-recherche{display:grid;grid-template-columns:1fr minmax(0,1.4fr);align-items:end;gap:2rem;padding:1.8rem 0 2.1rem;border-top:1px solid #575958;margin-top:.3rem}
-.accueil-recherche label{display:flex;flex-direction:column;gap:.35rem}
-.accueil-recherche label span{font:850 .62rem/1.6 var(--sans);letter-spacing:.12em;color:#ffe100}
-.accueil-recherche label strong{font:900 clamp(1.2rem,1.8vw,1.75rem)/1.15 var(--sans);letter-spacing:-.04em;color:#fff}
-.accueil-recherche-champs{display:flex;min-height:56px}
-.accueil-recherche input{appearance:none;min-width:0;flex:1;background:#fff;color:#111314;border:2px solid #fff;border-right:0;border-radius:0;padding:.8rem 1rem;font:650 .9rem/1.2 var(--sans)}
-.accueil-recherche input:focus{outline:3px solid #ffe100;outline-offset:2px;position:relative;z-index:1}
-.accueil-recherche input::placeholder{color:#6a6d6b}
-.accueil-recherche button{background:#ffe100;color:#111314;border:2px solid #ffe100;font:900 .75rem/1.2 var(--sans);letter-spacing:.04em;padding:0 1.4rem;white-space:nowrap}
-.accueil-recherche button:hover{background:#fff;border-color:#fff;color:#111314}
-.accueil-recherche button span{font-size:1.15rem;margin-left:.6rem}
-@media(max-width:63.99rem){.accueil-recherche{grid-template-columns:1fr;gap:1rem}}
-@media(max-width:47.99rem){.accueil-recherche{padding:1.5rem 0}.accueil-recherche label strong{font-size:1.4rem}.accueil-recherche-champs{min-height:54px}.accueil-recherche input{font-size:.84rem;padding:.7rem}.accueil-recherche button{padding:0 .85rem;font-size:.69rem}.accueil-recherche button span{margin-left:.25rem}}
 
 
   /* Dossiers : des affaires documentées prennent leur place avant les archives secondaires. */
@@ -377,17 +371,6 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 /* Direction artistique de la une : composition de presse, retenue et lisibilité. */
 .ouverture{background:#f7f5f0;color:#1b2024}
 .ouverture-interieur{padding-top:0}
-.parcours{color:#313739;border-top:1px solid #d6d2cc;border-bottom:1px solid #d6d2cc;margin-top:1.5rem;padding:.8rem 0}
-.parcours>span{color:#9d303c;font:700 .62rem/1.4 var(--sans)}
-.parcours a{font:650 .7rem/1.5 var(--sans);text-transform:none}
-.parcours a:hover{color:#a72a35}
-.accueil-recherche{border-color:#d6d2cc;margin-top:0;padding:1.3rem 0 1.7rem}
-.accueil-recherche label span{color:#9d303c}
-.accueil-recherche label strong{color:#202529;font:650 clamp(1.05rem,1.6vw,1.4rem)/1.3 var(--serif);letter-spacing:0}
-.accueil-recherche input{border:1px solid #c9c7c2;border-right:0;background:#fff}
-.accueil-recherche button{background:#a72a35;color:#fff;border:1px solid #a72a35;font-weight:700;letter-spacing:0}
-.accueil-recherche button:hover{background:#83232d;color:#fff;border-color:#83232d}
-.accueil-recherche input:focus{outline:2px solid #a72a35}
 .surface-lecture{background:#faf9f6}
 .journal-corps{padding-top:1.5rem}
 .journal-corps :global(.titre-section){border-top:1px solid #b9b7b1;margin-top:3.3rem;padding-top:1.2rem}
@@ -415,9 +398,6 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 .article-principal h3 a:hover,.selection-suite h3 a:hover{background:transparent;color:#a72a35}
 .chapeau{font:450 1rem/1.7 var(--sans)}
 @media(max-width:47.99rem){
- .parcours{grid-template-columns:repeat(2,minmax(0,1fr))}
- .parcours a{font-size:.7rem}
- .accueil-recherche{padding:1.4rem 0}
  .accueil-dossiers{padding:1.3rem}
  .accueil-dossiers-entete{grid-template-columns:1fr}
  .accueil-dossiers-grille{grid-template-columns:1fr}
@@ -427,8 +407,6 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 
 /* Règles propres à la une : une hiérarchie éditoriale sans blocs redondants. */
 .ouverture{background:#f7f5f0}
-.parcours{justify-content:flex-start;gap:.5rem 1.5rem}
-.accueil-recherche{margin-top:0;padding:1rem 0 1.25rem}
 .surface-lecture{background:#fbfaf8}
 .journal-corps{padding-top:1.2rem}
 .journal-corps :global(.titre-section){margin-top:2.7rem}
@@ -453,10 +431,9 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 .ouverture-interieur{padding-top:1.25rem}
 @media(max-width:47.99rem){.ouverture-interieur{padding-top:.9rem}}
 
-/* Espacement de la une et des repères. */
+/* Espacement de la une. */
 .ouverture{background:#f7f5f0}
 .ouverture-interieur{padding-top:2.1rem}
-.parcours{margin-top:1.3rem}
 @media(max-width:47.99rem){
  .ouverture-interieur{padding-top:1.1rem}
 }
@@ -518,4 +495,78 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
   .articles-carrousel .article-redaction-credit{position:absolute;right:1rem;bottom:.7rem;z-index:1;margin:0;color:#eee;font:500 .59rem/1.4 var(--sans);text-shadow:0 1px 4px #000}
   .articles-carrousel .article-redaction-credit a{text-decoration:underline;text-underline-offset:.15em}
   @media(max-width:720px){.articles-carrousel .article-redaction-une{display:flex;min-height:520px;padding:1.2rem 1.2rem 2.4rem;align-items:flex-end}.articles-carrousel .article-redaction-une::before{background:linear-gradient(0deg,rgba(9,8,8,.94),rgba(9,8,8,.81) 39%,rgba(9,8,8,.23) 70%,transparent 88%)}.articles-carrousel .article-redaction-credit{left:1.2rem;right:auto;bottom:.55rem}.articles-carrousel .article-redaction-une h2{font-size:clamp(1.65rem,7vw,2.5rem)}}
+
+  .outils-accueil {
+    display:grid;
+    grid-template-columns:minmax(0, 1fr) minmax(0, 1.15fr);
+    gap:clamp(1.25rem, 3vw, 3rem);
+    align-items:center;
+    padding:clamp(1rem, 2.8vw, 2.25rem);
+    background:#f0ebe4;
+    border:1px solid #d6cdc2;
+    border-top:2px solid #943440;
+  }
+  .accueil-recherche label {
+    display:block;
+    margin:0 0 .75rem;
+    font:650 clamp(1.4rem, 2.3vw, 2rem)/1.15 var(--serif);
+  }
+  .accueil-recherche-champs { display:flex; min-height:48px; }
+  .accueil-recherche input {
+    flex:1;
+    min-width:0;
+    padding:.65rem .7rem;
+    border:1px solid #9e9187;
+    border-radius:0;
+    color:var(--encre);
+    background:#fff;
+    font:500 1rem/1.3 var(--sans);
+  }
+  .accueil-recherche input::placeholder { color:#615a55; }
+  .accueil-recherche button {
+    border:0;
+    padding:0 clamp(.55rem, 1.5vw, 1.15rem);
+    color:#fff;
+    background:#923342;
+    cursor:pointer;
+    font:700 .78rem/1.2 var(--sans);
+  }
+  .accueil-recherche button:hover { background:#762636; }
+  .parcours h2 {
+    margin:0 0 .4rem;
+    color:#84323d;
+    font:750 .75rem/1.3 var(--sans);
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+  .parcours ul {
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    column-gap:1rem;
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+  .parcours li:last-child { grid-column:1/-1; }
+  .parcours a {
+    display:flex;
+    min-height:44px;
+    align-items:center;
+    justify-content:space-between;
+    gap:.4rem;
+    padding:.4rem 0;
+    border-bottom:1px solid #c7bdb2;
+    font:650 .85rem/1.3 var(--sans);
+  }
+  .parcours a span { color:#84323d; font-size:1rem; }
+  .parcours a:hover { color:#84323d; text-decoration:underline; }
+  .outils-accueil :is(a, input, button):focus-visible {
+    outline:2px solid #84323d;
+    outline-offset:2px;
+    position:relative;
+    z-index:1;
+  }
+  @media(max-width:47.99rem) {
+    .outils-accueil { grid-template-columns:minmax(0, 1fr); }
+  }
 </style>
