@@ -36,3 +36,10 @@
 - L'ancien index de onze liens « Cours de France : 10 octobre 2022 » devient « Aux assises, le temps ne passe pas de la même façon pour tous » (1 177 mots), un récit reliant plusieurs affaires par le rythme des procédures.
 - Article original de synthèse, références historiques conservées, suivi de l'affaire Kamara jusqu'en 2024 et du double parricide de La Bastide-Clairence jusqu'au verdict d'appel du 22 octobre 2022, précautions sur les autres procédures. Commit privé `40f0baf`.
 - URL et date historique de l'archive inchangées : `/cours-de-france-10-octobre-2022/10/2022/`.
+
+## 8 novembre 2026 : trois archives de mars 2023 corrigées et réécrites
+
+- `/tour-des-cours-de-france-20-au-25-mars-2023/03/2023/` : crise de l'audience aux assises du Gard, Conseil national des barreaux et arrêt de Cour de cassation du 7 juin 2023 ; originalité et sources conservées ; dépôt privé `5c02d008`.
+- `/tour-des-cours-27-fevrier-au-3-mars-2023/03/2023/` : deux dossiers documentés, Agen et Perpignan, après suppression des affirmations non sourcées et de la mention juridiquement impossible d'une condamnation posthume ; dépôt privé `fc5babc4`.
+- `/cours-du-jour-2-mars-2023/03/2023/` : rectification explicite du faux verdict de Montpellier, « quatre acquittements requis » le 2 mars, puis « un acquittement et quatre condamnations » le 3 mars ; dépôt privé `71179020`.
+- Aucune URL ancienne modifiée, dates historiques conservées, mises à jour attribuées au 8 novembre 2026. Reconstruction et publication du site engagées.
