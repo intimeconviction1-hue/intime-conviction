@@ -1,9 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
-import frontonAssises from '../assets/fronton-cour-dassises.jpg';
 import photoBlois from '../assets/blois.webp';
 import photoParis from '../assets/rue-de-la-paix.webp';
 import photoPoissy from '../assets/poissy.webp';
+import photoSalle from '../assets/salle-voltaire.webp';
+import photoTribunal from '../assets/tribunal-paris.webp';
 import AgendaEnBref from '../components/AgendaEnBref.astro';
 import Culture from '../components/Culture.astro';
 import { lireVeille } from '../lib/veille.mjs';
@@ -23,13 +24,14 @@ const rubriques = RUBRIQUES.map(r=>{
 });
 const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
 const total=articles.length.toLocaleString('fr-FR');
+const photoPalaisBlois = {
+  image: photoBlois, lieu: 'Palais de justice de Blois', auteur: 'Chabe01',
+  source: 'https://commons.wikimedia.org/wiki/File:Palais_Justice_-_Blois_(FR41)_-_2022-07-16_-_1.jpg',
+  licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
+};
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 const photosCarrousel = {
-  '/inass-touloub-a-blois-le-poids-des-trente-neuf-annees/11/2026/': {
-    image: photoBlois, lieu: 'Palais de justice de Blois', auteur: 'Chabe01',
-    source: 'https://commons.wikimedia.org/wiki/File:Palais_Justice_-_Blois_(FR41)_-_2022-07-16_-_1.jpg',
-    licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
-  },
+  '/inass-touloub-a-blois-le-poids-des-trente-neuf-annees/11/2026/': photoPalaisBlois,
   '/piaget-le-braqueur-au-borsalino-revient-devant-les-assises/11/2026/': {
     image: photoParis, lieu: 'Rue de la Paix, Paris', auteur: 'Mustang Joe',
     source: 'https://commons.wikimedia.org/wiki/File:Rue_de_la_Paix_(5999837542).jpg',
@@ -41,6 +43,21 @@ const photosCarrousel = {
     licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
   },
 };
+const photosIllustration = [
+  {
+    image: photoTribunal, lieu: 'Tribunal de Paris', auteur: 'Coppertarzan',
+    source: 'https://commons.wikimedia.org/wiki/File:Tribunal_de_Paris_seen_from_Batignolles_park.jpg',
+    licence: 'CC0', lienLicence: 'https://creativecommons.org/publicdomain/zero/1.0/',
+  },
+  {
+    image: photoSalle, lieu: 'Salle Voltaire, Paris', auteur: 'Tiraden',
+    source: 'https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris_-_salle_Voltaire_(cour_d%27assises).jpg',
+    licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
+  },
+  photoPalaisBlois,
+];
+const photosReservees = new Set(articlesCarrousel.map(({data}) => photosCarrousel[data.chemin]));
+const photosDisponibles = photosIllustration.filter(photo => !photosReservees.has(photo));
 
 
 
@@ -62,8 +79,9 @@ const photosCarrousel = {
           </div>
           <div class="articles-carrousel-piste" data-editorial-track tabindex="0" aria-label="Articles de la rédaction à faire défiler">
             {articlesCarrousel.map(({data},i) => {
-              const photo = photosCarrousel[data.chemin];
-              const image = photo?.image ?? frontonAssises;
+              const photoArticle = photosCarrousel[data.chemin];
+              const photo = photoArticle ?? photosDisponibles.shift();
+              const { image } = photo;
               return (
                 <article class="article-redaction-une" aria-label={`Article ${i+1} sur ${articlesCarrousel.length}`}>
                   <div class="article-redaction-fond" aria-hidden="true">
@@ -76,9 +94,8 @@ const photosCarrousel = {
                       decoding="async"
                     />
                   </div>
-                  <p class="article-redaction-credit">{photo
-                    ? <>{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a> · cadrée</>
-                    : 'Photographie d’illustration · Intime Conviction'}
+                  <p class="article-redaction-credit">
+                    {!photoArticle && 'Illustration · '}{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a> · cadrée
                   </p>
                   <div class="article-redaction-une-texte">
                     <p class="article-redaction-une-kicker">LE JOURNAL / {String(i+1).padStart(2,'0')}</p>
