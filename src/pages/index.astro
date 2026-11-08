@@ -1,6 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import frontonAssises from '../assets/fronton-cour-dassises.jpg';
+import photoBlois from '../assets/blois.webp';
+import photoParis from '../assets/rue-de-la-paix.webp';
+import photoPoissy from '../assets/poissy.webp';
 import AgendaEnBref from '../components/AgendaEnBref.astro';
 import Culture from '../components/Culture.astro';
 import { lireVeille } from '../lib/veille.mjs';
@@ -20,12 +23,24 @@ const rubriques = RUBRIQUES.map(r=>{
 });
 const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
 const total=articles.length.toLocaleString('fr-FR');
-// Photos distinctes de lieux judiciaires, utilisées comme illustrations génériques.
-const photosCarrousel = [
-  {src: frontonAssises.src, credit: 'Intime Conviction'},
-  {src: 'https://commons.wikimedia.org/wiki/Special:FilePath/Palais_de_justice_de_Paris_-_salle_Voltaire_%28cour_d%27assises%29.jpg?width=1280', credit: 'Tiraden / Wikimedia Commons'},
-  {src: 'https://commons.wikimedia.org/wiki/Special:FilePath/Palais_de_justice%2C_salle_des_assises_%28Paris%29_-_btv1b6930661f.jpg?width=1280', credit: 'Agence Rol / BnF / Wikimedia Commons'},
-];
+// Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
+const photosCarrousel = {
+  '/inass-touloub-a-blois-le-poids-des-trente-neuf-annees/11/2026/': {
+    image: photoBlois, lieu: 'Palais de justice de Blois', auteur: 'Chatmouettes',
+    source: 'https://commons.wikimedia.org/wiki/File:003_palais_de_justice_blois.jpg',
+    licence: 'CC BY-SA 3.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/3.0/',
+  },
+  '/piaget-le-braqueur-au-borsalino-revient-devant-les-assises/11/2026/': {
+    image: photoParis, lieu: 'Rue de la Paix, Paris', auteur: 'Mustang Joe',
+    source: 'https://commons.wikimedia.org/wiki/File:Rue_de_la_Paix_(5999837542).jpg',
+    licence: 'CC0', lienLicence: 'https://creativecommons.org/publicdomain/zero/1.0/',
+  },
+  '/mort-dolivio-gomes-le-proces-en-appel-du-policier-souvre-a-nanterre/11/2026/': {
+    image: photoPoissy, lieu: 'Hôtel de ville de Poissy', auteur: 'Chabe01',
+    source: 'https://commons.wikimedia.org/wiki/File:Hôtel_Ville_-_Poissy_(FR78)_-_2025-07-12_-_3.jpg',
+    licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
+  },
+};
 
 
 
@@ -46,29 +61,35 @@ const photosCarrousel = [
             </div>
           </div>
           <div class="articles-carrousel-piste" data-editorial-track tabindex="0" aria-label="Articles de la rédaction à faire défiler">
-            {articlesCarrousel.map(({data},i) => (
-              <article class="article-redaction-une" aria-label={`Article ${i+1} sur ${articlesCarrousel.length}`}>
-                <div class="article-redaction-fond" aria-hidden="true">
-                  <img
-                    src={photosCarrousel[i].src}
-                    alt=""
-                    width="1280"
-                    height="760"
-                    loading={i===0?'eager':'lazy'}
-                    decoding="async"
-                    onerror={`this.onerror=null;this.src='${frontonAssises.src}'`}
-                  />
-                </div>
-                <p class="article-redaction-credit">Photographie d’illustration · {photosCarrousel[i].credit}</p>
-                <div class="article-redaction-une-texte">
-                  <p class="article-redaction-une-kicker">LE JOURNAL / {String(i+1).padStart(2,'0')}</p>
-                  <p class="article-redaction-une-date"><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time> · {rubrique(data.rubrique).nom}</p>
-                  <h2><a href={data.chemin}>{data.titre}</a></h2>
-                  <p class="article-redaction-une-extrait">{data.extrait}</p>
-                  <a class="article-redaction-une-lien" href={data.chemin}>Lire l’article <span aria-hidden="true">↗</span></a>
-                </div>
-              </article>
-            ))}
+            {articlesCarrousel.map(({data},i) => {
+              const photo = photosCarrousel[data.chemin];
+              const image = photo?.image ?? frontonAssises;
+              return (
+                <article class="article-redaction-une" aria-label={`Article ${i+1} sur ${articlesCarrousel.length}`}>
+                  <div class="article-redaction-fond" aria-hidden="true">
+                    <img
+                      src={image.src}
+                      alt=""
+                      width={image.width}
+                      height={image.height}
+                      loading={i===0?'eager':'lazy'}
+                      decoding="async"
+                    />
+                  </div>
+                  <p class="article-redaction-credit">{photo
+                    ? <>{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a> · cadrée</>
+                    : 'Photographie d’illustration · Intime Conviction'}
+                  </p>
+                  <div class="article-redaction-une-texte">
+                    <p class="article-redaction-une-kicker">LE JOURNAL / {String(i+1).padStart(2,'0')}</p>
+                    <p class="article-redaction-une-date"><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time> · {rubrique(data.rubrique).nom}</p>
+                    <h2><a href={data.chemin}>{data.titre}</a></h2>
+                    <p class="article-redaction-une-extrait">{data.extrait}</p>
+                    <a class="article-redaction-une-lien" href={data.chemin}>Lire l’article <span aria-hidden="true">↗</span></a>
+                  </div>
+                </article>
+              );
+            })}
           </div>
           <div class="articles-carrousel-reperes" aria-label="Choisir un article">
             {articlesCarrousel.map((_,i)=><button type="button" data-editorial-dot={i} aria-label={`Afficher l’article ${i+1}`} aria-current={i===0?'true':undefined}>{String(i+1).padStart(2,'0')}</button>)}
@@ -753,7 +774,7 @@ const photosCarrousel = [
   .articles-carrousel .article-redaction-une{position:relative;isolation:isolate;display:flex;align-items:flex-end;min-height:clamp(400px,48vw,620px);padding:clamp(1.2rem,4vw,3.75rem);overflow:hidden;background:#272523;color:#fff}
   .articles-carrousel .article-redaction-fond{position:absolute;inset:0;z-index:-2}
   .articles-carrousel .article-redaction-fond img{display:block;width:100%;height:100%;object-fit:cover}
-  .articles-carrousel .article-redaction-une::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(11,10,10,.83) 0%,rgba(11,10,10,.63) 53%,rgba(11,10,10,.26) 100%),linear-gradient(0deg,rgba(0,0,0,.45),transparent 55%);pointer-events:none}
+  .articles-carrousel .article-redaction-une::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(11,10,10,.83) 0%,rgba(11,10,10,.63) 53%,rgba(11,10,10,.08) 100%),linear-gradient(0deg,rgba(0,0,0,.45),transparent 55%);pointer-events:none}
   .articles-carrousel .article-redaction-une-texte{position:relative;z-index:1;max-width:700px}
   .articles-carrousel .article-redaction-une-kicker{color:#ffd9d5}
   .articles-carrousel .article-redaction-une-date{color:#f0e6e0}
@@ -762,5 +783,6 @@ const photosCarrousel = [
   .articles-carrousel .article-redaction-une-lien{background:#a12c39;color:#fff;border:1px solid #f5d4d0}
   .articles-carrousel .article-redaction-une-lien:hover{background:#7d1f2c}
   .articles-carrousel .article-redaction-credit{position:absolute;right:1rem;bottom:.7rem;z-index:1;margin:0;color:#eee;font:500 .59rem/1.4 var(--sans);text-shadow:0 1px 4px #000}
-  @media(max-width:720px){.articles-carrousel .article-redaction-une{display:flex;min-height:520px;padding:1.2rem 1.2rem 2.4rem;align-items:flex-end}.articles-carrousel .article-redaction-une::before{background:linear-gradient(0deg,rgba(9,8,8,.94),rgba(9,8,8,.59) 69%,rgba(9,8,8,.24))}.articles-carrousel .article-redaction-credit{left:1.2rem;right:auto;bottom:.55rem}.articles-carrousel .article-redaction-une h2{font-size:clamp(1.65rem,7vw,2.5rem)}}
+  .articles-carrousel .article-redaction-credit a{text-decoration:underline;text-underline-offset:.15em}
+  @media(max-width:720px){.articles-carrousel .article-redaction-une{display:flex;min-height:520px;padding:1.2rem 1.2rem 2.4rem;align-items:flex-end}.articles-carrousel .article-redaction-une::before{background:linear-gradient(0deg,rgba(9,8,8,.94),rgba(9,8,8,.59) 69%,rgba(9,8,8,.05))}.articles-carrousel .article-redaction-credit{left:1.2rem;right:auto;bottom:.55rem}.articles-carrousel .article-redaction-une h2{font-size:clamp(1.65rem,7vw,2.5rem)}}
 </style>
