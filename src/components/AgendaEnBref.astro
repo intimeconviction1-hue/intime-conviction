@@ -1,50 +1,69 @@
 ---
 import { DATE_CONTROLE_AGENDA, SESSIONS_AGENDA, sessionsAvenir, dateLocaleAgenda } from '../lib/agenda-sessions.mjs';
 
-const dateJour = dateLocaleAgenda();
-const sessions = sessionsAvenir(SESSIONS_AGENDA, dateJour).slice(0, 3);
-const dateCourte = date => new Intl.DateTimeFormat('fr-FR', { day:'numeric', month:'short', timeZone:'UTC' }).format(new Date(date + 'T12:00:00Z'));
-const annee = date => new Intl.DateTimeFormat('fr-FR', { year:'numeric', timeZone:'UTC' }).format(new Date(date + 'T12:00:00Z'));
+const sessions = sessionsAvenir(SESSIONS_AGENDA, dateLocaleAgenda()).slice(0, 3);
+const dateComplete = new Intl.DateTimeFormat('fr-FR', { day:'numeric', month:'long', year:'numeric', timeZone:'UTC' });
+const dateSansAnnee = new Intl.DateTimeFormat('fr-FR', { day:'numeric', month:'long', timeZone:'UTC' });
+const jour = new Intl.DateTimeFormat('fr-FR', { day:'numeric', timeZone:'UTC' });
+const dateUtc = date => new Date(date + 'T12:00:00Z');
+const debutPeriode = (debut, fin) => {
+  if (debut.slice(0, 7) === fin.slice(0, 7)) return jour.format(dateUtc(debut));
+  if (debut.slice(0, 4) === fin.slice(0, 4)) return dateSansAnnee.format(dateUtc(debut));
+  return dateComplete.format(dateUtc(debut));
+};
 ---
 <section class="agenda-bref" aria-labelledby="agenda-bref-titre">
   <div class="agenda-bref-entete">
     <div>
-      <p class="agenda-bref-surtitre">À SUIVRE / SOURCES INSTITUTIONNELLES</p>
+      <p class="agenda-bref-surtitre">AGENDA JUDICIAIRE</p>
       <h2 id="agenda-bref-titre">Les prochaines sessions criminelles</h2>
     </div>
-    <a class="agenda-bref-suite" href="/agenda/">Tout l’agenda <span aria-hidden="true">↗</span></a>
+    <a class="agenda-bref-suite" href="/agenda/">Voir l’agenda <span aria-hidden="true">↗</span></a>
   </div>
-  <p class="agenda-bref-note">Périodes annoncées par les cours d’appel, contrôlées le <time datetime={DATE_CONTROLE_AGENDA}>7 novembre 2026</time>. Une session ne garantit pas la tenue d’un procès précis ni l’accès à chaque audience.</p>
   {sessions.length ? (
     <ol class="agenda-bref-liste">
       {sessions.map(s => (
         <li>
-          <p class="agenda-bref-date"><time datetime={s.debut}>{dateCourte(s.debut)}</time><span>au</span><time datetime={s.fin}>{dateCourte(s.fin)} {annee(s.fin)}</time></p>
-          <div class="agenda-bref-texte"><strong>{s.ville}</strong><span>{s.juridiction}</span></div>
-          <a href={s.source} target="_blank" rel="noopener noreferrer">Source officielle <span class="sr-only">(nouvel onglet)</span><span aria-hidden="true">↗</span></a>
+          <div class="agenda-bref-texte">
+            <h3>{s.ville}</h3>
+            <p class="agenda-bref-date">
+              {s.debut === s.fin
+                ? <time datetime={s.fin}>{dateComplete.format(dateUtc(s.fin))}</time>
+                : <>Du <time datetime={s.debut}>{debutPeriode(s.debut, s.fin)}</time> au <time datetime={s.fin}>{dateComplete.format(dateUtc(s.fin))}</time></>
+              }
+            </p>
+            <p class="agenda-bref-juridiction">{s.juridiction}</p>
+          </div>
+          <a href={s.source} target="_blank" rel="noopener noreferrer">
+            Source officielle<span class="sr-only"> · {s.ville} (nouvel onglet)</span><span aria-hidden="true">↗</span>
+          </a>
         </li>
       ))}
     </ol>
-  ) : <p class="agenda-bref-vide">Aucune session à venir confirmée dans notre sélection. Les publications des cours d’appel restent consultables dans l’agenda.</p>}
+  ) : <p class="agenda-bref-vide">Aucune session à venir dans notre sélection. Les publications des cours d’appel restent consultables dans l’agenda.</p>}
+  <p class="agenda-bref-note">Sources consultées le <time datetime={DATE_CONTROLE_AGENDA}>{dateComplete.format(dateUtc(DATE_CONTROLE_AGENDA))}</time>. Une période de session ne garantit ni la tenue d’un procès précis ni l’accès à une audience.</p>
 </section>
 <style>
-.agenda-bref{margin:2.8rem 0 3.5rem;border-top:4px solid #17191a;border-bottom:1px solid #bcc0be;padding:1.45rem 0 1.6rem}
-.agenda-bref-entete{display:flex;align-items:end;justify-content:space-between;gap:1.5rem;margin-bottom:1rem}
-.agenda-bref-surtitre{font:800 .66rem/1.4 var(--sans);letter-spacing:.055em;color:#96313b;margin:0 0 .55rem}
-.agenda-bref h2{font:750 clamp(1.65rem,3vw,2.65rem)/1.08 var(--sans);letter-spacing:-.045em;margin:0}
-.agenda-bref-suite{font:800 .77rem/1.4 var(--sans);white-space:nowrap;border-bottom:2px solid #96313b;padding-bottom:.15rem}
-.agenda-bref-note{font:480 .83rem/1.6 var(--sans);color:#50575a;max-width:85ch;margin:0 0 1.1rem}
-.agenda-bref-liste{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));list-style:none;margin:0;padding:0;gap:.7rem}
-.agenda-bref-liste li{display:flex;flex-direction:column;gap:.75rem;background:#f1eee9;border-left:3px solid #96313b;padding:1.05rem;min-width:0}
-.agenda-bref-date{display:flex;flex-wrap:wrap;gap:.3rem;font:800 .74rem/1.3 var(--sans);margin:0;color:#96313b}
-.agenda-bref-date span{font-weight:450}
-.agenda-bref-texte{display:flex;flex-direction:column;gap:.35rem}
-.agenda-bref-texte strong{font:800 1.2rem/1.2 var(--sans)}
-.agenda-bref-texte span{font:550 .83rem/1.5 var(--sans)}
-.agenda-bref-liste a{margin-top:auto;align-self:start;font:750 .75rem/1.4 var(--sans);text-decoration:underline;text-underline-offset:3px}
-.agenda-bref-liste a:hover,.agenda-bref-suite:hover{color:#96313b}
-.agenda-bref-vide{padding:1rem;background:#f1eee9}
+.agenda-bref{margin:clamp(1.5rem,3.5vw,3rem) 0 3rem;border-top:2px solid #943440;padding:1.3rem 0 0}
+.agenda-bref-entete{display:flex;align-items:end;justify-content:space-between;gap:.75rem 1.5rem;margin-bottom:1rem}
+.agenda-bref-surtitre{font:750 .72rem/1.3 var(--sans);letter-spacing:.08em;color:#84323d;margin:0 0 .45rem}
+.agenda-bref h2{font:650 clamp(1.9rem,3.4vw,3rem)/1.05 var(--serif);margin:0}
+.agenda-bref-suite{display:inline-flex;align-items:center;gap:.5rem;min-height:44px;font:750 .82rem/1.4 var(--sans);white-space:nowrap;color:#84323d}
+.agenda-bref-liste{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));list-style:none;margin:0;padding:0;gap:.75rem}
+.agenda-bref-liste li{display:flex;flex-direction:column;gap:.45rem;background:#f4f1eb;border:1px solid #d6cdc2;padding:clamp(.85rem,1.8vw,1.3rem);min-width:0}
+.agenda-bref-texte h3{font:650 clamp(1.35rem,2.3vw,2rem)/1.1 var(--serif);margin:0 0 .35rem}
+.agenda-bref-date{font:750 .83rem/1.4 var(--sans);margin:0 0 .3rem;color:#84323d}
+.agenda-bref-juridiction{font:500 .82rem/1.45 var(--sans);margin:0;color:#504945}
+.agenda-bref-liste a{display:inline-flex;align-items:center;gap:.35rem;margin-top:auto;align-self:start;min-height:44px;font:700 .75rem/1.3 var(--sans);text-decoration:underline;text-underline-offset:3px}
+.agenda-bref a:hover{color:#84323d;text-decoration:underline}
+.agenda-bref a:focus-visible{outline:2px solid #84323d;outline-offset:3px}
+.agenda-bref-note{font:480 .8rem/1.5 var(--sans);color:#504945;max-width:85ch;margin:.8rem 0 0}
+.agenda-bref-vide{padding:1rem;background:#f4f1eb}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
-@media(max-width:55rem){.agenda-bref-liste{grid-template-columns:1fr}.agenda-bref-liste li{display:grid;grid-template-columns:minmax(7rem,.65fr) minmax(0,1.4fr) auto;align-items:center}.agenda-bref-date{flex-direction:column}.agenda-bref-liste a{margin:0}}
-@media(max-width:36rem){.agenda-bref-entete{align-items:start;flex-direction:column;gap:.6rem}.agenda-bref-liste li{display:flex;align-items:stretch}.agenda-bref-date{flex-direction:row}}
+@media(max-width:47.99rem){
+  .agenda-bref-entete{align-items:start;flex-wrap:wrap;gap:.15rem 1rem;margin-bottom:.7rem}
+  .agenda-bref-liste{grid-template-columns:1fr;gap:.5rem}
+  .agenda-bref-liste li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:.75rem}
+  .agenda-bref-liste a{margin:0;align-self:center}
+}
 </style>
