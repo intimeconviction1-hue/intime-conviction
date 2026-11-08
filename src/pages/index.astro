@@ -26,9 +26,9 @@ const total=articles.length.toLocaleString('fr-FR');
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 const photosCarrousel = {
   '/inass-touloub-a-blois-le-poids-des-trente-neuf-annees/11/2026/': {
-    image: photoBlois, lieu: 'Palais de justice de Blois', auteur: 'Chatmouettes',
-    source: 'https://commons.wikimedia.org/wiki/File:003_palais_de_justice_blois.jpg',
-    licence: 'CC BY-SA 3.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/3.0/',
+    image: photoBlois, lieu: 'Palais de justice de Blois', auteur: 'Chabe01',
+    source: 'https://commons.wikimedia.org/wiki/File:Palais_Justice_-_Blois_(FR41)_-_2022-07-16_-_1.jpg',
+    licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
   },
   '/piaget-le-braqueur-au-borsalino-revient-devant-les-assises/11/2026/': {
     image: photoParis, lieu: 'Rue de la Paix, Paris', auteur: 'Mustang Joe',
@@ -773,8 +773,8 @@ const photosCarrousel = {
   /* Carrousel de Une : une photographie de fond différente sur chaque article. */
   .articles-carrousel .article-redaction-une{position:relative;isolation:isolate;display:flex;align-items:flex-end;min-height:clamp(400px,48vw,620px);padding:clamp(1.2rem,4vw,3.75rem);overflow:hidden;background:#272523;color:#fff}
   .articles-carrousel .article-redaction-fond{position:absolute;inset:0;z-index:-2}
-  .articles-carrousel .article-redaction-fond img{display:block;width:100%;height:100%;object-fit:cover}
-  .articles-carrousel .article-redaction-une::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(11,10,10,.83) 0%,rgba(11,10,10,.63) 53%,rgba(11,10,10,.08) 100%),linear-gradient(0deg,rgba(0,0,0,.45),transparent 55%);pointer-events:none}
+  .articles-carrousel .article-redaction-fond img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 25%}
+  .articles-carrousel .article-redaction-une::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(9,8,8,.93),rgba(9,8,8,.78) 36%,rgba(9,8,8,.18) 65%,transparent 82%);pointer-events:none}
   .articles-carrousel .article-redaction-une-texte{position:relative;z-index:1;max-width:700px}
   .articles-carrousel .article-redaction-une-kicker{color:#ffd9d5}
   .articles-carrousel .article-redaction-une-date{color:#f0e6e0}
@@ -784,5 +784,5 @@ const photosCarrousel = {
   .articles-carrousel .article-redaction-une-lien:hover{background:#7d1f2c}
   .articles-carrousel .article-redaction-credit{position:absolute;right:1rem;bottom:.7rem;z-index:1;margin:0;color:#eee;font:500 .59rem/1.4 var(--sans);text-shadow:0 1px 4px #000}
   .articles-carrousel .article-redaction-credit a{text-decoration:underline;text-underline-offset:.15em}
-  @media(max-width:720px){.articles-carrousel .article-redaction-une{display:flex;min-height:520px;padding:1.2rem 1.2rem 2.4rem;align-items:flex-end}.articles-carrousel .article-redaction-une::before{background:linear-gradient(0deg,rgba(9,8,8,.94),rgba(9,8,8,.59) 69%,rgba(9,8,8,.05))}.articles-carrousel .article-redaction-credit{left:1.2rem;right:auto;bottom:.55rem}.articles-carrousel .article-redaction-une h2{font-size:clamp(1.65rem,7vw,2.5rem)}}
+  @media(max-width:720px){.articles-carrousel .article-redaction-une{display:flex;min-height:520px;padding:1.2rem 1.2rem 2.4rem;align-items:flex-end}.articles-carrousel .article-redaction-une::before{background:linear-gradient(0deg,rgba(9,8,8,.94),rgba(9,8,8,.81) 39%,rgba(9,8,8,.23) 70%,transparent 88%)}.articles-carrousel .article-redaction-credit{left:1.2rem;right:auto;bottom:.55rem}.articles-carrousel .article-redaction-une h2{font-size:clamp(1.65rem,7vw,2.5rem)}}
 </style>
