@@ -294,9 +294,18 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
       </ul>
     </section>
 
-    <nav class="archives-passerelle" aria-label="Consulter les collections">
-      <div><span>LES COLLECTIONS</span><strong>Retrouver les publications et les références</strong><p>Les archives du journal et les références de la presse extérieure sont consultables séparément.</p></div>
-      <div><a href="/archives/">Archives du journal ↗</a><a href="/archives/presse/">Revue de presse ↗</a></div>
+    <nav class="archives-passerelle" aria-labelledby="titre-collections">
+      <h2 id="titre-collections">Les collections</h2>
+      <div class="archives-collections">
+        <a href="/archives/">
+          <strong>Archives du journal <span aria-hidden="true">↗</span></strong>
+          <span>Les articles publiés par Intime Conviction.</span>
+        </a>
+        <a href="/archives/presse/">
+          <strong>Revue de presse <span aria-hidden="true">↗</span></strong>
+          <span>Des références et des liens vers d’autres médias.</span>
+        </a>
+      </div>
     </nav>
 
   </div></div>
@@ -418,14 +427,40 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 .surface-lecture{background:#fbfaf8}
 .journal-corps{padding-top:1.2rem}
 .journal-corps :global(.titre-section){margin-top:2.7rem}
-.archives-passerelle{border-top:2px solid #33383a;border-bottom:1px solid #d0cbc4;padding:1.6rem 0;margin-top:3rem;display:flex;align-items:center;justify-content:space-between;gap:2rem}
-.archives-passerelle span{font:700 .65rem/1.5 var(--sans);color:#943440;letter-spacing:.06em}
-.archives-passerelle strong{display:block;font:650 clamp(1.5rem,2.4vw,2.2rem)/1.18 var(--serif);margin:.4rem 0}
-.archives-passerelle p{font:450 .87rem/1.6 var(--sans);color:#565b5e;margin:0;max-width:55ch}
-.archives-passerelle>div:last-child{display:flex;flex-direction:column;gap:.35rem;min-width:12rem}
-.archives-passerelle a{font:700 .78rem/1.4 var(--sans);border-bottom:1px solid #c7c1b8;padding:.55rem 0}
-.archives-passerelle a:hover{color:#943440}
-@media(max-width:47.99rem){.archives-passerelle{flex-direction:column;align-items:stretch;gap:1rem}.archives-passerelle>div:last-child{min-width:0}}
+.archives-passerelle {
+  margin-top:2.8rem;
+  padding-top:1.3rem;
+  border-top:2px solid #943440;
+}
+.archives-passerelle h2 {
+  margin:0 0 1rem;
+  font:650 clamp(1.9rem,3.4vw,3rem)/1.05 var(--serif);
+}
+.archives-collections {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:.75rem;
+}
+.archives-collections a {
+  display:grid;
+  gap:.4rem;
+  padding:clamp(.85rem,2vw,1.4rem);
+  border:1px solid #d6cdc2;
+  background:#f4f1eb;
+}
+.archives-collections strong {
+  display:flex;
+  justify-content:space-between;
+  gap:.65rem;
+  font:650 clamp(1.35rem,2.3vw,1.9rem)/1.15 var(--serif);
+}
+.archives-collections strong span { color:#84323d; }
+.archives-collections a > span { color:#504945; font:480 .88rem/1.5 var(--sans); }
+.archives-collections a:hover { background:#eee6dc; color:#84323d; }
+.archives-collections a:focus-visible { outline:2px solid #84323d; outline-offset:3px; }
+@media(max-width:36rem) {
+  .archives-collections { grid-template-columns:minmax(0,1fr); gap:.5rem; }
+}
 
 /* Accueil : la une présente un vrai dossier et non une seconde présentation du site. */
 .ouverture-interieur{padding-top:1.25rem}
