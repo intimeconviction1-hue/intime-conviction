@@ -161,13 +161,31 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 
     <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
       <div class="accueil-dossiers-entete">
-        <div><p class="accueil-dossiers-kicker">DOSSIERS JUDICIAIRES</p><h2 id="titre-dossiers-accueil">Dossiers judiciaires</h2></div>
-        
+        <h2 id="titre-dossiers-accueil">Dossiers judiciaires</h2>
+        <p>Retrouver, affaire par affaire, les références et les liens vers les publications de presse.</p>
       </div>
-      <ul class="accueil-dossiers-grille">
-        {dossiersMisEnAvant.map((d,i)=><li><a href={`/dossiers/${d.slug}/`}><span class="accueil-dossiers-num">DOSSIER {String(i+1).padStart(2,'0')} <span aria-hidden="true">↗</span></span><h3>{d.titre}</h3><p>{d.nombre.toLocaleString('fr-FR')} références de presse</p></a></li>)}
-      </ul>
-      <div class="accueil-dossiers-liens"><a href="/dossiers/">EXPLORER TOUS LES DOSSIERS <span aria-hidden="true">↗</span></a><a href="/chronologie/">VOIR LA CHRONOLOGIE JUDICIAIRE <span aria-hidden="true">↗</span></a></div>
+      {dossiersMisEnAvant.length > 0 && (
+        <ul class="accueil-dossiers-grille">
+          {dossiersMisEnAvant.map(d => (
+            <li>
+              <a href={`/dossiers/${d.slug}/`} aria-labelledby={`accueil-dossier-${d.slug}`} aria-describedby={`accueil-dossier-repere-${d.slug}`}>
+                <div class="accueil-dossiers-titre">
+                  <h3 id={`accueil-dossier-${d.slug}`}>{d.titre}</h3>
+                  <span aria-hidden="true">↗</span>
+                </div>
+                <p id={`accueil-dossier-repere-${d.slug}`}>{d.presentation}</p>
+                <span class="accueil-dossiers-total">
+                  {d.nombre.toLocaleString('fr-FR')} {d.nombre === 1 ? 'référence de presse' : 'références de presse'}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+      <div class="accueil-dossiers-liens">
+        <a href="/dossiers/">Tous les dossiers <span aria-hidden="true">↗</span></a>
+        <a href="/chronologie/">Chronologie judiciaire <span aria-hidden="true">↗</span></a>
+      </div>
     </section>
 
 
@@ -344,28 +362,6 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 .rubriques>li::before{margin-bottom:1.3rem}
 }
 
-
-  /* Dossiers : des affaires documentées prennent leur place avant les archives secondaires. */
-  .accueil-dossiers{margin:4rem 0 0;padding:2.2rem;background:#17191a;color:#fff;border-top:8px solid #ffe100}
-  .accueil-dossiers-entete{display:grid;grid-template-columns:1.3fr 1fr;gap:2rem;align-items:end;border-bottom:1px solid #606263;padding-bottom:1.7rem}
-  .accueil-dossiers-kicker{color:#ffe100;font:850 .7rem/1.4 var(--sans);letter-spacing:.09em;margin:0 0 1rem}
-  .accueil-dossiers-entete h2{font:900 clamp(2rem,4vw,4.2rem)/1.02 var(--sans);letter-spacing:-.065em;margin:0}
-  .accueil-dossiers-entete h2 span{color:#ffe100}
-  .accueil-dossiers-entete>p{font:500 .93rem/1.65 var(--sans);color:#dadada;margin:0;max-width:55ch}
-  .accueil-dossiers-grille{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;list-style:none;margin:1.5rem 0 0;padding:0;background:#676868;border:1px solid #676868}
-  .accueil-dossiers-grille li{min-width:0;background:#f5f4f0;color:#17191a}
-  .accueil-dossiers-grille a{display:flex;flex-direction:column;min-height:215px;padding:1.3rem;gap:1.4rem;height:100%}
-  .accueil-dossiers-grille a:hover,.accueil-dossiers-grille a:focus-visible{background:#ffe100;color:#17191a}
-  .accueil-dossiers-num{display:flex;justify-content:space-between;gap:.5rem;font:850 .66rem/1.4 var(--sans);letter-spacing:.06em}
-  .accueil-dossiers-num span{font-size:1.3rem}
-  .accueil-dossiers-grille h3{font:850 clamp(1.2rem,2vw,1.8rem)/1.14 var(--sans);letter-spacing:-.045em;margin:0;overflow-wrap:anywhere}
-  .accueil-dossiers-grille p{font:750 .67rem/1.45 var(--sans);margin:auto 0 0;text-transform:uppercase}
-  .accueil-dossiers-liens{display:flex;gap:1rem 2rem;flex-wrap:wrap;margin-top:1.4rem}
-  .accueil-dossiers-liens a{display:inline-flex;gap:1.2rem;align-items:center;border-bottom:2px solid #ffe100;padding:.6rem 0;font:850 .68rem/1.5 var(--sans)}
-  .accueil-dossiers-liens a:hover{color:#ffe100}
-  @media(max-width:64rem){.accueil-dossiers-grille{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  @media(max-width:48rem){.accueil-dossiers{padding:1.3rem;margin-top:2.5rem}.accueil-dossiers-entete{grid-template-columns:1fr;gap:1rem}.accueil-dossiers-grille{grid-template-columns:1fr}.accueil-dossiers-grille a{min-height:145px}.accueil-dossiers-grille h3{font-size:1.55rem}}
-
   /* Une d'information : l'ancien article d'archives ne simule plus l'actualité. */
 
 /* Direction artistique de la une : composition de presse, retenue et lisibilité. */
@@ -374,21 +370,6 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 .surface-lecture{background:#faf9f6}
 .journal-corps{padding-top:1.5rem}
 .journal-corps :global(.titre-section){border-top:1px solid #b9b7b1;margin-top:3.3rem;padding-top:1.2rem}
-.accueil-dossiers{background:#f0eee9;color:#1d2224;border:1px solid #d6d2cb;border-top:3px solid #a72a35;margin:3rem 0 0;padding:2rem}
-.accueil-dossiers-entete{border-bottom:1px solid #c6c1ba;grid-template-columns:1fr 1fr}
-.accueil-dossiers-kicker{color:#99303c;font:700 .66rem/1.4 var(--sans);letter-spacing:.04em}
-.accueil-dossiers-entete h2{font:650 clamp(2rem,3.5vw,3.4rem)/1.09 var(--serif);letter-spacing:-.025em}
-.accueil-dossiers-entete h2 span{color:#1d2224}
-.accueil-dossiers-entete>p{color:#53565a;font:450 .94rem/1.7 var(--sans)}
-.accueil-dossiers-grille{border:0;gap:1px;background:#c9c5be}
-.accueil-dossiers-grille li{background:#fff;color:#212629}
-.accueil-dossiers-grille a{min-height:185px;padding:1.2rem;gap:1rem}
-.accueil-dossiers-grille a:hover,.accueil-dossiers-grille a:focus-visible{background:#e7e2d8;color:#1d2224}
-.accueil-dossiers-grille h3{font:650 clamp(1.15rem,1.9vw,1.55rem)/1.2 var(--serif);letter-spacing:-.02em}
-.accueil-dossiers-num{font:700 .6rem/1.5 var(--sans);color:#9d303c}
-.accueil-dossiers-grille p{font:650 .63rem/1.4 var(--sans);text-transform:none}
-.accueil-dossiers-liens a{color:#33393c;border-bottom:1px solid #a72a35;font:700 .67rem/1.5 var(--sans)}
-.accueil-dossiers-liens a:hover{color:#a72a35}
 .article-principal h3{font:650 clamp(2rem,3.4vw,3.3rem)/1.14 var(--serif);letter-spacing:-.02em;text-transform:none}
 .article-principal{border-color:#d4d0c9}
 .selection-suite{color:#222729}
@@ -398,10 +379,6 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 .article-principal h3 a:hover,.selection-suite h3 a:hover{background:transparent;color:#a72a35}
 .chapeau{font:450 1rem/1.7 var(--sans)}
 @media(max-width:47.99rem){
- .accueil-dossiers{padding:1.3rem}
- .accueil-dossiers-entete{grid-template-columns:1fr}
- .accueil-dossiers-grille{grid-template-columns:1fr}
- .accueil-dossiers-grille a{min-height:135px}
  .article-principal h3{font-size:clamp(1.9rem,7vw,2.7rem)}
 }
 
@@ -410,11 +387,6 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 .surface-lecture{background:#fbfaf8}
 .journal-corps{padding-top:1.2rem}
 .journal-corps :global(.titre-section){margin-top:2.7rem}
-.accueil-dossiers{background:transparent;border:0;border-top:2px solid #993440;padding:1.5rem 0 0;margin:2.2rem 0 0}
-.accueil-dossiers-grille{background:#d8d3cc}
-.accueil-dossiers-grille li{background:#f4f1eb}
-.accueil-dossiers-grille a{min-height:150px}
-.accueil-dossiers-entete h2{font-size:clamp(1.9rem,3.3vw,3.1rem)}
 .rubriques>li{background:#f4f1eb;border-top:2px solid #353738;padding:1.3rem}
 .rubriques>li::before{margin-bottom:.9rem}
 .rubrique-entete h3{font-size:clamp(1.5rem,2.1vw,2rem)}
@@ -568,5 +540,88 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
   }
   @media(max-width:47.99rem) {
     .outils-accueil { grid-template-columns:minmax(0, 1fr); }
+  }
+  .accueil-dossiers {
+    margin:2.2rem 0 0;
+    padding-top:1.3rem;
+    border-top:2px solid #943440;
+  }
+  .accueil-dossiers-entete h2 {
+    margin:0;
+    font:650 clamp(1.9rem,3.4vw,3rem)/1.05 var(--serif);
+  }
+  .accueil-dossiers-entete p {
+    margin:.55rem 0 0;
+    color:#504945;
+    font:480 .91rem/1.55 var(--sans);
+  }
+  .accueil-dossiers-grille {
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:.75rem;
+    list-style:none;
+    margin:1rem 0 0;
+    padding:0;
+  }
+  .accueil-dossiers-grille a {
+    display:flex;
+    height:100%;
+    flex-direction:column;
+    gap:.65rem;
+    padding:clamp(.85rem,1.65vw,1.25rem);
+    background:#f4f1eb;
+    border:1px solid #d6cdc2;
+  }
+  .accueil-dossiers-grille a:hover {
+    background:#eee6dc;
+    color:#84323d;
+  }
+  .accueil-dossiers-titre {
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:.5rem;
+  }
+  .accueil-dossiers-titre h3 {
+    margin:0;
+    font:650 clamp(1.3rem,2vw,1.75rem)/1.13 var(--serif);
+  }
+  .accueil-dossiers-titre span { color:#84323d; }
+  .accueil-dossiers-grille p {
+    margin:0;
+    color:#504945;
+    font:480 .83rem/1.5 var(--sans);
+  }
+  .accueil-dossiers-total {
+    margin-top:auto;
+    padding-top:.55rem;
+    border-top:1px solid #d6cdc2;
+    color:#84323d;
+    font:700 .75rem/1.4 var(--sans);
+  }
+  .accueil-dossiers-liens {
+    display:flex;
+    flex-wrap:wrap;
+    gap:0 1.5rem;
+    margin-top:.55rem;
+  }
+  .accueil-dossiers-liens a {
+    display:inline-flex;
+    align-items:center;
+    gap:.45rem;
+    min-height:44px;
+    color:#84323d;
+    font:750 .82rem/1.4 var(--sans);
+  }
+  .accueil-dossiers-liens a:hover { text-decoration:underline; }
+  .accueil-dossiers a:focus-visible {
+    outline:2px solid #84323d;
+    outline-offset:3px;
+  }
+  @media(max-width:64rem) {
+    .accueil-dossiers-grille { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  }
+  @media(max-width:36rem) {
+    .accueil-dossiers-grille { grid-template-columns:1fr; gap:.5rem; }
   }
 </style>
