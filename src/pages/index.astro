@@ -31,15 +31,9 @@ const photosCarrousel = [
 
 ---
 <Base accueil>
-  <section class="ouverture" aria-labelledby="titre-cours-du-jour">
+  <section class="ouverture" aria-labelledby="titre-accueil">
     <div class="cadre ouverture-interieur">
-      <header class="une-news-entete">
-        <div>
-          <p class="une-news-surtitre">ACTUALITÉ JUDICIAIRE</p>
-          <h1 id="titre-cours-du-jour">Cours du Jour</h1>
-        </div>
-        <a class="une-news-lien" href="/rubrique/cours-du-jour/">Toute la rubrique <span aria-hidden="true">↗</span></a>
-      </header>
+      <h1 id="titre-accueil" class="sr-only">Intime Conviction, le journal des cours d’assises</h1>
       {articlesCarrousel.length > 0 && (
         <section class="articles-carrousel" aria-label="Trois articles à la une" data-editorial-carousel>
           <div class="articles-carrousel-tete">
@@ -632,11 +626,6 @@ const photosCarrousel = [
 /* Accueil 2026 : l'actualité est l'unique une. Défilement manuel sans autoplay. */
 .ouverture{background:#f7f5f0}
 .ouverture-interieur{padding-top:2.1rem}
-.une-news-entete{display:flex;align-items:end;justify-content:space-between;gap:2rem;margin:0 0 1.5rem;border-bottom:1px solid #c9c3bc;padding-bottom:1.4rem}
-.une-news-surtitre{margin:0 0 .6rem;font:750 .67rem/1.4 var(--sans);letter-spacing:.1em;color:#943440}
-.une-news-entete h1{margin:0;font:650 clamp(2.8rem,5.2vw,5.7rem)/1.02 var(--serif);letter-spacing:-.04em;text-transform:none;max-width:none}
-.une-news-entete p:not(.une-news-surtitre){font:450 1rem/1.6 var(--sans);max-width:68ch;margin:.75rem 0 0;color:#52585a}
-.une-news-lien{white-space:nowrap;font:700 .78rem/1.5 var(--sans);border-bottom:1px solid #943440;padding:.4rem 0}
 .une-info-principale{display:grid;grid-template-columns:minmax(0,1fr);background:#23272a;color:#fcfaf7;min-height:305px}
 .une-info-contenu{padding:clamp(1.6rem,3vw,3.2rem);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1rem}
 .une-info-source{display:flex;align-items:center;flex-wrap:wrap;gap:.6rem 1rem;margin:0;font:700 .72rem/1.4 var(--sans)}
@@ -672,8 +661,6 @@ const photosCarrousel = [
 @media(max-width:63.99rem){.une-info-principale{grid-template-columns:minmax(0,1fr)}.une-defile-carte{flex-basis:42%}}
 @media(max-width:47.99rem){
  .ouverture-interieur{padding-top:1.1rem}
- .une-news-entete{align-items:start;flex-direction:column;gap:.5rem}
- .une-news-entete h1{font-size:clamp(2.65rem,12vw,4.3rem)}
  .une-info-principale{grid-template-columns:1fr;min-height:0}
  .une-info-contenu{padding:1.6rem 1.25rem}
  .une-info-principale h2{font-size:clamp(1.85rem,7.5vw,2.65rem)}
@@ -700,7 +687,7 @@ const photosCarrousel = [
 @media(max-width:48rem){.article-redaction-une{margin:1rem 0 1.7rem}.article-redaction-une h2{font-size:clamp(1.8rem,7vw,2.5rem)}}
 
 /* Une éditoriale : trois publications distinctes, navigation explicite et tactile. */
-.articles-carrousel{margin:1.35rem 0 2rem;min-width:0}
+.articles-carrousel{margin:0 0 2rem;min-width:0}
 .articles-carrousel-tete{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 0;border-top:1px solid #8b8881}
 .articles-carrousel-tete p{font:800 .75rem/1.4 var(--sans);letter-spacing:.08em;margin:0}
 .articles-carrousel-outils{display:flex;align-items:center;gap:.6rem}
