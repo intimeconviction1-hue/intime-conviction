@@ -102,41 +102,47 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
             <p>À LA UNE</p>
             <div class="articles-carrousel-outils" aria-label="Navigation dans les articles">
               <span data-editorial-position aria-live="polite">01 / {String(articlesCarrousel.length).padStart(2,'0')}</span>
-              <button type="button" data-editorial-prev aria-label="Article précédent">←</button>
-              <button type="button" data-editorial-next aria-label="Article suivant">→</button>
               <button type="button" data-editorial-toggle aria-label="Mettre le défilement automatique en pause" aria-pressed="false" title="Mettre en pause">Ⅱ</button>
             </div>
           </div>
-          <div class="articles-carrousel-piste" data-editorial-track tabindex="0" aria-label="Articles de la rédaction à faire défiler">
-            {cartesCarrousel.map(({data, photo, illustration, portrait},i) => {
-              const { image } = photo;
-              return (
-                <article class="article-redaction-une" aria-label={`Article ${i+1} sur ${articlesCarrousel.length}`}>
-                  <picture class="article-redaction-fond" aria-hidden="true">
-                    <source media="(max-width: 520px)" srcset={portrait.srcSet.attribute} sizes="calc(100vw - 2.5rem)" />
-                    <img
-                      src={image.src}
-                      alt=""
-                      width={image.width}
-                      height={image.height}
-                      loading={i===0?'eager':'lazy'}
-                      fetchpriority={i===0?'high':undefined}
-                      decoding="async"
-                    />
-                  </picture>
-                  <p class="article-redaction-credit">
-                    {illustration && 'Illustration · '}{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a> · cadrée
-                  </p>
-                  <div class="article-redaction-une-texte">
-                    <p class="article-redaction-une-kicker">LE JOURNAL / {String(i+1).padStart(2,'0')}</p>
-                    <p class="article-redaction-une-date"><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time> · {rubrique(data.rubrique).nom}</p>
-                    <h2><a href={data.chemin}>{data.titre}</a></h2>
-                    <p class="article-redaction-une-extrait">{data.extrait}</p>
-                    <a class="article-redaction-une-lien" href={data.chemin}>Lire l’article <span aria-hidden="true">↗</span></a>
-                  </div>
-                </article>
-              );
-            })}
+          <div class="articles-carrousel-scene">
+            {articlesCarrousel.length > 1 && (
+              <>
+                <button class="articles-carrousel-fleche articles-carrousel-precedent" type="button" data-editorial-prev aria-controls="piste-carrousel-accueil" aria-label="Article précédent">←</button>
+                <button class="articles-carrousel-fleche articles-carrousel-suivant" type="button" data-editorial-next aria-controls="piste-carrousel-accueil" aria-label="Article suivant">→</button>
+              </>
+            )}
+            <div class="articles-carrousel-piste" id="piste-carrousel-accueil" data-editorial-track tabindex="0" aria-label="Articles de la rédaction à faire défiler">
+              {cartesCarrousel.map(({data, photo, illustration, portrait},i) => {
+                const { image } = photo;
+                return (
+                  <article class="article-redaction-une" aria-label={`Article ${i+1} sur ${articlesCarrousel.length}`}>
+                    <picture class="article-redaction-fond" aria-hidden="true">
+                      <source media="(max-width: 520px)" srcset={portrait.srcSet.attribute} sizes="calc(100vw - 2.5rem)" />
+                      <img
+                        src={image.src}
+                        alt=""
+                        width={image.width}
+                        height={image.height}
+                        loading={i===0?'eager':'lazy'}
+                        fetchpriority={i===0?'high':undefined}
+                        decoding="async"
+                      />
+                    </picture>
+                    <p class="article-redaction-credit">
+                      {illustration && 'Illustration · '}{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a> · cadrée
+                    </p>
+                    <div class="article-redaction-une-texte">
+                      <p class="article-redaction-une-kicker">LE JOURNAL / {String(i+1).padStart(2,'0')}</p>
+                      <p class="article-redaction-une-date"><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time> · {rubrique(data.rubrique).nom}</p>
+                      <h2><a href={data.chemin}>{data.titre}</a></h2>
+                      <p class="article-redaction-une-extrait">{data.extrait}</p>
+                      <a class="article-redaction-une-lien" href={data.chemin}>Lire l’article <span aria-hidden="true">↗</span></a>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
           </div>
           <div class="articles-carrousel-reperes" aria-label="Choisir un article">
             {articlesCarrousel.map((_,i)=><button type="button" data-editorial-dot={i} aria-label={`Afficher l’article ${i+1}`} aria-current={i===0?'true':undefined}>{String(i+1).padStart(2,'0')}</button>)}
@@ -899,5 +905,31 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
   }
   @media(max-width:36rem) {
     .rubriques { grid-template-columns:minmax(0,1fr); gap:.5rem; }
+  }
+  .articles-carrousel-scene { position:relative; }
+  .articles-carrousel-fleche {
+    position:absolute;
+    top:1rem;
+    z-index:2;
+    display:grid;
+    place-items:center;
+    width:44px;
+    height:44px;
+    border:1px solid #fff;
+    border-radius:50%;
+    color:#fff;
+    background:#17191ae8;
+    font:750 1.3rem/1 var(--sans);
+    cursor:pointer;
+  }
+  .articles-carrousel-precedent { left:1rem; }
+  .articles-carrousel-suivant { right:1rem; }
+  .articles-carrousel-fleche:hover { background:#84323d; }
+  .articles-carrousel-fleche:focus-visible { outline:2px solid #fff; outline-offset:3px; }
+  .articles-carrousel-fleche ~ .articles-carrousel-piste .article-redaction-une { padding-top:4.5rem; }
+  @media(max-width:47.99rem) {
+    .articles-carrousel-fleche { top:.65rem; }
+    .articles-carrousel-precedent { left:.65rem; }
+    .articles-carrousel-suivant { right:.65rem; }
   }
 </style>
