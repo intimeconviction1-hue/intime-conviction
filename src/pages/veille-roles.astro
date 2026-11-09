@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import {contactCourAppel} from '../lib/agenda-sessions.mjs';
+import {contactCourAppel,SOURCES_A_COMPLETER} from '../lib/agenda-sessions.mjs';
 import {ROLES_OFFICIELS,MODES_ROLES} from '../lib/roles-officiels.mjs';
 
 const sources=new Map();
@@ -13,17 +13,16 @@ for(const r of ROLES_OFFICIELS) {
   sources.set(r.url,s);
 }
 const surveillees=[...sources.values()].sort((a,b)=>a.ressorts[0].localeCompare(b.ressorts[0],'fr'));
-const exclus=ROLES_OFFICIELS.filter(r=>r.mode==='information'||r.mode==='sur-place');
+const suivisSansDate = new Map(SOURCES_A_COMPLETER.map(s=>[s.source,s.statut]));
 ---
-<Base titre="Veille des rôles d’audience" description="Revue éditoriale des rôles d’assises publiés par les cours d’appel : sources officielles à consulter et vérification humaine avant toute publication." rubriqueActive="annuaire">
+<Base titre="Sources de l’agenda judiciaire" description="Revue éditoriale des rôles d’assises publiés par les cours d’appel : sources officielles à consulter et vérification humaine avant toute publication." rubriqueActive="cours-du-jour">
   <header class="entete-veille">
-    <p>INTIME CONVICTION / VEILLE DES RÔLES</p>
-    <h1>LES RÔLES<br /><span>D’AUDIENCE.</span></h1>
-    <p class="introduction">Une revue éditoriale des publications officielles. L’objectif : retrouver les rôles et les mises à jour auprès des cours d’appel, sans confondre la mise en ligne d’un PDF avec la confirmation d’une audience.</p>
+    <p>INTIME CONVICTION / RÔLES D’AUDIENCE</p>
+    <h1>LES SOURCES<br /><span>DE L’AGENDA.</span></h1>
+    <p class="introduction">Retrouvez les cours d’appel dont nous suivons les publications et les coordonnées pour demander au greffe le programme des audiences.</p>
     <div class="chiffres"><span><strong>{surveillees.length}</strong> pages institutionnelles à vérifier</span><span><strong>{new Set(surveillees.flatMap(s=>s.codes)).size}</strong> départements couverts</span></div>
   </header>
 
-  <aside class="acces-agenda"><div><strong>Agenda des sessions criminelles</strong><p>Consultez les périodes de sessions identifiées dans les publications institutionnelles. Les dates ne constituent pas une annonce de procès individuel.</p></div><a href="/agenda/">Voir les sessions annoncées</a></aside>
 
   <section class="sources" aria-labelledby="titre-sources">
     <div class="tete-sources"><span>LE PÉRIMÈTRE / SOURCES OFFICIELLES</span><h2 id="titre-sources">LES SOURCES<br /><mark>OFFICIELLES.</mark></h2><p>Les pages regroupant plusieurs départements ne constituent pas des rôles distincts pour chacun. Les pages de publication contrôlées le 9 novembre 2026 affichaient une maintenance. Les liens ci-dessous ouvrent les coordonnées des cours pour demander au greffe les informations disponibles.</p></div>
@@ -32,13 +31,14 @@ const exclus=ROLES_OFFICIELS.filter(r=>r.mode==='information'||r.mode==='sur-pla
         <div class="source-haute"><span>{String(i+1).padStart(2,'0')} / SOURCE OFFICIELLE</span><span>{s.codes.join(' · ')}</span></div>
         <h3>{s.titre}</h3>
         <p class="source-type">{MODES_ROLES[s.mode]}</p>
+        {suivisSansDate.has(s.url) && <p class="source-suivi">{suivisSansDate.get(s.url)}</p>}
         <p class="source-departements">DÉPARTEMENTS : {s.codes.join(' / ')}</p>
         <a href={contactCourAppel(s.url)} target="_blank" rel="noopener noreferrer" aria-label={'Coordonnées de la cour pour '+s.ressorts.join(', ')}>COORDONNÉES DE LA COUR <span aria-hidden="true">↗</span></a>
       </li>
     ))}</ol>
   </section>
   <aside class="exclusion"><span>CE QUE NOUS NE SURVEILLONS PAS AUTOMATIQUEMENT</span><h2>LES INFORMATIONS NON PUBLIÉES.</h2><p>Les rôles consultables uniquement au greffe, notamment pour la Seine-Maritime et l’Eure, ne sont pas collectés. Les simples pages d’information générale ne valent pas publication d’une session. Le périmètre n’est ni complet pour les 101 départements, ni une garantie de fraîcheur des audiences.</p></aside>
-  <footer class="suite"><a href="/annuaire/">REVENIR À L’ANNUAIRE NATIONAL <span aria-hidden="true">↗</span></a><a href="/agenda/">CONSULTER LES SESSIONS À VENIR <span aria-hidden="true">↗</span></a></footer>
+  <footer class="suite"><a href="/annuaire/">TROUVER UNE COUR DANS L’ANNUAIRE <span aria-hidden="true">↗</span></a><a href="/agenda/">REVENIR À L’AGENDA <span aria-hidden="true">↗</span></a></footer>
 </Base>
 <style>
 .entete-veille{background:#151718;color:#fff;margin:1.5rem 0 0;padding:clamp(1.4rem,4vw,4rem);border-top:8px solid #ffe100}
@@ -65,6 +65,7 @@ const exclus=ROLES_OFFICIELS.filter(r=>r.mode==='information'||r.mode==='sur-pla
 .grille-sources li{display:flex;flex-direction:column;gap:.7rem;border:2px solid #151718;padding:1.5rem;background:#f0f0eb;color:#151718;min-width:0}
 .source-haute{display:flex;justify-content:space-between;gap:1rem;font:900 .65rem/1.4 var(--sans)}
 .grille-sources h3{font:900 clamp(1.2rem,2vw,1.7rem)/1.17 var(--sans);letter-spacing:-.035em;margin:1rem 0 .3rem}
+.source-suivi{font:500 .86rem/1.5 var(--sans);margin:0}
 .source-type{font:900 .75rem/1.4 var(--sans);margin:0;background:#ffe100;align-self:start;padding:.35rem .5rem}
 .source-departements{font:750 .67rem/1.45 var(--sans);margin:0}
 .grille-sources a{margin-top:auto;padding:1rem .3rem 0;border-top:2px solid #151718;display:flex;justify-content:space-between;gap:1rem;font:900 .68rem/1.45 var(--sans)}
@@ -78,10 +79,4 @@ const exclus=ROLES_OFFICIELS.filter(r=>r.mode==='information'||r.mode==='sur-pla
 .suite a:hover{background:#151718;color:#fff}
 @media(max-width:48rem){.entete-veille{padding:2rem 1.2rem}.entete-veille h1{font-size:clamp(2.5rem,10vw,4.2rem)}.fonctionnement ol,.grille-sources,.suite{grid-template-columns:1fr}.fonctionnement li:nth-child(odd){border-right:0}}
 
-.acces-agenda{margin:1.5rem 0 2rem;padding:1.4rem 1.7rem;display:flex;justify-content:space-between;align-items:center;gap:1.4rem;background:#f3f0eb;border-left:3px solid #a12c39;color:#202529}
-.acces-agenda strong{font:650 1.45rem/1.2 var(--serif)}
-.acces-agenda p{font:450 .9rem/1.6 var(--sans);max-width:65ch;margin:.45rem 0 0}
-.acces-agenda a{font:650 .84rem/1.5 var(--sans);text-decoration:underline;text-underline-offset:.2em;flex-shrink:0}
-.acces-agenda a:hover{color:#96313b}
-@media(max-width:48rem){.acces-agenda{flex-direction:column;align-items:stretch}.acces-agenda a{flex-shrink:1}}
 </style>

@@ -20,16 +20,16 @@ const imagePartage = image ? new URL(image, Astro.site).href : (accueil ? new UR
 const annee = new Date().getFullYear();
 // Les pages-outils restent à leur adresse historique, mais relèvent d'une rubrique.
 const rattachement = {
-  comprendre: 'le-banc-des-jures', annuaire: 'le-banc-des-jures', carte: 'le-banc-des-jures',
+  comprendre: 'le-banc-des-jures', annuaire: 'le-banc-des-jures', carte: 'l-expose',
   dossiers: 'l-expose', chronologie: 'l-expose'
 };
 const rubriqueCourante = rattachement[rubriqueActive] ?? rubriqueActive;
 const menusRubriques = {
-  'cours-du-jour': { accroche:'Suivre les procès criminels', liens:[{nom:'Les actualités',href:'/rubrique/cours-du-jour/'},{nom:'Agenda des audiences',href:'/agenda/'},{nom:'Rôles officiels',href:'/veille-roles/'}] },
+  'cours-du-jour': { accroche:'Suivre les procès criminels', liens:[{nom:'Les actualités',href:'/rubrique/cours-du-jour/'},{nom:'Agenda des sessions',href:'/agenda/'}] },
   'le-banc-des-jures': { accroche:'Comprendre le procès et ses acteurs', liens:[{nom:'Comprendre les assises',href:'/comprendre/'},{nom:'Assister à une audience',href:'/assister/'},{nom:'Trouver une cour',href:'/annuaire/'}] },
   'la-cour-se-leve': { accroche:'Récits et chroniques d’audience', liens:[{nom:'Lire les chroniques',href:'/rubrique/la-cour-se-leve/'},{nom:'Parcourir les archives',href:'/archives/'}] },
   'delibere': { accroche:'Regards et débats sur la justice', liens:[{nom:'Lire les réflexions',href:'/rubrique/delibere/'},{nom:'Notre ligne éditoriale',href:'/ligne-editoriale/'}] },
-  'l-expose': { accroche:'Éclairer les affaires et les décisions', liens:[{nom:'Dossiers judiciaires',href:'/dossiers/'},{nom:'Chronologie des affaires',href:'/chronologie/'},{nom:'Jurisprudence criminelle',href:'/jurisprudence/'}] },
+  'l-expose': { accroche:'Éclairer les affaires et les décisions', liens:[{nom:'Dossiers judiciaires',href:'/dossiers/'},{nom:'Chronologie des affaires',href:'/chronologie/'},{nom:'Carte des affaires',href:'/carte/'},{nom:'Jurisprudence criminelle',href:'/jurisprudence/'}] },
   'le-greffe': { accroche:'La justice dans l’histoire et la culture', liens:[{nom:'Livres et cinéma',href:'/rubrique/le-greffe/#titre-culture'},{nom:'Archives du journal',href:'/archives/'}] }
 };
 ---
@@ -119,7 +119,7 @@ const menusRubriques = {
     <footer class="pied">
       <div class="cadre">
         <div class="pied-intro"><a class="pied-nom" href="/">INTIME<br /><span>CONVICTION.</span></a><p>Le journal des cours d’assises. Actualité des procès criminels, analyses judiciaires et archives.</p></div>
-        <nav aria-label="Les rubriques du journal"><ul>{RUBRIQUES.map(r=><li><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></li>)}<li><a href="/boutique/">La Boutique</a></li><li><a href="/archives/">Archives</a></li><li><a href="/dossiers/">Dossiers judiciaires</a></li><li><a href="/chronologie/">Chronologie judiciaire</a></li><li><a href="/carte/">Carte des juridictions</a></li><li><a href="/annuaire/">Annuaire des cours d’assises</a></li><li><a href="/agenda/">Agenda des sessions criminelles</a></li><li><a href="/veille-roles/">Veille des rôles officiels</a></li><li><a href="/comprendre/">Comprendre les assises</a></li><li><a href="/assister/">Assister à une audience</a></li><li><a href="/jurisprudence/">Jurisprudence criminelle</a></li><li><a href="/recherche/">Rechercher un article</a></li><li><a href="/archives/presse/">Archives de presse</a></li><li><a href="/archives/presse/rechercher/">Rechercher dans la presse</a></li><li><a href="/ligne-editoriale/">Notre ligne éditoriale</a></li><li><a href="/mentions-legales/">Mentions légales</a></li></ul></nav>
+        <nav aria-label="Les rubriques du journal"><ul>{RUBRIQUES.map(r=><li><a href={`/rubrique/${r.slug}/`}>{r.nom}</a></li>)}<li><a href="/boutique/">La Boutique</a></li><li><a href="/archives/">Archives</a></li><li><a href="/dossiers/">Dossiers judiciaires</a></li><li><a href="/chronologie/">Chronologie judiciaire</a></li><li><a href="/carte/">Carte des affaires</a></li><li><a href="/annuaire/">Annuaire des cours d’assises</a></li><li><a href="/agenda/">Agenda des sessions criminelles</a></li><li><a href="/comprendre/">Comprendre les assises</a></li><li><a href="/assister/">Assister à une audience</a></li><li><a href="/jurisprudence/">Jurisprudence criminelle</a></li><li><a href="/recherche/">Rechercher un article</a></li><li><a href="/archives/presse/">Archives de presse</a></li><li><a href="/archives/presse/rechercher/">Rechercher dans la presse</a></li><li><a href="/ligne-editoriale/">Notre ligne éditoriale</a></li><li><a href="/mentions-legales/">Mentions légales</a></li></ul></nav>
         <div class="pied-bas"><span>Intime Conviction · {annee}</span><a href="https://x.com/IntimeConv" rel="noopener">@IntimeConv sur X</a><a href="#contenu">Retour en haut <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
       </div>
     </footer>

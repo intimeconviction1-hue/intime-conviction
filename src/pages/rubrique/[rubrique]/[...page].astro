@@ -18,18 +18,17 @@ const r = rubrique(Astro.params.rubrique);
 const titre = page.currentPage > 1 ? `${r.nom}, page ${page.currentPage}` : r.nom;
 const ressources = {
   'cours-du-jour': [
-    {titre:'Agenda des audiences',url:'/agenda/'},
-    {titre:'Rôles officiels',url:'/veille-roles/'}
+    {titre:'Agenda des sessions',url:'/agenda/'}
   ],
   'le-banc-des-jures': [
     {titre:'Comprendre les assises',url:'/comprendre/'},
     {titre:'Annuaire des juridictions',url:'/annuaire/'},
-    {titre:'Carte des juridictions',url:'/carte/'},
     {titre:'Assister à une audience',url:'/assister/'}
   ],
   'l-expose': [
     {titre:'Dossiers judiciaires',url:'/dossiers/'},
     {titre:'Chronologie des affaires',url:'/chronologie/'},
+    {titre:'Carte des affaires',url:'/carte/'},
     {titre:'Jurisprudence criminelle',url:'/jurisprudence/'}
   ],
   'le-greffe': [

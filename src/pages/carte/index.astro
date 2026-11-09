@@ -21,13 +21,13 @@ const contours=limites.map(([lon,lat],i)=>{const p=coordonneesPlan(lat,lon);retu
 const cartouche="CARTE ÉDITORIALE / FRANCE MÉTROPOLITAINE";
 ---
 <Base
-  titre="Carte des affaires et des juridictions"
+  titre="Carte des affaires judiciaires"
   description="Situer les juridictions des dossiers judiciaires d’Intime Conviction : Albi, Besançon, Avignon, Nîmes et Blois. Carte schématique, sources institutionnelles identifiées."
   rubriqueActive="carte"
 >
   <header class="carte-intro">
     <p class="surtitre">INTIME CONVICTION / GÉOGRAPHIE JUDICIAIRE</p>
-    <h1>CARTE DES<br /><span>JURIDICTIONS.</span></h1>
+    <h1>CARTE DES<br /><span>AFFAIRES.</span></h1>
     <p>Quatre grandes affaires, cinq villes d’audience : explorez les juridictions et les étapes vérifiées de chaque procédure.</p>
     <div class="intro-chiffres"><span><strong>{JURIDICTIONS.length}</strong> lieux d’audience associés</span><span><strong>{dossiers.length}</strong> affaires documentées</span><span><strong>{new Set(JURIDICTIONS.map(j=>j.departement)).size}</strong> départements</span></div>
   </header>
