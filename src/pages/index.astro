@@ -31,7 +31,10 @@ const descriptionsRubriques = {
 };
 const rubriques = RUBRIQUES.map(r=>{
   const archives=articles.filter(a=>a.data.rubrique===r.slug);
-  return {...r,total:archives.length,titres:archives.filter(a=>!vus.has(a.data.slug)).slice(0,2)};
+  const titres = archives
+    .filter(({data}) => data.verificationEnCours !== true && !vus.has(data.slug))
+    .slice(0, 2);
+  return {...r,total:archives.length,titres};
 });
 const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
 const total=articles.length.toLocaleString('fr-FR');
