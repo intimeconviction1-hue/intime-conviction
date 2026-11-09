@@ -22,7 +22,7 @@ const LIENS = [
 
 export const ROLES_OFFICIELS = Object.freeze(LIENS.flatMap(({codes,...r})=>codes.map(code=>Object.freeze({code,...r}))));
 export const MODES_ROLES = Object.freeze({
- publication: 'Rôles publiés en ligne',
+ publication: 'Rôles à vérifier auprès du greffe',
  ressort: 'Informations à l’échelle du ressort',
  information: 'Informations pratiques',
  'sur-place': 'Consultation sur place (journalistes)',
