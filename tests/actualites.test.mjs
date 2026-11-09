@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { lireFil } from '../src/lib/fil-actualites.mjs';
+import { lireFil, lienDirectPresse } from '../src/lib/fil-actualites.mjs';
 
 test('un relevé identifié est lu sans altérer son titre ni sa date', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'ic-releve-'));
@@ -14,11 +14,12 @@ test('un relevé identifié est lu sans altérer son titre ni sa date', async ()
       articles: [{
         titre: 'Ouverture du procès devant la cour d’assises', source: 'Journal Exemple',
         date: '2026-11-07T09:00:00.000Z',
-        lien: 'https://news.google.com/rss/articles/exemple'
+        lien: 'https://journal.example/justice/proces'
       }]
     }), 'utf8');
     const r = await lireFil(chemin);
     assert.equal(r.releveLe, '2026-11-07T10:00:00.000Z');
+    assert.equal(r.articles[0].lien, 'https://journal.example/justice/proces');
     assert.equal(r.articles[0].titre, 'Ouverture du procès devant la cour d’assises');
     assert.equal(r.articles[0].rubrique, 'cours-du-jour');
   } finally { await rm(dir, { recursive:true, force:true }); }
@@ -39,4 +40,10 @@ test('un relevé invalide ou un lien dangereux ne sont jamais publiés', async (
     await writeFile(chemin, '{}', 'utf8');
     assert.equal(await lireFil(chemin), null);
   } finally { await rm(dir, { recursive:true, force:true }); }
+});
+
+test('les intermédiaires Google News ne sont pas des liens directs de publication', () => {
+  assert.equal(lienDirectPresse('https://news.google.com/rss/articles/exemple'), false);
+  assert.equal(lienDirectPresse('https://news.google.fr/articles/exemple'), false);
+  assert.equal(lienDirectPresse('https://journal.example/justice/proces'), true);
 });

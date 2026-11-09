@@ -6,9 +6,19 @@ import { classerNouvelle } from './classer-nouvelles.mjs';
 
 export const CACHE = resolve('.cache/actualites.json');
 
-function lienValide(v) {
+export function lienDirectPresse(lien) {
   try {
-    const u = new URL(v);
+    const u = new URL(lien);
+    return ['https:', 'http:'].includes(u.protocol) && !u.username && !u.password && !u.port
+      && u.hostname.includes('.')
+      && !/(^|\.)google\.(com|fr)$|^news\.google\./i.test(u.hostname)
+      && !/^(127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)|:|\.(local|internal)$/.test(u.hostname);
+  } catch { return false; }
+}
+
+function lienGoogleNews(lien) {
+  try {
+    const u = new URL(lien);
     return u.protocol === 'https:' && u.hostname === 'news.google.com'
       && !u.username && !u.password && /^\/(rss\/)?articles\//.test(u.pathname);
   } catch { return false; }
@@ -21,7 +31,7 @@ export async function lireFil(chemin = CACHE) {
     const articles = d.articles.filter(a =>
       typeof a.titre === 'string' && a.titre
       && typeof a.source === 'string' && a.source
-      && lienValide(a.lien) && Number.isFinite(new Date(a.date).getTime())
+      && (lienDirectPresse(a.lien) || lienGoogleNews(a.lien)) && Number.isFinite(new Date(a.date).getTime())
     );
     return articles.length ? {
       releveLe: d.releveLe,

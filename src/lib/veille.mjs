@@ -1,7 +1,8 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { classerNouvelle } from './classer-nouvelles.mjs';
-import { lireFil } from './fil-actualites.mjs';
+import { lireFil, lienDirectPresse } from './fil-actualites.mjs';
+import actualitesVerifiees from './actualites-verifiees.json' with { type: 'json' };
 
 export function normaliserVeille(rows) {
   if (!Array.isArray(rows)) throw new Error('Veille : liste attendue.');
@@ -47,9 +48,12 @@ export async function lireVeille() {
 export async function lireActualites() {
   const [fil,veille]=await Promise.all([lireFil(),lireVeille()]);
   const seuil=Date.now()-7*86400000;
-  const recents=veille.articles.filter(a=>Date.parse(a.dateAlerte)>=seuil).map(a=>({...a,date:a.dateAlerte+'T12:00:00Z'}));
+  const selection = actualitesVerifiees.map(a=>({...a,rubrique:classerNouvelle(a.titre)}));
+  const recents = veille.articles.filter(a=>Date.parse(a.dateAlerte+'T12:00:00Z')>=seuil)
+    .map(a=>({...a,date:a.dateAlerte+'T12:00:00Z'}));
   const vus=new Set(),articles=[];
-  for(const a of [...(fil?.articles??[]),...recents]) {
+  for(const a of [...selection,...(fil?.articles??[]),...recents]) {
+    if (!lienDirectPresse(a.lien) || Date.parse(a.date) < seuil) continue;
     const cle=(a.source+'|'+a.titre).normalize('NFKC').toLocaleLowerCase('fr');
     if(vus.has(cle)||vus.has(a.lien))continue;vus.add(cle);vus.add(a.lien);articles.push(a);
   }
