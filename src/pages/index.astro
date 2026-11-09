@@ -16,8 +16,10 @@ import { tousLesArticles, dateLongue, minutesDeLecture } from '../lib/articles.m
 const articles = await tousLesArticles();
 const veille = await lireVeille();
 const articlesCarrousel = articles.slice(0, 3);
-const [archiveUne,...archivesSuite] = articles.slice(3);
-const derniers = archivesSuite.slice(0,3);
+const [archiveUne, ...derniers] = articles
+  .slice(articlesCarrousel.length)
+  .filter(({data}) => data.verificationEnCours !== true)
+  .slice(0, 4);
 const vus = new Set([...articlesCarrousel,archiveUne,...derniers].filter(Boolean).map(a=>a.data.slug));
 const descriptionsRubriques = {
   'cours-du-jour': 'Le suivi des procès criminels et de leurs audiences.',
