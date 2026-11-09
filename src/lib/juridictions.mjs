@@ -28,7 +28,7 @@ export const JURIDICTIONS = Object.freeze([
     type: 'Première instance',
     dossier: 'affaire-pechier',
     sourceInstitutionnelle: 'Cour d’appel de Besançon',
-    urlInstitutionnelle: 'https://www.cours-appel.justice.fr/besancon/les-juridictions-criminelles',
+    urlInstitutionnelle: 'https://lannuaire.service-public.gouv.fr/bourgogne-franche-comte/doubs/4b2d9b23-2a84-4cbe-8afe-5f6fd0fcc014',
   },
   {
     id: 'avignon',

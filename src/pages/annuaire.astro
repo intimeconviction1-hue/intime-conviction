@@ -23,7 +23,7 @@ const troisEntrees = [
     <div class="stats"><span><strong>{nombreDepartements}</strong> départements référencés</span><span><strong>{nombreOutreMer}</strong> départements d’outre-mer</span><span><strong>01</strong> annuaire officiel à consulter</span></div>
   </header>
   <section class="notice" aria-labelledby="titre-notice"><h2 id="titre-notice">Informations sur les audiences</h2><p>Les villes ci-dessous servent de <strong>repères d’orientation</strong>, pas de preuve de la tenue d’une audience aujourd’hui. La cour de la Haute-Saône et du Territoire de Belfort est commune aux deux départements et siège à Vesoul. D’autres collectivités françaises ont une organisation judiciaire spécifique qui ne figure pas dans cette liste départementale. Les adresses, téléphones et horaires sont à vérifier dans le répertoire officiel.</p><a href={ANNUAIRE_OFFICIEL} target="_blank" rel="noopener noreferrer">OUVRIR L’ANNUAIRE DU MINISTÈRE <span aria-hidden="true">↗</span></a></section>
-  <aside class="signal-roles"><div><span>RÔLES DES AUDIENCES / LIENS OFFICIELS</span><strong>{ROLES_OFFICIELS.length} départements reliés à une page institutionnelle</strong><p>Ces liens mènent aux pages des cours d’appel, pas à un calendrier certifié en temps réel. Plusieurs de ces pages étaient en maintenance le 9 novembre 2026. Les coordonnées de la cour permettent de se renseigner auprès du greffe.</p></div><a href="/assister/">COMMENT ASSISTER À UNE AUDIENCE ? <span aria-hidden="true">↗</span></a></aside>
+  <aside class="signal-roles"><div><span>RÔLES DES AUDIENCES / LIENS OFFICIELS</span><strong>{ROLES_OFFICIELS.length} départements reliés à une page institutionnelle</strong><p>Les pages des rôles contrôlées le 9 novembre 2026 affichaient une maintenance. Les fiches ci-dessous donnent les coordonnées des cours pour demander au greffe les informations disponibles.</p></div><a href="/assister/">COMMENT ASSISTER À UNE AUDIENCE ? <span aria-hidden="true">↗</span></a></aside>
   <p class="acces-veille"><a href="/agenda/">CONSULTER L’AGENDA DES SESSIONS CRIMINELLES <span aria-hidden="true">↗</span></a></p>
   <p class="acces-veille"><a href="/veille-roles/">COMMENT LES RÔLES OFFICIELS SONT-ILS VÉRIFIÉS ? <span aria-hidden="true">↗</span></a></p>
   <section class="methode"><h2>Comment trouver une audience</h2><ol>{troisEntrees.map(x=><li><strong>{x.n}</strong><div><h3>{x.titre}</h3><p>{x.texte}</p></div></li>)}</ol></section>
@@ -60,7 +60,6 @@ const troisEntrees = [
               <div><span class="type-role">{MODES_ROLES[roleParDepartement(d.code).mode]}</span>
                 <p>{roleParDepartement(d.code).note}</p></div>
               <a href={contactCourAppel(roleParDepartement(d.code).url)} target="_blank" rel="noopener noreferrer" aria-label={'Coordonnées de la cour pour '+d.departement}>COORDONNÉES DE LA COUR <span aria-hidden="true">↗</span></a>
-              <a href={roleParDepartement(d.code).url} target="_blank" rel="noopener noreferrer" aria-label={'Consulter la page officielle : '+roleParDepartement(d.code).titre}>CONSULTER LA SOURCE <span aria-hidden="true">↗</span></a>
             </div>
           ) : (
             <p class="role-absent">Aucun rôle officiel en ligne identifié dans notre sélection pour ce département. Vérifier auprès du greffe.</p>
