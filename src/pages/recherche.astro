@@ -7,7 +7,7 @@ import { lireVeille } from '../lib/veille.mjs';
 const [articles, veille] = await Promise.all([tousLesArticles(), lireVeille()]);
 const index = articles.map(({data:d})=>({
   titre:d.titre,chemin:d.chemin,rubrique:d.rubrique,
-  rubriqueNom:trouverRubrique(d.rubrique).nom,
+  rubriqueNom:trouverRubrique(d.rubrique).libelle,
   annee:d.date.getFullYear(),extrait:d.extrait
 }));
 const annees = [...new Set([
@@ -27,7 +27,7 @@ const total=articles.length.toLocaleString('fr-FR');
       <input type="search" name="q" id="requete" placeholder="Ex. procès, jurés, verdict..." autocomplete="off" aria-controls="resultats" />
     </label>
     <label>RUBRIQUE DU JOURNAL
-      <select id="rubrique" name="rubrique"><option value="">Toutes les rubriques</option>{RUBRIQUES.map(r=><option value={r.slug}>{r.nom}</option>)}</select>
+      <select id="rubrique" name="rubrique"><option value="">Toutes les rubriques</option>{RUBRIQUES.map(r=><option value={r.slug}>{r.libelle}</option>)}</select>
     </label>
     <label>ANNÉE DE PUBLICATION OU D’ALERTE
       <select id="annee" name="annee"><option value="">Toutes les années</option>{annees.map(a=><option value={a}>{a}</option>)}</select>

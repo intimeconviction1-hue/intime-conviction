@@ -33,9 +33,9 @@ const regards = [
     </div>
     <section class="regards" aria-labelledby="regards-titre">
       <h2 id="regards-titre">Six rubriques pour explorer la justice</h2>
-      <dl>{RUBRIQUES.map((r,i)=><div><dt><a href={'/rubrique/'+r.slug+'/'}>{r.nom}</a></dt><dd>{regards[i]}</dd></div>)}</dl>
+      <dl>{RUBRIQUES.map((r,i)=><div><dt><a href={'/rubrique/'+r.slug+'/'}>{r.libelle}</a></dt><dd>{regards[i]}</dd></div>)}</dl>
     </section>
-    <a class="retour" href="/rubrique/cours-du-jour/">Lire Cours du Jour</a>
+    <a class="retour" href="/rubrique/cours-du-jour/">Suivre l’actualité des procès</a>
   </article>
 </Base>
 <style>

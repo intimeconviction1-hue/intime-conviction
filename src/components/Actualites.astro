@@ -4,7 +4,7 @@ import { hierarchiserPresse } from '../lib/hierarchiser-presse.mjs';
 import { rubrique } from '../lib/rubriques.mjs';
 const { rubriqueSlug = 'cours-du-jour', limite = 8, titre, lienRubrique = true, debut = 0, compacte = false } = Astro.props;
 const r = rubrique(rubriqueSlug);
-const titreAffiche = titre ?? r.nom;
+const titreAffiche = titre ?? r.libelle;
 const fil = await lireActualites();
 const candidates = hierarchiserPresse((fil?.articles ?? []).filter(n=>n.rubrique === rubriqueSlug)).slice(debut);
 const nouvelles = candidates.slice(0,limite);

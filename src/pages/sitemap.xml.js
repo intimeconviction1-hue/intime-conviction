@@ -14,7 +14,7 @@ const PAR_PAGE_DOSSIER = 42;
 const PAGES_STATIQUES = [
   '/', '/archives/', '/archives/presse/',
   '/ligne-editoriale/', '/comprendre/', '/annuaire/',
-  '/assister/', '/jurisprudence/', '/veille-roles/', '/carte/',
+  '/agenda/', '/assister/', '/jurisprudence/', '/veille-roles/', '/carte/',
   '/chronologie/', '/dossiers/'
 ];
 

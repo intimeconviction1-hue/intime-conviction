@@ -1,9 +1,9 @@
 ---
 import { CULTURE } from '../lib/culture.mjs';
-const { titre = 'LE GREFFE. HORS AUDIENCE.' } = Astro.props;
+const { titre = 'Livres, films et histoire' } = Astro.props;
 ---
 <section class="culture-selection" aria-labelledby="titre-culture">
-  <div class="titre-section"><h2 id="titre-culture">{titre}</h2><a href="/rubrique/le-greffe/">Explorer Le Greffe</a></div>
+  <div class="titre-section"><h2 id="titre-culture">{titre}</h2><a href="/rubrique/le-greffe/">Voir les livres et les films</a></div>
   <p class="culture-intro">Cinéma, livres et histoire : trois portes d’entrée dans la culture judiciaire.</p>
   <ul>{CULTURE.map(c=><li><p class="meta">{c.genre} · {c.auteur}</p><h3><a href={'/culture/'+c.slug+'/'}>{c.titre}</a></h3><p>{c.extrait}</p><a class="ouvrir" href={'/culture/'+c.slug+'/'}>Découvrir cette œuvre <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></li>)}</ul>
 </section>

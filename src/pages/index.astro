@@ -37,14 +37,11 @@ const rubriques = RUBRIQUES.map(r=>{
   return {...r,total:archives.length,titres};
 });
 const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
-const total=articles.length.toLocaleString('fr-FR');
 const reperes = [
-  { href: '/agenda/', titre: 'Agenda des sessions' },
-  { href: '/comprendre/', titre: 'Comprendre le procès' },
+  { href: '/agenda/', titre: 'Voir les dates des sessions' },
+  { href: '/assister/', titre: 'Assister à une audience' },
   { href: '/annuaire/', titre: 'Trouver une cour' },
-  { href: '/dossiers/', titre: 'Dossiers judiciaires' },
   { href: '/carte/', titre: 'Carte des affaires' },
-  { href: '/archives/', titre: `${total} articles d’archives` },
 ];
 const photoPalaisBlois = {
   image: photoBlois, lieu: 'Palais de justice de Blois', auteur: 'Chabe01',
@@ -140,7 +137,7 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
                     </p>
                     <div class="article-redaction-une-texte">
                       <p class="article-redaction-une-kicker">LE JOURNAL / {String(i+1).padStart(2,'0')}</p>
-                      <p class="article-redaction-une-date"><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time> · {rubrique(data.rubrique).nom}</p>
+                      <p class="article-redaction-une-date"><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time> · {rubrique(data.rubrique).libelle}</p>
                       <h2><a href={data.chemin}>{data.titre}</a></h2>
                       <p class="article-redaction-une-extrait">{data.extrait}</p>
                       <a class="article-redaction-une-lien" href={data.chemin}>Lire l’article <span aria-hidden="true">↗</span></a>
@@ -223,7 +220,7 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
                 <img src={`/illustrations/${archiveUne.data.rubrique}.svg`} alt="" width="640" height="520" loading="lazy" decoding="async" />
               </div>
               <p class="archive-vedette-meta">
-                <span>{rubrique(archiveUne.data.rubrique).nom}</span>
+                <span>{rubrique(archiveUne.data.rubrique).libelle}</span>
                 <time datetime={archiveUne.data.date.toISOString()}>{dateLongue(archiveUne.data.date)}</time>
               </p>
               <p class="archive-vedette-extrait">{archiveUne.data.extrait}</p>
@@ -259,9 +256,9 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
       <div class="greffe-accueil-entete">
         <div>
           <p>CINÉMA, LIVRES ET HISTOIRE</p>
-          <h2 id="titre-culture">Le Greffe</h2>
+          <h2 id="titre-culture">Livres, films et histoire</h2>
         </div>
-        <a href="/rubrique/le-greffe/">Explorer Le Greffe <span aria-hidden="true">↗</span></a>
+        <a href="/rubrique/le-greffe/">Voir les livres et les films <span aria-hidden="true">↗</span></a>
       </div>
       <ul class="greffe-accueil-cartes">
         {CULTURE.map(({slug, genre, auteur, titre, extrait}) => (
@@ -284,11 +281,11 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
         {rubriques.map(r => (
           <li class="rubrique-carte">
             <h3>
-              <a href={`/rubrique/${r.slug}/`}>{r.nom}<span aria-hidden="true">↗</span></a>
+              <a href={`/rubrique/${r.slug}/`}>{r.libelle}<span aria-hidden="true">↗</span></a>
             </h3>
             <p class="rubrique-description">{descriptionsRubriques[r.slug] ?? r.sousTitre}</p>
             {r.titres.length > 0 && (
-              <ul class="rubrique-lectures" aria-label={`À lire dans ${r.nom}`}>
+              <ul class="rubrique-lectures" aria-label={`À lire dans ${r.libelle}`}>
                 {r.titres.map(({data}) => <li><a href={data.chemin}>{data.titre}</a></li>)}
               </ul>
             )}
@@ -579,7 +576,6 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
     margin:0;
     padding:0;
   }
-  .parcours li:last-child { grid-column:1/-1; }
   .parcours a {
     display:flex;
     min-height:44px;

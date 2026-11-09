@@ -6,7 +6,7 @@ const { oeuvre:c } = Astro.props;
 ---
 <Base titre={c.titre} description={c.extrait} rubriqueActive="le-greffe">
   <article class="article">
-    <a class="etiquette" href="/rubrique/le-greffe/">Le Greffe · {c.genre}</a>
+    <a class="etiquette" href="/rubrique/le-greffe/">Culture · {c.genre}</a>
     <h1>{c.titre}</h1>
     <p class="meta">{c.auteur} · {c.repere}</p>
     <div class="corps"><h2>{c.angle}</h2>{c.paragraphes.map(p=><p>{p}</p>)}<blockquote>{c.question}</blockquote>

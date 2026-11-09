@@ -15,12 +15,12 @@
 export const CORRESPONDANCE_VALIDEE = true;
 
 export const RUBRIQUES = [
-  { slug: 'cours-du-jour', nom: 'Cours du Jour', sousTitre: "Suivi d'audience" },
-  { slug: 'le-banc-des-jures', nom: 'Le Banc des Jurés', sousTitre: 'Les règles du procès' },
-  { slug: 'la-cour-se-leve', nom: 'La Cour se Lève', sousTitre: 'Chroniques & ambiances' },
-  { slug: 'delibere', nom: 'Délibéré', sousTitre: 'Réflexions & opinions' },
-  { slug: 'l-expose', nom: "L'Exposé", sousTitre: 'Analyses & décryptages' },
-  { slug: 'le-greffe', nom: 'Le Greffe', sousTitre: 'Culture criminelle' },
+  { slug: 'cours-du-jour', libelle: 'Actualité des procès', nom: 'Cours du Jour', sousTitre: "Suivi d'audience" },
+  { slug: 'le-banc-des-jures', libelle: 'Comprendre le procès', nom: 'Le Banc des Jurés', sousTitre: 'Les règles du procès' },
+  { slug: 'la-cour-se-leve', libelle: 'Chroniques d’audience', nom: 'La Cour se Lève', sousTitre: 'Chroniques & ambiances' },
+  { slug: 'delibere', libelle: 'Opinions et débats', nom: 'Délibéré', sousTitre: 'Réflexions & opinions' },
+  { slug: 'l-expose', libelle: 'Analyses et dossiers', nom: "L'Exposé", sousTitre: 'Analyses & décryptages' },
+  { slug: 'le-greffe', libelle: 'Livres, films et histoire', nom: 'Le Greffe', sousTitre: 'Culture criminelle' },
 ];
 
 // Ancienne catégorie → rubrique. Les trois lignes marquées « TRANCHÉ » pèsent à

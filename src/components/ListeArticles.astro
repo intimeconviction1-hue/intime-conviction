@@ -11,7 +11,7 @@ const Titre = `h${niveau}`;
   {articles.map(({ data }) => (
     <li>
       <p class="meta">
-        {rubriqueVisible && <><span class="etiquette">{rubrique(data.rubrique).nom}</span>&ensp;</>}
+        {rubriqueVisible && <><span class="etiquette">{rubrique(data.rubrique).libelle}</span>&ensp;</>}
         <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
       </p>
       <Titre><a href={data.chemin}>{data.titre}</a></Titre>

@@ -34,7 +34,7 @@ for (const a of articles) {
       <h2 class="mois etiquette">{mois} · {liste.length}</h2>
       <ul class="titres">
         {liste.map(({ data }) => (
-          <li><a href={data.chemin}>{data.titre}</a> <span class="meta">{rubrique(data.rubrique).nom}</span></li>
+          <li><a href={data.chemin}>{data.titre}</a> <span class="meta">{rubrique(data.rubrique).libelle}</span></li>
         ))}
       </ul>
     </section>
