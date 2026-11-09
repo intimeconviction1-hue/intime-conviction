@@ -132,6 +132,25 @@ export function provenancePeriode(entree){
   throw Error('Provenance inconnue pour cette période');
 }
 
+// Les URL des rôles restent dans les données pour documenter les dates publiées.
+// Les liens destinés aux lecteurs utilisent les fiches de contact de Service Public.
+const CONTACTS_COURS_APPEL = {
+  angers:'pays-de-la-loire/maine-et-loire/f945ac4e-ef2f-4cb3-bd14-f91b95bf8446',
+  besancon:'bourgogne-franche-comte/doubs/4b2d9b23-2a84-4cbe-8afe-5f6fd0fcc014',
+  bordeaux:'nouvelle-aquitaine/gironde/5c978bd4-b1be-451e-aaaf-a7633dc91c3d',
+  chambery:'auvergne-rhone-alpes/savoie/64ef305a-8548-4c63-8800-38e83c807df9',
+  limoges:'nouvelle-aquitaine/haute-vienne/3741a011-59c3-460a-8d80-578a6075a0d5',
+  lyon:'auvergne-rhone-alpes/rhone/6614b495-76b5-401d-8937-0c6e804279fd',
+  rennes:'bretagne/ille-et-vilaine/88acf439-b5b6-4233-8d26-284651bf49ba',
+  toulouse:'occitanie/haute-garonne/1963e2c7-037d-4d78-808c-43dcc493bad3'
+};
+
+export function contactCourAppel(source) {
+  const cour = new URL(source).pathname.split('/')[1];
+  const fiche = CONTACTS_COURS_APPEL[cour];
+  return fiche ? `https://lannuaire.service-public.gouv.fr/${fiche}` : '/annuaire/';
+}
+
 export function sessionsAvenir(sessions, dateISO) {
   return [...sessions].filter(s=>s.fin>=dateISO).sort((a,b)=>a.debut.localeCompare(b.debut)||a.ville.localeCompare(b.ville,'fr'));
 }

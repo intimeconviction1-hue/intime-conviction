@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,SOURCES_A_COMPLETER,AUDIENCES_A_RECONFIRMER,PROVENANCE_AGENDA,provenancePeriode,sessionsAvenir,dateLocaleAgenda} from '../lib/agenda-sessions.mjs';
+import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,SOURCES_A_COMPLETER,AUDIENCES_A_RECONFIRMER,PROVENANCE_AGENDA,provenancePeriode,sessionsAvenir,dateLocaleAgenda,contactCourAppel} from '../lib/agenda-sessions.mjs';
 
 const dateDuJour=dateLocaleAgenda();
 const dates=sessionsAvenir(SESSIONS_AGENDA,dateDuJour);
@@ -27,6 +27,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
     <p class="sur-titre">Les juridictions / Les sessions annoncées</p>
     <h1>Agenda des <span>sessions criminelles</span></h1>
     <p>Les périodes ci-dessous proviennent des intitulés de rôles publiés par les cours d’appel. Une période de session ne confirme ni la tenue d’un procès particulier ni l’accès du public à chaque audience.</p>
+    <p>Plusieurs pages de publication des rôles sont en maintenance. Les liens ci-dessous donnent les coordonnées des cours d’appel pour vérifier les dates auprès du greffe.</p>
     <p id="alerte-actualite" class="alerte-actualite" data-date-generation={dateDuJour} data-date-verification={DATE_CONTROLE_AGENDA} hidden role="status"></p>
     <p class="date-controle">Sources vérifiées le <time datetime={DATE_CONTROLE_AGENDA}>{formatDate(DATE_CONTROLE_AGENDA)}</time>. Sessions non terminées au <time datetime={dateDuJour}>{formatDate(dateDuJour)}</time>, date de génération de cette page.</p>
   </header>
@@ -60,7 +61,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
             <h3>{s.juridiction}</h3>
             <p>{s.libelle}</p>
             <p class="provenance-entree"><strong>{provenancePeriode(s).niveau}.</strong> Source institutionnelle examinée le <time datetime={PROVENANCE_AGENDA.dateExamen}>{formatDate(PROVENANCE_AGENDA.dateExamen)}</time>. Date de publication du rôle non renseignée. Cette période ne confirme pas la tenue d’une audience individuelle.</p>
-            <a href={s.source} target="_blank" rel="noopener noreferrer">Consulter la page officielle <span class="sr-only">(nouvel onglet)</span><span aria-hidden="true">↗</span></a>
+            <a href={contactCourAppel(s.source)} target="_blank" rel="noopener noreferrer">Coordonnées de la cour d’appel <span class="sr-only">(nouvel onglet)</span><span aria-hidden="true">↗</span></a>
           </div>
         </li>
       ))}
@@ -78,7 +79,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
             <h3>{a.juridiction}</h3>
             <p>Objet mentionné au calendrier : {a.objet}.</p>
             <p class="provenance-entree"><strong>{provenancePeriode(a).niveau}.</strong> Dernière mise à jour affichée par la cour : <time datetime={provenancePeriode(a).publicationSource}>{formatDate(provenancePeriode(a).publicationSource)}</time>. Signalement examiné le <time datetime={PROVENANCE_AGENDA.dateExamen}>{formatDate(PROVENANCE_AGENDA.dateExamen)}</time>.</p>
-            <a href={a.source} target="_blank" rel="noopener noreferrer">Consulter la page institutionnelle <span class="sr-only">(nouvel onglet)</span></a>
+            <a href={contactCourAppel(a.source)} target="_blank" rel="noopener noreferrer">Coordonnées de la cour d’appel <span class="sr-only">(nouvel onglet)</span></a>
           </div>
         </li>
       ))}</ol>
@@ -89,7 +90,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
     <p>Les pages suivantes ont été repérées, mais la période exacte des sessions n’a pas encore été confirmée. Elles ne figurent donc pas dans l’agenda daté.</p>
     <ul>
       {SOURCES_A_COMPLETER.map(s=>(
-        <li><div><strong>{s.ressort}</strong><span>{s.statut}</span></div><a href={s.source} target="_blank" rel="noopener noreferrer">Voir la source officielle <span class="sr-only">(nouvel onglet)</span></a></li>
+        <li><div><strong>{s.ressort}</strong><span>{s.statut}</span></div><a href={contactCourAppel(s.source)} target="_blank" rel="noopener noreferrer">Coordonnées de la cour d’appel <span class="sr-only">(nouvel onglet)</span></a></li>
       ))}
     </ul>
   </section>

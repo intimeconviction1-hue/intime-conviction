@@ -15,7 +15,7 @@ export const JURIDICTIONS = Object.freeze([
     type: 'Première instance',
     dossier: 'affaire-jubillar',
     sourceInstitutionnelle: 'Cour d’appel de Toulouse',
-    urlInstitutionnelle: 'https://www.cours-appel.justice.fr/toulouse/palais-de-justice-dalbi',
+    urlInstitutionnelle: 'https://lannuaire.service-public.gouv.fr/occitanie/tarn/1d58f07e-fc35-42b3-a961-18693dd9f901',
   },
   {
     id: 'besancon',
@@ -41,7 +41,7 @@ export const JURIDICTIONS = Object.freeze([
     type: 'Première instance',
     dossier: 'viols-de-mazan',
     sourceInstitutionnelle: 'Cour d’appel de Nîmes',
-    urlInstitutionnelle: 'https://www.cours-appel.justice.fr/nimes/les-tribunaux-davignon-0',
+    urlInstitutionnelle: 'https://lannuaire.service-public.gouv.fr/provence-alpes-cote-d-azur/vaucluse/f77e3eba-44a4-4288-9523-d9563e37aecc',
   },
   {
     id: 'nimes',
@@ -54,7 +54,7 @@ export const JURIDICTIONS = Object.freeze([
     type: 'Appel',
     dossier: 'viols-de-mazan',
     sourceInstitutionnelle: 'Ministère de la Justice',
-    urlInstitutionnelle: 'https://www.justice.fr/mon-suivi-justice/preparer-ma-convocation/tribunal-judiciaire-nimes',
+    urlInstitutionnelle: 'https://lannuaire.service-public.gouv.fr/occitanie/gard/7b730ff9-3944-464e-9707-fdf7ce2d6ec4',
   },
   {
     id: 'blois',
@@ -67,7 +67,7 @@ export const JURIDICTIONS = Object.freeze([
     type: 'Première instance',
     dossier: 'martyre-de-a10',
     sourceInstitutionnelle: 'Cour d’appel d’Orléans',
-    urlInstitutionnelle: 'https://www.cours-appel.justice.fr/orleans/tribunal-judiciaire-de-blois',
+    urlInstitutionnelle: 'https://lannuaire.service-public.gouv.fr/centre-val-de-loire/loir-et-cher/5adebf71-25bf-412e-8af4-8d474a03dcb2',
   },
 ]);
 
@@ -96,7 +96,7 @@ export function validerJuridictions(donnees, dossiers) {
     if (!j.ville || !j.adresse || !j.juridiction || !j.region || !j.departement) throw new Error('Informations institutionnelles manquantes');
     let url;
     try { url = new URL(j.urlInstitutionnelle); } catch { throw new Error('Source institutionnelle invalide'); }
-    if (url.protocol !== 'https:' || !['www.cours-appel.justice.fr','www.justice.fr'].includes(url.hostname)) throw new Error('Source institutionnelle non officielle');
+    if (url.protocol !== 'https:' || !['www.cours-appel.justice.fr','www.justice.fr','lannuaire.service-public.gouv.fr'].includes(url.hostname)) throw new Error('Source institutionnelle non officielle');
   }
   return true;
 }

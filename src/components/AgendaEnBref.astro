@@ -1,5 +1,5 @@
 ---
-import { DATE_CONTROLE_AGENDA, SESSIONS_AGENDA, sessionsAvenir, dateLocaleAgenda } from '../lib/agenda-sessions.mjs';
+import { DATE_CONTROLE_AGENDA, SESSIONS_AGENDA, sessionsAvenir, dateLocaleAgenda, contactCourAppel } from '../lib/agenda-sessions.mjs';
 
 const sessions = sessionsAvenir(SESSIONS_AGENDA, dateLocaleAgenda()).slice(0, 3);
 const dateComplete = new Intl.DateTimeFormat('fr-FR', { day:'numeric', month:'long', year:'numeric', timeZone:'UTC' });
@@ -34,13 +34,13 @@ const debutPeriode = (debut, fin) => {
             </p>
             <p class="agenda-bref-juridiction">{s.juridiction}</p>
           </div>
-          <a href={s.source} target="_blank" rel="noopener noreferrer">
-            Source officielle<span class="sr-only"> · {s.ville} (nouvel onglet)</span><span aria-hidden="true">↗</span>
+          <a href={contactCourAppel(s.source)} target="_blank" rel="noopener noreferrer">
+            Coordonnées de la cour<span class="sr-only"> · {s.ville} (nouvel onglet)</span><span aria-hidden="true">↗</span>
           </a>
         </li>
       ))}
     </ol>
-  ) : <p class="agenda-bref-vide">Aucune session à venir dans notre sélection. Les publications des cours d’appel restent consultables dans l’agenda.</p>}
+  ) : <p class="agenda-bref-vide">Aucune session à venir dans notre sélection. Les coordonnées des cours d’appel figurent dans l’agenda.</p>}
   <p class="agenda-bref-note">Sources consultées le <time datetime={DATE_CONTROLE_AGENDA}>{dateComplete.format(dateUtc(DATE_CONTROLE_AGENDA))}</time>. Une période de session ne garantit ni la tenue d’un procès précis ni l’accès à une audience.</p>
 </section>
 <style>
