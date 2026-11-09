@@ -50,6 +50,11 @@ export function normaliserTitre(texte = '') {
     .trim();
 }
 
+export function dossiersPourRecherche(requete) {
+  const texte = normaliserTitre(requete);
+  return DOSSIERS.filter(dossier => REGLES[dossier.slug].test(texte));
+}
+
 export function referencesPourDossier(dossier, references = []) {
   const regle = REGLES[dossier?.slug];
   if (!regle || !Array.isArray(references)) return [];

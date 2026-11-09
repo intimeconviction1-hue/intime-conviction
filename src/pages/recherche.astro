@@ -2,45 +2,61 @@
 import Base from '../layouts/Base.astro';
 import { RUBRIQUES, rubrique as trouverRubrique } from '../lib/rubriques.mjs';
 import { tousLesArticles } from '../lib/articles.mjs';
+import { lireVeille } from '../lib/veille.mjs';
 
-const articles = await tousLesArticles();
+const [articles, veille] = await Promise.all([tousLesArticles(), lireVeille()]);
 const index = articles.map(({data:d})=>({
   titre:d.titre,chemin:d.chemin,rubrique:d.rubrique,
   rubriqueNom:trouverRubrique(d.rubrique).nom,
   annee:d.date.getFullYear(),extrait:d.extrait
 }));
-const annees = [...new Set(index.map(a=>a.annee))].sort((a,b)=>b-a);
+const annees = [...new Set([
+  ...index.map(a=>String(a.annee)),
+  ...veille.articles.map(a=>a.dateAlerte.slice(0,4))
+])].sort((a,b)=>b.localeCompare(a));
 const total=articles.length.toLocaleString('fr-FR');
 ---
-<Base noindex titre="Rechercher dans les archives" description="Retrouvez une affaire, un procès ou un sujet parmi les articles d’Intime Conviction, grâce à la recherche par pertinence et aux filtres par rubrique et année.">
+<Base noindex titre="Rechercher sur Intime Conviction" description="Retrouvez les dossiers judiciaires, les articles du journal et les références de presse à partir d’une seule recherche.">
   <header class="titre-page recherche-intro">
     <p class="etiquette">LE FONDS / INTIME CONVICTION</p>
     <h1>RETROUVER<br /><span>UNE AFFAIRE.</span></h1>
-    <p class="sous-titre">{total} articles. Recherche par nom, procès, ville, sujet ou expression. Les correspondances dans les titres passent avant celles des résumés.</p>
+    <p class="sous-titre">{total} articles. Une recherche par nom, ville ou sujet dans les dossiers judiciaires, les articles du journal et la revue de presse.</p>
   </header>
   <form id="recherche" class="recherche-form" role="search">
     <label>RECHERCHE
       <input type="search" name="q" id="requete" placeholder="Ex. procès, jurés, verdict..." autocomplete="off" aria-controls="resultats" />
     </label>
-    <label>RUBRIQUE
+    <label>RUBRIQUE DU JOURNAL
       <select id="rubrique" name="rubrique"><option value="">Toutes les rubriques</option>{RUBRIQUES.map(r=><option value={r.slug}>{r.nom}</option>)}</select>
     </label>
-    <label>ANNÉE
+    <label>ANNÉE DE PUBLICATION OU D’ALERTE
       <select id="annee" name="annee"><option value="">Toutes les années</option>{annees.map(a=><option value={a}>{a}</option>)}</select>
     </label>
     <button type="submit">CHERCHER <span aria-hidden="true">↗</span></button>
   </form>
-  <div class="recherche-bilan">
-    <p id="compteur" class="meta" role="status" aria-live="polite">Chargement de l’index des archives…</p>
-    <button type="button" id="effacer" hidden>EFFACER LES FILTRES</button>
-  </div>
-  <ul id="resultats" class="role" aria-label="Résultats de recherche"></ul>
-  <button id="suite" class="suite-resultats" type="button" hidden>AFFICHER 30 ARTICLES DE PLUS <span aria-hidden="true">↓</span></button>
+  <button type="button" id="effacer" class="effacer-recherche" hidden>EFFACER LES FILTRES</button>
+  <section id="dossiers-recherche" class="resultats-fonds" aria-labelledby="titre-dossiers" hidden>
+    <h2 id="titre-dossiers">Dossiers judiciaires</h2>
+    <ul id="resultats-dossiers"></ul>
+  </section>
+  <section class="resultats-fonds" aria-labelledby="titre-journal">
+    <h2 id="titre-journal">Articles du journal</h2>
+    <p id="compteur" class="meta" role="status">Chargement de l’index des archives…</p>
+    <ul id="resultats" class="role"></ul>
+    <button id="suite" class="suite-resultats" type="button" hidden>AFFICHER 30 ARTICLES DE PLUS <span aria-hidden="true">↓</span></button>
+  </section>
+  <section id="presse-recherche" class="resultats-fonds" aria-labelledby="titre-presse" hidden>
+    <h2 id="titre-presse">Revue de presse</h2>
+    <p id="compteur-presse" class="meta" role="status"></p>
+    <ul id="apercu-presse"></ul>
+    <a id="suite-presse" href="/archives/presse/rechercher/">Voir tous les résultats presse ↗</a>
+  </section>
   <noscript>Cette recherche nécessite JavaScript. Vous pouvez consulter <a href="/archives/">les archives par année</a>.</noscript>
   <script id="index-recherche" type="application/json" set:html={JSON.stringify(index).replaceAll('<','\\u003c')} />
 </Base>
 <script>
-import { normaliser, preparerIndex, filtrerEtClasser } from '../lib/recherche.mjs';
+import { preparerIndex, filtrerEtClasser, chargerIndexPresse, filtrerPresse } from '../lib/recherche.mjs';
+import { dossiersPourRecherche } from '../lib/dossiers.mjs';
 const index = preparerIndex(JSON.parse(document.querySelector('#index-recherche').textContent));
 const form = document.querySelector('#recherche');
 const q = document.querySelector('#requete');
@@ -50,6 +66,53 @@ const liste = document.querySelector('#resultats');
 const suite = document.querySelector('#suite');
 const compteur = document.querySelector('#compteur');
 const effacer = document.querySelector('#effacer');
+const dossiers = document.querySelector('#dossiers-recherche');
+const listeDossiers = document.querySelector('#resultats-dossiers');
+const presse = document.querySelector('#presse-recherche');
+const listePresse = document.querySelector('#apercu-presse');
+const compteurPresse = document.querySelector('#compteur-presse');
+const suitePresse = document.querySelector('#suite-presse');
+let demandePresse = 0;
+
+function ajouterLien(liste, texte, href, source = '') {
+  const item = document.createElement('li');
+  const lien = document.createElement('a');
+  lien.href = href;
+  lien.textContent = texte;
+  if (source) {
+    lien.target = '_blank';
+    lien.rel = 'noopener noreferrer';
+    lien.textContent += ' ↗';
+    item.append(document.createTextNode(source + ' · '));
+  }
+  item.append(lien);
+  liste.append(item);
+}
+
+async function chercherPresse(options) {
+  const demande = ++demandePresse;
+  presse.hidden = options.q.length < 2;
+  listePresse.replaceChildren();
+  if (presse.hidden) return;
+  const params = new URLSearchParams({q: options.q});
+  if (options.annee) params.set('annee', options.annee);
+  suitePresse.href = '/archives/presse/rechercher/?' + params.toString();
+  compteurPresse.textContent = 'Recherche dans les titres de presse…';
+  try {
+    const references = await chargerIndexPresse();
+    if (demande !== demandePresse || options.q !== q.value.trim()) return;
+    const resultats = filtrerPresse(references, options);
+    const total = resultats.length;
+    compteurPresse.textContent = total
+      ? total.toLocaleString('fr-FR') + (total === 1 ? ' référence trouvée' : ' références trouvées')
+      : 'Aucune référence de presse pour cette recherche.';
+    for (const [titre, media, url] of resultats.slice(0, 3)) {
+      ajouterLien(listePresse, titre, url, media);
+    }
+  } catch {
+    if (demande === demandePresse && options.q === q.value.trim()) compteurPresse.textContent = 'La revue de presse est momentanément indisponible.';
+  }
+}
 let matches = [], limite = 30, delai;
 
 function affiche() {
@@ -71,7 +134,7 @@ function affiche() {
     liste.append(li);
   }
   const n = matches.length;
-  if (!n) compteur.textContent = 'Aucun résultat. Essayez un autre mot ou retirez un filtre.';
+  if (!n) compteur.textContent = 'Aucun article du journal pour cette recherche.';
   else compteur.textContent = n.toLocaleString('fr-FR') + ' article' + (n > 1 ? 's' : '') + ' · ' + Math.min(limite, n).toLocaleString('fr-FR') + ' affiché' + (Math.min(limite,n) > 1 ? 's' : '');
   suite.hidden = n <= limite;
   effacer.hidden = !q.value.trim() && !rubrique.value && !annee.value;
@@ -87,7 +150,14 @@ function rechercher() {
   if (options.rubrique) params.set('rubrique', options.rubrique);
   if (options.annee) params.set('annee', options.annee);
   history.replaceState(null, '', location.pathname + (params.size ? '?' + params : ''));
+  const correspondances = dossiersPourRecherche(options.q);
+  dossiers.hidden = correspondances.length === 0;
+  listeDossiers.replaceChildren();
+  for (const dossier of correspondances) {
+    ajouterLien(listeDossiers, dossier.titre, '/dossiers/' + dossier.slug + '/');
+  }
   affiche();
+  chercherPresse(options);
 }
 const params = new URLSearchParams(location.search);
 q.value = params.get('q') || '';
@@ -113,10 +183,13 @@ rechercher();
 .recherche-form button{min-height:54px;background:#17191a;color:#fff;border:2px solid #17191a;font:900 .72rem/1.2 var(--sans);letter-spacing:.05em;white-space:nowrap}
 .recherche-form button:hover{background:#fff;color:#17191a}
 .recherche-form button span{font-size:1.15rem;margin-left:.55rem}
-.recherche-bilan{display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:4px solid #17191a;padding:1.5rem 0 .7rem}
-.recherche-bilan p{font:900 .8rem/1.4 var(--sans);text-transform:uppercase;color:#17191a;margin:0}
-.recherche-bilan button{background:transparent;border:0;border-bottom:2px solid #17191a;color:#17191a;padding:.4rem .1rem;font:850 .68rem/1.4 var(--sans)}
-.recherche-bilan button:hover{background:#ffe100}
+.effacer-recherche{background:transparent;border:0;border-bottom:2px solid #17191a;color:#17191a;padding:.4rem 0;margin-top:1rem;font:850 .68rem/1.4 var(--sans)}
+.effacer-recherche:hover{background:#ffe100}
+.resultats-fonds{margin:2rem 0;border-top:4px solid #17191a;padding-top:1rem}
+.resultats-fonds>h2{margin:0 0 .5rem}
+.resultats-fonds>p{margin:.5rem 0;font:850 .8rem/1.4 var(--sans)}
+.resultats-fonds>ul:not(.role){padding-left:1.15rem;line-height:1.65}
+.resultats-fonds a{text-decoration:underline;text-underline-offset:.18em}
 .role{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:2.4rem;list-style:none;padding:0;margin:0}
 :global(#resultats > li){border-bottom:2px solid #d1d2cd;padding:1.6rem 0}
 :global(#resultats h2){font:850 clamp(1.3rem,2.2vw,2rem)/1.17 var(--sans);letter-spacing:-.04em;margin:.6rem 0 .5rem}
@@ -125,7 +198,7 @@ rechercher();
 :global(#resultats .extrait){font:450 .94rem/1.6 var(--sans);color:#454848;margin:0}
 .suite-resultats{display:block;margin:2rem auto 0;background:#17191a;color:#fff;border:2px solid #17191a;font:900 .72rem/1.4 var(--sans)}
 .suite-resultats:hover{background:#ffe100;color:#17191a}
-.suite-resultats[hidden],.recherche-bilan button[hidden]{display:none}
+.suite-resultats[hidden],.effacer-recherche[hidden]{display:none}
 @media(max-width:63.99rem){.recherche-form{grid-template-columns:1fr 1fr}.recherche-form label:first-child{grid-column:1/-1}.recherche-form button{align-self:stretch}}
-@media(max-width:47.99rem){.recherche-intro{margin-top:1rem;padding:2rem 1.2rem}.recherche-intro h1{font-size:clamp(2.6rem,11vw,4.3rem)}.recherche-form{grid-template-columns:1fr;padding:1rem}.recherche-form label:first-child{grid-column:auto}.recherche-form button{min-height:50px}.role{grid-template-columns:1fr}.recherche-bilan{align-items:start;gap:.8rem}.recherche-bilan p{font-size:.73rem}.recherche-bilan button{font-size:.59rem}}
+@media(max-width:47.99rem){.recherche-intro{margin-top:1rem;padding:2rem 1.2rem}.recherche-intro h1{font-size:clamp(2.6rem,11vw,4.3rem)}.recherche-form{grid-template-columns:1fr;padding:1rem}.recherche-form label:first-child{grid-column:auto}.recherche-form button{min-height:50px}.role{grid-template-columns:1fr}}
 </style>

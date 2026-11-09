@@ -25,6 +25,7 @@ import Base from '../../../layouts/Base.astro';
 <aside class="lien-double"><div><span>DEUX FONDS. DEUX VOIX.</span><h2>LES ARTICLES DU JOURNAL<br />SONT AUSSI CONSULTABLES.</h2><p>La revue de presse renvoie à des médias extérieurs. Les articles d’Intime Conviction sont répertoriés séparément et possèdent leur propre moteur de recherche.</p></div><a href="/recherche/">RECHERCHER DANS LES ARTICLES DU JOURNAL <span aria-hidden="true">↗</span></a></aside>
 </Base>
 <script>
+ import {chargerIndexPresse, filtrerPresse} from '../../../lib/recherche.mjs';
  type Presse=[string,string,string,string];
  const champ=document.querySelector<HTMLInputElement>('#mot-cle');
  const annee=document.querySelector<HTMLSelectElement>('#filtre-annee');
@@ -33,24 +34,18 @@ import Base from '../../../layouts/Base.astro';
  const bilan=document.querySelector<HTMLElement>('#nombre');
  const effacer=document.querySelector<HTMLButtonElement>('#effacer');
  const suite=document.querySelector<HTMLButtonElement>('#charger-plus');
- let base:Presse[]|null=null, enCours:Promise<Presse[]>|null=null, matches:Presse[]=[];
+ let matches:Presse[]=[];
  let limite=40,delai=0,requeteCourante=0;
- const norm=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr');
  const date=(s:string)=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'}).format(new Date(s+'T12:00:00Z'));
  async function index() {
-   if(base)return base;
-   if(!enCours)enCours=fetch('/archives/presse/index-recherche.json')
-      .then(r=>{if(!r.ok)throw new Error('Index indisponible');return r.json()})
-      .then((v:{articles:Presse[]})=>{
-        if(!Array.isArray(v.articles))throw new Error('Index invalide');
-        base=v.articles.filter(x=>Array.isArray(x)&&x.length===4);
-        const annees=[...new Set(base.map(x=>x[3].slice(0,4)))].sort((a,b)=>b.localeCompare(a));
-        const choisi=new URLSearchParams(location.search).get('annee')||'';
-        for(const y of annees){const o=document.createElement('option');o.value=y;o.textContent=y;annee.append(o);}
-        if(annees.includes(choisi))annee.value=choisi;
-        return base;
-      }).catch(e=>{enCours=null;throw e;});
-   return enCours;
+   const articles:Presse[] = await chargerIndexPresse();
+   if (annee.options.length === 1) {
+     const annees = [...new Set(articles.map(x=>x[3].slice(0,4)))].sort((a,b)=>b.localeCompare(a));
+     const choisi = new URLSearchParams(location.search).get('annee') || '';
+     for (const y of annees) annee.add(new Option(y, y));
+     if (annees.includes(choisi)) annee.value = choisi;
+   }
+   return articles;
  }
  function afficher() {
    liste.replaceChildren();
@@ -69,15 +64,14 @@ import Base from '../../../layouts/Base.astro';
  }
  async function rechercher() {
    const demande=++requeteCourante;
-   const q=norm(champ.value.trim());
+   const q=champ.value.trim();
    if(q.length<2){matches=[];liste.replaceChildren();suite.hidden=true;effacer.hidden=!champ.value.trim()&&!annee.value;bilan.textContent='Saisissez au moins deux caractères pour chercher parmi les titres.';return;}
    bilan.textContent='Recherche dans les titres en cours…';
    try{
      const data=await index();
      if(demande!==requeteCourante)return;
      const y=annee.value;
-     const morceaux=q.split(/\s+/).filter(Boolean);
-     matches=data.filter(r=>(!y||r[3].startsWith(y))&&morceaux.every(m=>norm(r[0]+' '+r[1]).includes(m)));
+     matches=filtrerPresse(data,{q,annee:y});
      limite=40;
      const params=new URLSearchParams();params.set('q',champ.value.trim());if(y)params.set('annee',y);
      history.replaceState(null,'',location.pathname+'?'+params.toString());

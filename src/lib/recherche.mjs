@@ -45,3 +45,31 @@ export function filtrerEtClasser(index, { q = '', rubrique = '', annee = '' } = 
   if (mots.length) resultats.sort((a, b) => b.score - a.score || a.article.ordre - b.article.ordre);
   return resultats.map((r) => r.article);
 }
+
+const normaliserPresse = texte => texte.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('fr');
+
+export function filtrerPresse(references, {q = '', annee = ''} = {}) {
+  const phrase = normaliserPresse(q.trim());
+  if (phrase.length < 2) return [];
+  const mots = phrase.split(/\s+/);
+  return references.filter(([titre, media, , date]) => {
+    if (annee && !date.startsWith(annee)) return false;
+    const texte = normaliserPresse(titre + ' ' + media);
+    return mots.every(mot => texte.includes(mot));
+  });
+}
+
+let indexPresse;
+export function chargerIndexPresse() {
+  indexPresse ??= fetch('/archives/presse/index-recherche.json').then(async reponse => {
+    if (!reponse.ok) throw new Error('Index presse indisponible');
+    const {articles} = await reponse.json();
+    if (!Array.isArray(articles)) throw new Error('Index presse invalide');
+    return articles.filter(reference => Array.isArray(reference) && reference.length === 4 &&
+      reference.every(champ => typeof champ === 'string') && /^https?:\/\//i.test(reference[2]));
+  }).catch(erreur => {
+    indexPresse = undefined;
+    throw erreur;
+  });
+  return indexPresse;
+}

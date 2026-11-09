@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import {contactCourAppel} from '../lib/agenda-sessions.mjs';
 import {ROLES_OFFICIELS,MODES_ROLES} from '../lib/roles-officiels.mjs';
 
 const sources=new Map();
@@ -25,13 +26,14 @@ const exclus=ROLES_OFFICIELS.filter(r=>r.mode==='information'||r.mode==='sur-pla
   <aside class="acces-agenda"><div><strong>Agenda des sessions criminelles</strong><p>Consultez les périodes de sessions identifiées dans les publications institutionnelles. Les dates ne constituent pas une annonce de procès individuel.</p></div><a href="/agenda/">Voir les sessions annoncées</a></aside>
 
   <section class="sources" aria-labelledby="titre-sources">
-    <div class="tete-sources"><span>LE PÉRIMÈTRE / SOURCES OFFICIELLES</span><h2 id="titre-sources">LES SOURCES<br /><mark>OFFICIELLES.</mark></h2><p>Les pages regroupant plusieurs départements ne constituent pas des rôles distincts pour chacun. Chaque lien mène à l’autorité qui publie ou présente les sessions. Les documents doivent être consultés et vérifiés auprès des juridictions concernées.</p></div>
+    <div class="tete-sources"><span>LE PÉRIMÈTRE / SOURCES OFFICIELLES</span><h2 id="titre-sources">LES SOURCES<br /><mark>OFFICIELLES.</mark></h2><p>Les pages regroupant plusieurs départements ne constituent pas des rôles distincts pour chacun. Chaque lien mène à l’autorité qui publie ou présente les sessions. Plusieurs pages étaient en maintenance le 9 novembre 2026. Utilisez les coordonnées de la cour pour demander au greffe les informations disponibles.</p></div>
     <ol class="grille-sources">{surveillees.map((s,i)=>(
       <li>
         <div class="source-haute"><span>{String(i+1).padStart(2,'0')} / SOURCE OFFICIELLE</span><span>{s.codes.join(' · ')}</span></div>
         <h3>{s.titre}</h3>
         <p class="source-type">{MODES_ROLES[s.mode]}</p>
         <p class="source-departements">DÉPARTEMENTS : {s.codes.join(' / ')}</p>
+        <a href={contactCourAppel(s.url)} target="_blank" rel="noopener noreferrer" aria-label={'Coordonnées de la cour pour '+s.ressorts.join(', ')}>COORDONNÉES DE LA COUR <span aria-hidden="true">↗</span></a>
         <a href={s.url} target="_blank" rel="noopener noreferrer">CONSULTER LA PUBLICATION <span aria-hidden="true">↗</span></a>
       </li>
     ))}</ol>

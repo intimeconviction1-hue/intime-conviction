@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { DEPARTEMENTS_ASSISES, ANNUAIRE_OFFICIEL, NOTICE_DATE, validerAnnuaire } from '../lib/guide-assises.mjs';
 import { ROLES_OFFICIELS, MODES_ROLES, roleParDepartement, dossiersParDepartement, validerRoles, VERIFIE_LE } from '../lib/roles-officiels.mjs';
-import { SESSIONS_AGENDA, AUDIENCES_A_RECONFIRMER, sessionsAvenir, dateLocaleAgenda } from '../lib/agenda-sessions.mjs';
+import { SESSIONS_AGENDA, AUDIENCES_A_RECONFIRMER, sessionsAvenir, dateLocaleAgenda, contactCourAppel } from '../lib/agenda-sessions.mjs';
 validerAnnuaire();
 validerRoles(DEPARTEMENTS_ASSISES);
 const auCalendrier=sessionsAvenir([...SESSIONS_AGENDA,...AUDIENCES_A_RECONFIRMER],dateLocaleAgenda());
@@ -23,7 +23,7 @@ const troisEntrees = [
     <div class="stats"><span><strong>{nombreDepartements}</strong> départements référencés</span><span><strong>{nombreOutreMer}</strong> départements d’outre-mer</span><span><strong>01</strong> annuaire officiel à consulter</span></div>
   </header>
   <section class="notice" aria-labelledby="titre-notice"><h2 id="titre-notice">Informations sur les audiences</h2><p>Les villes ci-dessous servent de <strong>repères d’orientation</strong>, pas de preuve de la tenue d’une audience aujourd’hui. La cour de la Haute-Saône et du Territoire de Belfort est commune aux deux départements et siège à Vesoul. D’autres collectivités françaises ont une organisation judiciaire spécifique qui ne figure pas dans cette liste départementale. Les adresses, téléphones et horaires sont à vérifier dans le répertoire officiel.</p><a href={ANNUAIRE_OFFICIEL} target="_blank" rel="noopener noreferrer">OUVRIR L’ANNUAIRE DU MINISTÈRE <span aria-hidden="true">↗</span></a></section>
-  <aside class="signal-roles"><div><span>RÔLES DES AUDIENCES / LIENS OFFICIELS</span><strong>{ROLES_OFFICIELS.length} départements reliés à une page institutionnelle</strong><p>Ces liens mènent aux pages des cours d’appel, pas à un calendrier certifié en temps réel. Certains proposent des PDF publics, d’autres une information de ressort ou une consultation sur place réservée aux journalistes.</p></div><a href="/assister/">COMMENT ASSISTER À UNE AUDIENCE ? <span aria-hidden="true">↗</span></a></aside>
+  <aside class="signal-roles"><div><span>RÔLES DES AUDIENCES / LIENS OFFICIELS</span><strong>{ROLES_OFFICIELS.length} départements reliés à une page institutionnelle</strong><p>Ces liens mènent aux pages des cours d’appel, pas à un calendrier certifié en temps réel. Plusieurs de ces pages étaient en maintenance le 9 novembre 2026. Les coordonnées de la cour permettent de se renseigner auprès du greffe.</p></div><a href="/assister/">COMMENT ASSISTER À UNE AUDIENCE ? <span aria-hidden="true">↗</span></a></aside>
   <p class="acces-veille"><a href="/agenda/">CONSULTER L’AGENDA DES SESSIONS CRIMINELLES <span aria-hidden="true">↗</span></a></p>
   <p class="acces-veille"><a href="/veille-roles/">COMMENT LES RÔLES OFFICIELS SONT-ILS VÉRIFIÉS ? <span aria-hidden="true">↗</span></a></p>
   <section class="methode"><h2>Comment trouver une audience</h2><ol>{troisEntrees.map(x=><li><strong>{x.n}</strong><div><h3>{x.titre}</h3><p>{x.texte}</p></div></li>)}</ol></section>
@@ -59,6 +59,7 @@ const troisEntrees = [
             <div class="acces-role">
               <div><span class="type-role">{MODES_ROLES[roleParDepartement(d.code).mode]}</span>
                 <p>{roleParDepartement(d.code).note}</p></div>
+              <a href={contactCourAppel(roleParDepartement(d.code).url)} target="_blank" rel="noopener noreferrer" aria-label={'Coordonnées de la cour pour '+d.departement}>COORDONNÉES DE LA COUR <span aria-hidden="true">↗</span></a>
               <a href={roleParDepartement(d.code).url} target="_blank" rel="noopener noreferrer" aria-label={'Consulter la page officielle : '+roleParDepartement(d.code).titre}>CONSULTER LA SOURCE <span aria-hidden="true">↗</span></a>
             </div>
           ) : (
@@ -116,8 +117,8 @@ const troisEntrees = [
 .signal-roles>a{display:flex;justify-content:space-between;gap:.8rem;background:#ffe100;color:#151718;padding:1.1rem;font:900 .7rem/1.4 var(--sans)}
 .signal-roles>a:hover{background:#fff;color:#151718}
 .ressources-departement{grid-column:1/-1;display:flex;flex-direction:column;gap:.7rem;padding-top:.8rem;border-top:1px dashed var(--filet)}
-.acces-role{background:#edeee8;color:#151718;padding:.8rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.acces-role>div{flex:1}
+.acces-role{background:#edeee8;color:#151718;padding:.8rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem}
+.acces-role>div{flex:1 0 100%}
 .type-role{font:900 .65rem/1.3 var(--sans);letter-spacing:.025em}
 .acces-role p{font:500 .72rem/1.5 var(--sans);margin:.35rem 0 0}
 .acces-role>a{background:#151718;color:#fff;flex-shrink:0;padding:.8rem;font:900 .61rem/1.35 var(--sans);display:flex;gap:.4rem;align-items:center}

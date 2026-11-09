@@ -138,10 +138,13 @@ const CONTACTS_COURS_APPEL = {
   angers:'pays-de-la-loire/maine-et-loire/f945ac4e-ef2f-4cb3-bd14-f91b95bf8446',
   besancon:'bourgogne-franche-comte/doubs/4b2d9b23-2a84-4cbe-8afe-5f6fd0fcc014',
   bordeaux:'nouvelle-aquitaine/gironde/5c978bd4-b1be-451e-aaaf-a7633dc91c3d',
+  caen:'normandie/calvados/25087a2e-60f8-4d39-b999-de1388b483f5',
   chambery:'auvergne-rhone-alpes/savoie/64ef305a-8548-4c63-8800-38e83c807df9',
   limoges:'nouvelle-aquitaine/haute-vienne/3741a011-59c3-460a-8d80-578a6075a0d5',
   lyon:'auvergne-rhone-alpes/rhone/6614b495-76b5-401d-8937-0c6e804279fd',
   rennes:'bretagne/ille-et-vilaine/88acf439-b5b6-4233-8d26-284651bf49ba',
+  rouen:'normandie/seine-maritime/e5dbae83-ffca-4003-9781-0ae3c464514d',
+  'saint-denis':'la-reunion/reunion/8114c644-9f2c-4144-9aba-cf473e1c7433',
   toulouse:'occitanie/haute-garonne/1963e2c7-037d-4d78-808c-43dcc493bad3'
 };
 

@@ -1,5 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
+import {contactCourAppel} from '../lib/agenda-sessions.mjs';
+import {roleParDepartement} from '../lib/roles-officiels.mjs';
+
+const rolesBordeaux = roleParDepartement('33').url;
+const contactBordeaux = contactCourAppel(rolesBordeaux);
 const conseils=[
   {n:'01',titre:'Choisir une audience',texte:'Repère la cour compétente, puis cherche le rôle de la session. Certaines juridictions publient un calendrier sur leur site, d’autres non. Ne déduis pas une date à partir d’un article de presse.'},
   {n:'02',titre:'Confirmer auprès du greffe',texte:'Vérifie l’horaire, l’adresse exacte, l’accès du public et les éventuels changements de programme. Un rôle annoncé peut être modifié ou une affaire reportée.'},
@@ -21,7 +26,7 @@ const faq=[
 const sources=[
   {titre:'Ministère de la Justice : chercher une juridiction',href:'https://www.justice.gouv.fr/annuaire/juridictions-judiciaires',desc:'Adresse et coordonnées officielles'},
   {titre:'Service-Public : assister à un procès criminel',href:'https://www.service-public.gouv.fr/particuliers/vosdroits/F1487',desc:'Publicité, huis clos et déroulement légal'},
-  {titre:'Cour d’appel de Bordeaux : rôles des assises',href:'https://www.cours-appel.justice.fr/bordeaux/roles-des-cours-dassises',desc:'Exemple de calendrier publié par une juridiction'},
+  {titre:'Cour d’appel de Bordeaux : coordonnées',href:contactBordeaux,desc:'Accueil et contact de la juridiction'},
   {titre:'Service-Public : devenir juré d’assises',href:'https://www.service-public.gouv.fr/particuliers/vosdroits/F1540',desc:'Convocation, obligations et fonctionnement'},
   {titre:'Service-Public : indemnités des jurés',href:'https://www.service-public.gouv.fr/particuliers/vosdroits/F17783',desc:'Montants et justificatifs en vigueur'},
 ];
@@ -31,7 +36,7 @@ const sources=[
   <nav class="rapide" aria-label="Parcourir le guide"><a href="#public">PREMIÈRE VISITE ↘</a><a href="#juré">VOUS ÊTES JURÉ ↘</a><a href="#questions">QUESTIONS FRÉQUENTES ↘</a><a href="#sources">SOURCES OFFICIELLES ↘</a></nav>
   <section class="avertissement"><strong>LE POINT CRUCIAL.</strong><p>Un rôle d’audience n’est pas une réservation, et une date repérée dans la presse ne garantit pas la tenue du procès. Contacte la juridiction pour confirmer les informations avant de te déplacer.</p><a href="/annuaire/">TROUVER MA COUR PAR DÉPARTEMENT <span aria-hidden="true">↗</span></a></section>
   <section id="public" class="module"><div class="entete-module"><span>01 / POUR LE PUBLIC</span><h2>PRÉPARER<br /><mark>SA VISITE.</mark></h2><p>Un parcours en six gestes pratiques pour préparer une visite sans perturber les débats.</p></div><ol class="etapes-visite">{conseils.map(c=><li><strong>{c.n}</strong><div><h3>{c.titre}</h3><p>{c.texte}</p></div></li>)}</ol></section>
-  <section class="sources-roles"><p>EXEMPLE / UNE SOURCE OFFICIELLE</p><div><div><h2>OÙ TROUVER UN<br />RÔLE D’AUDIENCE ?</h2><p>La cour d’appel de Bordeaux publie des rôles anonymisés pour les assises et la cour criminelle de Gironde. Les autres juridictions n’ont pas toutes la même pratique.</p></div><a href="https://www.cours-appel.justice.fr/bordeaux/roles-des-cours-dassises" target="_blank" rel="noopener noreferrer">VOIR LES RÔLES DE BORDEAUX <span aria-hidden="true">↗</span></a></div></section>
+  <section class="sources-roles"><p>EXEMPLE / UNE SOURCE OFFICIELLE</p><div><div><h2>OÙ TROUVER UN<br />RÔLE D’AUDIENCE ?</h2><p>La cour d’appel de Bordeaux publie des rôles anonymisés pour les assises et la cour criminelle de Gironde. La page des rôles était en maintenance le 9 novembre 2026. Contactez la cour pour connaître le programme accessible au public.</p><p><a href={rolesBordeaux} target="_blank" rel="noopener noreferrer">Page de publication des rôles ↗</a></p></div><a href={contactBordeaux} target="_blank" rel="noopener noreferrer">COORDONNÉES DE LA COUR DE BORDEAUX <span aria-hidden="true">↗</span></a></div></section>
   <section id="juré" class="module jury"><div class="entete-module"><span>02 / POUR LES CITOYENS TIRÉS AU SORT</span><h2>VOUS AVEZ<br /><mark>REÇU UNE CONVOCATION.</mark></h2><p>Un juré ne vient pas comme spectateur : il contribue à juger. La convocation, les devoirs et les droits sont spécifiques.</p></div><div class="grille-jure"><article><span>01 / LE TIRAGE AU SORT</span><h3>On ne s’inscrit pas.</h3><p>Le processus de sélection part des listes électorales et comprend plusieurs tirages. Les personnes retenues reçoivent une convocation officielle.</p></article><article><span>02 / LA MISSION</span><h3>Être attentif, impartial, discret.</h3><p>Les jurés écoutent les débats, participent à la décision avec les magistrats et sont tenus au secret du délibéré.</p></article><article><span>03 / LES OBLIGATIONS</span><h3>Une convocation compte.</h3><p>Des dispenses peuvent être accordées dans certains cas, mais une absence non justifiée peut être sanctionnée. L’employeur doit respecter les dispositions légales applicables.</p></article><article><span>04 / LES INDEMNITÉS</span><h3>Une indemnisation à demander.</h3><p>Selon la fiche officielle vérifiée en janvier 2026, l’indemnité de comparution est de 102,16 € par jour. D’autres compensations existent. Les montants doivent être revérifiés avant toute demande.</p><a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F17783" target="_blank" rel="noopener noreferrer">VÉRIFIER LE BARÈME ACTUEL ↗</a></article></div></section>
   <aside class="jure-article" aria-labelledby="jure-article-titre">
     <div><p>LE BANC DES JURÉS / NOTRE RÉCIT</p><h2 id="jure-article-titre">Un nom tiré au sort, une vie devant les assises</h2><p>Ce que deviennent les noms tirés en mairie, jusqu’à la formation d’un jury populaire.</p></div>
