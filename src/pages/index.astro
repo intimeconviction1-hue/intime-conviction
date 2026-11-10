@@ -40,7 +40,7 @@ const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossie
 const reperes = [
   { href: '/agenda/', titre: 'Voir les dates des sessions' },
   { href: '/assister/', titre: 'Assister à une audience' },
-  { href: '/annuaire/', titre: 'Trouver une cour' },
+  { href: '/annuaire/#repertoire', titre: 'Liste des juridictions' },
   { href: '/carte/', titre: 'Carte des affaires' },
 ];
 const photoPalaisBlois = {
@@ -100,9 +100,9 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
     <div class="cadre ouverture-interieur">
       <h1 id="titre-accueil" class="sr-only">Intime Conviction, le journal des cours d’assises</h1>
       {articlesCarrousel.length > 0 && (
-        <section class="articles-carrousel" aria-label="Articles à la une" data-editorial-carousel>
+        <section class="articles-carrousel" aria-label="Articles de la rédaction à la une" data-editorial-carousel>
           <div class="articles-carrousel-tete">
-            <p>À LA UNE</p>
+            <p>À LA UNE DE LA RÉDACTION</p>
             <div class="articles-carrousel-outils" aria-label="Navigation dans les articles">
               <span data-editorial-position aria-live="polite">01 / {String(articlesCarrousel.length).padStart(2,'0')}</span>
               <button type="button" data-editorial-toggle aria-label="Mettre le défilement automatique en pause" aria-pressed="false" title="Mettre en pause">Ⅱ</button>

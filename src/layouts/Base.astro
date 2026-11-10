@@ -19,11 +19,30 @@ const canonique = new URL(Astro.url.pathname, Astro.site);
 const imagePartage = image ? new URL(image, Astro.site).href : (accueil ? new URL(frontonAssises.src, Astro.site).href : null);
 const annee = new Date().getFullYear();
 const navigation = [
-  { titre: 'Actualité', href: '/rubrique/cours-du-jour/' },
-  { titre: 'Agenda', href: '/agenda/' },
-  { titre: 'Affaires', href: '/dossiers/' },
-  { titre: 'Comprendre', href: '/comprendre/' },
-  { titre: 'Archives', href: '/archives/' },
+  { titre: 'Actualité', href: '/rubrique/cours-du-jour/', liens: [
+    {titre:'Articles de la rédaction',href:'/rubrique/cours-du-jour/#articles-redaction'},
+    {titre:'Chroniques d’audience',href:'/rubrique/la-cour-se-leve/'},
+    {titre:'Dans la presse',href:'/rubrique/cours-du-jour/#actualites'},
+  ] },
+  { titre: 'Agenda', href: '/agenda/', liens: [
+    {titre:'Sessions annoncées',href:'/agenda/'},
+    {titre:'Sources de l’agenda',href:'/veille-roles/'},
+  ] },
+  { titre: 'Affaires', href: '/dossiers/', liens: [
+    {titre:'Dossiers judiciaires',href:'/dossiers/'},
+    {titre:'Carte des affaires',href:'/carte/'},
+    {titre:'Chronologie des affaires',href:'/chronologie/'},
+  ] },
+  { titre: 'Comprendre', href: '/comprendre/', liens: [
+    {titre:'Les règles du procès',href:'/comprendre/'},
+    {titre:'Assister à une audience',href:'/assister/'},
+    {titre:'Liste des juridictions',href:'/annuaire/#repertoire'},
+    {titre:'Jurisprudence',href:'/jurisprudence/'},
+  ] },
+  { titre: 'Archives', href: '/archives/', liens: [
+    {titre:'Archives du journal',href:'/archives/'},
+    {titre:'Archives de presse',href:'/archives/presse/'},
+  ] },
 ];
 const piedNavigation = [
   { titre: 'Le journal', liens: [
@@ -34,7 +53,7 @@ const piedNavigation = [
   { titre: 'Infos pratiques', liens: [
     {titre:'Agenda des sessions',href:'/agenda/'},
     {titre:'Assister à une audience',href:'/assister/'},
-    {titre:'Trouver une cour',href:'/annuaire/'},
+    {titre:'Liste des juridictions',href:'/annuaire/#repertoire'},
     {titre:'Carte des affaires',href:'/carte/'},
   ] },
   { titre: 'À propos', liens: [
@@ -99,9 +118,15 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       </div>
       <nav class="navigation-principale" aria-label="Navigation principale">
         <ul class="cadre">
-          {navigation.map(lien=><li><a href={lien.href} aria-current={courant(lien.href)}>{lien.titre}</a></li>)}
+          {navigation.map(lien=><li class="navigation-entree">
+            <a href={lien.href} aria-current={courant(lien.href)}>{lien.titre}</a>
+            <details name="navigation-principale" class="navigation-rubriques navigation-sous-menu">
+              <summary aria-label={`Sous-menu ${lien.titre}`}><svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></summary>
+              <ul>{lien.liens.map(l=> <li><a href={l.href}>{l.titre}</a></li>)}</ul>
+            </details>
+          </li>)}
           <li>
-            <details class="navigation-rubriques">
+            <details name="navigation-principale" class="navigation-rubriques">
               <summary>Rubriques <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></summary>
               <ul>
                 {RUBRIQUES.map(r=>{
@@ -132,12 +157,24 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       </div>
     </footer>
   <script>
-    const rubriques = document.querySelector<HTMLDetailsElement>('.navigation-rubriques');
-    rubriques?.addEventListener('keydown', event => {
-      if (event.key !== 'Escape' || !rubriques.open) return;
+    const nav = document.querySelector('.navigation-principale');
+    nav?.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') return;
+      const menu = nav.querySelector<HTMLDetailsElement>('details[open]');
+      if (!menu) return;
       event.preventDefault();
-      rubriques.open = false;
-      rubriques.querySelector('summary')?.focus();
+      menu.open = false;
+      menu.querySelector('summary')?.focus();
+    });
+    nav?.addEventListener('focusout', event => {
+      if (event.relatedTarget instanceof Node && !nav.contains(event.relatedTarget)) {
+        nav.querySelector('details[open]')?.removeAttribute('open');
+      }
+    });
+    document.addEventListener('pointerdown', event => {
+      if (event.target instanceof Node && !nav?.contains(event.target)) {
+        nav?.querySelector('details[open]')?.removeAttribute('open');
+      }
     });
   </script>
   <style is:global>
@@ -162,6 +199,9 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     .navigation-principale>.cadre{display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}
     .navigation-principale>.cadre>li{min-width:0}
     .navigation-principale :is(a,summary){display:flex;align-items:center;justify-content:center;gap:.3rem;min-height:48px;padding:.45rem .25rem;text-align:center;color:#303638;font:750 .9rem/1.25 var(--sans)}
+    .navigation-entree{display:flex;justify-content:center}
+    .navigation-entree>a{flex:1;min-width:0}
+    .navigation-sous-menu summary{min-width:44px}
     .navigation-principale summary{cursor:pointer;list-style:none}
     .navigation-principale summary::-webkit-details-marker{display:none}
     .navigation-principale details[open] summary svg{transform:rotate(180deg)}
@@ -182,8 +222,8 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       .identite-journal .marque a{font-size:clamp(1.75rem,4.4vw,3rem)}
     }
     @media(max-width:47.99rem){
-      .navigation-principale>.cadre{grid-template-columns:repeat(3,minmax(0,1fr))}
-      .navigation-principale>.cadre>li:nth-child(n+4){border-top:1px solid #d8d2cb}
+      .navigation-principale>.cadre{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .navigation-principale>.cadre>li:nth-child(n+3){border-top:1px solid #d8d2cb}
       .navigation-principale :is(a,summary){font-size:.85rem}
       .entete .barre{min-height:88px;gap:.65rem}
       .identite-journal{padding:.75rem 0;gap:.35rem}

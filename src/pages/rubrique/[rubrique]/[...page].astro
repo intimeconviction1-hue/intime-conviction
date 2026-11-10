@@ -38,6 +38,9 @@ const ressources = {
   ]
 };
 const liensRubrique = ressources[r.slug] ?? [];
+const estActualite = page.currentPage === 1 && r.slug === 'cours-du-jour';
+const aLaUne = estActualite ? page.data.filter(({data})=>data.verificationEnCours !== true).slice(0,3) : [];
+const suite = page.data.filter(article=>!aLaUne.includes(article));
 ---
 <Base titre={titre} description={`${r.libelle}. ${page.total} articles d'Intime Conviction.`} rubriqueActive={r.slug}>
   <header class="titre-page">
@@ -59,10 +62,18 @@ const liensRubrique = ressources[r.slug] ?? [];
       <a class="lecture-jures-action" href="/jures-en-mai/05/2022/">Lire le récit <span aria-hidden="true">↗</span></a>
     </aside>
   )}
-  {page.currentPage === 1 && r.slug === 'cours-du-jour' && <Actualites rubriqueSlug="cours-du-jour" limite={24} titre="Dans la presse" lienRubrique={false} />}
+  {estActualite && (
+    <section id="articles-redaction" aria-labelledby="titre-articles-redaction">
+      <div class="titre-section"><h2 id="titre-articles-redaction">Les articles de la rédaction</h2></div>
+      <ListeArticles articles={aLaUne} rubriqueVisible={false} niveau={3} />
+    </section>
+  )}
+  {estActualite && <Actualites rubriqueSlug="cours-du-jour" limite={24} titre="Dans la presse" lienRubrique={false} />}
   {page.currentPage === 1 && r.slug === 'le-greffe' && <Culture titre="À lire, à voir" />}
-  <div class="titre-section"><h2>Les articles d’Intime Conviction</h2></div>
-  <ListeArticles articles={page.data} rubriqueVisible={false} niveau={3} />
+  {suite.length > 0 && <>
+    <div class="titre-section"><h2>{estActualite ? 'Tous les autres articles du journal' : 'Les articles d’Intime Conviction'}</h2></div>
+    <ListeArticles articles={suite} rubriqueVisible={false} niveau={3} />
+  </>}
   <nav class="pagination" aria-label="Pages">
     {page.url.prev ? <a href={page.url.prev}>← Plus récents</a> : <span />}
     {page.url.next ? <a href={page.url.next}>Plus anciens →</a> : <span />}
