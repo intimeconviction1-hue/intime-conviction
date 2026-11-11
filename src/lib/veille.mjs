@@ -52,8 +52,11 @@ export async function lireActualites() {
   const recents = veille.articles.filter(a=>Date.parse(a.dateAlerte+'T12:00:00Z')>=seuil)
     .map(a=>({...a,date:a.dateAlerte+'T12:00:00Z'}));
   const vus=new Set(),articles=[];
-  for(const a of [...selection,...(fil?.articles??[]),...recents]) {
-    if (!lienDirectPresse(a.lien) || Date.parse(a.date) < seuil) continue;
+  const collectes = fil?.articles ?? [];
+  const directs = collectes.filter(a=>lienDirectPresse(a.lien));
+  const viaGoogle = collectes.filter(a=>!lienDirectPresse(a.lien));
+  for(const a of [...selection,...directs,...recents,...viaGoogle]) {
+    if (Date.parse(a.date) < seuil) continue;
     const cle=(a.source+'|'+a.titre).normalize('NFKC').toLocaleLowerCase('fr');
     if(vus.has(cle)||vus.has(a.lien))continue;vus.add(cle);vus.add(a.lien);articles.push(a);
   }

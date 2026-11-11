@@ -1,4 +1,5 @@
 ---
+import { lienDirectPresse } from '../lib/fil-actualites.mjs';
 import { lireActualites } from '../lib/veille.mjs';
 import { hierarchiserPresse } from '../lib/hierarchiser-presse.mjs';
 import { rubrique } from '../lib/rubriques.mjs';
@@ -16,11 +17,11 @@ const formatDate = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',y
     <h2 id="titre-actualites">{titreAffiche}</h2>
     {lienRubrique && <a href={`/rubrique/${r.slug}/`}>Toute la rubrique <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg></a>}
   </div>
-  <p class="provenance">Sélection de titres publiés par les médias cités. Les liens renvoient aux articles d’origine ; leur contenu n’est pas reproduit ici.</p>
+  <p class="provenance">Sélection de titres publiés par les médias cités. Les liens ouvrent les articles chez les médias ou passent par Google Actualités lorsque le lien direct manque.</p>
   {nouvelles.length ? <ul class="nouvelles">
     {nouvelles.map(n => <li>
       <p class="meta"><span class="source">{n.source}</span><time datetime={n.date}>{n.dateAlerte ? "Référence du " : ""}{formatDate.format(new Date(n.date))}</time></p>
-      <h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> — {n.source} (nouvel onglet)</span></a></h3>
+      <h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> — {n.source} (nouvel onglet)</span>{!lienDirectPresse(n.lien) && <span class="meta"> · via Google Actualités</span>}</a></h3>
     </li>)}
   </ul> : <p>Aucun article à afficher dans cette sélection. <a class="secours" href="/archives/presse/">Consulter les archives de presse.</a></p>}
 </section>}
