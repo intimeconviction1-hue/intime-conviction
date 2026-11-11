@@ -19,17 +19,17 @@ const canonique = new URL(Astro.url.pathname, Astro.site);
 const imagePartage = image ? new URL(image, Astro.site).href : (accueil ? new URL(frontonAssises.src, Astro.site).href : null);
 const annee = new Date().getFullYear();
 const navigation = [
-  { titre: 'Actualité', href: '/rubrique/cours-du-jour/', liens: [
+  { titre: 'Nos articles', href: '/rubrique/cours-du-jour/#articles-redaction', liens: [
     {titre:'Chroniques d’audience',href:'/rubrique/la-cour-se-leve/'},
   ] },
   { titre: 'Agenda', href: '/agenda/', liens: [
     {titre:'Sources de l’agenda',href:'/veille-roles/'},
   ] },
-  { titre: 'Affaires', href: '/dossiers/', liens: [
+  { titre: 'Dossiers', href: '/dossiers/', liens: [
     {titre:'Chronologie des affaires',href:'/chronologie/'},
   ] },
   { titre: 'Comprendre', href: '/comprendre/', liens: [
-    {titre:'Assister à une audience',href:'/assister/'},
+    {titre:'Les jurés et les acteurs du procès',href:'/rubrique/le-banc-des-jures/'},
     {titre:'Jurisprudence',href:'/jurisprudence/'},
   ] },
   { titre: 'Archives', href: '/archives/', liens: [
@@ -37,10 +37,10 @@ const navigation = [
   ] },
 ];
 const accesDirects = [
-  { href: '/rubrique/cours-du-jour/#articles-redaction', titre: 'Nos articles' },
   { href: '/rubrique/cours-du-jour/#actualites', titre: 'Revue de presse' },
-  { href: '/annuaire/#repertoire', titre: 'Annuaire des juridictions' },
+  { href: '/annuaire/#repertoire', titre: 'Trouver un tribunal' },
   { href: '/carte/', titre: 'Carte des affaires' },
+  { href: '/assister/', titre: 'Assister à un procès' },
 ];
 const piedNavigation = [
   { titre: 'Le journal', liens: [
@@ -125,9 +125,9 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
           </li>)}
           <li>
             <details name="navigation-principale" class="navigation-rubriques">
-              <summary>À lire <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></summary>
+              <summary>Analyses et culture <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></summary>
               <ul>
-                {RUBRIQUES.filter(r=>!['cours-du-jour','la-cour-se-leve'].includes(r.slug)).map(r=>{
+                {RUBRIQUES.filter(r=>!['cours-du-jour','la-cour-se-leve','le-banc-des-jures'].includes(r.slug)).map(r=>{
                   const href = `/rubrique/${r.slug}/`;
                   return <li><a href={href} aria-current={courant(href)}>{r.libelle}</a></li>;
                 })}
