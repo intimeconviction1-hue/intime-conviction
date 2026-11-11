@@ -15,8 +15,7 @@ const debutPeriode = (debut, fin) => {
 <section class="agenda-bref" aria-labelledby="agenda-bref-titre">
   <div class="agenda-bref-entete">
     <div>
-      <p class="agenda-bref-surtitre">AGENDA JUDICIAIRE</p>
-      <h2 id="agenda-bref-titre">Les prochaines sessions criminelles</h2>
+      <h2 id="agenda-bref-titre">Les prochaines sessions d’assises</h2>
     </div>
     <a class="agenda-bref-suite" href="/agenda/">Voir l’agenda <span aria-hidden="true">↗</span></a>
   </div>
@@ -25,13 +24,13 @@ const debutPeriode = (debut, fin) => {
       {sessions.map(s => (
         <li>
           <div class="agenda-bref-texte">
-            <h3>{s.ville}</h3>
             <p class="agenda-bref-date">
               {s.debut === s.fin
                 ? <time datetime={s.fin}>{dateComplete.format(dateUtc(s.fin))}</time>
                 : <>Du <time datetime={s.debut}>{debutPeriode(s.debut, s.fin)}</time> au <time datetime={s.fin}>{dateComplete.format(dateUtc(s.fin))}</time></>
               }
             </p>
+            <h3>{s.ville}</h3>
             <p class="agenda-bref-juridiction">{s.juridiction}</p>
           </div>
           <a href={contactCourAppel(s.source)} target="_blank" rel="noopener noreferrer">

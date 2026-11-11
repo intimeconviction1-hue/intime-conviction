@@ -37,13 +37,12 @@ const rubriques = RUBRIQUES.map(r=>{
     .slice(0, 2);
   return {...r,total:archives.length,titres};
 });
-const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
-const reperes = [
-  { href: '/agenda/', titre: 'Voir les dates des sessions' },
-  { href: '/assister/', titre: 'Assister à une audience' },
-  { href: '/annuaire/#repertoire', titre: 'Liste des juridictions' },
-  { href: '/carte/', titre: 'Carte des affaires' },
-];
+const dossiersMisEnAvant = DOSSIERS.map(dossier => {
+  const [derniere] = referencesPourDossier(dossier, veille.articles);
+  return {...dossier, derniere};
+}).filter(dossier => dossier.derniere)
+  .sort((a,b) => b.derniere.dateAlerte.localeCompare(a.derniere.dateAlerte))
+  .slice(0,3);
 const photoPalaisBlois = {
   image: photoBlois, lieu: 'Palais de justice de Blois', auteur: 'Chabe01',
   source: 'https://commons.wikimedia.org/wiki/File:Palais_Justice_-_Blois_(FR41)_-_2022-07-16_-_1.jpg',
@@ -152,39 +151,22 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
             </div>
           </div>
           <div class="articles-carrousel-reperes" aria-label="Choisir un article">
-            {articlesCarrousel.map((_,i)=><button type="button" data-editorial-dot={i} aria-label={`Afficher l’article ${i+1}`} aria-current={i===0?'true':undefined}>{String(i+1).padStart(2,'0')}</button>)}
+            {articlesCarrousel.map(({data},i)=><button type="button" data-editorial-dot={i} aria-current={i===0?'true':undefined}>{data.titre}</button>)}
           </div>
         </section>
       )}
-      <div class="outils-accueil">
-        <form class="accueil-recherche" action="/recherche/" method="get" role="search" aria-labelledby="titre-recherche-accueil">
-          <label id="titre-recherche-accueil" for="recherche-accueil">Retrouver un article ou une affaire</label>
-          <div class="accueil-recherche-champs">
-            <input id="recherche-accueil" type="search" name="q" placeholder="Nom ou mot-clé" autocomplete="off" />
-            <button type="submit">Rechercher</button>
-          </div>
-        </form>
-        <nav class="parcours" aria-labelledby="titre-reperes-accueil">
-          <h2 id="titre-reperes-accueil">Repères</h2>
-          <ul>
-            {reperes.map(({href, titre}) => (
-              <li><a href={href}>{titre}<span aria-hidden="true">↗</span></a></li>
-            ))}
-          </ul>
-        </nav>
-      </div>
+
     </div>
   </section>
 
   <div class="surface-lecture"><div class="cadre journal-corps">
-    <AgendaEnBref />
+
 
 
     <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
       <div class="accueil-dossiers-entete">
-        <h2 id="titre-dossiers-accueil">Dossiers judiciaires</h2>
-        <p>Retrouver, affaire par affaire, les références et les liens vers les publications de presse.</p>
-      </div>
+        <h2 id="titre-dossiers-accueil">Les affaires à suivre</h2>
+        </div>
       {dossiersMisEnAvant.length > 0 && (
         <ul class="accueil-dossiers-grille">
           {dossiersMisEnAvant.map(d => (
@@ -194,9 +176,9 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
                   <h3 id={`accueil-dossier-${d.slug}`}>{d.titre}</h3>
                   <span aria-hidden="true">↗</span>
                 </div>
-                <p id={`accueil-dossier-repere-${d.slug}`}>{d.presentation}</p>
+                <p id={`accueil-dossier-repere-${d.slug}`}>{d.derniere.titre}</p>
                 <span class="accueil-dossiers-total">
-                  {d.nombre.toLocaleString('fr-FR')} {d.nombre === 1 ? 'référence de presse' : 'références de presse'}
+                  {d.derniere.source}
                 </span>
               </a>
             </li>
@@ -209,6 +191,17 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
       </div>
     </section>
 
+
+    <AgendaEnBref />
+      <div class="outils-accueil">
+        <form class="accueil-recherche" action="/recherche/" method="get" role="search" aria-labelledby="titre-recherche-accueil">
+          <label id="titre-recherche-accueil" for="recherche-accueil">Retrouver un article ou une affaire</label>
+          <div class="accueil-recherche-champs">
+            <input id="recherche-accueil" type="search" name="q" placeholder="Nom ou mot-clé" autocomplete="off" />
+            <button type="submit">Rechercher</button>
+          </div>
+        </form>
+      </div>
 
     {archiveUne && (
       <section class="selection" aria-labelledby="titre-selection">
@@ -259,7 +252,6 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
     <section class="greffe-accueil" aria-labelledby="titre-culture">
       <div class="greffe-accueil-entete">
         <div>
-          <p>CINÉMA, LIVRES ET HISTOIRE</p>
           <h2 id="titre-culture">Livres, films et histoire</h2>
         </div>
         <a href="/rubrique/le-greffe/">Voir les livres et les films <span aria-hidden="true">↗</span></a>
@@ -302,14 +294,14 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
     </section>
 
     <nav class="archives-passerelle" aria-labelledby="titre-collections">
-      <h2 id="titre-collections">Les collections</h2>
+      <h2 id="titre-collections">Les archives</h2>
       <div class="archives-collections">
         <a href="/archives/">
           <strong>Archives du journal <span aria-hidden="true">↗</span></strong>
           <span>Les articles publiés par Intime Conviction.</span>
         </a>
         <a href="/archives/presse/">
-          <strong>Revue de presse <span aria-hidden="true">↗</span></strong>
+          <strong>Archives de presse <span aria-hidden="true">↗</span></strong>
           <span>Des références et des liens vers d’autres médias.</span>
         </a>
       </div>
@@ -502,8 +494,8 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 .articles-carrousel-piste{position:relative;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;gap:0}
 .articles-carrousel-piste::-webkit-scrollbar{display:none}
 .articles-carrousel-piste .article-redaction-une{flex:0 0 100%;scroll-snap-align:start;min-width:0;margin:0;min-height:340px;display:flex;align-items:center}
-.articles-carrousel-reperes{display:flex;gap:.4rem;justify-content:center;margin-top:.85rem}
-.articles-carrousel-reperes button{border:0;border-bottom:3px solid #9c9b95;background:transparent;min-width:58px;min-height:44px;font:800 .7rem var(--sans);color:#333;cursor:pointer}
+.articles-carrousel-reperes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.65rem;margin-top:.85rem}
+.articles-carrousel-reperes button{border:0;border-bottom:3px solid #9c9b95;background:transparent;min-height:44px;padding:.65rem;text-align:left;font:700 .9rem/1.35 var(--sans);color:#333;cursor:pointer}
 .articles-carrousel-reperes button[aria-current="true"]{border-color:#a12c39;color:#a12c39}
 .articles-carrousel-piste:focus-visible{outline:3px solid #a12c39;outline-offset:3px}
 @media(max-width:47.99rem){.articles-carrousel-piste .article-redaction-une{min-height:400px}.articles-carrousel-tete p{font-size:.62rem}}
@@ -530,7 +522,7 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 
   .outils-accueil {
     display:grid;
-    grid-template-columns:minmax(0, 1fr) minmax(0, 1.15fr);
+    grid-template-columns:minmax(0, 1fr);
     gap:clamp(1.25rem, 3vw, 3rem);
     align-items:center;
     padding:clamp(1rem, 2.8vw, 2.25rem);
@@ -564,33 +556,6 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
     font:700 .78rem/1.2 var(--sans);
   }
   .accueil-recherche button:hover { background:#762636; }
-  .parcours h2 {
-    margin:0 0 .4rem;
-    color:#84323d;
-    font:750 .75rem/1.3 var(--sans);
-    letter-spacing:.08em;
-    text-transform:uppercase;
-  }
-  .parcours ul {
-    display:grid;
-    grid-template-columns:repeat(2, minmax(0, 1fr));
-    column-gap:1rem;
-    list-style:none;
-    margin:0;
-    padding:0;
-  }
-  .parcours a {
-    display:flex;
-    min-height:44px;
-    align-items:center;
-    justify-content:space-between;
-    gap:.4rem;
-    padding:.4rem 0;
-    border-bottom:1px solid #c7bdb2;
-    font:650 .85rem/1.3 var(--sans);
-  }
-  .parcours a span { color:#84323d; font-size:1rem; }
-  .parcours a:hover { color:#84323d; text-decoration:underline; }
   .outils-accueil :is(a, input, button):focus-visible {
     outline:2px solid #84323d;
     outline-offset:2px;
