@@ -37,6 +37,13 @@ const rubriques = RUBRIQUES.map(r=>{
   return {...r,total:archives.length,titres};
 });
 const dossiersMisEnAvant = DOSSIERS.map(d => ({...d, nombre:referencesPourDossier(d, veille.articles).length})).filter(d=>d.nombre>0).slice(0,4);
+const accesDirects = [
+  { href: '/rubrique/cours-du-jour/#articles-redaction', titre: 'Nos articles' },
+  { href: '/rubrique/cours-du-jour/#actualites', titre: 'Revue de presse' },
+  { href: '/agenda/', titre: 'Agenda' },
+  { href: '/annuaire/#repertoire', titre: 'Liste des juridictions' },
+  { href: '/carte/', titre: 'Carte des affaires' },
+];
 const reperes = [
   { href: '/agenda/', titre: 'Voir les dates des sessions' },
   { href: '/assister/', titre: 'Assister à une audience' },
@@ -99,6 +106,13 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
   <section class="ouverture" aria-labelledby="titre-accueil">
     <div class="cadre ouverture-interieur">
       <h1 id="titre-accueil" class="sr-only">Intime Conviction, le journal des cours d’assises</h1>
+      <nav class="acces-directs" aria-label="Accès directs">
+        <ul>
+          {accesDirects.map(({href, titre}) => (
+            <li><a href={href}>{titre}<span aria-hidden="true">↗</span></a></li>
+          ))}
+        </ul>
+      </nav>
       {articlesCarrousel.length > 0 && (
         <section class="articles-carrousel" aria-label="Articles de la rédaction à la une" data-editorial-carousel>
           <div class="articles-carrousel-tete">
@@ -489,6 +503,16 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 @media(max-width:48rem){.article-redaction-une{margin:1rem 0 1.7rem}.article-redaction-une h2{font-size:clamp(1.8rem,7vw,2.5rem)}}
 
 /* Une éditoriale : trois publications distinctes, navigation explicite et tactile. */
+.acces-directs{margin:0 0 1rem}
+.acces-directs ul{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.4rem;list-style:none;margin:0;padding:0}
+.acces-directs a{display:flex;align-items:center;justify-content:space-between;gap:.4rem;min-height:44px;height:100%;padding:.5rem .7rem;border:1px solid #c7bdb2;background:#f0ebe4;color:#252a2d;font:750 .85rem/1.25 var(--sans)}
+.acces-directs a span{color:#84323d}
+.acces-directs a:hover,.acces-directs a:focus-visible{border-color:#84323d;text-decoration:underline}
+.acces-directs a:focus-visible{outline:2px solid #84323d;outline-offset:-3px}
+@media(max-width:47.99rem){
+  .acces-directs ul{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .acces-directs li:last-child{grid-column:1/-1}
+}
 .articles-carrousel{margin:0 0 2rem;min-width:0}
 .articles-carrousel-tete{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 0;border-top:1px solid #8b8881}
 .articles-carrousel-tete p{font:800 .75rem/1.4 var(--sans);letter-spacing:.08em;margin:0}
