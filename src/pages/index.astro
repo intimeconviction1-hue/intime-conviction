@@ -3,22 +3,23 @@ import Base from '../layouts/Base.astro';
 import photoAix from '../assets/palais-verdun-aix.webp';
 import photoBlois from '../assets/blois.webp';
 import photoParis from '../assets/rue-de-la-paix.webp';
+import photoSalle from '../assets/salle-voltaire.webp';
 import photoPoissy from '../assets/poissy.webp';
 import AgendaEnBref from '../components/AgendaEnBref.astro';
 import { CULTURE } from '../lib/culture.mjs';
 import { lireVeille } from '../lib/veille.mjs';
 import { RUBRIQUES, rubrique } from '../lib/rubriques.mjs';
 import { DOSSIERS, referencesPourDossier } from '../lib/dossiers.mjs';
-import { tousLesArticles, dateLongue, minutesDeLecture } from '../lib/articles.mjs';
+import { tousLesArticles, dateLongue } from '../lib/articles.mjs';
 
 const articles = await tousLesArticles();
 const veille = await lireVeille();
-const articlesCarrousel = articles.slice(0, 3);
+const selectionUne = articles.slice(0, 3);
 const [archiveUne, ...derniers] = articles
-  .slice(articlesCarrousel.length)
+  .slice(selectionUne.length)
   .filter(({data}) => data.verificationEnCours !== true)
   .slice(0, 4);
-const vus = new Set([...articlesCarrousel,archiveUne,...derniers].filter(Boolean).map(a=>a.data.slug));
+const vus = new Set([...selectionUne,archiveUne,...derniers].filter(Boolean).map(a=>a.data.slug));
 const descriptionsRubriques = {
   'cours-du-jour': 'Le suivi des procès criminels et de leurs audiences.',
   'le-banc-des-jures': 'Les règles du procès, les jurés et les autres acteurs de l’audience.',
@@ -32,7 +33,7 @@ const rubriques = RUBRIQUES.map(r=>{
   const titres = archives
     .filter(({data}) => data.verificationEnCours !== true && !vus.has(data.slug))
     .slice(0, 2);
-  return {...r,total:archives.length,titres};
+  return {...r,titres};
 });
 const dossiersMisEnAvant = DOSSIERS.map(dossier => {
   const [derniere] = referencesPourDossier(dossier, veille.articles);
@@ -46,7 +47,7 @@ const photoPalaisBlois = {
   licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
 };
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
-const photosCarrousel = {
+const photosUne = {
   '/proces-sollacaro-et-tout-recommence-aux-assises/11/2026/': {
     image: photoAix, lieu: 'Palais Verdun, Aix-en-Provence', auteur: 'Lsmpascal',
     source: 'https://commons.wikimedia.org/wiki/File:Palais_de_justice_Aix-en-Provence.jpg',
@@ -64,7 +65,7 @@ const photosCarrousel = {
     licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
   },
 };
-const articlesUne = articlesCarrousel.map(({data}) => ({data, photo: photosCarrousel[data.chemin]}));
+const articlesUne = selectionUne.map(({data}) => ({data, photo: photosUne[data.chemin]}));
 ---
 <Base accueil>
   <section class="ouverture" aria-labelledby="titre-accueil">
@@ -98,13 +99,11 @@ const articlesUne = articlesCarrousel.map(({data}) => ({data, photo: photosCarro
   </section>
 
   <div class="surface-lecture"><div class="cadre journal-corps">
-
-
-
     <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
       <div class="accueil-dossiers-entete">
         <h2 id="titre-dossiers-accueil">Les affaires à suivre</h2>
-        </div>
+        <a href="/dossiers/">Tous les dossiers <span aria-hidden="true">↗</span></a>
+      </div>
       {dossiersMisEnAvant.length > 0 && (
         <ul class="accueil-dossiers-grille">
           {dossiersMisEnAvant.map(d => (
@@ -124,45 +123,46 @@ const articlesUne = articlesCarrousel.map(({data}) => ({data, photo: photosCarro
         </ul>
       )}
       <div class="accueil-dossiers-liens">
-        <a href="/dossiers/">Tous les dossiers <span aria-hidden="true">↗</span></a>
         <a href="/chronologie/">Chronologie judiciaire <span aria-hidden="true">↗</span></a>
       </div>
     </section>
 
 
     <AgendaEnBref />
-      <div class="outils-accueil">
-        <form class="accueil-recherche" action="/recherche/" method="get" role="search" aria-labelledby="titre-recherche-accueil">
-          <label id="titre-recherche-accueil" for="recherche-accueil">Retrouver un article ou une affaire</label>
-          <div class="accueil-recherche-champs">
-            <input id="recherche-accueil" type="search" name="q" placeholder="Nom ou mot-clé" autocomplete="off" />
-            <button type="submit">Rechercher</button>
-          </div>
-        </form>
+    <section class="guide-assises" aria-labelledby="titre-guide-assises">
+      <figure>
+        <img src={photoSalle.src} width={photoSalle.width} height={photoSalle.height}
+          alt="Le banc de la cour dans la salle Voltaire, à Paris" loading="lazy" decoding="async" />
+        <figcaption>Salle Voltaire, Paris · <a href="https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris_-_salle_Voltaire_(cour_d%27assises).jpg">Tiraden</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> · cadrée</figcaption>
+      </figure>
+      <div class="guide-assises-texte">
+        <h2 id="titre-guide-assises">Comprendre les assises</h2>
+        <p>Qui siège à la cour ? Dans quel ordre parle-t-on ? Comment se prend la décision ?</p>
+        <ul>
+          <li><a href="/comprendre/">Le déroulement du procès <span aria-hidden="true">↗</span></a></li>
+          <li><a href="/rubrique/le-banc-des-jures/">Les jurés et les acteurs du procès <span aria-hidden="true">↗</span></a></li>
+          <li><a href="/assister/">Préparer sa première audience <span aria-hidden="true">↗</span></a></li>
+        </ul>
       </div>
+    </section>
 
     {archiveUne && (
       <section class="selection" aria-labelledby="titre-selection">
         <div class="selection-entete">
           <h2 id="titre-selection">À relire dans nos archives</h2>
-          <a href="/archives/">Toutes les archives <span aria-hidden="true">↗</span></a>
+          <a href="/archives/">Archives du journal <span aria-hidden="true">↗</span></a>
         </div>
         <div class:list={['selection-grille', { 'selection-grille-simple': derniers.length === 0 }]}>
           <article class="archive-vedette">
             <a href={archiveUne.data.chemin} aria-labelledby="titre-archive-vedette">
               <div class="archive-vedette-entete">
                 <h3 id="titre-archive-vedette">{archiveUne.data.titre}</h3>
-                <img src={`/illustrations/${archiveUne.data.rubrique}.svg`} alt="" width="640" height="520" loading="lazy" decoding="async" />
               </div>
               <p class="archive-vedette-meta">
                 <span>{rubrique(archiveUne.data.rubrique).libelle}</span>
                 <time datetime={archiveUne.data.date.toISOString()}>{dateLongue(archiveUne.data.date)}</time>
               </p>
               <p class="archive-vedette-extrait">{archiveUne.data.extrait}</p>
-              <p class="archive-vedette-lire">
-                <span>Lire l’article <span aria-hidden="true">↗</span></span>
-                <span>{minutesDeLecture(archiveUne.data.mots)} min de lecture</span>
-              </p>
             </a>
           </article>
           {derniers.length > 0 && (
@@ -202,7 +202,6 @@ const articlesUne = articlesCarrousel.map(({data}) => ({data, photo: photosCarro
               <h3 id={`greffe-accueil-${slug}`}>{titre}</h3>
               <p class="greffe-accueil-auteur">{auteur}</p>
               <p class="greffe-accueil-extrait" id={`greffe-extrait-${slug}`}>{extrait}</p>
-              <span class="greffe-accueil-ouvrir" aria-hidden="true">Lire la fiche <span>↗</span></span>
             </a>
           </li>
         ))}
@@ -210,7 +209,7 @@ const articlesUne = articlesCarrousel.map(({data}) => ({data, photo: photosCarro
     </section>
 
     <section class="univers" aria-labelledby="titre-rubriques">
-      <h2 id="titre-rubriques">Les six rubriques du journal</h2>
+      <h2 id="titre-rubriques">Dans le journal</h2>
       <ul class="rubriques">
         {rubriques.map(r => (
           <li class="rubrique-carte">
@@ -223,111 +222,33 @@ const articlesUne = articlesCarrousel.map(({data}) => ({data, photo: photosCarro
                 {r.titres.map(({data}) => <li><a href={data.chemin}>{data.titre}</a></li>)}
               </ul>
             )}
-            <p class="rubrique-volume">
-              {r.total.toLocaleString('fr-FR')} {r.total === 1 ? 'article d’archives' : 'articles d’archives'}
-            </p>
           </li>
         ))}
       </ul>
     </section>
 
-    <nav class="archives-passerelle" aria-labelledby="titre-collections">
-      <h2 id="titre-collections">Les archives</h2>
-      <div class="archives-collections">
-        <a href="/archives/">
-          <strong>Archives du journal <span aria-hidden="true">↗</span></strong>
-          <span>Les articles publiés par Intime Conviction.</span>
-        </a>
-        <a href="/archives/presse/">
-          <strong>Archives de presse <span aria-hidden="true">↗</span></strong>
-          <span>Des références et des liens vers d’autres médias.</span>
-        </a>
-      </div>
-    </nav>
+    <div class="outils-accueil">
+      <form class="accueil-recherche" action="/recherche/" method="get" role="search" aria-labelledby="titre-recherche-accueil">
+        <label id="titre-recherche-accueil" for="recherche-accueil">Retrouver un article ou une affaire</label>
+        <div class="accueil-recherche-champs">
+          <input id="recherche-accueil" type="search" name="q" placeholder="Nom ou mot-clé" />
+          <button type="submit">Rechercher</button>
+        </div>
+      </form>
+      <nav aria-label="Consulter les archives">
+        <a href="/archives/">Archives du journal <span aria-hidden="true">↗</span></a>
+        <a href="/archives/presse/">Archives de presse <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
 
   </div></div>
 </Base>
 
 <style>
-  .ouverture{background:var(--papier);color:var(--encre);padding-top:0}.ouverture-interieur{padding-top:1.1rem;padding-bottom:0}h1{font-size:clamp(2.15rem,3.6vw,3.25rem);line-height:1.04;font-weight:600;letter-spacing:-.035em;margin:0;max-width:22ch}h1 a:hover{color:#fff;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
-  .surface-lecture{background:color-mix(in srgb,var(--papier) 97%,transparent)}.journal-corps{padding-top:.1rem;padding-bottom:4rem}.journal-corps :global(.titre-section){margin-top:3.5rem}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
-  @media(max-width:63.99rem){h1{font-size:2.3rem}}
-  @media(max-width:47.99rem){h1{font-size:2.2rem;max-width:23ch}.journal-corps :global(.titre-section){margin-top:2.8rem}}
-
-/* Nouvelle direction artistique : la une des assises */
-.ouverture{background:#f1ede5;color:#171716}
-.surface-lecture{background:#f8f5ef}
-.journal-corps{padding-top:1.5rem}
-
-
-/* Identite 2026 : vrai contraste noir / jaune, langage de bande-annonce, sans effets decoratifs gratuits. */
-.ouverture{background:#111314;color:#fff}
-.ouverture-interieur{padding-top:0}
-.surface-lecture{background:#f4f4f1}
-.journal-corps{padding-top:2rem}
-.journal-corps :global(.titre-section){border-top:7px solid #111314;margin-top:4.5rem}
-
-  /* Une d'information : l'ancien article d'archives ne simule plus l'actualité. */
-
-/* Direction artistique de la une : composition de presse, retenue et lisibilité. */
-.ouverture{background:#f7f5f0;color:#1b2024}
-.ouverture-interieur{padding-top:0}
-.surface-lecture{background:#faf9f6}
-.journal-corps{padding-top:1.5rem}
-.journal-corps :global(.titre-section){border-top:1px solid #b9b7b1;margin-top:3.3rem;padding-top:1.2rem}
-
-/* Règles propres à la une : une hiérarchie éditoriale sans blocs redondants. */
-.ouverture{background:#f7f5f0}
-.surface-lecture{background:#fbfaf8}
-.journal-corps{padding-top:1.2rem}
-.journal-corps :global(.titre-section){margin-top:2.7rem}
-.archives-passerelle {
-  margin-top:2.8rem;
-  padding-top:1.3rem;
-  border-top:2px solid #943440;
-}
-.archives-passerelle h2 {
-  margin:0 0 1rem;
-  font:650 clamp(1.9rem,3.4vw,3rem)/1.05 var(--serif);
-}
-.archives-collections {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:.75rem;
-}
-.archives-collections a {
-  display:grid;
-  gap:.4rem;
-  padding:clamp(.85rem,2vw,1.4rem);
-  border:1px solid #d6cdc2;
-  background:#f4f1eb;
-}
-.archives-collections strong {
-  display:flex;
-  justify-content:space-between;
-  gap:.65rem;
-  font:650 clamp(1.35rem,2.3vw,1.9rem)/1.15 var(--serif);
-}
-.archives-collections strong span { color:#84323d; }
-.archives-collections a > span { color:#504945; font:480 .88rem/1.5 var(--sans); }
-.archives-collections a:hover { background:#eee6dc; color:#84323d; }
-.archives-collections a:focus-visible { outline:2px solid #84323d; outline-offset:3px; }
-@media(max-width:36rem) {
-  .archives-collections { grid-template-columns:minmax(0,1fr); gap:.5rem; }
-}
-
-/* Accueil : la une présente un vrai dossier et non une seconde présentation du site. */
-.ouverture-interieur{padding-top:1.25rem}
-@media(max-width:47.99rem){.ouverture-interieur{padding-top:.9rem}}
-
-/* Espacement de la une. */
-.ouverture{background:#f7f5f0}
-.ouverture-interieur{padding-top:2.1rem}
-@media(max-width:47.99rem){
- .ouverture-interieur{padding-top:1.1rem}
-}
-
-/* Le dernier article du journal précède la revue de presse externe. */
+  .ouverture,.surface-lecture{background:#fbfaf7;color:#252525}
+  .ouverture-interieur{padding-top:clamp(1rem,2.5vw,2rem)}
+  .journal-corps{padding-bottom:3rem}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
   .une-editoriale{margin:0 0 clamp(1.4rem,4vw,3rem)}
   .une-editoriale>h2{border-top:3px solid #943440;padding:.75rem 0;margin:0;color:#84323d;font:800 .8rem/1.4 var(--sans);letter-spacing:.1em;text-transform:uppercase}
   .une-editoriale-grille{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:1rem 1.8rem}
@@ -348,421 +269,49 @@ const articlesUne = articlesCarrousel.map(({data}) => ({data, photo: photosCarro
     .article-redaction-une:first-child{grid-row:auto}
   }
 
-  .outils-accueil {
-    display:grid;
-    grid-template-columns:minmax(0, 1fr);
-    gap:clamp(1.25rem, 3vw, 3rem);
-    align-items:center;
-    padding:clamp(1rem, 2.8vw, 2.25rem);
-    background:#f0ebe4;
-    border:1px solid #d6cdc2;
-    border-top:2px solid #943440;
-  }
-  .accueil-recherche label {
-    display:block;
-    margin:0 0 .75rem;
-    font:650 clamp(1.4rem, 2.3vw, 2rem)/1.15 var(--serif);
-  }
-  .accueil-recherche-champs { display:flex; min-height:48px; }
-  .accueil-recherche input {
-    flex:1;
-    min-width:0;
-    padding:.65rem .7rem;
-    border:1px solid #9e9187;
-    border-radius:0;
-    color:var(--encre);
-    background:#fff;
-    font:500 1rem/1.3 var(--sans);
-  }
-  .accueil-recherche input::placeholder { color:#615a55; }
-  .accueil-recherche button {
-    border:0;
-    padding:0 clamp(.55rem, 1.5vw, 1.15rem);
-    color:#fff;
-    background:#923342;
-    cursor:pointer;
-    font:700 .78rem/1.2 var(--sans);
-  }
-  .accueil-recherche button:hover { background:#762636; }
-  .outils-accueil :is(a, input, button):focus-visible {
-    outline:2px solid #84323d;
-    outline-offset:2px;
-    position:relative;
-    z-index:1;
-  }
-  @media(max-width:47.99rem) {
-    .outils-accueil { grid-template-columns:minmax(0, 1fr); }
-  }
-  .accueil-dossiers {
-    margin:2.2rem 0 0;
-    padding-top:1.3rem;
-    border-top:2px solid #943440;
-  }
-  .accueil-dossiers-entete h2 {
-    margin:0;
-    font:650 clamp(1.9rem,3.4vw,3rem)/1.05 var(--serif);
-  }
-  .accueil-dossiers-entete p {
-    margin:.55rem 0 0;
-    color:#504945;
-    font:480 .91rem/1.55 var(--sans);
-  }
-  .accueil-dossiers-grille {
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:.75rem;
-    list-style:none;
-    margin:1rem 0 0;
-    padding:0;
-  }
-  .accueil-dossiers-grille a {
-    display:flex;
-    height:100%;
-    flex-direction:column;
-    gap:.65rem;
-    padding:clamp(.85rem,1.65vw,1.25rem);
-    background:#f4f1eb;
-    border:1px solid #d6cdc2;
-  }
-  .accueil-dossiers-grille a:hover {
-    background:#eee6dc;
-    color:#84323d;
-  }
-  .accueil-dossiers-titre {
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    gap:.5rem;
-  }
-  .accueil-dossiers-titre h3 {
-    margin:0;
-    font:650 clamp(1.3rem,2vw,1.75rem)/1.13 var(--serif);
-  }
-  .accueil-dossiers-titre span { color:#84323d; }
-  .accueil-dossiers-grille p {
-    margin:0;
-    color:#504945;
-    font:480 .83rem/1.5 var(--sans);
-  }
-  .accueil-dossiers-total {
-    margin-top:auto;
-    padding-top:.55rem;
-    border-top:1px solid #d6cdc2;
-    color:#84323d;
-    font:700 .75rem/1.4 var(--sans);
-  }
-  .accueil-dossiers-liens {
-    display:flex;
-    flex-wrap:wrap;
-    gap:0 1.5rem;
-    margin-top:.55rem;
-  }
-  .accueil-dossiers-liens a {
-    display:inline-flex;
-    align-items:center;
-    gap:.45rem;
-    min-height:44px;
-    color:#84323d;
-    font:750 .82rem/1.4 var(--sans);
-  }
-  .accueil-dossiers-liens a:hover { text-decoration:underline; }
-  .accueil-dossiers a:focus-visible {
-    outline:2px solid #84323d;
-    outline-offset:3px;
-  }
-  @media(max-width:64rem) {
-    .accueil-dossiers-grille { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  }
-  @media(max-width:36rem) {
-    .accueil-dossiers-grille { grid-template-columns:1fr; gap:.5rem; }
-  }
-  .selection {
-    margin-top:2.8rem;
-    padding-top:1.3rem;
-    border-top:2px solid #943440;
-  }
-  .selection-entete {
-    display:flex;
-    flex-wrap:wrap;
-    align-items:end;
-    justify-content:space-between;
-    gap:.2rem 1rem;
-    margin-bottom:1rem;
-  }
-  .selection-entete h2 {
-    margin:0;
-    font:650 clamp(1.9rem,3.4vw,3rem)/1.05 var(--serif);
-  }
-  .selection-entete a {
-    display:inline-flex;
-    align-items:center;
-    gap:.45rem;
-    min-height:44px;
-    color:#84323d;
-    font:750 .82rem/1.4 var(--sans);
-  }
-  .selection-grille {
-    display:grid;
-    grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);
-    gap:clamp(1rem,3vw,2.5rem);
-  }
-  .selection-grille-simple { grid-template-columns:minmax(0,1fr); }
-  .archive-vedette a {
-    display:grid;
-    gap:.7rem;
-    padding:clamp(.85rem,2vw,1.5rem);
-    border:1px solid #d6cdc2;
-    background:#f4f1eb;
-  }
-  .archive-vedette a:hover { background:#eee6dc; }
-  .archive-vedette-entete {
-    display:grid;
-    grid-template-columns:minmax(0,1fr) clamp(3.25rem,9vw,6rem);
-    align-items:start;
-    gap:.7rem;
-  }
-  .archive-vedette-entete img {
-    width:100%;
-    height:auto;
-    border:1px solid #d6cdc2;
-  }
-  .archive-vedette h3 {
-    margin:0;
-    font:650 clamp(1.55rem,2.6vw,2.4rem)/1.12 var(--serif);
-  }
-  .archive-vedette-meta,.archive-vedette-lire {
-    display:flex;
-    flex-wrap:wrap;
-    gap:.25rem .65rem;
-    margin:0;
-    color:#504945;
-    font:650 .75rem/1.45 var(--sans);
-  }
-  .archive-vedette-meta span,.archive-vedette-lire span:first-child { color:#84323d; }
-  .archive-vedette-extrait {
-    margin:0;
-    color:#504945;
-    font:480 .9rem/1.55 var(--sans);
-  }
-  .archive-vedette-lire {
-    justify-content:space-between;
-    padding-top:.65rem;
-    border-top:1px solid #d6cdc2;
-  }
-  .selection-suite h3 {
-    margin:0;
-    color:#84323d;
-    font:750 .75rem/1.35 var(--sans);
-    letter-spacing:.06em;
-    text-transform:uppercase;
-  }
-  .selection-suite ul { list-style:none; margin:0; padding:0; }
-  .selection-suite a {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:.75rem;
-    min-height:44px;
-    padding:.8rem 0;
-    border-bottom:1px solid #d6cdc2;
-  }
-  .selection-suite h4 { margin:0; font:650 1.25rem/1.25 var(--serif); }
-  .selection-suite time { color:#504945; font:550 .75rem/1.4 var(--sans); }
-  .selection-suite a > span { color:#84323d; }
-  .selection-entete a:hover,.archive-vedette a:hover h3,.selection-suite a:hover h4 {
-    color:#84323d;
-    text-decoration:underline;
-    text-underline-offset:.12em;
-  }
-  .selection a:focus-visible { outline:2px solid #84323d; outline-offset:3px; }
-  @media(max-width:47.99rem) {
-    .selection-grille { grid-template-columns:minmax(0,1fr); }
-  }
-  .greffe-accueil {
-    margin-top:2.8rem;
-    padding-top:1.3rem;
-    border-top:2px solid #943440;
-  }
-  .greffe-accueil-entete {
-    display:flex;
-    flex-wrap:wrap;
-    align-items:end;
-    justify-content:space-between;
-    gap:.2rem 1rem;
-    margin-bottom:1rem;
-  }
-  .greffe-accueil-entete p {
-    margin:0 0 .45rem;
-    color:#84323d;
-    font:750 .72rem/1.3 var(--sans);
-    letter-spacing:.08em;
-  }
-  .greffe-accueil h2 {
-    margin:0;
-    font:650 clamp(1.9rem,3.4vw,3rem)/1.05 var(--serif);
-  }
-  .greffe-accueil-entete a {
-    display:inline-flex;
-    align-items:center;
-    gap:.45rem;
-    min-height:44px;
-    color:#84323d;
-    font:750 .82rem/1.4 var(--sans);
-  }
-  .greffe-accueil-entete a:hover { text-decoration:underline; }
-  .greffe-accueil-cartes {
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:.75rem;
-    list-style:none;
-    margin:0;
-    padding:0;
-  }
-  .greffe-accueil-cartes a {
-    display:flex;
-    flex-direction:column;
-    gap:.5rem;
-    height:100%;
-    padding:clamp(1rem,2vw,1.5rem);
-    border:1px solid #473a3b;
-    color:#faf6f1;
-    background:#241f20;
-  }
-  .greffe-accueil-cartes a:hover {
-    background:#382b2d;
-    color:#faf6f1;
-  }
-  .greffe-accueil-cartes a:hover h3 {
-    text-decoration:underline;
-    text-underline-offset:.13em;
-  }
-  .greffe-accueil-cartes h3 {
-    margin:0;
-    font:650 clamp(1.5rem,2.45vw,2.1rem)/1.12 var(--serif);
-  }
-  .greffe-accueil-genre {
-    margin:0;
-    color:#ffc5ca;
-    font:750 .7rem/1.4 var(--sans);
-    letter-spacing:.06em;
-    text-transform:uppercase;
-  }
-  .greffe-accueil-auteur,.greffe-accueil-extrait {
-    margin:0;
-    color:#e6dcd5;
-    font:500 .86rem/1.55 var(--sans);
-  }
-  .greffe-accueil-extrait { margin:.2rem 0 .5rem; }
-  .greffe-accueil-ouvrir {
-    display:flex;
-    justify-content:space-between;
-    gap:.5rem;
-    margin-top:auto;
-    padding-top:.6rem;
-    border-top:1px solid #68595b;
-    color:#ffc5ca;
-    font:750 .8rem/1.4 var(--sans);
-  }
-  .greffe-accueil a:focus-visible { outline:2px solid #84323d; outline-offset:3px; }
-  @media(max-width:47.99rem) {
-    .greffe-accueil-cartes { grid-template-columns:minmax(0,1fr); gap:.5rem; }
-  }
-  .univers {
-    margin-top:2.8rem;
-    padding-top:1.3rem;
-    border-top:2px solid #943440;
-  }
-  .univers h2 {
-    margin:0 0 1rem;
-    font:650 clamp(1.9rem,3.4vw,3rem)/1.05 var(--serif);
-  }
-  .rubriques,.rubrique-lectures {
-    list-style:none;
-    margin:0;
-    padding:0;
-  }
-  .rubriques {
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:.75rem;
-  }
-  .rubrique-carte {
-    display:flex;
-    flex-direction:column;
-    gap:.55rem;
-    min-width:0;
-    padding:clamp(.85rem,1.7vw,1.25rem);
-    background:#f4f1eb;
-    border:1px solid #d6cdc2;
-  }
-  .rubrique-carte h3 {
-    margin:0;
-    font:650 clamp(1.45rem,2.2vw,1.95rem)/1.12 var(--serif);
-  }
-  .rubrique-carte h3 a {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:.6rem;
-    min-height:44px;
-  }
-  .rubrique-carte h3 span { color:#84323d; font-size:1.15rem; }
-  .rubrique-description {
-    margin:0;
-    color:#504945;
-    font:480 .86rem/1.55 var(--sans);
-  }
-  .rubrique-lectures li { border-top:1px solid #d6cdc2; }
-  .rubrique-lectures a {
-    display:flex;
-    align-items:center;
-    min-height:44px;
-    padding:.45rem 0;
-    font:650 .95rem/1.3 var(--serif);
-  }
-  .rubrique-volume {
-    margin:auto 0 0;
-    padding-top:.6rem;
-    border-top:1px solid #d6cdc2;
-    color:#84323d;
-    font:700 .75rem/1.4 var(--sans);
-  }
-  .rubrique-carte a:hover {
-    color:#84323d;
-    text-decoration:underline;
-    text-underline-offset:.13em;
-  }
-  .rubrique-carte a:focus-visible { outline:2px solid #84323d; outline-offset:3px; }
-  @media(max-width:64rem) {
-    .rubriques { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  }
-  @media(max-width:36rem) {
-    .rubriques { grid-template-columns:minmax(0,1fr); gap:.5rem; }
-  }
-  .articles-carrousel-scene { position:relative; }
-  .articles-carrousel-fleche {
-    position:absolute;
-    top:1rem;
-    z-index:2;
-    display:grid;
-    place-items:center;
-    width:44px;
-    height:44px;
-    border:1px solid #fff;
-    border-radius:50%;
-    color:#fff;
-    background:#17191ae8;
-    font:750 1.3rem/1 var(--sans);
-    cursor:pointer;
-  }
-  .articles-carrousel-precedent { left:1rem; }
-  .articles-carrousel-suivant { right:1rem; }
-  .articles-carrousel-fleche:hover { background:#84323d; }
-  .articles-carrousel-fleche:focus-visible { outline:2px solid #fff; outline-offset:3px; }
-  .articles-carrousel-fleche ~ .articles-carrousel-piste .article-redaction-une { padding-top:4.5rem; }
-  @media(max-width:47.99rem) {
-    .articles-carrousel-fleche { top:.65rem; }
-    .articles-carrousel-precedent { left:.65rem; }
-    .articles-carrousel-suivant { right:.65rem; }
+  .journal-corps>section,.journal-corps>.outils-accueil{margin:clamp(1.75rem,5vw,3.75rem) 0}
+  .accueil-dossiers,.selection,.greffe-accueil,.univers{border-top:2px solid #84323d;padding-top:1rem}
+  .journal-corps h2{margin:0;font:650 clamp(1.8rem,3.4vw,2.75rem)/1.08 var(--serif)}
+  .accueil-dossiers-entete,.selection-entete,.greffe-accueil-entete{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.45rem 1rem;margin-bottom:1rem}
+  .accueil-dossiers-entete>a,.selection-entete>a,.greffe-accueil-entete>a,.accueil-dossiers-liens>a{color:#84323d;font:750 .82rem/1.4 var(--sans)}
+  .accueil-dossiers-grille,.greffe-accueil-cartes,.rubriques{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;list-style:none;padding:0;margin:0}
+  .accueil-dossiers-grille a,.greffe-accueil-cartes a{display:block;height:100%;padding:1.1rem;background:#f1ede6;border-top:1px solid #c9bcb1}
+  .accueil-dossiers-titre{display:flex;justify-content:space-between;gap:.65rem}
+  .journal-corps h3{margin:0;font:650 clamp(1.25rem,2vw,1.65rem)/1.15 var(--serif)}
+  .journal-corps p{font:500 .9rem/1.55 var(--sans)}
+  .accueil-dossiers-total,.greffe-accueil-genre,.archive-vedette-meta,time{color:#84323d;font:700 .75rem/1.4 var(--sans)}
+  .accueil-dossiers-liens{margin-top:.85rem}
+  .guide-assises{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);background:#262526;color:#fff}
+  .guide-assises figure{margin:0;display:flex;flex-direction:column}
+  .guide-assises img{display:block;width:100%;height:0;min-height:12rem;flex:1;object-fit:cover}
+  .guide-assises figcaption{padding:.5rem .8rem;color:#e7ded4;font:500 .7rem/1.4 var(--sans)}
+  .guide-assises figcaption a{text-decoration:underline}
+  .guide-assises-texte{padding:clamp(1.2rem,4vw,2.75rem)}
+  .guide-assises ul,.selection-suite ul,.rubrique-lectures{list-style:none;margin:0;padding:0}
+  .guide-assises li a{display:flex;justify-content:space-between;gap:.5rem;padding:.75rem 0;border-top:1px solid #71686a;font:700 .85rem/1.4 var(--sans)}
+  .selection-grille{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:1.5rem}
+  .selection-grille-simple{grid-template-columns:minmax(0,1fr)}
+  .archive-vedette{background:#f1ede6;padding:1.3rem}
+  .archive-vedette>a{display:block}
+  .archive-vedette-meta{display:flex;gap:.5rem 1rem;flex-wrap:wrap}
+  .selection-suite ul{margin-top:.65rem}
+  .selection-suite li{border-top:1px solid #d2c8bf}
+  .selection-suite li a{display:flex;justify-content:space-between;gap:.7rem;padding:.65rem 0}
+  .selection-suite h4{margin:0;font:650 .93rem/1.35 var(--sans)}
+  .greffe-accueil-genre{margin:0 0 .4rem}
+  .rubriques{margin-top:1rem}
+  .rubrique-carte{padding:.85rem 0;border-top:1px solid #c9bcb1}
+  .rubrique-carte h3 a{display:flex;justify-content:space-between;gap:.65rem}
+  .rubrique-lectures li{margin:.5rem 0;font:650 .85rem/1.4 var(--sans)}
+  .outils-accueil{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:end;gap:1rem;padding:1.2rem;background:#f1ede6}
+  .outils-accueil label{display:block;margin-bottom:.45rem;font:700 .95rem/1.4 var(--sans)}
+  .accueil-recherche-champs{display:flex;min-height:44px}
+  .accueil-recherche input{flex:1;min-width:0;padding:.65rem;border:1px solid #847872;background:#fff;color:#252525;font:500 1rem/1.3 var(--sans)}
+  .accueil-recherche button{padding:.65rem;background:#84323d;color:#fff;border:0;cursor:pointer;font:700 .8rem var(--sans)}
+  .outils-accueil nav{display:grid;gap:.45rem;font:700 .85rem/1.4 var(--sans)}
+  .journal-corps a:hover{text-decoration:underline;text-underline-offset:.15em}
+  @media(max-width:48rem){
+    .accueil-dossiers-grille,.greffe-accueil-cartes,.rubriques,.guide-assises,.selection-grille,.outils-accueil{grid-template-columns:minmax(0,1fr)}
+    .guide-assises img{height:auto;min-height:0;aspect-ratio:16/9}
   }
 </style>
