@@ -1,12 +1,9 @@
 ---
-import { getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import photoAix from '../assets/palais-verdun-aix.webp';
 import photoBlois from '../assets/blois.webp';
 import photoParis from '../assets/rue-de-la-paix.webp';
 import photoPoissy from '../assets/poissy.webp';
-import photoSalle from '../assets/salle-voltaire.webp';
-import photoTribunal from '../assets/tribunal-paris.webp';
 import AgendaEnBref from '../components/AgendaEnBref.astro';
 import { CULTURE } from '../lib/culture.mjs';
 import { lireVeille } from '../lib/veille.mjs';
@@ -67,91 +64,32 @@ const photosCarrousel = {
     licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
   },
 };
-const photosIllustration = [
-  {
-    image: photoTribunal, lieu: 'Tribunal de Paris', auteur: 'Coppertarzan',
-    source: 'https://commons.wikimedia.org/wiki/File:Tribunal_de_Paris_seen_from_Batignolles_park.jpg',
-    licence: 'CC0', lienLicence: 'https://creativecommons.org/publicdomain/zero/1.0/',
-  },
-  {
-    image: photoSalle, lieu: 'Salle Voltaire, Paris', auteur: 'Tiraden',
-    source: 'https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris_-_salle_Voltaire_(cour_d%27assises).jpg',
-    licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
-  },
-  photoPalaisBlois,
-];
-const photosReservees = new Set(articlesCarrousel.map(({data}) => photosCarrousel[data.chemin]));
-const photosDisponibles = photosIllustration.filter(photo => !photosReservees.has(photo));
-const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) => {
-  const photoArticle = photosCarrousel[data.chemin];
-  const photo = photoArticle ?? photosDisponibles.shift();
-  const { image } = photo;
-  // Portrait 3:4 sur téléphone, avec des variantes adaptées à la définition de l’écran.
-  const largeur = Math.floor(Math.min(image.width, image.height * .75, 720) / 3) * 3;
-  const portrait = await getImage({
-    src: image,
-    width: largeur,
-    height: largeur * 4 / 3,
-    widths: [360, 540].filter(taille => taille < largeur).concat(largeur),
-    fit: 'cover',
-    format: 'webp',
-    quality: 76,
-  });
-  return { data, photo, illustration: !photoArticle, portrait };
-}));
+const articlesUne = articlesCarrousel.map(({data}) => ({data, photo: photosCarrousel[data.chemin]}));
 ---
 <Base accueil>
   <section class="ouverture" aria-labelledby="titre-accueil">
     <div class="cadre ouverture-interieur">
       <h1 id="titre-accueil" class="sr-only">Intime Conviction, le journal des cours d’assises</h1>
-      {articlesCarrousel.length > 0 && (
-        <section class="articles-carrousel" aria-label="Articles de la rédaction à la une" data-editorial-carousel>
-          <div class="articles-carrousel-tete">
-            <p>À LA UNE</p>
-            <div class="articles-carrousel-outils" aria-label="Navigation dans les articles">
-              <button type="button" data-editorial-toggle aria-label="Mettre le défilement automatique en pause" aria-pressed="false" title="Mettre en pause">Ⅱ</button>
-            </div>
-          </div>
-          <div class="articles-carrousel-scene">
-            {articlesCarrousel.length > 1 && (
-              <>
-                <button class="articles-carrousel-fleche articles-carrousel-precedent" type="button" data-editorial-prev aria-controls="piste-carrousel-accueil" aria-label="Article précédent">←</button>
-                <button class="articles-carrousel-fleche articles-carrousel-suivant" type="button" data-editorial-next aria-controls="piste-carrousel-accueil" aria-label="Article suivant">→</button>
-              </>
-            )}
-            <div class="articles-carrousel-piste" id="piste-carrousel-accueil" data-editorial-track tabindex="0" aria-label="Articles de la rédaction à faire défiler">
-              {cartesCarrousel.map(({data, photo, illustration, portrait},i) => {
-                const { image } = photo;
-                return (
-                  <article class="article-redaction-une" aria-label={`Article ${i+1} sur ${articlesCarrousel.length}`}>
-                    <picture class="article-redaction-fond" aria-hidden="true">
-                      <source media="(max-width: 520px)" srcset={portrait.srcSet.attribute} sizes="calc(100vw - 2.5rem)" />
-                      <img
-                        src={image.src}
-                        alt=""
-                        width={image.width}
-                        height={image.height}
-                        loading={i===0?'eager':'lazy'}
-                        fetchpriority={i===0?'high':undefined}
-                        decoding="async"
-                      />
-                    </picture>
-                    <p class="article-redaction-credit">
-                      {illustration && 'Illustration · '}{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a> · cadrée
-                    </p>
-                    <div class="article-redaction-une-texte">
-                      <p class="article-redaction-une-date"><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time> · {rubrique(data.rubrique).libelle}</p>
-                      <h2><a href={data.chemin}>{data.titre}</a></h2>
-                      <p class="article-redaction-une-extrait">{data.extrait}</p>
-                      <a class="article-redaction-une-lien" href={data.chemin}>Lire l’article <span aria-hidden="true">↗</span></a>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-          <div class="articles-carrousel-reperes" aria-label="Choisir un article">
-            {articlesCarrousel.map(({data},i)=><button type="button" data-editorial-dot={i} aria-current={i===0?'true':undefined}>{data.titre}</button>)}
+      {articlesUne.length > 0 && (
+        <section class="une-editoriale" aria-labelledby="une-editoriale-titre">
+          <h2 id="une-editoriale-titre">À la une</h2>
+          <div class="une-editoriale-grille">
+            {articlesUne.map(({data, photo}, i) => (
+              <article class="article-redaction-une">
+                {photo && (
+                  <figure>
+                    <img src={photo.image.src} width={photo.image.width} height={photo.image.height}
+                      alt={photo.lieu} loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} />
+                    <figcaption>{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a> · cadrée</figcaption>
+                  </figure>
+                )}
+                <div class="une-editoriale-texte">
+                  <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
+                  <h3><a href={data.chemin}>{data.titre}</a></h3>
+                  {i === 0 && <p>{data.extrait}</p>}
+                </div>
+              </article>
+            ))}
           </div>
         </section>
       )}
@@ -309,88 +247,7 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 
   </div></div>
 </Base>
-<script>
-  const carrousel = document.querySelector('[data-editorial-carousel]');
-  if (carrousel) {
-    const piste = carrousel.querySelector('[data-editorial-track]');
-    const diapositives = [...piste.querySelectorAll('.article-redaction-une')];
-    const reperes = [...carrousel.querySelectorAll('[data-editorial-dot]')];
-    const boutonPause = carrousel.querySelector('[data-editorial-toggle]');
-    const mouvementReduit = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const DELAI = 8000;
-    let actif = 0;
-    let minuteur = null;
-    let suspenduSurvol = false;
-    let suspenduFocus = false;
-    let suspenduToucher = false;
-    let pauseDemandee = mouvementReduit.matches;
 
-    const afficher = (index, defiler = true) => {
-      actif = (index + diapositives.length) % diapositives.length;
-      reperes.forEach((repere,i) => {
-        if (i === actif) repere.setAttribute('aria-current','true');
-        else repere.removeAttribute('aria-current');
-      });
-      if (defiler) piste.scrollTo({
-        left:diapositives[actif].offsetLeft,
-        behavior:mouvementReduit.matches?'instant':'smooth'
-      });
-    };
-
-    const actualiserBouton = () => {
-      const enPause = pauseDemandee || mouvementReduit.matches;
-      boutonPause.setAttribute('aria-pressed',String(enPause));
-      boutonPause.setAttribute('aria-label',enPause?'Relancer le défilement automatique':'Mettre le défilement automatique en pause');
-      boutonPause.title = enPause?'Relancer le défilement':'Mettre en pause';
-      boutonPause.textContent = enPause?'▶':'Ⅱ';
-    };
-    const arreter = () => {
-      if (minuteur !== null) { window.clearInterval(minuteur); minuteur = null; }
-    };
-    const synchroniser = () => {
-      arreter();
-      actualiserBouton();
-      if (diapositives.length < 2 || pauseDemandee || mouvementReduit.matches ||
-          suspenduSurvol || suspenduFocus || suspenduToucher || document.hidden) return;
-      minuteur = window.setInterval(() => afficher(actif+1), DELAI);
-    };
-    const naviguer = index => { afficher(index); synchroniser(); };
-
-    carrousel.querySelector('[data-editorial-prev]')?.addEventListener('click',()=>naviguer(actif-1));
-    carrousel.querySelector('[data-editorial-next]')?.addEventListener('click',()=>naviguer(actif+1));
-    reperes.forEach((repere,i)=>repere.addEventListener('click',()=>naviguer(i)));
-    boutonPause.addEventListener('click',()=>{pauseDemandee=!pauseDemandee;synchroniser();});
-
-    carrousel.addEventListener('mouseenter',()=>{suspenduSurvol=true;synchroniser();});
-    carrousel.addEventListener('mouseleave',()=>{suspenduSurvol=false;synchroniser();});
-    carrousel.addEventListener('focusin',()=>{suspenduFocus=true;synchroniser();});
-    carrousel.addEventListener('focusout',event=>{
-      if (event.relatedTarget instanceof Node && carrousel.contains(event.relatedTarget)) return;
-      suspenduFocus=false;synchroniser();
-    });
-    piste.addEventListener('touchstart',()=>{suspenduToucher=true;synchroniser();},{passive:true});
-    piste.addEventListener('touchend',()=>{suspenduToucher=false;synchroniser();},{passive:true});
-    piste.addEventListener('touchcancel',()=>{suspenduToucher=false;synchroniser();},{passive:true});
-    document.addEventListener('visibilitychange',synchroniser);
-    mouvementReduit.addEventListener('change',event=>{pauseDemandee=event.matches;synchroniser();});
-
-    let raf=0;
-    piste.addEventListener('scroll',()=>{
-      cancelAnimationFrame(raf);
-      raf=requestAnimationFrame(()=>{
-        const centre=piste.scrollLeft + piste.clientWidth/2;
-        let index=0, distance=Infinity;
-        diapositives.forEach((slide,i)=>{
-          const ecart=Math.abs(slide.offsetLeft+slide.clientWidth/2-centre);
-          if(ecart<distance){distance=ecart;index=i;}
-        });
-        afficher(index,false);
-      });
-    },{passive:true});
-    afficher(0,false);
-    synchroniser();
-  }
-</script>
 <style>
   .ouverture{background:var(--papier);color:var(--encre);padding-top:0}.ouverture-interieur{padding-top:1.1rem;padding-bottom:0}h1{font-size:clamp(2.15rem,3.6vw,3.25rem);line-height:1.04;font-weight:600;letter-spacing:-.035em;margin:0;max-width:22ch}h1 a:hover{color:#fff;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.15em}
   .surface-lecture{background:color-mix(in srgb,var(--papier) 97%,transparent)}.journal-corps{padding-top:.1rem;padding-bottom:4rem}.journal-corps :global(.titre-section){margin-top:3.5rem}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
@@ -471,54 +328,25 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
 }
 
 /* Le dernier article du journal précède la revue de presse externe. */
-.article-redaction-une{margin:1.4rem 0 2.5rem;border:1px solid #a9a49c;border-top:5px solid #a12c39;background:#fff;color:#181b1c;padding:clamp(1.35rem,3vw,2.8rem);max-width:100%}
-.article-redaction-une-texte{max-width:83ch}
-.article-redaction-une-kicker{font:850 .72rem/1.45 var(--sans);color:#8f2734;letter-spacing:.08em;margin:0 0 .9rem}
-.article-redaction-une-date{font:650 .76rem/1.4 var(--sans);color:#565b5e;margin:0 0 1rem}
-.article-redaction-une h2{font:750 clamp(1.75rem,3.3vw,3.25rem)/1.08 var(--sans);letter-spacing:-.045em;margin:0 0 1rem}
-.article-redaction-une h2 a:hover{text-decoration:underline;text-decoration-color:#a12c39;text-underline-offset:.13em}
-.article-redaction-une-extrait{font:460 clamp(.96rem,1.2vw,1.13rem)/1.62 var(--sans);margin:0 0 1.2rem;max-width:75ch}
-.article-redaction-une-lien{display:inline-flex;gap:1.8rem;align-items:center;background:#161819;color:#fff;padding:.85rem 1.05rem;font:750 .8rem/1.4 var(--sans)}
-.article-redaction-une-lien:hover{background:#a12c39;color:#fff}
-@media(max-width:48rem){.article-redaction-une{margin:1rem 0 1.7rem}.article-redaction-une h2{font-size:clamp(1.8rem,7vw,2.5rem)}}
-
-/* Une éditoriale : trois publications distinctes, navigation explicite et tactile. */
-
-.articles-carrousel{margin:0 0 2rem;min-width:0}
-.articles-carrousel-tete{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 0;border-top:1px solid #8b8881}
-.articles-carrousel-tete p{font:800 .75rem/1.4 var(--sans);letter-spacing:.08em;margin:0}
-.articles-carrousel-outils{display:flex;align-items:center;gap:.6rem}
-.articles-carrousel-outils span{font:750 .75rem/1.2 var(--sans);min-width:4rem;text-align:center;font-variant-numeric:tabular-nums}
-.articles-carrousel-outils button{width:44px;height:44px;border:1px solid #272727;color:#17191a;background:transparent;font:700 1.3rem/1 var(--sans);cursor:pointer}
-.articles-carrousel-outils button:hover,.articles-carrousel-outils button:focus-visible{background:#17191a;color:white}
-.articles-carrousel-piste{position:relative;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;gap:0}
-.articles-carrousel-piste::-webkit-scrollbar{display:none}
-.articles-carrousel-piste .article-redaction-une{flex:0 0 100%;scroll-snap-align:start;min-width:0;margin:0;min-height:340px;display:flex;align-items:center}
-.articles-carrousel-reperes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.65rem;margin-top:.85rem}
-.articles-carrousel-reperes button{border:0;border-bottom:3px solid #9c9b95;background:transparent;min-height:44px;padding:.65rem;text-align:left;font:700 .9rem/1.35 var(--sans);color:#333;cursor:pointer}
-.articles-carrousel-reperes button[aria-current="true"]{border-color:#a12c39;color:#a12c39}
-.articles-carrousel-piste:focus-visible{outline:3px solid #a12c39;outline-offset:3px}
-@media(max-width:47.99rem){.articles-carrousel-piste .article-redaction-une{min-height:400px}.articles-carrousel-tete p{font-size:.62rem}}
-@media(prefers-reduced-motion:reduce){.articles-carrousel-piste{scroll-behavior:auto}}
-
-.articles-carrousel-outils [data-editorial-toggle]{font-size:1rem;min-width:44px}
-.articles-carrousel-outils button:focus-visible,.articles-carrousel-reperes button:focus-visible{outline:3px solid #a12c39;outline-offset:2px}
-
-  /* Carrousel de Une : une photographie de fond différente sur chaque article. */
-  .articles-carrousel .article-redaction-une{position:relative;isolation:isolate;display:flex;align-items:flex-end;min-height:clamp(400px,48vw,620px);padding:clamp(1.2rem,4vw,3.75rem);overflow:hidden;background:#272523;color:#fff}
-  .articles-carrousel .article-redaction-fond{position:absolute;inset:0;z-index:-2}
-  .articles-carrousel .article-redaction-fond img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 25%}
-  .articles-carrousel .article-redaction-une::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(9,8,8,.93),rgba(9,8,8,.78) 36%,rgba(9,8,8,.18) 65%,transparent 82%);pointer-events:none}
-  .articles-carrousel .article-redaction-une-texte{position:relative;z-index:1;max-width:700px}
-  .articles-carrousel .article-redaction-une-kicker{color:#ffd9d5}
-  .articles-carrousel .article-redaction-une-date{color:#f0e6e0}
-  .articles-carrousel .article-redaction-une h2,.articles-carrousel .article-redaction-une h2 a{color:#fff}
-  .articles-carrousel .article-redaction-une-extrait{color:#f3ece6}
-  .articles-carrousel .article-redaction-une-lien{background:#a12c39;color:#fff;border:1px solid #f5d4d0}
-  .articles-carrousel .article-redaction-une-lien:hover{background:#7d1f2c}
-  .articles-carrousel .article-redaction-credit{position:absolute;right:1rem;bottom:.7rem;z-index:1;margin:0;color:#eee;font:500 .59rem/1.4 var(--sans);text-shadow:0 1px 4px #000}
-  .articles-carrousel .article-redaction-credit a{text-decoration:underline;text-underline-offset:.15em}
-  @media(max-width:720px){.articles-carrousel .article-redaction-une{display:flex;min-height:520px;padding:1.2rem 1.2rem 2.4rem;align-items:flex-end}.articles-carrousel .article-redaction-une::before{background:linear-gradient(0deg,rgba(9,8,8,.94),rgba(9,8,8,.81) 39%,rgba(9,8,8,.23) 70%,transparent 88%)}.articles-carrousel .article-redaction-credit{left:1.2rem;right:auto;bottom:.55rem}.articles-carrousel .article-redaction-une h2{font-size:clamp(1.65rem,7vw,2.5rem)}}
+  .une-editoriale{margin:0 0 clamp(1.4rem,4vw,3rem)}
+  .une-editoriale>h2{border-top:3px solid #943440;padding:.75rem 0;margin:0;color:#84323d;font:800 .8rem/1.4 var(--sans);letter-spacing:.1em;text-transform:uppercase}
+  .une-editoriale-grille{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:1rem 1.8rem}
+  .article-redaction-une{min-width:0;border-bottom:1px solid #c7bdb2;padding-bottom:1rem}
+  .article-redaction-une:first-child{grid-row:span 2}
+  .article-redaction-une figure{margin:0 0 .55rem}
+  .article-redaction-une img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+  .article-redaction-une:first-child img{aspect-ratio:2/1}
+  .article-redaction-une figcaption{color:#554b47;font:500 .68rem/1.4 var(--sans);margin-top:.35rem}
+  .article-redaction-une figcaption a{text-decoration:underline}
+  .une-editoriale-texte time{color:#84323d;font:750 .76rem/1.4 var(--sans)}
+  .une-editoriale-texte h3{margin:.35rem 0 0;font:650 clamp(1.35rem,2.2vw,2rem)/1.1 var(--serif)}
+  .article-redaction-une:first-child h3{font-size:clamp(2rem,4.2vw,3.85rem);letter-spacing:-.025em}
+  .une-editoriale-texte p{max-width:65ch;margin:.7rem 0 0;font:500 1rem/1.55 var(--sans)}
+  .une-editoriale a:hover{text-decoration:underline;text-underline-offset:.14em}
+  @media(max-width:48rem){
+    .une-editoriale-grille{grid-template-columns:minmax(0,1fr)}
+    .article-redaction-une:first-child{grid-row:auto}
+  }
 
   .outils-accueil {
     display:grid;
@@ -581,7 +409,7 @@ const cartesCarrousel = await Promise.all(articlesCarrousel.map(async ({data}) =
   }
   .accueil-dossiers-grille {
     display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-template-columns:repeat(3,minmax(0,1fr));
     gap:.75rem;
     list-style:none;
     margin:1rem 0 0;
