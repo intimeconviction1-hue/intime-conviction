@@ -1,6 +1,7 @@
 ---
 import { getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import photoAix from '../assets/palais-verdun-aix.webp';
 import photoBlois from '../assets/blois.webp';
 import photoParis from '../assets/rue-de-la-paix.webp';
 import photoPoissy from '../assets/poissy.webp';
@@ -57,6 +58,11 @@ const photoPalaisBlois = {
 };
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 const photosCarrousel = {
+  '/proces-sollacaro-et-tout-recommence-aux-assises/11/2026/': {
+    image: photoAix, lieu: 'Palais Verdun, Aix-en-Provence', auteur: 'Lsmpascal',
+    source: 'https://commons.wikimedia.org/wiki/File:Palais_de_justice_Aix-en-Provence.jpg',
+    licence: 'CC BY-SA 3.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/3.0/',
+  },
   '/inass-touloub-a-blois-le-poids-des-trente-neuf-annees/11/2026/': photoPalaisBlois,
   '/piaget-le-braqueur-au-borsalino-revient-devant-les-assises/11/2026/': {
     image: photoParis, lieu: 'Rue de la Paix, Paris', auteur: 'Mustang Joe',
