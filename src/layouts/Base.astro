@@ -20,29 +20,27 @@ const imagePartage = image ? new URL(image, Astro.site).href : (accueil ? new UR
 const annee = new Date().getFullYear();
 const navigation = [
   { titre: 'Actualité', href: '/rubrique/cours-du-jour/', liens: [
-    {titre:'Articles de la rédaction',href:'/rubrique/cours-du-jour/#articles-redaction'},
     {titre:'Chroniques d’audience',href:'/rubrique/la-cour-se-leve/'},
-    {titre:'Dans la presse',href:'/rubrique/cours-du-jour/#actualites'},
   ] },
   { titre: 'Agenda', href: '/agenda/', liens: [
-    {titre:'Sessions annoncées',href:'/agenda/'},
     {titre:'Sources de l’agenda',href:'/veille-roles/'},
   ] },
   { titre: 'Affaires', href: '/dossiers/', liens: [
-    {titre:'Dossiers judiciaires',href:'/dossiers/'},
-    {titre:'Carte des affaires',href:'/carte/'},
     {titre:'Chronologie des affaires',href:'/chronologie/'},
   ] },
   { titre: 'Comprendre', href: '/comprendre/', liens: [
-    {titre:'Les règles du procès',href:'/comprendre/'},
     {titre:'Assister à une audience',href:'/assister/'},
-    {titre:'Liste des juridictions',href:'/annuaire/#repertoire'},
     {titre:'Jurisprudence',href:'/jurisprudence/'},
   ] },
   { titre: 'Archives', href: '/archives/', liens: [
-    {titre:'Archives du journal',href:'/archives/'},
     {titre:'Archives de presse',href:'/archives/presse/'},
   ] },
+];
+const accesDirects = [
+  { href: '/rubrique/cours-du-jour/#articles-redaction', titre: 'Nos articles' },
+  { href: '/rubrique/cours-du-jour/#actualites', titre: 'Revue de presse' },
+  { href: '/annuaire/#repertoire', titre: 'Annuaire des juridictions' },
+  { href: '/carte/', titre: 'Carte des affaires' },
 ];
 const piedNavigation = [
   { titre: 'Le journal', liens: [
@@ -127,15 +125,22 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
           </li>)}
           <li>
             <details name="navigation-principale" class="navigation-rubriques">
-              <summary>Rubriques <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></summary>
+              <summary>À lire <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></summary>
               <ul>
-                {RUBRIQUES.map(r=>{
+                {RUBRIQUES.filter(r=>!['cours-du-jour','la-cour-se-leve'].includes(r.slug)).map(r=>{
                   const href = `/rubrique/${r.slug}/`;
                   return <li><a href={href} aria-current={courant(href)}>{r.libelle}</a></li>;
                 })}
               </ul>
             </details>
           </li>
+        </ul>
+      </nav>
+      <nav class="acces-directs cadre" aria-label="Accès rapides">
+        <ul>
+          {accesDirects.map(({href, titre}) => (
+            <li><a href={href}>{titre}<span aria-hidden="true">↗</span></a></li>
+          ))}
         </ul>
       </nav>
     </header>
@@ -194,6 +199,16 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     .entete .recherche-lien span{position:static;width:auto;height:auto;overflow:visible;clip-path:none;white-space:nowrap}
     .entete .recherche-lien svg{width:18px;height:18px}
     .entete .recherche-lien:hover,.avec-fond .entete .recherche-lien:hover{background:#9b303d;border-color:#9b303d;color:#fff!important}
+.acces-directs{margin:0 auto;padding-block:.45rem}
+.acces-directs ul{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.4rem;list-style:none;margin:0;padding:0}
+.acces-directs a{display:flex;align-items:center;justify-content:space-between;gap:.4rem;min-height:44px;height:100%;padding:.5rem .7rem;border:1px solid #c7bdb2;background:#f0ebe4;color:#252a2d;font:750 .78rem/1.25 var(--sans);text-transform:uppercase}
+.acces-directs a span{color:#84323d}
+.acces-directs a:hover,.acces-directs a:focus-visible{border-color:#84323d;text-decoration:underline}
+.acces-directs a:focus-visible{outline:2px solid #84323d;outline-offset:-3px}
+@media(max-width:47.99rem){
+  .acces-directs ul{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+    .navigation-principale :is(a,summary),.entete .recherche-lien{text-transform:uppercase}
     .navigation-principale{position:relative;z-index:20;background:#edeae4;border-block:1px solid #d8d2cb}
     .navigation-principale ul{margin-block:0;list-style:none}
     .navigation-principale>.cadre{display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}
