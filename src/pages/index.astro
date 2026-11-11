@@ -65,7 +65,12 @@ const photosUne = {
     licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
   },
 };
-const articlesUne = selectionUne.map(({data}) => ({data, photo: photosUne[data.chemin]}));
+const repereUne = {
+  '/proces-sollacaro-et-tout-recommence-aux-assises/11/2026/': 'Aix-en-Provence · Cour d’assises · Nouveau procès',
+};
+const articlesUne = selectionUne.map(({data}) => ({
+  data, photo: photosUne[data.chemin], repere: repereUne[data.chemin],
+}));
 ---
 <Base accueil>
   <section class="ouverture" aria-labelledby="titre-accueil">
@@ -75,7 +80,7 @@ const articlesUne = selectionUne.map(({data}) => ({data, photo: photosUne[data.c
         <section class="une-editoriale" aria-labelledby="une-editoriale-titre">
           <h2 id="une-editoriale-titre">À la une</h2>
           <div class="une-editoriale-grille">
-            {articlesUne.map(({data, photo}, i) => (
+            {articlesUne.map(({data, photo, repere}, i) => (
               <article class="article-redaction-une">
                 {photo && (
                   <figure>
@@ -86,8 +91,9 @@ const articlesUne = selectionUne.map(({data}) => ({data, photo: photosUne[data.c
                 )}
                 <div class="une-editoriale-texte">
                   <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
+                  {repere && <p class="repere-proces">{repere}</p>}
                   <h3><a href={data.chemin}>{data.titre}</a></h3>
-                  {i === 0 && <p>{data.extrait}</p>}
+                  {i === 0 && <><p>{data.extrait}</p><a class="lire-une" href={data.chemin}>Lire l’article <span aria-hidden="true">↗</span></a></>}
                 </div>
               </article>
             ))}
@@ -115,7 +121,7 @@ const articlesUne = selectionUne.map(({data}) => ({data, photo: photosUne[data.c
                 </div>
                 <p id={`accueil-dossier-repere-${d.slug}`}>{d.derniere.titre}</p>
                 <span class="accueil-dossiers-total">
-                  {d.derniere.source}
+                  {d.derniere.source} · <time datetime={d.derniere.dateAlerte}>{dateLongue(new Date(d.derniere.dateAlerte + "T12:00:00Z"))}</time>
                 </span>
               </a>
             </li>
@@ -314,4 +320,12 @@ const articlesUne = selectionUne.map(({data}) => ({data, photo: photosUne[data.c
     .accueil-dossiers-grille,.greffe-accueil-cartes,.rubriques,.guide-assises,.selection-grille,.outils-accueil{grid-template-columns:minmax(0,1fr)}
     .guide-assises img{height:auto;min-height:0;aspect-ratio:16/9}
   }
+  .article-redaction-une:first-child{background:#262526;color:#fff;padding-bottom:0;border-bottom:0}
+  .article-redaction-une:first-child figure{margin:0}
+  .article-redaction-une:first-child figcaption{padding:.45rem 1rem;color:#e5d9cf}
+  .article-redaction-une:first-child .une-editoriale-texte{padding:clamp(1rem,3vw,2rem)}
+  .article-redaction-une:first-child time{color:#f1bebf}
+  .une-editoriale-texte .repere-proces{margin:.45rem 0;font:750 .72rem/1.45 var(--sans);letter-spacing:.06em;text-transform:uppercase}
+  .lire-une{display:inline-flex;align-items:center;gap:.7rem;min-height:44px;margin-top:1rem;padding:.45rem .85rem;background:#84323d;color:#fff;font:750 .85rem/1.3 var(--sans)}
+  .lire-une:focus-visible{outline:2px solid white;outline-offset:3px}
 </style>
