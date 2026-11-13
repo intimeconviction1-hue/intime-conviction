@@ -1,4 +1,6 @@
 ---
+import VisuelAssises from '../../components/VisuelAssises.astro';
+import photoAssises from '../../assets/assises-landru.webp';
 import Base from '../../layouts/Base.astro';
 import { tousLesArticles } from '../../lib/articles.mjs';
 import { lireVeille } from '../../lib/veille.mjs';
@@ -23,10 +25,13 @@ const totalArticles = articles.length.toLocaleString('fr-FR');
 const totalPresse = veille.articles.length.toLocaleString('fr-FR');
 ---
 <Base titre="Archives" description="Les archives d’Intime Conviction et les articles de presse consacrés aux procès criminels, classés par année." rubriqueActive="archives">
-  <header class="titre-page archives-tete">
+  <header class="titre-page archives-tete ouverture-illustree">
+    <div>
     <p class="etiquette">INTIME CONVICTION</p>
     <h1>ARCHIVES<br /><span>DU JOURNAL.</span></h1>
     <p class="sous-titre">Retrouvez les articles et les archives de presse, année par année.</p>
+    </div>
+    <VisuelAssises image={photoAssises} alt="Plaidoirie de Moro-Giafferi au procès Landru, assises de Versailles, novembre 1921" source="https://gallica.bnf.fr/ark:/12148/btv1b530737165" credit="Agence Rol / BnF, Gallica" prioritaire />
   </header>
 
   <div class="fonds-legende" aria-label="Comprendre les deux collections">
@@ -136,4 +141,6 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
 .acces-dossiers a{background:#a12c39;color:#fff;font-weight:700}
 .acces-dossiers a:hover{background:#842631;color:#fff}
 
+  .ouverture-illustree{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);align-items:center;gap:clamp(1rem,3vw,2.5rem)}
+  @media(max-width:52rem){.ouverture-illustree{grid-template-columns:minmax(0,1fr)}}
 </style>

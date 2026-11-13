@@ -1,4 +1,7 @@
 ---
+import VisuelAssises from '../components/VisuelAssises.astro';
+import photoAssises from '../assets/salle-voltaire.webp';
+import codeAssises from '../assets/code-procedure-penale-croquis.webp';
 import Base from '../layouts/Base.astro';
 import { ETAPES_ASSISES, ACTEURS_ASSISES, LEXIQUE_ASSISES } from '../lib/guide-assises.mjs';
 const sources=[
@@ -8,11 +11,14 @@ const sources=[
 ];
 ---
 <Base titre="Comprendre les assises" description="De la mise en accusation au verdict : une exploration originale du procès criminel, de ses douze étapes, de ses acteurs et de vingt mots de procédure." rubriqueActive="comprendre">
-  <header class="ouverture">
+  <header class="ouverture ouverture-illustree">
+    <div>
     <p class="kicker">INTIME CONVICTION / LES RÈGLES DU PROCÈS</p>
     <h1>COMPRENDRE<br /><span>LE PROCÈS CRIMINEL.</span></h1>
     <p class="chapô">Ce qui se joue derrière la porte d’une cour d’assises : les règles, les personnes, le temps de la parole et celui du jugement. Avec des explications précises et des références aux textes.</p>
     <div class="stats"><span><strong>12</strong> étapes du procès</span><span><strong>8</strong> acteurs à connaître</span><span><strong>{LEXIQUE_ASSISES.length}</strong> mots de justice</span></div>
+    </div>
+    <VisuelAssises image={codeAssises} alt="Code de procédure pénale" source="https://www.legifrance.gouv.fr/codes/id/LEGITEXT000006071154/" credit="Illustration générée pour Intime Conviction" prioritaire />
   </header>
   <nav class="sommaire" aria-label="Dans ce guide">
     <a href="#juridictions">QUI JUGE QUOI ? <span aria-hidden="true">↘</span></a>
@@ -31,6 +37,7 @@ const sources=[
   </section>
   <section id="etapes" class="etapes" aria-labelledby="titre-etapes">
     <div class="head-section"><p>02 / DANS LA SALLE D’AUDIENCE</p><h2 id="titre-etapes">DOUZE TEMPS.<br /><mark>UN PROCÈS.</mark></h2><div class="intro-section">La séquence varie selon la juridiction, les incidents de procédure, la nature des débats et la durée des audiences. Ces douze repères aident à lire ce qui se passe, sans prétendre imposer un ordre identique à tous les procès.</div></div>
+    <VisuelAssises image={photoAssises} alt="Salle Voltaire de la cour d’assises, Paris" source="https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris_-_salle_Voltaire_(cour_d%27assises).jpg" credit="Tiraden" licence="CC BY-SA 4.0" licenceUrl="https://creativecommons.org/licenses/by-sa/4.0/" />
     <ol class="timeline">
       {ETAPES_ASSISES.map((e,i)=><li><span class="index">{String(i+1).padStart(2,'0')}</span><div><h3>{e.titre}</h3><p>{e.texte}</p></div></li>)}
     </ol>
@@ -160,4 +167,6 @@ const sources=[
 
 .jures-lecture{display:flex;align-items:center;justify-content:space-between;gap:1.4rem 2rem;flex-wrap:wrap;border:2px solid #151718;border-left:8px solid #ffe100;padding:1.5rem;margin:2rem 0;background:#f6f5f0}
 .jures-lecture>div{flex:1 1 340px;min-width:0}.jures-lecture>div>p:first-child{font:850 .66rem var(--sans);letter-spacing:.07em;margin:0 0 .6rem}.jures-lecture h3{font:800 clamp(1.4rem,2.4vw,2.2rem)/1.15 var(--sans);margin:0 0 .7rem;letter-spacing:-.03em}.jures-lecture>div>p:last-child{font:500 .9rem/1.55 var(--sans);margin:0}.jures-lecture>a{display:flex;align-items:center;justify-content:center;gap:.6rem;min-height:48px;padding:.8rem 1rem;background:#151718;color:white;font:800 .72rem var(--sans);text-transform:uppercase}.jures-lecture>a:hover{background:#a12c39}
+  .ouverture-illustree{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);align-items:center;gap:clamp(1rem,3vw,2.5rem)}
+  @media(max-width:52rem){.ouverture-illustree{grid-template-columns:minmax(0,1fr)}}
 </style>

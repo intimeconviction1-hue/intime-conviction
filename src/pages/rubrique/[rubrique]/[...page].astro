@@ -1,4 +1,6 @@
 ---
+import VisuelAssises from '../../../components/VisuelAssises.astro';
+import photoAssises from '../../../assets/salle-voltaire.webp';
 import Base from '../../../layouts/Base.astro';
 import ListeArticles from '../../../components/ListeArticles.astro';
 import Actualites from '../../../components/Actualites.astro';
@@ -57,10 +59,13 @@ const suite = page.data.filter(article=>!aLaUne.includes(article));
       }))
     }
   })} />
-  <header class="titre-page">
+  <header class:list={["titre-page", {"ouverture-illustree": page.currentPage === 1 && r.slug === "la-cour-se-leve"}]}>
+    <div>
     <p class="etiquette">Rubrique</p>
     <h1>{r.libelle}</h1>
     <p class="meta">{page.total.toLocaleString('fr-FR')} articles d’archives · page {page.currentPage} sur {page.lastPage}</p>
+    </div>
+    {page.currentPage === 1 && r.slug === "la-cour-se-leve" && <VisuelAssises image={photoAssises} alt="Salle Voltaire de la cour d’assises, Paris" source="https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris_-_salle_Voltaire_(cour_d%27assises).jpg" credit="Tiraden" licence="CC BY-SA 4.0" licenceUrl="https://creativecommons.org/licenses/by-sa/4.0/" prioritaire />}
   </header>
   {page.currentPage === 1 && liensRubrique.length > 0 && (
     <nav class="ressources-rubrique" aria-label={`Accès thématiques : ${r.libelle}`}>
@@ -108,4 +113,6 @@ const suite = page.data.filter(article=>!aLaUne.includes(article));
   .lecture-jures h2 a:hover,.lecture-jures h2 a:focus-visible{color:#ffe100}
   .lecture-jures>p:not(.lecture-jures-surtitre){font:450 1.02rem/1.65 var(--sans);max-width:70ch;color:#e0e0df}
   .lecture-jures-action{display:inline-flex;align-items:center;min-height:44px;padding-bottom:.4rem;margin-top:.4rem;border-bottom:3px solid #ffe100;font:800 .75rem/1.3 var(--sans);text-transform:uppercase;letter-spacing:.05em}
+  .ouverture-illustree{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);align-items:center;gap:clamp(1rem,3vw,2.5rem)}
+  @media(max-width:52rem){.ouverture-illustree{grid-template-columns:minmax(0,1fr)}}
 </style>

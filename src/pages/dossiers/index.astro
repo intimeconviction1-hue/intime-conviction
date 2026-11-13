@@ -1,4 +1,6 @@
 ---
+import VisuelAssises from '../../components/VisuelAssises.astro';
+import photoAssises from '../../assets/assises-bordeaux.webp';
 import Base from '../../layouts/Base.astro';
 import { lireVeille } from '../../lib/veille.mjs';
 import { DOSSIERS, referencesPourDossier, statistiquesDossier } from '../../lib/dossiers.mjs';
@@ -18,12 +20,15 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
   description="Les affaires criminelles suivies par la presse : articles, décisions et chronologies judiciaires."
   rubriqueActive="dossiers"
 >
-  <header class="en-tete-dossiers">
+  <header class="en-tete-dossiers ouverture-illustree">
+    <div>
     <p class="code-dossier">Les affaires et leurs sources</p>
     <p class="en-tete-sur">Dossiers judiciaires</p>
     <h1>Les dossiers<br /><span>judiciaires</span></h1>
     <p class="sous-titre">Les grandes affaires criminelles, à travers les articles de presse et les étapes judiciaires documentées.</p>
     <div class="chiffres"><span><strong>{dossiers.length}</strong> dossiers thématiques</span><span><strong>{nombre(totalReferences)}</strong> liens répertoriés</span></div>
+    </div>
+    <VisuelAssises image={photoAssises} alt="Salle de la cour d’assises, palais Thiac, Bordeaux" source="https://commons.wikimedia.org/wiki/File:Palais_Thiac,_Salle_d%27audience_de_la_cour_d%27assises.jpg" credit="Tiraden" licence="CC BY-SA 4.0" licenceUrl="https://creativecommons.org/licenses/by-sa/4.0/" prioritaire />
   </header>
   <aside class="lien-chronologie">
     <div><span>Repères judiciaires documentés</span><strong>Les étapes des procédures</strong><p>Ouvertures d’audience, verdicts et appels : retrouvez les dates et les décisions documentées pour chaque affaire.</p></div>
@@ -145,4 +150,6 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
  .cartes a{min-height:unset}
  .lien-chronologie a{max-width:none}
 }
+  .ouverture-illustree{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);align-items:center;gap:clamp(1rem,3vw,2.5rem)}
+  @media(max-width:52rem){.ouverture-illustree{grid-template-columns:minmax(0,1fr)}}
 </style>

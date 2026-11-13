@@ -1,0 +1,13 @@
+---
+const { image, alt, source, credit, licence, licenceUrl, prioritaire = false } = Astro.props;
+---
+<figure class="visuel-assises">
+  <img src={image.src} width={image.width} height={image.height} alt={alt} loading={prioritaire ? 'eager' : 'lazy'} decoding="async" />
+  <figcaption>{alt} · <a href={source}>{credit}</a>{licence && <> · <a href={licenceUrl}>{licence}</a></>}</figcaption>
+</figure>
+<style>
+  .visuel-assises{margin:0;background:#f7f3ec;min-width:0;color:#34302c}
+  img{display:block;width:100%;height:auto;max-height:24rem;object-fit:contain}
+  figcaption{padding:.65rem .8rem;font:.76rem/1.45 var(--sans);border-top:1px solid #d9cfc3}
+  a{text-decoration:underline;text-underline-offset:.14em}
+</style>
