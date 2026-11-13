@@ -1,4 +1,5 @@
-import photoCode from '../assets/code-procedure-penale-croquis.webp';
+import photoCode from '../assets/code-procedure-penale.webp';
+import croquisDelibere from '../assets/dossier-delibere-croquis.webp';
 import photoAix from '../assets/palais-verdun-aix.webp';
 import photoBlois from '../assets/blois.webp';
 import photoParis from '../assets/rue-de-la-paix.webp';
@@ -23,7 +24,6 @@ const photoPalaisBlois = {
 export const photosArticles = {
   '/assises-que-dit-la-feuille-de-motivation/11/2026/': {
     image: photoCode,
-    croquis: true,
     lieu: 'Code de procédure pénale',
     auteur: 'Illustration générée pour Intime Conviction',
     source: photoCode.src,
@@ -31,11 +31,11 @@ export const photosArticles = {
     lienLicence: 'https://www.legifrance.gouv.fr/codes/id/LEGITEXT000006071154/',
   },
   '/assises-quand-le-dossier-revient-au-delibere/11/2026/': {
-    image: photoCode,
+    image: croquisDelibere,
     croquis: true,
-    lieu: 'Code de procédure pénale',
+    lieu: 'Dossier judiciaire fermé sur un code',
     auteur: 'Illustration générée pour Intime Conviction',
-    source: photoCode.src,
+    source: croquisDelibere.src,
     licence: 'Texte officiel',
     lienLicence: 'https://www.legifrance.gouv.fr/codes/id/LEGITEXT000006071154/',
   },
