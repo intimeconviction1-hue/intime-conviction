@@ -15,12 +15,22 @@ import { tousLesArticles, dateLongue } from '../lib/articles.mjs';
 
 const articles = await tousLesArticles();
 const veille = await lireVeille();
-const selectionUne = articles.slice(0, 3);
-const [archiveUne, ...derniers] = articles
-  .slice(selectionUne.length)
-  .filter(({data}) => data.verificationEnCours !== true)
-  .slice(0, 4);
-const vus = new Set([...selectionUne,archiveUne,...derniers].filter(Boolean).map(a=>a.data.slug));
+const articlesVerifies = articles.filter(({data}) => data.verificationEnCours !== true);
+const selectionUne = articlesVerifies.slice(0, 3);
+// Sept dates civiles, aujourd’hui compris, selon l’heure de Paris.
+const dateParis = new Intl.DateTimeFormat('fr-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' });
+const debutSemaine = new Date(dateParis.format(new Date()) + 'T00:00:00Z');
+debutSemaine.setUTCDate(debutSemaine.getUTCDate() - 6);
+const limiteRecente = debutSemaine.toISOString().slice(0, 10);
+const [articlesRecents, articlesArchives] = articlesVerifies.slice(selectionUne.length)
+  .reduce(([recents, anciens], article) => {
+    const groupe = dateParis.format(article.data.date) >= limiteRecente ? recents : anciens;
+    groupe.push(article);
+    return [recents, anciens];
+  }, [[], []]);
+const dernieresPublications = articlesRecents.slice(0, 5);
+const [archiveUne, ...derniers] = articlesArchives.slice(0, 4);
+const vus = new Set([...selectionUne, ...dernieresPublications, archiveUne, ...derniers].filter(Boolean).map(a => a.data.slug));
 const descriptionsRubriques = {
   'cours-du-jour': 'Le suivi des procès criminels et de leurs audiences.',
   'le-banc-des-jures': 'Les règles du procès, les jurés et les autres acteurs de l’audience.',
@@ -106,6 +116,26 @@ const articlesUne = selectionUne.map(({data}) => ({
   </section>
 
   <div class="surface-lecture"><div class="cadre journal-corps">
+    {dernieresPublications.length > 0 && (
+      <section class="dernieres-publications" aria-labelledby="titre-dernieres-publications">
+        <div class="selection-entete">
+          <h2 id="titre-dernieres-publications">Derniers articles</h2>
+          <a href="/rubrique/cours-du-jour/#articles-redaction">Toute l’actualité de la rédaction <span aria-hidden="true">↗</span></a>
+        </div>
+        <ul>
+          {dernieresPublications.map(({data}) => (
+            <li>
+              <a href={data.chemin}>
+                <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
+                <h3>{data.titre}</h3>
+                <span aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
     <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
       <div class="accueil-dossiers-entete">
         <h2 id="titre-dossiers-accueil">Les affaires à suivre</h2>
@@ -277,7 +307,17 @@ const articlesUne = selectionUne.map(({data}) => ({
   }
 
   .journal-corps>section,.journal-corps>.outils-accueil{margin:clamp(1.75rem,5vw,3.75rem) 0}
-  .accueil-dossiers,.selection,.greffe-accueil,.univers{border-top:2px solid #84323d;padding-top:1rem}
+  .dernieres-publications ul{list-style:none;margin:0;padding:0;border-bottom:1px solid #d2c8bf}
+  .dernieres-publications li{border-top:1px solid #d2c8bf}
+  .dernieres-publications li a{display:grid;grid-template-columns:10rem minmax(0,1fr) auto;align-items:baseline;gap:.35rem 1rem;padding:.75rem .35rem;min-height:44px}
+  .dernieres-publications li a:hover{background:#f1ede6}
+  .dernieres-publications li a:focus-visible{outline:2px solid #84323d;outline-offset:-2px}
+  .dernieres-publications li a>span{color:#84323d}
+  @media(max-width:48rem){
+    .dernieres-publications li a{grid-template-columns:minmax(0,1fr) auto}
+    .dernieres-publications time{grid-column:1/-1}
+  }
+  .accueil-dossiers,.dernieres-publications,.selection,.greffe-accueil,.univers{border-top:2px solid #84323d;padding-top:1rem}
   .journal-corps h2{margin:0;font:650 clamp(1.8rem,3.4vw,2.75rem)/1.08 var(--serif)}
   .accueil-dossiers-entete,.selection-entete,.greffe-accueil-entete{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.45rem 1rem;margin-bottom:1rem}
   .accueil-dossiers-entete>a,.selection-entete>a,.greffe-accueil-entete>a,.accueil-dossiers-liens>a{color:#84323d;font:750 .82rem/1.4 var(--sans)}
