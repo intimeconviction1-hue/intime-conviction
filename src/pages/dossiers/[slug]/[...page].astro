@@ -25,6 +25,7 @@ export async function getStaticPaths({ paginate }) {
 const { page, dossier, statistiques, dernierArticle } = Astro.props;
 const reperes = reperesPourDossier(dossier.slug);
 const decision = reperes.findLast(repere => repere.type === 'decision');
+const dernierRepere = reperes.at(-1);
 const lieux = juridictionsPourDossier(dossier.slug);
 const nombre = (n) => n.toLocaleString('fr-FR');
 const date = (s) => new Intl.DateTimeFormat('fr-FR', {
@@ -48,6 +49,16 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
 
     </div>
   </header>
+
+  {page.currentPage === 1 && dernierRepere && (
+    <section class="point-affaire" aria-labelledby="titre-point-affaire">
+      <h2 id="titre-point-affaire">Dernière étape documentée</h2>
+      <p class="date-point"><time datetime={dernierRepere.dateEvenement}>{date(dernierRepere.dateEvenement)}</time> · {dernierRepere.juridiction}</p>
+      <h3><a href={'#' + dernierRepere.id}>{dernierRepere.titre} <span aria-hidden="true">↘</span></a></h3>
+      <p>{dernierRepere.description}</p>
+      <p class="source-point"><a href={dernierRepere.urlSource}>{dernierRepere.source}</a></p>
+    </section>
+  )}
 
   {page.currentPage === 1 && (reperes.length > 0 || dernierArticle) && (
     <nav class="liens-dossier" aria-label="Suivre cette affaire">
@@ -223,4 +234,9 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
  .pagination-dossiers{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:.4rem;font-size:.7rem}
  .pagination-dossiers a{padding:.7rem .45rem;overflow-wrap:anywhere}
 }
+  .point-affaire{margin:1.25rem 0;padding:clamp(1rem,3vw,2rem);background:#f3ede5;border-left:4px solid #84323d;color:#252525}
+  .point-affaire h2,.date-point,.source-point{font:750 .8rem/1.5 var(--sans);color:#84323d}
+  .point-affaire h2,.point-affaire p{margin:.3rem 0}
+  .point-affaire h3{margin:.45rem 0;font:650 clamp(1.6rem,3vw,2.45rem)/1.15 var(--serif)}
+  .point-affaire a{text-decoration:underline;text-underline-offset:.14em}
 </style>

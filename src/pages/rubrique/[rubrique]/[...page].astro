@@ -5,7 +5,7 @@ import Base from '../../../layouts/Base.astro';
 import ListeArticles from '../../../components/ListeArticles.astro';
 import Culture from '../../../components/Culture.astro';
 import { RUBRIQUES, rubrique } from '../../../lib/rubriques.mjs';
-import { tousLesArticles } from '../../../lib/articles.mjs';
+import { tousLesArticles, dateLongue } from '../../../lib/articles.mjs';
 
 export async function getStaticPaths({ paginate }) {
   const articles = await tousLesArticles();
@@ -41,7 +41,10 @@ const ressources = {
 const liensRubrique = ressources[r.slug] ?? [];
 const estActualite = page.currentPage === 1 && r.slug === 'cours-du-jour';
 const aLaUne = estActualite ? page.data.filter(({data})=>data.verificationEnCours !== true).slice(0,3) : [];
-const suite = page.data.filter(article=>!aLaUne.includes(article));
+const chroniqueVedette = page.currentPage === 1 && r.slug === 'la-cour-se-leve'
+  ? page.data.find(({data}) => data.verificationEnCours !== true)?.data
+  : undefined;
+const suite = page.data.filter(article => article.data !== chroniqueVedette && !aLaUne.includes(article));
 ---
 <Base titre={titre} description={`${r.libelle}. ${page.total} articles d'Intime Conviction.`} rubriqueActive={r.slug}>
   <script type="application/ld+json" set:html={JSON.stringify({
@@ -58,14 +61,23 @@ const suite = page.data.filter(article=>!aLaUne.includes(article));
       }))
     }
   })} />
-  <header class:list={["titre-page", {"ouverture-illustree": page.currentPage === 1 && r.slug === "la-cour-se-leve"}]}>
+  <header class="titre-page">
     <div>
     <p class="etiquette">Rubrique</p>
     <h1>{r.libelle}</h1>
     <p class="meta">{page.total.toLocaleString('fr-FR')} articles d’archives · page {page.currentPage} sur {page.lastPage}</p>
     </div>
-    {page.currentPage === 1 && r.slug === "la-cour-se-leve" && <VisuelAssises image={photoAssises} alt="Salle Voltaire de la cour d’assises, Paris" source="https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris_-_salle_Voltaire_(cour_d%27assises).jpg" credit="Tiraden" licence="CC BY-SA 4.0" licenceUrl="https://creativecommons.org/licenses/by-sa/4.0/" prioritaire />}
   </header>
+  {chroniqueVedette && (
+    <section class="chronique-vedette ouverture-illustree" aria-labelledby="titre-chronique-vedette">
+      <div class="chronique-vedette-texte">
+        <time datetime={chroniqueVedette.date.toISOString()}>{dateLongue(chroniqueVedette.date)}</time>
+        <h2 id="titre-chronique-vedette"><a href={chroniqueVedette.chemin}>{chroniqueVedette.titre}</a></h2>
+        {chroniqueVedette.extrait && <p>{chroniqueVedette.extrait}</p>}
+      </div>
+      <VisuelAssises image={photoAssises} alt="Photo d’illustration · Salle Voltaire de la cour d’assises, Paris" source="https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris_-_salle_Voltaire_(cour_d%27assises).jpg" credit="Tiraden" licence="CC BY-SA 4.0" licenceUrl="https://creativecommons.org/licenses/by-sa/4.0/" prioritaire />
+    </section>
+  )}
   {page.currentPage === 1 && liensRubrique.length > 0 && (
     <nav class="ressources-rubrique" aria-label={`Accès thématiques : ${r.libelle}`}>
       <h2>À découvrir dans cette rubrique</h2>
@@ -114,4 +126,9 @@ const suite = page.data.filter(article=>!aLaUne.includes(article));
   .lecture-jures-action{display:inline-flex;align-items:center;min-height:44px;padding-bottom:.4rem;margin-top:.4rem;border-bottom:3px solid #ffe100;font:800 .75rem/1.3 var(--sans);text-transform:uppercase;letter-spacing:.05em}
   .ouverture-illustree{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);align-items:center;gap:clamp(1rem,3vw,2.5rem)}
   @media(max-width:52rem){.ouverture-illustree{grid-template-columns:minmax(0,1fr)}}
+  .chronique-vedette{background:#f3ede5;border-top:3px solid #84323d;margin:0 0 2rem}
+  .chronique-vedette-texte{min-width:0;padding:clamp(1rem,4vw,2.6rem)}
+  .chronique-vedette time{color:#84323d;font:750 .8rem/1.4 var(--sans)}
+  .chronique-vedette h2{margin:.45rem 0;font:650 clamp(1.9rem,4vw,3.3rem)/1.1 var(--serif)}
+  .chronique-vedette h2 a:hover,.chronique-vedette h2 a:focus-visible{text-decoration:underline}
 </style>
