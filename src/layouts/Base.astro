@@ -148,16 +148,12 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     <slot name="fond" />
     <a class="evitement" href="#contenu">Aller au contenu</a>
     <header class="entete">
-      <div class:list={["barre", "cadre", { "barre-illustree": accueil }]}>
+      <div class:list={["barre", "cadre", { "barre-illustree": accueil }]} style={accueil ? `--croquis-entete: url("${croquisEntete.src}")` : undefined}>
         <div class="identite-journal">
           <Marque class="marque"><a href="/" aria-label="Intime Conviction, accueil"><span class="marque-mot"><span class="marque-intime">INTIME</span><span class="marque-conviction">CONVICTION<span class="marque-point">.</span></span></span></a></Marque>
           <p class="signature">Le journal des <strong>cours d’assises</strong></p>
           {edition && <p class="edition-date">Édition du <time datetime={edition.toISOString()}>{formatEdition.format(edition)} · {heureEdition.format(edition)}</time></p>}
         </div>
-        {accueil && (
-          <img class="croquis-entete" src={croquisEntete.src} width={croquisEntete.width}
-            height={croquisEntete.height} alt="" />
-        )}
         <nav class="liens-entete" aria-label="Recherche, réseaux sociaux et espace lecteur">
           <a class="recherche-lien" href="/recherche/" aria-label="Rechercher dans les articles"><span>Rechercher</span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>
           <a class="edition-reseau" href={reseaux.x} aria-label="Intime Conviction sur X">
@@ -326,12 +322,14 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     /* Identité éditoriale commune à l'ensemble du site. */
     .entete,.avec-fond .entete{background:#f7f5f0;color:#22282a;border-top:3px solid #9b303d;border-bottom:0}
     .entete .barre{min-height:124px;display:flex;align-items:center;justify-content:space-between;gap:.75rem 1.25rem;flex-wrap:wrap}
-    .croquis-entete{display:block;flex:0 1 clamp(9rem,19vw,16rem);width:clamp(9rem,19vw,16rem);height:clamp(5rem,9vw,7.5rem);object-fit:contain;mix-blend-mode:multiply}
+    .entete .barre-illustree{position:relative;isolation:isolate}
+    .barre-illustree::before{
+      content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+      background:linear-gradient(90deg,#f7f5f0 15%,#f7f5f000 65%),var(--croquis-entete) 75% 57% / clamp(34rem,62vw,62rem) auto no-repeat;
+      mix-blend-mode:multiply;opacity:.23
+    }
     @media(max-width:47.99rem){
-      .entete .barre-illustree{display:grid;grid-template-columns:minmax(0,1fr) minmax(3.75rem,24%);align-items:center}
-      .barre-illustree .liens-entete{grid-column:1/-1}
-      .barre-illustree .identite-journal .marque a{font-size:clamp(1.06rem,4.45vw,1.85rem)}
-      .croquis-entete{width:100%;height:auto;max-height:5rem}
+      .barre-illustree::before{background-position:0 0, right 55%;background-size:auto,27rem auto;opacity:.16}
     }
     .edition-date{margin:.1rem 0 0;color:#565052;font:650 .73rem/1.4 var(--sans)}
     .liens-entete{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;margin-inline-start:auto}
