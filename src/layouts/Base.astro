@@ -114,35 +114,49 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
         </div>
         <a class="recherche-lien" href="/recherche/" aria-label="Rechercher dans les articles"><span>Rechercher</span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>
       </div>
-      <nav class="navigation-principale" aria-label="Navigation principale">
-        <ul class="cadre">
-          {navigation.map(lien=><li class="navigation-entree">
-            <a href={lien.href} aria-current={courant(lien.href)}>{lien.titre}</a>
-            <details name="navigation-principale" class="navigation-rubriques navigation-sous-menu">
-              <summary aria-label={`Sous-menu ${lien.titre}`}><svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></summary>
-              <ul>{lien.liens.map(l=> <li><a href={l.href}>{l.titre}</a></li>)}</ul>
-            </details>
-          </li>)}
-          <li>
-            <details name="navigation-principale" class="navigation-rubriques">
-              <summary>Analyses et culture <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></summary>
+      <div class="bande-navigation">
+        <div class="cadre bande-navigation-interieur">
+          <button class="navigation-bouton navigation-bouton-rubriques" type="button" aria-expanded="false" aria-controls="navigation-rubriques">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            Rubriques
+          </button>
+          <nav id="navigation-rubriques" class="navigation-principale" aria-label="Navigation principale">
+            <ul>
+              {navigation.map(lien=><li class="navigation-entree">
+                <a href={lien.href} aria-current={courant(lien.href)}>{lien.titre}</a>
+                <details name="navigation-principale" class="navigation-rubriques navigation-sous-menu">
+                  <summary aria-label={`Sous-menu ${lien.titre}`}><svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></summary>
+                  <ul>{lien.liens.map(l=> <li><a href={l.href}>{l.titre}</a></li>)}</ul>
+                </details>
+              </li>)}
+              <li>
+                <details name="navigation-principale" class="navigation-rubriques">
+                  <summary>Analyses et culture <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></summary>
+                  <ul>
+                    {RUBRIQUES.filter(r=>!['cours-du-jour','la-cour-se-leve','le-banc-des-jures'].includes(r.slug)).map(r=>{
+                      const href = `/rubrique/${r.slug}/`;
+                      return <li><a href={href} aria-current={courant(href)}>{r.libelle}</a></li>;
+                    })}
+                  </ul>
+                </details>
+              </li>
+            </ul>
+          </nav>
+          <details class="navigation-acces">
+            <summary class="navigation-bouton">
+              <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              Accès rapides
+            </summary>
+            <nav class="acces-directs" aria-label="Accès rapides">
               <ul>
-                {RUBRIQUES.filter(r=>!['cours-du-jour','la-cour-se-leve','le-banc-des-jures'].includes(r.slug)).map(r=>{
-                  const href = `/rubrique/${r.slug}/`;
-                  return <li><a href={href} aria-current={courant(href)}>{r.libelle}</a></li>;
-                })}
+                {accesDirects.map(({href, titre}) => (
+                  <li><a href={href}>{titre}<span aria-hidden="true">↗</span></a></li>
+                ))}
               </ul>
-            </details>
-          </li>
-        </ul>
-      </nav>
-      <nav class="acces-directs cadre" aria-label="Accès rapides">
-        <ul>
-          {accesDirects.map(({href, titre}) => (
-            <li><a href={href}>{titre}<span aria-hidden="true">↗</span></a></li>
-          ))}
-        </ul>
-      </nav>
+            </nav>
+          </details>
+        </div>
+      </div>
     </header>
 
     <main id="contenu" class="cadre" tabindex="-1">
@@ -162,25 +176,92 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       </div>
     </footer>
   <script>
-    const nav = document.querySelector('.navigation-principale');
-    nav?.addEventListener('keydown', event => {
-      if (event.key !== 'Escape') return;
-      const menu = nav.querySelector<HTMLDetailsElement>('details[open]');
-      if (!menu) return;
-      event.preventDefault();
-      menu.open = false;
-      menu.querySelector('summary')?.focus();
-    });
-    nav?.addEventListener('focusout', event => {
-      if (event.relatedTarget instanceof Node && !nav.contains(event.relatedTarget)) {
-        nav.querySelector('details[open]')?.removeAttribute('open');
+    const bande = document.querySelector('.bande-navigation');
+    const bouton = bande?.querySelector<HTMLButtonElement>('.navigation-bouton-rubriques');
+    const rubriques = bande?.querySelector<HTMLElement>('.navigation-principale');
+    const acces = bande?.querySelector<HTMLDetailsElement>('.navigation-acces');
+    const resumeAcces = acces?.querySelector('summary');
+    const compact = window.matchMedia('(max-width: 63.99rem)');
+
+    if (bande && bouton && rubriques && acces && resumeAcces) {
+      bande.classList.add('navigation-interactive');
+
+      function fermerSousMenus() {
+        rubriques?.querySelectorAll<HTMLDetailsElement>('details[open]').forEach(menu => {
+          menu.open = false;
+        });
       }
-    });
-    document.addEventListener('pointerdown', event => {
-      if (event.target instanceof Node && !nav?.contains(event.target)) {
-        nav?.querySelector('details[open]')?.removeAttribute('open');
+
+      function fermerRubriques() {
+        bouton?.setAttribute('aria-expanded', 'false');
+        fermerSousMenus();
       }
-    });
+
+      bouton.addEventListener('click', () => {
+        if (bouton.getAttribute('aria-expanded') === 'true') {
+          fermerRubriques();
+        } else {
+          acces.open = false;
+          bouton.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      resumeAcces.addEventListener('click', () => {
+        if (!acces.open) fermerRubriques();
+      });
+
+      bande.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        const sousMenu = rubriques.querySelector<HTMLDetailsElement>('details[open]');
+        if (sousMenu && sousMenu.contains(event.target as Node)) {
+          sousMenu.open = false;
+          sousMenu.querySelector('summary')?.focus();
+        } else if (acces.open) {
+          acces.open = false;
+          resumeAcces.focus();
+        } else if (bouton.getAttribute('aria-expanded') === 'true') {
+          fermerRubriques();
+          bouton.focus();
+        } else if (sousMenu) {
+          sousMenu.open = false;
+        } else {
+          return;
+        }
+        event.preventDefault();
+      });
+
+      bande.addEventListener('focusout', event => {
+        if (event.relatedTarget instanceof Node && !bande.contains(event.relatedTarget)) {
+          fermerRubriques();
+          acces.open = false;
+        }
+      });
+
+      document.addEventListener('pointerdown', event => {
+        if (!(event.target instanceof Node)) return;
+        if (!rubriques.contains(event.target) && !bouton.contains(event.target)) fermerRubriques();
+        if (!acces.contains(event.target)) acces.open = false;
+      });
+
+      bande.addEventListener('click', event => {
+        if (event.target instanceof Element && event.target.closest('a[href]')) {
+          // Les liens d’ancrage gardent la même page ouverte.
+          if (acces.contains(event.target)) resumeAcces.focus();
+          else if (compact.matches) bouton.focus();
+          else event.target.closest('details')?.querySelector('summary')?.focus();
+          fermerRubriques();
+          acces.open = false;
+        }
+      });
+
+      compact.addEventListener('change', () => {
+        const focusDansLesRubriques = rubriques.contains(document.activeElement);
+        const focusSurLeBouton = document.activeElement === bouton;
+        fermerRubriques();
+        if (compact.matches && focusDansLesRubriques) bouton.focus();
+        if (!compact.matches && focusSurLeBouton) rubriques.querySelector('a')?.focus();
+      });
+    }
   </script>
   <style is:global>
     /* Identité éditoriale commune à l'ensemble du site. */
@@ -201,32 +282,46 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     .entete .recherche-lien span{position:static;width:auto;height:auto;overflow:visible;clip-path:none;white-space:nowrap}
     .entete .recherche-lien svg{width:18px;height:18px}
     .entete .recherche-lien:hover,.avec-fond .entete .recherche-lien:hover{background:#9b303d;border-color:#9b303d;color:#fff!important}
-.acces-directs{margin:0 auto;padding-block:.45rem}
-.acces-directs ul{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.4rem;list-style:none;margin:0;padding:0}
-.acces-directs a{display:flex;align-items:center;justify-content:space-between;gap:.4rem;min-height:44px;height:100%;padding:.5rem .7rem;border:1px solid #c7bdb2;background:#f0ebe4;color:#252a2d;font:750 .78rem/1.25 var(--sans);text-transform:uppercase}
-.acces-directs a span{color:#84323d}
-.acces-directs a:hover,.acces-directs a:focus-visible{border-color:#84323d;text-decoration:underline}
-.acces-directs a:focus-visible{outline:2px solid #84323d;outline-offset:-3px}
-@media(max-width:47.99rem){
-  .acces-directs ul{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
-    .navigation-principale :is(a,summary),.entete .recherche-lien{text-transform:uppercase}
-    .navigation-principale{position:relative;z-index:20;background:#edeae4;border-block:1px solid #d8d2cb}
-    .navigation-principale ul{margin-block:0;list-style:none}
-    .navigation-principale>.cadre{display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}
-    .navigation-principale>.cadre>li{min-width:0}
-    .navigation-principale :is(a,summary){display:flex;align-items:center;justify-content:center;gap:.3rem;min-height:48px;padding:.45rem .25rem;text-align:center;color:#303638;font:750 .9rem/1.25 var(--sans)}
-    .navigation-entree{display:flex;justify-content:center}
-    .navigation-entree>a{flex:1;min-width:0}
-    .navigation-sous-menu summary{min-width:44px}
-    .navigation-principale summary{cursor:pointer;list-style:none}
-    .navigation-principale summary::-webkit-details-marker{display:none}
-    .navigation-principale details[open] summary svg{transform:rotate(180deg)}
-    .navigation-principale :is(a,summary):hover,.navigation-principale a[aria-current="page"]{background:#e8ddd8;color:#842631}
-    .navigation-principale a[aria-current="page"]{box-shadow:inset 0 -2px #9b303d}
-    .navigation-principale :is(a,summary):focus-visible,.entete .recherche-lien:focus-visible,.entete .marque a:focus-visible{outline:2px solid #9b303d;outline-offset:-2px}
-    .navigation-rubriques>ul{position:absolute;top:100%;right:max(1rem,calc((100% - var(--large))/2));width:min(24rem,calc(100% - 2rem));padding:.35rem;background:#f7f5f0;border:1px solid #c8bdb4;box-shadow:0 8px 18px #22282a26}
-    .navigation-rubriques>ul a{justify-content:flex-start;text-align:start;padding:.5rem .85rem}
+    .bande-navigation{position:relative;z-index:20;background:#edeae4;border-block:1px solid #d8d2cb}
+    .bande-navigation-interieur{position:relative;display:flex;align-items:stretch;gap:.55rem}
+    .bande-navigation ul{list-style:none;margin:0;padding:0}
+    .navigation-principale{flex:1;min-width:0}
+    .navigation-principale>ul{display:flex;align-items:stretch;justify-content:space-between;gap:.2rem}
+    .navigation-principale>ul>li{position:relative;min-width:0}
+    .navigation-entree{display:flex;align-items:stretch}
+    .bande-navigation :is(a,summary,button){display:flex;align-items:center;justify-content:center;gap:.35rem;min-height:44px;padding:.35rem .45rem;color:#303638;font:750 .76rem/1.25 var(--sans);text-transform:uppercase}
+    .entete .recherche-lien{text-transform:uppercase}
+    .bande-navigation :is(summary,button){cursor:pointer;list-style:none}
+    .bande-navigation summary::-webkit-details-marker{display:none}
+    .navigation-sous-menu summary{min-width:32px;padding-inline:.35rem}
+    .navigation-rubriques[open]>summary svg{transform:rotate(180deg)}
+    .bande-navigation :is(a,summary,button):hover,.bande-navigation a[aria-current="page"],.bande-navigation [aria-expanded="true"],.bande-navigation details[open]>summary{background:#e8ddd8;color:#842631}
+    .bande-navigation a[aria-current="page"]{box-shadow:inset 0 -2px #9b303d}
+    .bande-navigation :is(a,summary,button):focus-visible,.entete .recherche-lien:focus-visible,.entete .marque a:focus-visible{outline:2px solid #9b303d;outline-offset:-2px}
+    .bande-navigation .navigation-bouton-rubriques{display:none;border:0;background:transparent}
+    .navigation-acces{position:relative;border-inline-start:1px solid #d8d2cb}
+    .bande-navigation .navigation-acces>summary{padding-inline:.75rem;white-space:nowrap}
+    .navigation-rubriques>ul,.acces-directs{position:absolute;top:100%;left:0;width:16rem;background:#f7f5f0;border:1px solid #c8bdb4;box-shadow:0 8px 18px #22282a26}
+    .navigation-principale>ul>li:last-child .navigation-rubriques>ul,.acces-directs{left:auto;right:0}
+    .bande-navigation :is(.navigation-rubriques>ul,.acces-directs) a{justify-content:flex-start;text-align:start;padding-inline:.85rem}
+    .acces-directs a span{margin-inline-start:auto;color:#84323d}
+    @media(max-width:63.99rem){
+      .bande-navigation-interieur{flex-wrap:wrap;justify-content:space-between}
+      .bande-navigation.navigation-interactive .navigation-bouton-rubriques{display:flex;padding-inline:.65rem}
+      .navigation-interactive .navigation-bouton-rubriques[aria-expanded="false"]+.navigation-principale{display:none}
+      .navigation-principale{order:1;flex-basis:100%}
+      .navigation-interactive .navigation-principale{position:absolute;inset:100% 0 auto;width:100%;max-height:min(65vh,28rem);overflow:auto;overscroll-behavior:contain;background:#f7f5f0;border:1px solid #c8bdb4;box-shadow:0 8px 18px #22282a26}
+      .navigation-principale>ul{display:block}
+      .navigation-principale>ul>li+li,.acces-directs li+li{border-top:1px solid #d8d2cb}
+      .navigation-principale .navigation-entree{display:grid;grid-template-columns:minmax(0,1fr) auto}
+      .navigation-principale>ul>li :is(a,summary){justify-content:flex-start;text-align:start;padding-inline:.75rem}
+      .navigation-principale .navigation-sous-menu{display:contents}
+      .navigation-principale .navigation-sous-menu summary{justify-content:center;min-width:44px;border-inline-start:1px solid #d8d2cb}
+      .navigation-principale .navigation-rubriques>ul{position:static;grid-column:1/-1;width:auto;border:0;border-top:1px solid #d8d2cb;box-shadow:none;background:#edeae4}
+      .navigation-principale .navigation-rubriques>ul a{padding-inline:1.25rem}
+      .navigation-acces{border:0}
+      .acces-directs{width:min(17rem,calc(100vw - 2rem))}
+    }
     .pied>.cadre{grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr)}
     .pied-navigation{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
     .pied-navigation h2{font:750 1rem/1.3 var(--sans);margin:0 0 .5rem}
@@ -239,9 +334,6 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       .identite-journal .marque a{font-size:clamp(1.75rem,4.4vw,3rem)}
     }
     @media(max-width:47.99rem){
-      .navigation-principale>.cadre{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .navigation-principale>.cadre>li:nth-child(n+3){border-top:1px solid #d8d2cb}
-      .navigation-principale :is(a,summary){font-size:.85rem}
       .entete .barre{min-height:88px;gap:.65rem}
       .identite-journal{padding:.75rem 0;gap:.35rem}
       .identite-journal .marque a{font-size:clamp(1.28rem,5.35vw,2.1rem);letter-spacing:-.06em}
