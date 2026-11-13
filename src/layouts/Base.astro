@@ -89,15 +89,37 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       datePublished:article.datePublished,
       ...(article.dateModified ? { dateModified:article.dateModified } : {}),
       ...(article.author ? { author:{'@type':'Person',name:article.author} } : {}),
-      publisher:{'@type':'Organization',name:'Intime Conviction',url:'https://www.intimeconviction.fr/'},
+      publisher:{'@id':'https://www.intimeconviction.fr/#organisation'},
+      ...(imagePartage ? {image:[imagePartage]} : {}),
       mainEntityOfPage:canonique.href,
+      isAccessibleForFree:true,
       inLanguage:'fr-FR'
     })} />}
     <meta name="twitter:card" content={imagePartage ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={titreComplet} />
     <meta name="twitter:description" content={description} />
     {imagePartage && <meta name="twitter:image" content={imagePartage} />}
-    {accueil && <script type="application/ld+json" set:html={JSON.stringify({ '@context':'https://schema.org', '@type':'WebSite', name:'Intime Conviction', alternateName:'Le journal des cours d’assises', url:'https://www.intimeconviction.fr/', description, inLanguage:'fr-FR' })} />}
+    {accueil && <script type="application/ld+json" set:html={JSON.stringify({ '@context':'https://schema.org', '@type':'WebSite', '@id':'https://www.intimeconviction.fr/#site', name:'Intime Conviction', alternateName:'Le journal des cours d’assises', url:'https://www.intimeconviction.fr/', description, inLanguage:'fr-FR' })} />}
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context':'https://schema.org',
+      '@type':'Organization',
+      '@id':'https://www.intimeconviction.fr/#organisation',
+      name:'Intime Conviction',
+      url:'https://www.intimeconviction.fr/',
+      description:"Média français consacré aux procès criminels, aux cours d'assises et à la justice pénale.",
+      logo:new URL('/favicon.svg',Astro.site).href
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context':'https://schema.org',
+      '@type':'WebPage',
+      '@id':canonique.href+'#page',
+      url:canonique.href,
+      name:titreComplet,
+      description,
+      inLanguage:'fr-FR',
+      isPartOf:{'@type':'WebSite','@id':'https://www.intimeconviction.fr/#site',name:'Intime Conviction',url:'https://www.intimeconviction.fr/'},
+      ...(article ? {mainEntity:{'@type':'Article',headline:article.headline}} : {})
+    })} />
     <meta name="theme-color" content="#121314" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap.xml" />
