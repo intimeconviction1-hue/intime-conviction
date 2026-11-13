@@ -313,11 +313,11 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       .navigation-interactive .navigation-principale{position:absolute;inset:100% 0 auto;width:100%;max-height:min(65vh,28rem);overflow:auto;overscroll-behavior:contain;background:#f7f5f0;border:1px solid #c8bdb4;box-shadow:0 8px 18px #22282a26}
       .navigation-principale>ul{display:block}
       .navigation-principale>ul>li+li,.acces-directs li+li{border-top:1px solid #d8d2cb}
-      .navigation-principale .navigation-entree{display:grid;grid-template-columns:minmax(0,1fr) auto}
+      .navigation-principale .navigation-entree{display:block}
+      .navigation-entree>a{margin-inline-end:44px}
       .navigation-principale>ul>li :is(a,summary){justify-content:flex-start;text-align:start;padding-inline:.75rem}
-      .navigation-principale .navigation-sous-menu{display:contents}
-      .navigation-principale .navigation-sous-menu summary{justify-content:center;min-width:44px;border-inline-start:1px solid #d8d2cb}
-      .navigation-principale .navigation-rubriques>ul{position:static;grid-column:1/-1;width:auto;border:0;border-top:1px solid #d8d2cb;box-shadow:none;background:#edeae4}
+      .navigation-principale .navigation-sous-menu summary{position:absolute;inset:0 0 auto auto;justify-content:center;min-width:44px;border-inline-start:1px solid #d8d2cb}
+      .navigation-principale .navigation-rubriques>ul{position:static;width:auto;border:0;border-top:1px solid #d8d2cb;box-shadow:none;background:#edeae4}
       .navigation-principale .navigation-rubriques>ul a{padding-inline:1.25rem}
       .navigation-acces{border:0}
       .acces-directs{width:min(17rem,calc(100vw - 2rem))}
