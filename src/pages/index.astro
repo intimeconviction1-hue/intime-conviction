@@ -53,13 +53,9 @@ const dossiersMisEnAvant = DOSSIERS.map(dossier => {
 const repereUne = {
   '/proces-sollacaro-et-tout-recommence-aux-assises/11/2026/': 'Aix-en-Provence · Cour d’assises · Nouveau procès',
 };
-const articlesSansVisuelUne = new Set([
-  '/assises-que-dit-la-feuille-de-motivation/11/2026/',
-  '/assises-quand-le-dossier-revient-au-delibere/11/2026/',
-]);
 const articlesUne = selectionUne.map(({data}) => ({
   data,
-  photo: articlesSansVisuelUne.has(data.chemin) ? undefined : photosArticles[data.chemin],
+  photo: photosArticles[data.chemin],
   repere: repereUne[data.chemin],
 }));
 ---
