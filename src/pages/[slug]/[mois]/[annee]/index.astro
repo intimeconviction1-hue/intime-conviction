@@ -1,5 +1,6 @@
 ---
 import Base from '../../../../layouts/Base.astro';
+import { photosArticles } from '../../../../lib/photos-articles.mjs';
 import ListeArticles from '../../../../components/ListeArticles.astro';
 import { rubrique } from '../../../../lib/rubriques.mjs';
 import { provenanceVerifiee } from '../../../../lib/provenance-archives.mjs';
@@ -32,6 +33,7 @@ export async function getStaticPaths() {
 const { article, voisins } = Astro.props;
 const { data } = article;
 const r = rubrique(data.rubrique);
+const photo = photosArticles[data.chemin];
 const provenance = provenanceVerifiee(data.chemin);
 const formatArchive = formatArchiveVerifie(data.chemin);
 const signatureArchive = String(data.auteur ?? '').trim();
@@ -39,7 +41,7 @@ const signatureArchive = String(data.auteur ?? '').trim();
 // à identifier la personne qui a rédigé un texte historique.
 const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCase('fr') === 'intime conviction' ? null : (signatureArchive || null));
 ---
-<Base titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} noindex={data.verificationEnCours === true} article={{ headline:data.titre,datePublished:data.date.toISOString(),dateModified:data.dateMiseAJour?.toISOString(),author:auteurIdentifie }}>
+<Base image={photo?.image.src} imageAlt={photo?.lieu} titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} noindex={data.verificationEnCours === true} article={{ headline:data.titre,datePublished:data.date.toISOString(),dateModified:data.dateMiseAJour?.toISOString(),author:auteurIdentifie }}>
   <script type="application/ld+json" set:html={JSON.stringify({
     '@context':'https://schema.org',
     '@type':'BreadcrumbList',
@@ -75,6 +77,12 @@ const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCas
       </aside>
     )}
     <div class="outils-lecture"><span>Confort de lecture</span><button id="taille-texte" type="button" aria-pressed="false">Agrandir le texte</button><button id="copier-lien" type="button">Copier le lien</button><span id="partage-statut" role="status"></span></div>
+    {photo && (
+      <figure class="photo-article">
+        <img src={photo.image.src} width={photo.image.width} height={photo.image.height} alt={photo.lieu} fetchpriority="high" />
+        <figcaption>{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a></figcaption>
+      </figure>
+    )}
     <div class="corps" set:html={data.html} />
     <nav class="retour-archives" aria-label="Parcourir les archives">
       <a href={`/archives/${data.date.getFullYear()}/`}>Tous les articles de {data.date.getFullYear()}</a>
@@ -99,6 +107,11 @@ function progression(){const r=article.getBoundingClientRect();barre.style.width
 </script>
 
 <style>
+.photo-article{margin:1.5rem 0}
+.photo-article img{display:block;width:100%;height:auto}
+.photo-article figcaption{margin-top:.45rem;color:var(--encre-2);font:.75rem/1.5 var(--sans)}
+.photo-article a{text-decoration:underline;text-underline-offset:.15em}
+
 .fil-ariane{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;max-width:var(--mesure);margin:2rem auto 0;font:850 .63rem/1.5 var(--sans);letter-spacing:.045em;text-transform:uppercase}
 .fil-ariane span[aria-hidden]{color:#787b77}
 .fil-ariane a{border-bottom:2px solid #ffe100;padding-bottom:.15rem}

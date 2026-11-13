@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { photosArticles } from '../lib/photos-articles.mjs';
 import photoAix from '../assets/palais-verdun-aix.webp';
 import photoBlois from '../assets/blois.webp';
 import photoParis from '../assets/rue-de-la-paix.webp';
@@ -69,7 +70,7 @@ const repereUne = {
   '/proces-sollacaro-et-tout-recommence-aux-assises/11/2026/': 'Aix-en-Provence · Cour d’assises · Nouveau procès',
 };
 const articlesUne = selectionUne.map(({data}) => ({
-  data, photo: photosUne[data.chemin], repere: repereUne[data.chemin],
+  data, photo: photosArticles[data.chemin] ?? photosUne[data.chemin], repere: repereUne[data.chemin],
 }));
 ---
 <Base accueil>
