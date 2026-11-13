@@ -65,11 +65,11 @@ const articlesUne = selectionUne.map(({data}) => ({
           <div class="une-editoriale-grille">
             {articlesUne.map(({data, photo, repere}, i) => (
               <article class="article-redaction-une">
-                {photo && !photo.croquis && (
-                  <figure>
+                {photo && (
+                  <figure class:list={{"une-croquis": photo.croquis}}>
                     <img src={photo.image.src} width={photo.image.width} height={photo.image.height}
                       alt={photo.lieu} loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} />
-                    <figcaption>{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a> · cadrée</figcaption>
+                    <figcaption>{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a>{!photo.croquis && " · cadrée"}</figcaption>
                   </figure>
                 )}
                 <div class="une-editoriale-texte">
@@ -266,6 +266,7 @@ const articlesUne = selectionUne.map(({data}) => ({
   .article-redaction-une figure{margin:0 0 .55rem}
   .article-redaction-une img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
   .article-redaction-une:first-child img{aspect-ratio:2/1}
+  .article-redaction-une .une-croquis img{object-fit:contain;background:#fbfaf7}
   .article-redaction-une figcaption{color:#554b47;font:500 .68rem/1.4 var(--sans);margin-top:.35rem}
   .article-redaction-une figcaption a{text-decoration:underline}
   .une-editoriale-texte time{color:#84323d;font:750 .76rem/1.4 var(--sans)}
