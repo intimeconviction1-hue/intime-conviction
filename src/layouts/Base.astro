@@ -6,6 +6,7 @@ import '../styles/global.css';
 import frontonAssises from '../assets/fronton-cour-dassises.jpg';
 // Précharger la police d'interface, employée également pour les titres.
 import policeSans from '@fontsource-variable/libre-franklin/files/libre-franklin-latin-wght-normal.woff2?url';
+import { tousLesArticles } from '../lib/articles.mjs';
 import { RUBRIQUES } from '../lib/rubriques.mjs';
 
 const { titre, description = "Intime Conviction, journal consacré aux procès criminels : actualité des audiences, verdicts, analyses et archives judiciaires.", accueil = false, noindex = false, image, article, imageAlt = "Image d'Intime Conviction" } = Astro.props;
@@ -18,6 +19,15 @@ const canonique = new URL(Astro.url.pathname, Astro.site);
 // fournir sa propre photographie sans illustration trompeuse.
 const imagePartage = image ? new URL(image, Astro.site).href : (accueil ? new URL(frontonAssises.src, Astro.site).href : null);
 const annee = new Date().getFullYear();
+const articlesEdition = await tousLesArticles();
+const edition = articlesEdition.find(({data}) => data.verificationEnCours !== true)?.data.date;
+const formatEdition = new Intl.DateTimeFormat('fr-FR', {
+  timeZone: 'Europe/Paris', day: 'numeric', month: 'long', year: 'numeric',
+});
+const heureEdition = new Intl.DateTimeFormat('fr-FR', {
+  timeZone: 'Europe/Paris', hour: '2-digit', minute: '2-digit',
+});
+const reseauX = 'https://x.com/IntimeConv';
 const navigation = [
   { titre: 'Nos articles', href: '/rubrique/cours-du-jour/#articles-redaction', liens: [
     {titre:'Chroniques d’audience',href:'/rubrique/la-cour-se-leve/'},
@@ -129,6 +139,18 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     <slot name="fond" />
     <a class="evitement" href="#contenu">Aller au contenu</a>
     <header class="entete">
+      <div class="barre-edition">
+        <div class="cadre barre-edition-interieur">
+          {edition && <p>Édition du <time datetime={edition.toISOString()}>{formatEdition.format(edition)} · {heureEdition.format(edition)}</time></p>}
+          <nav class="barre-edition-liens" aria-label="Réseaux sociaux et espace lecteur">
+            <a class="edition-reseau" href={reseauX} aria-label="Intime Conviction sur X">
+              <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-7.5L5.4 22H2.3l7.3-8.4L1.8 2h6.5l4.4 6.8L18.9 2ZM17.8 20h1.7L7.3 4H5.5l12.3 16Z"/></svg>
+            </a>
+            <a href="/connexion/">Se connecter</a>
+            <a class="edition-abonnement" href="/abonnement/">S’abonner</a>
+          </nav>
+        </div>
+      </div>
       <div class="barre cadre">
         <div class="identite-journal">
           <Marque class="marque"><a href="/" aria-label="Intime Conviction, accueil"><span class="marque-mot"><span class="marque-intime">INTIME</span><span class="marque-conviction">CONVICTION<span class="marque-point">.</span></span></span></a></Marque>
@@ -194,7 +216,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
             <ul>{groupe.liens.map(lien=><li><a href={lien.href}>{lien.titre}</a></li>)}</ul>
           </div>)}
         </nav>
-        <div class="pied-bas"><span>Intime Conviction · {annee}</span><a href="https://x.com/IntimeConv" rel="noopener">@IntimeConv sur X</a><a href="#contenu">Retour en haut <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
+        <div class="pied-bas"><span>Intime Conviction · {annee}</span><a href={reseauX} rel="noopener">@IntimeConv sur X</a><a href="#contenu">Retour en haut <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
       </div>
     </footer>
   <script>
@@ -288,6 +310,19 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
   <style is:global>
     /* Identité éditoriale commune à l'ensemble du site. */
     .entete,.avec-fond .entete{background:#f7f5f0;color:#22282a;border-top:3px solid #9b303d;border-bottom:0}
+    .barre-edition{background:#252a2d;color:#fff}
+    .barre-edition-interieur{display:flex;align-items:center;justify-content:space-between;gap:0 .75rem;flex-wrap:wrap}
+    .barre-edition p{margin:0;padding:.55rem 0;font:650 .73rem/1.4 var(--sans)}
+    .barre-edition-liens{display:flex;align-items:center;gap:.3rem;margin-inline-start:auto}
+    .entete .barre-edition a{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:.25rem .5rem;color:#fff;font:700 .73rem/1.3 var(--sans)}
+    .entete .barre-edition a:hover{color:#fff;text-decoration:underline}
+    .entete .barre-edition a:focus-visible{outline:2px solid #fff;outline-offset:-3px}
+    .entete .barre-edition .edition-reseau{min-width:36px}
+    .entete .barre-edition .edition-abonnement{background:#a12c39;min-height:30px}
+    @media(max-width:47.99rem){
+      .entete .barre-edition a{min-height:44px}
+      .entete .barre-edition .edition-abonnement{min-height:44px}
+    }
     .entete .barre{min-height:124px;display:flex;align-items:center;justify-content:space-between;gap:1.5rem}
     .identite-journal{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-width:0;padding:1.15rem 0 1rem;gap:.5rem}
     .identite-journal .marque{margin:0}
