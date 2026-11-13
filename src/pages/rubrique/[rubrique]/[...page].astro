@@ -3,7 +3,6 @@ import VisuelAssises from '../../../components/VisuelAssises.astro';
 import photoAssises from '../../../assets/salle-voltaire.webp';
 import Base from '../../../layouts/Base.astro';
 import ListeArticles from '../../../components/ListeArticles.astro';
-import Actualites from '../../../components/Actualites.astro';
 import Culture from '../../../components/Culture.astro';
 import { RUBRIQUES, rubrique } from '../../../lib/rubriques.mjs';
 import { tousLesArticles } from '../../../lib/articles.mjs';
@@ -87,7 +86,7 @@ const suite = page.data.filter(article=>!aLaUne.includes(article));
       <ListeArticles articles={aLaUne} rubriqueVisible={false} niveau={3} />
     </section>
   )}
-  {estActualite && <Actualites rubriqueSlug="cours-du-jour" limite={24} titre="Dans la presse" lienRubrique={false} />}
+  {estActualite && <p id="actualites"><a href="/revue-de-presse/">Consulter la revue de presse ↗</a></p>}
   {page.currentPage === 1 && r.slug === 'le-greffe' && <Culture titre="À lire, à voir" />}
   {suite.length > 0 && <>
     <div class="titre-section"><h2>{estActualite ? 'Tous les autres articles du journal' : 'Les articles d’Intime Conviction'}</h2></div>

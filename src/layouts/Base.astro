@@ -42,26 +42,23 @@ const navigation = [
   ] },
   { titre: 'Dossiers', href: '/dossiers/', liens: [
     {titre:'Chronologie des affaires',href:'/chronologie/'},
+    {titre:'Carte des affaires',href:'/carte/'},
   ] },
   { titre: 'Comprendre', href: '/comprendre/', liens: [
     {titre:'Les jurés et les acteurs du procès',href:'/rubrique/le-banc-des-jures/'},
     {titre:'Jurisprudence',href:'/jurisprudence/'},
   ] },
-  { titre: 'Archives', href: '/archives/', liens: [
-    {titre:'Archives de presse',href:'/archives/presse/'},
-  ] },
+  { titre: 'Archives', href: '/archives/', liens: [] },
 ];
 const accesDirects = [
-  { href: '/rubrique/cours-du-jour/#actualites', titre: 'Revue de presse' },
   { href: '/annuaire/#repertoire', titre: 'Trouver un tribunal' },
-  { href: '/carte/', titre: 'Carte des affaires' },
   { href: '/assister/', titre: 'Assister à un procès' },
 ];
 const piedNavigation = [
   { titre: 'Le journal', liens: [
     ...RUBRIQUES.map(r=>({titre:r.libelle,href:`/rubrique/${r.slug}/`})),
     {titre:'Archives du journal',href:'/archives/'},
-    {titre:'Revue de presse',href:'/archives/presse/'},
+    {titre:'Revue de presse',href:'/revue-de-presse/'},
   ] },
   { titre: 'Infos pratiques', liens: [
     {titre:'Agenda des sessions',href:'/agenda/'},
@@ -179,14 +176,14 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
             <ul>
               {navigation.map(lien=><li class="navigation-entree">
                 <a href={lien.href} aria-current={courant(lien.href)}>{lien.titre}</a>
-                <details name="navigation-principale" class="navigation-rubriques navigation-sous-menu">
+                {lien.liens.length > 0 && <details name="navigation-principale" class="navigation-rubriques navigation-sous-menu">
                   <summary aria-label={`Sous-menu ${lien.titre}`}><svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></summary>
                   <ul>{lien.liens.map(l=> <li><a href={l.href}>{l.titre}</a></li>)}</ul>
-                </details>
+                </details>}
               </li>)}
               <li>
                 <details name="navigation-principale" class="navigation-rubriques">
-                  <summary>Analyses et culture <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></summary>
+                  <summary>Analyses &amp; culture <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" /></svg></summary>
                   <ul>
                     {RUBRIQUES.filter(r=>!['cours-du-jour','la-cour-se-leve','le-banc-des-jures'].includes(r.slug)).map(r=>{
                       const href = `/rubrique/${r.slug}/`;
@@ -197,12 +194,13 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
               </li>
             </ul>
           </nav>
+          <a class="navigation-presse" href="/revue-de-presse/" aria-current={courant("/revue-de-presse/")}>Revue de presse</a>
           <details class="navigation-acces">
             <summary class="navigation-bouton">
               <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-              Accès rapides
+              Aller au tribunal
             </summary>
-            <nav class="acces-directs" aria-label="Accès rapides">
+            <nav class="acces-directs" aria-label="Aller au tribunal">
               <ul>
                 {accesDirects.map(({href, titre}) => (
                   <li><a href={href}>{titre}<span aria-hidden="true">↗</span></a></li>
@@ -370,6 +368,12 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     .bande-navigation a[aria-current="page"]{box-shadow:inset 0 -2px #9b303d}
     .bande-navigation :is(a,summary,button):focus-visible,.entete .recherche-lien:focus-visible,.entete .marque a:focus-visible{outline:2px solid #9b303d;outline-offset:-2px}
     .bande-navigation .navigation-bouton-rubriques{display:none;border:0;background:transparent}
+    .bande-navigation .navigation-presse{background:#84323d;color:#fff;padding-inline:.8rem;text-align:center}
+    .bande-navigation .navigation-presse:hover,.bande-navigation .navigation-presse[aria-current="page"]{background:#66232b;color:#fff}
+    @media(max-width:23rem){
+      .bande-navigation .navigation-presse,.bande-navigation .navigation-acces>summary{padding-inline:.35rem;font-size:.65rem}
+      .navigation-acces>summary svg{display:none}
+    }
     .navigation-acces{position:relative;border-inline-start:1px solid #d8d2cb}
     .bande-navigation .navigation-acces>summary{padding-inline:.75rem;white-space:nowrap}
     .navigation-rubriques>ul,.acces-directs{position:absolute;top:100%;left:0;width:16rem;background:#f7f5f0;border:1px solid #c8bdb4;box-shadow:0 8px 18px #22282a26}

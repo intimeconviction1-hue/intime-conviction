@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import { photosArticles } from '../lib/photos-articles.mjs';
+import VisuelAssises from '../components/VisuelAssises.astro';
+import photoDossiers from '../assets/assises-bordeaux.webp';
 import photoSalle from '../assets/salle-voltaire.webp';
 import AgendaEnBref from '../components/AgendaEnBref.astro';
 import { CULTURE } from '../lib/culture.mjs';
@@ -114,10 +116,23 @@ const articlesUne = selectionUne.map(({data}) => ({
       </section>
     )}
 
+    <section class="renvoi-presse" aria-labelledby="titre-revue-accueil">
+      <div>
+        <h2 id="titre-revue-accueil">Revue de presse</h2>
+        <p>Les audiences et verdicts suivis par les médias, avec leurs sources.</p>
+      </div>
+      <a href="/revue-de-presse/">Voir la sélection <span aria-hidden="true">↗</span></a>
+    </section>
+
     <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
       <div class="accueil-dossiers-entete">
         <h2 id="titre-dossiers-accueil">Les affaires à suivre</h2>
         <a href="/dossiers/">Tous les dossiers <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="dossiers-visuel">
+        <VisuelAssises image={photoDossiers} alt="Salle de la cour d’assises du palais Thiac, Bordeaux"
+          source="https://commons.wikimedia.org/wiki/File:Palais_Thiac,_Salle_d%27audience_de_la_cour_d%27assises.jpg"
+          credit="Tiraden" licence="CC BY-SA 4.0" licenceUrl="https://creativecommons.org/licenses/by-sa/4.0/" />
       </div>
       {dossiersMisEnAvant.length > 0 && (
         <ul class="accueil-dossiers-grille">
@@ -251,7 +266,6 @@ const articlesUne = selectionUne.map(({data}) => ({
         </div>
       </form>
       <nav aria-label="Consulter les archives">
-        <a href="/archives/">Archives du journal <span aria-hidden="true">↗</span></a>
         <a href="/archives/presse/">Archives de presse <span aria-hidden="true">↗</span></a>
       </nav>
     </div>
@@ -260,7 +274,16 @@ const articlesUne = selectionUne.map(({data}) => ({
 </Base>
 
 <style>
-  .ouverture,.surface-lecture{background:#fbfaf7;color:#252525}
+  .ouverture,.surface-lecture{color:#252525}
+  .ouverture{background:linear-gradient(155deg,#f0e9e0,#fcfaf6 66%)}
+  .surface-lecture{background:#fcfaf6}
+  .renvoi-presse{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.65rem 1.5rem;padding:1.15rem clamp(1rem,3vw,2rem);background:#262526;color:#fff;border-left:5px solid #a12c39}
+  .renvoi-presse h2{margin:0;color:#fff;font:650 clamp(1.5rem,3vw,2.2rem)/1.12 var(--serif)}
+  .renvoi-presse p{margin:.4rem 0 0;color:#e7ded4;font:.87rem/1.5 var(--sans)}
+  .renvoi-presse a{display:inline-flex;gap:.65rem;align-items:center;min-height:44px;padding:.4rem .75rem;border:1px solid #c6aea3;font:700 .8rem var(--sans);color:#fff}
+  .renvoi-presse a:hover,.renvoi-presse a:focus-visible{background:#84323d}
+  .dossiers-visuel{margin-bottom:1rem;background:#e8ded1}
+  .dossiers-visuel :global(img){max-height:17rem;object-fit:cover;object-position:center 56%}
   .ouverture-interieur{padding-top:clamp(1rem,2.5vw,2rem)}
   .journal-corps{padding-bottom:3rem}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}

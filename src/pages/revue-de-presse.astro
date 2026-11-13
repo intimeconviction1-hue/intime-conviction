@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import Actualites from '../components/Actualites.astro';
+---
+<Base titre="Revue de presse" description="Une sélection de titres et de liens des médias qui suivent les audiences, verdicts et procès criminels.">
+  <header class="titre-page">
+    <h1>Revue de presse</h1>
+    <p class="sous-titre"><a href="/archives/presse/">Archives de presse ↗</a></p>
+  </header>
+  <Actualites rubriqueSlug="cours-du-jour" limite={24} titre="Les procès dans les médias" lienRubrique={false} />
+</Base>
+<style>
+  .titre-page{border-bottom:2px solid #84323d}
+  h1{font:650 clamp(2.5rem,6vw,5rem)/1.1 var(--serif);letter-spacing:-.04em}
+  .sous-titre a{color:#84323d;text-decoration:underline;text-underline-offset:.15em}
+</style>
