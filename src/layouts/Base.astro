@@ -194,7 +194,15 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
               </li>
             </ul>
           </nav>
-          <a class="navigation-presse" href="/revue-de-presse/" aria-current={courant("/revue-de-presse/")}>Revue de presse</a>
+          <details class="navigation-presse-menu">
+            <summary class="navigation-presse">Revue de presse <span aria-hidden="true">⌄</span></summary>
+            <nav class="acces-directs" aria-label="Revue de presse">
+              <ul>
+                <li><a href="/revue-de-presse/" aria-current={courant("/revue-de-presse/")}>Derniers articles de presse</a></li>
+                <li><a href="/archives/presse/" aria-current={courant("/archives/presse/")}>Archives de presse</a></li>
+              </ul>
+            </nav>
+          </details>
           <details class="navigation-acces">
             <summary class="navigation-bouton">
               <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -233,6 +241,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     const bouton = bande?.querySelector<HTMLButtonElement>('.navigation-bouton-rubriques');
     const rubriques = bande?.querySelector<HTMLElement>('.navigation-principale');
     const acces = bande?.querySelector<HTMLDetailsElement>('.navigation-acces');
+    const presse = bande?.querySelector<HTMLDetailsElement>('.navigation-presse-menu');
     const resumeAcces = acces?.querySelector('summary');
     const compact = window.matchMedia('(max-width: 63.99rem)');
 
@@ -255,12 +264,17 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
           fermerRubriques();
         } else {
           acces.open = false;
+          if (presse) presse.open = false;
           bouton.setAttribute('aria-expanded', 'true');
         }
       });
 
       resumeAcces.addEventListener('click', () => {
-        if (!acces.open) fermerRubriques();
+        if (!acces.open) { fermerRubriques(); if (presse) presse.open = false; }
+      });
+
+      presse?.querySelector('summary')?.addEventListener('click', () => {
+        if (!presse.open) { fermerRubriques(); acces.open = false; }
       });
 
       bande.addEventListener('keydown', event => {
@@ -269,6 +283,9 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
         if (sousMenu && sousMenu.contains(event.target as Node)) {
           sousMenu.open = false;
           sousMenu.querySelector('summary')?.focus();
+        } else if (presse?.open) {
+          presse.open = false;
+          presse.querySelector('summary')?.focus();
         } else if (acces.open) {
           acces.open = false;
           resumeAcces.focus();
@@ -294,6 +311,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
         if (!(event.target instanceof Node)) return;
         if (!rubriques.contains(event.target) && !bouton.contains(event.target)) fermerRubriques();
         if (!acces.contains(event.target)) acces.open = false;
+        if (presse && !presse.contains(event.target)) presse.open = false;
       });
 
       bande.addEventListener('click', event => {
@@ -368,6 +386,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     .bande-navigation a[aria-current="page"]{box-shadow:inset 0 -2px #9b303d}
     .bande-navigation :is(a,summary,button):focus-visible,.entete .recherche-lien:focus-visible,.entete .marque a:focus-visible{outline:2px solid #9b303d;outline-offset:-2px}
     .bande-navigation .navigation-bouton-rubriques{display:none;border:0;background:transparent}
+    .navigation-presse-menu{position:relative}
     .bande-navigation .navigation-presse{background:#84323d;color:#fff;padding-inline:.8rem;text-align:center}
     .bande-navigation .navigation-presse:hover,.bande-navigation .navigation-presse[aria-current="page"]{background:#66232b;color:#fff}
     @media(max-width:23rem){

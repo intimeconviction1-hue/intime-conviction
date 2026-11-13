@@ -66,6 +66,11 @@ const articlesUne = selectionUne.map(({data}) => ({
       {articlesUne.length > 0 && (
         <section class="une-editoriale" aria-labelledby="une-editoriale-titre">
           <h2 id="une-editoriale-titre">À la une</h2>
+          <div class="commandes-une" hidden>
+            <button type="button" data-precedent aria-label="Article précédent">←</button>
+            <button type="button" data-suivant aria-label="Article suivant">→</button>
+            <button type="button" data-pause>Pause</button>
+          </div>
           <div class="une-editoriale-grille">
             {articlesUne.map(({data, photo, repere}, i) => (
               <article class="article-redaction-une">
@@ -80,7 +85,7 @@ const articlesUne = selectionUne.map(({data}) => ({
                   <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
                   {repere && <p class="repere-proces">{repere}</p>}
                   <h3><a href={data.chemin}>{data.titre}</a></h3>
-                  {i === 0 && <><p>{data.extrait}</p><a class="lire-une" href={data.chemin}>Lire l’article <span aria-hidden="true">↗</span></a></>}
+                  <p>{data.extrait}</p><a class="lire-une" href={data.chemin}>Lire l’article <span aria-hidden="true">↗</span></a>
                 </div>
               </article>
             ))}
@@ -268,6 +273,45 @@ const articlesUne = selectionUne.map(({data}) => ({
 
   </div></div>
 </Base>
+<script>
+  const carrousel = document.querySelector('.une-editoriale');
+  const cartes = [...(carrousel?.querySelectorAll<HTMLElement>('.article-redaction-une') ?? [])];
+  const commandes = carrousel?.querySelector<HTMLElement>('.commandes-une');
+  const pause = commandes?.querySelector<HTMLButtonElement>('[data-pause]');
+  if (carrousel && commandes && pause && cartes.length > 1) {
+    const mouvement = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let index = 0;
+    let enPause = mouvement.matches;
+    let survol = false;
+    let timer: number | undefined;
+    const afficher = (position: number) => {
+      index = (position + cartes.length) % cartes.length;
+      cartes.forEach((carte, i) => { carte.hidden = i !== index; });
+    };
+    const regler = () => {
+      window.clearInterval(timer);
+      pause.textContent = enPause ? 'Reprendre' : 'Pause';
+      if (!enPause && !survol && !document.hidden) timer = window.setInterval(() => afficher(index + 1), 8000);
+    };
+    const parcourir = (pas: number) => {
+      enPause = true;
+      afficher(index + pas);
+      regler();
+    };
+    commandes.querySelector('[data-precedent]')?.addEventListener('click', () => parcourir(-1));
+    commandes.querySelector('[data-suivant]')?.addEventListener('click', () => parcourir(1));
+    pause.addEventListener('click', () => { enPause = !enPause; regler(); });
+    carrousel.addEventListener('focusin', () => { enPause = true; regler(); });
+    carrousel.addEventListener('mouseenter', () => { survol = true; regler(); });
+    carrousel.addEventListener('mouseleave', () => { survol = false; regler(); });
+    mouvement.addEventListener('change', () => { if (mouvement.matches) { enPause = true; regler(); } });
+    document.addEventListener('visibilitychange', regler);
+    carrousel.classList.add('une-carrousel');
+    commandes.hidden = false;
+    afficher(0);
+    regler();
+  }
+</script>
 
 <style>
   .ouverture,.surface-lecture{color:#252525}
@@ -367,4 +411,13 @@ const articlesUne = selectionUne.map(({data}) => ({
   .une-editoriale-texte .repere-proces{margin:.45rem 0;font:750 .72rem/1.45 var(--sans);letter-spacing:.06em;text-transform:uppercase}
   .lire-une{display:inline-flex;align-items:center;gap:.7rem;min-height:44px;margin-top:1rem;padding:.45rem .85rem;background:#84323d;color:#fff;font:750 .85rem/1.3 var(--sans)}
   .lire-une:focus-visible{outline:2px solid white;outline-offset:3px}
+  .une-carrousel .une-editoriale-grille{display:block}
+  .une-carrousel .article-redaction-une{background:#262526;color:#fff;border:0;padding:0}
+  .une-carrousel .article-redaction-une[hidden]{display:none}
+  .une-carrousel .une-editoriale-texte{padding:clamp(1rem,3vw,2rem)}
+  .une-carrousel .article-redaction-une :is(time,figcaption){color:#f1d7d5}
+  .une-carrousel .article-redaction-une figcaption{padding:.45rem 1rem}
+  .une-carrousel .article-redaction-une img{aspect-ratio:2.5/1;max-height:25rem}
+  .commandes-une:not([hidden]){display:flex;justify-content:flex-end;gap:.4rem;margin:0 0 .65rem}
+  .commandes-une button{min-width:44px;min-height:44px;padding:.4rem .75rem}
 </style>
