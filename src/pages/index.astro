@@ -301,7 +301,7 @@ const articlesUne = selectionUne.map(({data}) => ({
     commandes.querySelector('[data-precedent]')?.addEventListener('click', () => parcourir(-1));
     commandes.querySelector('[data-suivant]')?.addEventListener('click', () => parcourir(1));
     pause.addEventListener('click', () => { enPause = !enPause; regler(); });
-    carrousel.addEventListener('focusin', () => { enPause = true; regler(); });
+    carrousel.querySelector('.une-editoriale-grille')?.addEventListener('focusin', () => { enPause = true; regler(); });
     carrousel.addEventListener('mouseenter', () => { survol = true; regler(); });
     carrousel.addEventListener('mouseleave', () => { survol = false; regler(); });
     mouvement.addEventListener('change', () => { if (mouvement.matches) { enPause = true; regler(); } });
