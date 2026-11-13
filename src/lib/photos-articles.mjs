@@ -20,6 +20,9 @@ const photoPalaisBlois = {
 };
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/assises-que-dit-la-feuille-de-motivation/11/2026/': {
+    ...photoPalaisAix, lieu: 'Photo d’illustration · Palais Verdun, Aix-en-Provence',
+  },
   '/chateauneuf-les-martigues-ce-que-reconnait-un-accuse/11/2026/': photoPalaisAix,
   '/proces-sollacaro-et-tout-recommence-aux-assises/11/2026/': photoPalaisAix,
   '/inass-touloub-a-blois-le-poids-des-trente-neuf-annees/11/2026/': photoPalaisBlois,
