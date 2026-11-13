@@ -21,6 +21,7 @@ const PAGES_STATIQUES = [
 export async function GET({ site }) {
   const [articles, veille] = await Promise.all([tousLesArticles(), lireVeille()]);
   const adresses = new Set(PAGES_STATIQUES);
+  const modifications = new Map();
 
   for (const c of CULTURE) adresses.add('/culture/' + c.slug + '/');
 
@@ -29,7 +30,11 @@ export async function GET({ site }) {
     parRubrique.set(article.data.rubrique, (parRubrique.get(article.data.rubrique) ?? 0) + 1);
     // Une notice dont les faits restent invérifiables demeure accessible par son URL
     // historique, mais n'est pas proposée à l'indexation.
-    if (article.data.verificationEnCours !== true) adresses.add(article.data.chemin);
+    if (article.data.verificationEnCours !== true) {
+      adresses.add(article.data.chemin);
+      const date = article.data.dateMiseAJour ?? article.data.date;
+      if (date instanceof Date && !Number.isNaN(date.getTime())) modifications.set(article.data.chemin, date.toISOString());
+    }
     adresses.add('/archives/' + article.data.date.getFullYear() + '/');
   }
   for (const r of RUBRIQUES) {
@@ -58,7 +63,9 @@ export async function GET({ site }) {
   }
 
   const xml = [...adresses].map(chemin => '<url><loc>' +
-    new URL(chemin, site).href.replace(/&/g, '&amp;') + '</loc></url>').join('\n');
+    new URL(chemin, site).href.replace(/&/g, '&amp;') + '</loc>' +
+    (modifications.has(chemin) ? '<lastmod>' + modifications.get(chemin) + '</lastmod>' : '') +
+    '</url>').join('\n');
   return new Response('<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
     xml + '\n</urlset>\n', {
