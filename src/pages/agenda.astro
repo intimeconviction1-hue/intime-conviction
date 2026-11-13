@@ -28,6 +28,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
     <h1>Agenda des <span>sessions criminelles</span></h1>
     <p>Les périodes ci-dessous proviennent des intitulés de rôles publiés par les cours d’appel. Une période de session ne confirme ni la tenue d’un procès particulier ni l’accès du public à chaque audience.</p>
     <p>Plusieurs pages de publication des rôles sont en maintenance. Les liens ci-dessous donnent les coordonnées des cours d’appel pour vérifier les dates auprès du greffe.</p>
+    <p class="liens-agenda"><a href="/assister/">Comment assister à un procès d’assises</a> · <a href="/dossiers/">Suivre les affaires du journal</a></p>
     <p id="alerte-actualite" class="alerte-actualite" data-date-generation={dateDuJour} data-date-verification={DATE_CONTROLE_AGENDA} hidden role="status"></p>
     <p class="date-controle">Sources vérifiées le <time datetime={DATE_CONTROLE_AGENDA}>{formatDate(DATE_CONTROLE_AGENDA)}</time>. Sessions non terminées au <time datetime={dateDuJour}>{formatDate(dateDuJour)}</time>, date de génération de cette page.</p>
   </header>
@@ -154,6 +155,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
   filtres?.addEventListener('reset',()=>requestAnimationFrame(afficherSelection));
 </script>
 <style>
+.liens-agenda a{text-decoration:underline;text-underline-offset:.2em}
 .tete-agenda{margin:2rem 0 2.5rem;padding:clamp(1.5rem,4vw,3rem);background:#f3f0eb;border-top:3px solid #a12c39;color:#202529}
 .sur-titre{margin:0 0 1rem;font:650 .8rem/1.5 var(--sans);color:#96313b}
 .tete-agenda h1{font:650 clamp(2.6rem,6vw,5rem)/1.08 var(--serif);letter-spacing:-.045em;margin:0 0 1.1rem}

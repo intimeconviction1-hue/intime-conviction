@@ -8,7 +8,7 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
 ---
 <ol class="frise-evenements" aria-label={annee ? 'Repères judiciaires de ' + annee : 'Repères judiciaires vérifiés dans les médias'}>
   {reperes.map((r) => (
-    <li data-dossier={r.dossier} data-type={r.type} data-phase={r.phase}>
+    <li id={r.id} data-dossier={r.dossier} data-type={r.type} data-phase={r.phase}>
       <div class="marqueur-date">
         <time datetime={r.dateEvenement}>{date(r.dateEvenement)}</time>
         <span>DATE DE L’ÉVÉNEMENT</span>
@@ -29,6 +29,7 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
 <style>
 .frise-evenements{list-style:none;counter-reset:ligne;display:flex;flex-direction:column;gap:0;padding:0;margin:0}
 .frise-evenements li{display:grid;grid-template-columns:minmax(145px,.9fr) minmax(0,2.8fr);gap:2rem;position:relative;border-top:1px solid var(--filet);padding:1.7rem 0 1.9rem}
+.frise-evenements li:target{scroll-margin-top:2rem;outline:2px solid var(--encre);outline-offset:.35rem}
 .frise-evenements li:last-child{border-bottom:1px solid var(--filet)}
 .marqueur-date{display:flex;flex-direction:column;gap:.45rem;border-left:5px solid #151718;padding:0 0 0 .8rem;align-self:start}
 .marqueur-date time{font:900 clamp(1.15rem,2vw,1.75rem)/1.2 var(--sans);letter-spacing:-.04em}

@@ -1,5 +1,7 @@
 ---
 import { signatureRedaction } from '../../../../lib/diffusion.mjs';
+import { DOSSIERS, dossiersPourArticle, referencesPourDossier } from '../../../../lib/dossiers.mjs';
+import { lireVeille } from '../../../../lib/veille.mjs';
 import Base from '../../../../layouts/Base.astro';
 import { photosArticles } from '../../../../lib/photos-articles.mjs';
 import ListeArticles from '../../../../components/ListeArticles.astro';
@@ -11,7 +13,8 @@ import { tousLesArticles, dateLongue, minutesDeLecture } from '../../../../lib/a
 // L'adresse est celle de l'ancien WordPress, /titre/mois/année/, pour que les
 // liens partagés depuis 2009 mènent toujours au bon article.
 export async function getStaticPaths() {
-  const articles = await tousLesArticles();
+  const [articles, veille] = await Promise.all([tousLesArticles(), lireVeille()]);
+  const dossiersPublies = new Set(DOSSIERS.filter(dossier => referencesPourDossier(dossier, veille.articles).length));
   // Precalcul des voisins par rubrique en O(n), plutot qu'un filtrage
   // integral de 3 436 articles pour chacune des pages generees.
   const groupes = new Map();
@@ -27,11 +30,11 @@ export async function getStaticPaths() {
   }
   return articles.map((article) => {
     const [, slug, mois, annee] = article.data.chemin.split('/');
-    return { params: { slug, mois, annee }, props: { article, voisins: voisinage.get(article) ?? [] } };
+    return { params: { slug, mois, annee }, props: { article, voisins: voisinage.get(article) ?? [], dossiers: dossiersPourArticle(article.data).filter(dossier => dossiersPublies.has(dossier)) } };
   });
 }
 
-const { article, voisins } = Astro.props;
+const { article, voisins, dossiers } = Astro.props;
 const { data } = article;
 const r = rubrique(data.rubrique);
 const photo = photosArticles[data.chemin];
@@ -41,7 +44,10 @@ const signatureArchive = String(data.auteur ?? '').trim();
 // Le nom du journal provient d'un champ WordPress importé et ne suffit pas
 // à identifier la personne qui a rédigé un texte historique.
 const redaction = signatureRedaction(signatureArchive);
-const urlPartage = new URL(data.chemin, Astro.site).href;
+const urlPartage = new URL(data.chemin, Astro.site);
+urlPartage.searchParams.set('utm_source', 'whatsapp');
+urlPartage.searchParams.set('utm_medium', 'social');
+urlPartage.searchParams.set('utm_campaign', 'partage_lecteurs');
 const lienWhatsApp = new URL('https://wa.me/');
 lienWhatsApp.searchParams.set('text', `${data.titre} — ${urlPartage}`);
 const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCase('fr') === 'intime conviction' ? null : (signatureArchive || null));
@@ -90,6 +96,7 @@ const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCas
     )}
     <div class="corps" set:html={data.html} />
     <nav class="retour-archives" aria-label="Parcourir les archives">
+      {dossiers.map(dossier => <a href={`/dossiers/${dossier.slug}/`}>Suivre le dossier · {dossier.titre}</a>)}
       <a href={`/archives/${data.date.getFullYear()}/`}>Tous les articles de {data.date.getFullYear()}</a>
       <a href="/archives/presse/">Archives de presse</a>
     </nav>

@@ -1,27 +1,30 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import { lireVeille } from '../../../lib/veille.mjs';
-import { DOSSIERS, referencesPourDossier, statistiquesDossier } from '../../../lib/dossiers.mjs';
+import { DOSSIERS, dossiersPourArticle, referencesPourDossier, statistiquesDossier } from '../../../lib/dossiers.mjs';
 import { reperesPourDossier, VERIFICATION_AU } from '../../../lib/chronologie-judiciaire.mjs';
 import { juridictionsPourDossier } from '../../../lib/juridictions.mjs';
+import { articlesADiffuser } from '../../../lib/diffusion.mjs';
 import ChronologieEvenements from '../../../components/ChronologieEvenements.astro';
 
 export async function getStaticPaths({ paginate }) {
-  const veille = await lireVeille();
+  const [veille, articles] = await Promise.all([lireVeille(), articlesADiffuser()]);
   return DOSSIERS.flatMap(dossier => {
     const references = referencesPourDossier(dossier, veille.articles);
     if (!references.length) return [];
     const statistiques = statistiquesDossier(references);
+    const dernierArticle = articles.find(article => dossiersPourArticle(article).includes(dossier));
     return paginate(references, {
       params: { slug: dossier.slug },
-      props: { dossier, statistiques },
+      props: { dossier, statistiques, dernierArticle },
       pageSize: 42
     });
   });
 }
 
-const { page, dossier, statistiques } = Astro.props;
+const { page, dossier, statistiques, dernierArticle } = Astro.props;
 const reperes = reperesPourDossier(dossier.slug);
+const decision = reperes.findLast(repere => repere.type === 'decision');
 const lieux = juridictionsPourDossier(dossier.slug);
 const nombre = (n) => n.toLocaleString('fr-FR');
 const date = (s) => new Intl.DateTimeFormat('fr-FR', {
@@ -46,6 +49,13 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
     </div>
   </header>
 
+  {page.currentPage === 1 && (reperes.length > 0 || dernierArticle) && (
+    <nav class="liens-dossier" aria-label="Suivre cette affaire">
+      {dernierArticle && <a href={dernierArticle.chemin}>Lire le dernier article de la rédaction</a>}
+      {reperes.length > 0 && <a href="#reperes-judiciaires">Voir la chronologie de l’affaire</a>}
+      {decision && <a href={'#' + decision.id}>Lire le dernier verdict documenté</a>}
+    </nav>
+  )}
   <aside class="lieux-en-tete" aria-label="Villes où sont situées les juridictions associées"><div><strong>OÙ SE SITUENT LES JURIDICTIONS ?</strong><p>{lieux.map(l=>l.ville).join(" / ")}. Ces villes sont celles des tribunaux, pas nécessairement celles des faits.</p></div><a href="/carte/">VOIR SUR LA CARTE <span aria-hidden="true">↗</span></a></aside>
   <div class="separation">
     <div class="methode">
@@ -103,6 +113,9 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
   </div>
 </Base>
 <style>
+.liens-dossier{display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;padding:1rem 0;font:650 .9rem/1.5 var(--sans)}
+.liens-dossier a{text-decoration:underline;text-underline-offset:.2em}
+
 .fil-ariane{display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;padding:1.3rem 0;font:850 .65rem/1.5 var(--sans);letter-spacing:.05em}
 .fil-ariane a:hover{text-decoration:underline}
 .entete-dossier{background:#151718;color:#fff;border-top:8px solid #ffe100;padding:clamp(1.5rem,5vw,4rem)}

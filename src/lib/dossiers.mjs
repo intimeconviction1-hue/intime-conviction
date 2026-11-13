@@ -55,6 +55,11 @@ export function dossiersPourRecherche(requete) {
   return DOSSIERS.filter(dossier => REGLES[dossier.slug].test(texte));
 }
 
+export function dossiersPourArticle(article) {
+  if (article.verificationEnCours === true) return [];
+  return dossiersPourRecherche(article.titre);
+}
+
 export function referencesPourDossier(dossier, references = []) {
   const regle = REGLES[dossier?.slug];
   if (!regle || !Array.isArray(references)) return [];
