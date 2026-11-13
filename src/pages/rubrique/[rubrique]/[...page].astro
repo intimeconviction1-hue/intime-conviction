@@ -43,6 +43,20 @@ const aLaUne = estActualite ? page.data.filter(({data})=>data.verificationEnCour
 const suite = page.data.filter(article=>!aLaUne.includes(article));
 ---
 <Base titre={titre} description={`${r.libelle}. ${page.total} articles d'Intime Conviction.`} rubriqueActive={r.slug}>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context':'https://schema.org',
+    '@type':'CollectionPage',
+    name:titre,
+    url:Astro.url.href,
+    inLanguage:'fr-FR',
+    mainEntity:{
+      '@type':'ItemList',
+      itemListElement:page.data.filter(a=>a.data.verificationEnCours !== true).map((a,i)=>({
+        '@type':'ListItem',position:i+1,name:a.data.titre,
+        url:new URL(a.data.chemin,Astro.site).href
+      }))
+    }
+  })} />
   <header class="titre-page">
     <p class="etiquette">Rubrique</p>
     <h1>{r.libelle}</h1>
