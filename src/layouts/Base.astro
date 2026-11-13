@@ -27,7 +27,11 @@ const formatEdition = new Intl.DateTimeFormat('fr-FR', {
 const heureEdition = new Intl.DateTimeFormat('fr-FR', {
   timeZone: 'Europe/Paris', hour: '2-digit', minute: '2-digit',
 });
-const reseauX = 'https://x.com/IntimeConv';
+const reseaux = {
+  x: 'https://x.com/IntimeConv',
+  instagram: 'https://www.instagram.com/inti.meconviction/',
+  facebook: 'https://www.facebook.com/profile.php?id=100062932463597',
+};
 const navigation = [
   { titre: 'Nos articles', href: '/rubrique/cours-du-jour/#articles-redaction', liens: [
     {titre:'Chroniques d’audience',href:'/rubrique/la-cour-se-leve/'},
@@ -66,6 +70,7 @@ const piedNavigation = [
   ] },
   { titre: 'À propos', liens: [
     {titre:'Ligne éditoriale',href:'/ligne-editoriale/'},
+    {titre:'Flux RSS',href:'/feed.xml'},
     {titre:'Boutique',href:'/boutique/'},
     {titre:'Mentions légales',href:'/mentions-legales/'},
   ] },
@@ -93,12 +98,13 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     {imagePartage && <meta property="og:image:alt" content={image ? imageAlt : "Fronton d'une cour d'assises"} />}
     {article && <script type="application/ld+json" set:html={JSON.stringify({
       '@context':'https://schema.org',
-      '@type':'Article',
+      '@type':article.type,
+      '@id':canonique.href+'#article',
       headline:article.headline,
       description,
       datePublished:article.datePublished,
       ...(article.dateModified ? { dateModified:article.dateModified } : {}),
-      ...(article.author ? { author:{'@type':'Person',name:article.author} } : {}),
+      ...(article.author ? { author:{'@type':article.authorType,name:article.author,...(article.authorType === 'Organization' ? {url:new URL('/ligne-editoriale/',Astro.site).href} : {})} } : {}),
       publisher:{'@id':'https://www.intimeconviction.fr/#organisation'},
       ...(imagePartage ? {image:[imagePartage]} : {}),
       mainEntityOfPage:canonique.href,
@@ -117,7 +123,8 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       name:'Intime Conviction',
       url:'https://www.intimeconviction.fr/',
       description:"Média français consacré aux procès criminels, aux cours d'assises et à la justice pénale.",
-      logo:new URL('/favicon.svg',Astro.site).href
+      logo:new URL('/favicon.svg',Astro.site).href,
+      sameAs:Object.values(reseaux)
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context':'https://schema.org',
@@ -128,11 +135,12 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       description,
       inLanguage:'fr-FR',
       isPartOf:{'@type':'WebSite','@id':'https://www.intimeconviction.fr/#site',name:'Intime Conviction',url:'https://www.intimeconviction.fr/'},
-      ...(article ? {mainEntity:{'@type':'Article',headline:article.headline}} : {})
+      ...(article ? {mainEntity:{'@id':canonique.href+'#article'}} : {})
     })} />
     <meta name="theme-color" content="#121314" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Intime Conviction" href={new URL('/feed.xml', Astro.site)} />
     {[policeSans].map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
   </head>
   <body class:list={{'avec-fond':accueil}}>
@@ -147,13 +155,13 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
         </div>
         <nav class="liens-entete" aria-label="Recherche, réseaux sociaux et espace lecteur">
           <a class="recherche-lien" href="/recherche/" aria-label="Rechercher dans les articles"><span>Rechercher</span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>
-          <a class="edition-reseau" href={reseauX} aria-label="Intime Conviction sur X">
+          <a class="edition-reseau" href={reseaux.x} aria-label="Intime Conviction sur X">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-7.5L5.4 22H2.3l7.3-8.4L1.8 2h6.5l4.4 6.8L18.9 2ZM17.8 20h1.7L7.3 4H5.5l12.3 16Z"/></svg>
           </a>
-          <a class="edition-reseau" href="https://www.instagram.com/inti.meconviction/" aria-label="Intime Conviction sur Instagram">
+          <a class="edition-reseau" href={reseaux.instagram} aria-label="Intime Conviction sur Instagram">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
           </a>
-          <a class="edition-reseau" href="https://www.facebook.com/profile.php?id=100062932463597" aria-label="Intime Conviction sur Facebook">
+          <a class="edition-reseau" href={reseaux.facebook} aria-label="Intime Conviction sur Facebook">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M14 22v-9h3l.5-3H14V8c0-.9.3-1.5 1.6-1.5H18V3.8c-.4-.1-1.6-.3-3-.3-3 0-5 1.8-5 5V10H7v3h3v9z"/></svg>
           </a>
           <a href="/connexion/">Se connecter</a>
@@ -218,7 +226,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
             <ul>{groupe.liens.map(lien=><li><a href={lien.href}>{lien.titre}</a></li>)}</ul>
           </div>)}
         </nav>
-        <div class="pied-bas"><span>Intime Conviction · {annee}</span><a href={reseauX} rel="noopener">@IntimeConv sur X</a><a href="#contenu">Retour en haut <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
+        <div class="pied-bas"><span>Intime Conviction · {annee}</span><a href={reseaux.x} rel="noopener">@IntimeConv sur X</a><a href="#contenu">Retour en haut <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
       </div>
     </footer>
   <script>

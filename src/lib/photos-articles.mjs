@@ -1,14 +1,37 @@
 import photoAix from '../assets/palais-verdun-aix.webp';
+import photoBlois from '../assets/blois.webp';
+import photoParis from '../assets/rue-de-la-paix.webp';
+import photoPoissy from '../assets/poissy.webp';
 import photoSaintBrieuc from '../assets/saint-brieuc-tribunal.webp';
 
+const photoPalaisAix = {
+  image: photoAix,
+  lieu: 'Palais Verdun, Aix-en-Provence',
+  auteur: 'Lsmpascal',
+  source: 'https://commons.wikimedia.org/wiki/File:Palais_de_justice_Aix-en-Provence.jpg',
+  licence: 'CC BY-SA 3.0',
+  lienLicence: 'https://creativecommons.org/licenses/by-sa/3.0/',
+};
+
+const photoPalaisBlois = {
+  image: photoBlois, lieu: 'Palais de justice de Blois', auteur: 'Chabe01',
+  source: 'https://commons.wikimedia.org/wiki/File:Palais_Justice_-_Blois_(FR41)_-_2022-07-16_-_1.jpg',
+  licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
+};
+// Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
-  '/chateauneuf-les-martigues-ce-que-reconnait-un-accuse/11/2026/': {
-    image: photoAix,
-    lieu: 'Palais Verdun, Aix-en-Provence',
-    auteur: 'Lsmpascal',
-    source: 'https://commons.wikimedia.org/wiki/File:Palais_de_justice_Aix-en-Provence.jpg',
-    licence: 'CC BY-SA 3.0',
-    lienLicence: 'https://creativecommons.org/licenses/by-sa/3.0/',
+  '/chateauneuf-les-martigues-ce-que-reconnait-un-accuse/11/2026/': photoPalaisAix,
+  '/proces-sollacaro-et-tout-recommence-aux-assises/11/2026/': photoPalaisAix,
+  '/inass-touloub-a-blois-le-poids-des-trente-neuf-annees/11/2026/': photoPalaisBlois,
+  '/piaget-le-braqueur-au-borsalino-revient-devant-les-assises/11/2026/': {
+    image: photoParis, lieu: 'Rue de la Paix, Paris', auteur: 'Mustang Joe',
+    source: 'https://commons.wikimedia.org/wiki/File:Rue_de_la_Paix_(5999837542).jpg',
+    licence: 'CC0', lienLicence: 'https://creativecommons.org/publicdomain/zero/1.0/',
+  },
+  '/mort-dolivio-gomes-le-proces-en-appel-du-policier-souvre-a-nanterre/11/2026/': {
+    image: photoPoissy, lieu: 'Hôtel de ville de Poissy', auteur: 'Chabe01',
+    source: 'https://commons.wikimedia.org/wiki/File:Hôtel_Ville_-_Poissy_(FR78)_-_2025-07-12_-_3.jpg',
+    licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
   },
   '/affaire-ferreira-ce-que-les-aveux-permettent-de-verifier/11/2026/': {
     image: photoSaintBrieuc,

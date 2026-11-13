@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://www.intimeconviction.fr/sitemap.xml
+Sitemap: https://www.intimeconviction.fr/news-sitemap.xml

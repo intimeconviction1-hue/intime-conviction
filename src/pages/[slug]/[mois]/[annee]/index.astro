@@ -1,4 +1,5 @@
 ---
+import { signatureRedaction } from '../../../../lib/diffusion.mjs';
 import Base from '../../../../layouts/Base.astro';
 import { photosArticles } from '../../../../lib/photos-articles.mjs';
 import ListeArticles from '../../../../components/ListeArticles.astro';
@@ -39,9 +40,13 @@ const formatArchive = formatArchiveVerifie(data.chemin);
 const signatureArchive = String(data.auteur ?? '').trim();
 // Le nom du journal provient d'un champ WordPress importé et ne suffit pas
 // à identifier la personne qui a rédigé un texte historique.
+const redaction = signatureRedaction(signatureArchive);
+const urlPartage = new URL(data.chemin, Astro.site).href;
+const lienWhatsApp = new URL('https://wa.me/');
+lienWhatsApp.searchParams.set('text', `${data.titre} — ${urlPartage}`);
 const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCase('fr') === 'intime conviction' ? null : (signatureArchive || null));
 ---
-<Base image={photo?.image.src} imageAlt={photo?.lieu} titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} noindex={data.verificationEnCours === true} article={{ headline:data.titre,datePublished:data.date.toISOString(),dateModified:data.dateMiseAJour?.toISOString(),author:auteurIdentifie }}>
+<Base image={photo?.image.src} imageAlt={photo?.lieu} titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} noindex={data.verificationEnCours === true} article={{ headline:data.titre,datePublished:data.date.toISOString(),dateModified:data.dateMiseAJour?.toISOString(),author:auteurIdentifie, authorType:redaction ? 'Organization' : 'Person', type:redaction && data.rubrique === 'cours-du-jour' ? 'NewsArticle' : 'Article' }}>
   <script type="application/ld+json" set:html={JSON.stringify({
     '@context':'https://schema.org',
     '@type':'BreadcrumbList',
@@ -76,7 +81,7 @@ const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCas
         <p>{formatArchive.explication}</p>
       </aside>
     )}
-    <div class="outils-lecture"><span>Confort de lecture</span><button id="taille-texte" type="button" aria-pressed="false">Agrandir le texte</button><button id="copier-lien" type="button">Copier le lien</button><span id="partage-statut" role="status"></span></div>
+    <div class="outils-lecture"><span>Confort de lecture</span><button id="taille-texte" type="button" aria-pressed="false">Agrandir le texte</button>{data.verificationEnCours !== true && <a class="partager-whatsapp" href={lienWhatsApp.href}>Partager sur WhatsApp</a>}<button id="copier-lien" type="button">Copier le lien</button><span id="partage-statut" role="status"></span></div>
     {photo && (
       <figure class="photo-article">
         <img src={photo.image.src} width={photo.image.width} height={photo.image.height} alt={photo.lieu} fetchpriority="high" />
@@ -124,7 +129,8 @@ function progression(){const r=article.getBoundingClientRect();barre.style.width
 .fil-ariane{font:650 .69rem/1.6 var(--sans);letter-spacing:0;text-transform:none;color:#565b5e}
 .fil-ariane a{border-bottom:1px solid #a12c39}
 .fil-ariane a:hover{background:transparent;color:#a12c39}
-.outils-lecture button:focus-visible{outline:3px solid #a12c39}
+.partager-whatsapp{font:inherit;color:inherit;text-decoration:underline;text-underline-offset:.2em}
+.outils-lecture :is(button,a):focus-visible{outline:3px solid #a12c39}
 
 
 .credit-archive{margin:1.25rem 0;padding:1rem 1.2rem;border-left:3px solid #a12c39;background:#f0eee9;color:#202529}
