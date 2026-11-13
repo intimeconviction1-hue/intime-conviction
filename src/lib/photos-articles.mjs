@@ -1,4 +1,4 @@
-import photoCode from '../assets/code-procedure-penale.webp';
+import photoCode from '../assets/code-procedure-penale-croquis.webp';
 import photoAix from '../assets/palais-verdun-aix.webp';
 import photoBlois from '../assets/blois.webp';
 import photoParis from '../assets/rue-de-la-paix.webp';
@@ -23,6 +23,7 @@ const photoPalaisBlois = {
 export const photosArticles = {
   '/assises-que-dit-la-feuille-de-motivation/11/2026/': {
     image: photoCode,
+    croquis: true,
     lieu: 'Code de procédure pénale',
     auteur: 'Illustration générée pour Intime Conviction',
     source: photoCode.src,
