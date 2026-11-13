@@ -1,3 +1,4 @@
+import photoCode from '../assets/code-procedure-penale.webp';
 import photoAix from '../assets/palais-verdun-aix.webp';
 import photoBlois from '../assets/blois.webp';
 import photoParis from '../assets/rue-de-la-paix.webp';
@@ -21,7 +22,12 @@ const photoPalaisBlois = {
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
   '/assises-que-dit-la-feuille-de-motivation/11/2026/': {
-    ...photoPalaisAix, lieu: 'Photo d’illustration · Palais Verdun, Aix-en-Provence',
+    image: photoCode,
+    lieu: 'Code de procédure pénale',
+    auteur: 'Illustration générée pour Intime Conviction',
+    source: photoCode.src,
+    licence: 'Texte officiel',
+    lienLicence: 'https://www.legifrance.gouv.fr/codes/id/LEGITEXT000006071154/',
   },
   '/chateauneuf-les-martigues-ce-que-reconnait-un-accuse/11/2026/': photoPalaisAix,
   '/proces-sollacaro-et-tout-recommence-aux-assises/11/2026/': photoPalaisAix,
