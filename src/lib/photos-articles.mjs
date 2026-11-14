@@ -40,6 +40,14 @@ export const photosArticles = {
     licence: 'CC BY-SA 4.0',
     lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
   },
+  '/assises-piece-a-conviction-a-la-barre/11/2026/': {
+    image: photoSalleVoltaire,
+    lieu: 'Photo d’illustration · Salle Voltaire de la cour d’assises, Paris',
+    auteur: 'Tiraden',
+    source: 'https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris_-_salle_Voltaire_(cour_d%27assises).jpg',
+    licence: 'CC BY-SA 4.0',
+    lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
+  },
   '/assises-que-dit-la-feuille-de-motivation/11/2026/': {
     image: photoCode,
     lieu: 'Code de procédure pénale',
