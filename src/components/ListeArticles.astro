@@ -4,7 +4,7 @@ import { dateLongue } from '../lib/articles.mjs';
 
 // `niveau` : 3 sous une section titrée en h2 (accueil), 2 directement sous le
 // h1 d'une page (rubrique) — un saut de niveau égare les lecteurs d'écran.
-const { articles, rubriqueVisible = true, extraits = true, niveau = 3 } = Astro.props;
+const { articles, rubriqueVisible = true, extraits = true, niveau = 3, dateMiseAJourVisible = false } = Astro.props;
 const Titre = `h${niveau}`;
 ---
 <ul class="role">
@@ -13,6 +13,7 @@ const Titre = `h${niveau}`;
       <p class="meta">
         {rubriqueVisible && <><span class="etiquette">{rubrique(data.rubrique).libelle}</span>&ensp;</>}
         <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
+        {dateMiseAJourVisible && data.dateMiseAJour && <> · Mis à jour le <time datetime={data.dateMiseAJour.toISOString()}>{dateLongue(data.dateMiseAJour)}</time></>}
       </p>
       <Titre><a href={data.chemin}>{data.titre}</a></Titre>
       {extraits && <p class="extrait">{data.extrait}</p>}

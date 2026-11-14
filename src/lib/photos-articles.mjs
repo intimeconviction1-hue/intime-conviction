@@ -22,24 +22,32 @@ const photoPalaisBlois = {
   source: 'https://commons.wikimedia.org/wiki/File:Palais_Justice_-_Blois_(FR41)_-_2022-07-16_-_1.jpg',
   licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
 };
+const illustrationAssises = {
+  image: photoBordeaux,
+  lieu: 'Photo d’illustration · Salle de la cour d’assises, palais Thiac, Bordeaux',
+  auteur: 'Tiraden',
+  source: 'https://commons.wikimedia.org/wiki/File:Palais_Thiac,_Salle_d%27audience_de_la_cour_d%27assises.jpg',
+  licence: 'CC BY-SA 4.0',
+  lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
+};
+const photoAssisesParis = {
+  image: photoSalleVoltaire,
+  lieu: 'Photo d’illustration · Salle Voltaire de la cour d’assises, Paris',
+  auteur: 'Tiraden',
+  source: 'https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris_-_salle_Voltaire_(cour_d%27assises).jpg',
+  licence: 'CC BY-SA 4.0',
+  lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
+};
+
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
-  '/assises-entendre-un-proche-sans-serment/11/2026/': {
-    image: photoBordeaux,
-    lieu: 'Photo d’illustration · Salle de la cour d’assises, palais Thiac, Bordeaux',
-    auteur: 'Tiraden',
-    source: 'https://commons.wikimedia.org/wiki/File:Palais_Thiac,_Salle_d%27audience_de_la_cour_d%27assises.jpg',
-    licence: 'CC BY-SA 4.0',
-    lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
-  },
-  '/assises-qui-parle-en-dernier/11/2026/': {
-    image: photoSalleVoltaire,
-    lieu: 'Photo d’illustration · Salle Voltaire de la cour d’assises, Paris',
-    auteur: 'Tiraden',
-    source: 'https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris_-_salle_Voltaire_(cour_d%27assises).jpg',
-    licence: 'CC BY-SA 4.0',
-    lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
-  },
+  '/dettes-cupidite-et-jalousie-le-proces-de-lassassinat-de-la-milliardaire-helene-pastor/09/2018/': photoPalaisAix,
+  '/viol-du-36/01/2019/': photoAssisesParis,
+  '/yvan-colonna-acte-iii/11/2015/': photoAssisesParis,
+  '/dominique-cottrez/07/2015/': illustrationAssises,
+  '/le-bebe-dans-le-coffre/11/2018/': illustrationAssises,
+  '/assises-entendre-un-proche-sans-serment/11/2026/': illustrationAssises,
+  '/assises-qui-parle-en-dernier/11/2026/': photoAssisesParis,
   '/assises-piece-a-conviction-a-la-barre/11/2026/': {
     image: photoSalleVoltaire,
     lieu: 'Photo d’illustration · Salle Voltaire de la cour d’assises, Paris',
