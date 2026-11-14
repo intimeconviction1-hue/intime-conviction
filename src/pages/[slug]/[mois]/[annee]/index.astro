@@ -2,6 +2,7 @@
 import { signatureRedaction } from '../../../../lib/diffusion.mjs';
 import { DOSSIERS, dossiersPourArticle, referencesPourDossier } from '../../../../lib/dossiers.mjs';
 import { lireVeille } from '../../../../lib/veille.mjs';
+import { routesArticles } from '../../../../lib/adresses-articles.mjs';
 import Base from '../../../../layouts/Base.astro';
 import { photosArticles } from '../../../../lib/photos-articles.mjs';
 import ListeArticles from '../../../../components/ListeArticles.astro';
@@ -28,13 +29,14 @@ export async function getStaticPaths() {
       voisinage.set(groupe[i], [groupe[i - 1], groupe[i + 1], groupe[i + 2]].filter(Boolean));
     }
   }
-  return articles.map((article) => {
-    const [, slug, mois, annee] = article.data.chemin.split('/');
-    return { params: { slug, mois, annee }, props: { article, voisins: voisinage.get(article) ?? [], dossiers: dossiersPourArticle(article.data).filter(dossier => dossiersPublies.has(dossier)) } };
+  return routesArticles(articles).map(({ params, article, redirection }) => {
+    if (redirection) return { params, props: { redirection } };
+    return { params, props: { article, voisins: voisinage.get(article) ?? [], dossiers: dossiersPourArticle(article.data).filter(dossier => dossiersPublies.has(dossier)) } };
   });
 }
 
-const { article, voisins, dossiers } = Astro.props;
+const { article, voisins, dossiers, redirection } = Astro.props;
+if (redirection) return Astro.redirect(redirection, 301);
 const { data } = article;
 const r = rubrique(data.rubrique);
 const photo = photosArticles[data.chemin];
@@ -52,7 +54,7 @@ const lienWhatsApp = new URL('https://wa.me/');
 lienWhatsApp.searchParams.set('text', `${data.titre} — ${urlPartage}`);
 const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCase('fr') === 'intime conviction' ? null : (signatureArchive || null));
 ---
-<Base image={photo?.image.src} imageAlt={photo?.lieu} titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} noindex={data.verificationEnCours === true} article={{ headline:data.titre,datePublished:data.date.toISOString(),dateModified:data.dateMiseAJour?.toISOString(),author:auteurIdentifie, authorType:redaction ? 'Organization' : 'Person', type:redaction && data.rubrique === 'cours-du-jour' ? 'NewsArticle' : 'Article' }}>
+<Base cheminCanonique={data.chemin} image={photo?.image.src} imageAlt={photo?.lieu} titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} noindex={data.verificationEnCours === true} article={{ headline:data.titre,datePublished:data.date.toISOString(),dateModified:data.dateMiseAJour?.toISOString(),author:auteurIdentifie, authorType:redaction ? 'Organization' : 'Person', type:redaction && data.rubrique === 'cours-du-jour' ? 'NewsArticle' : 'Article' }}>
   <script type="application/ld+json" set:html={JSON.stringify({
     '@context':'https://schema.org',
     '@type':'BreadcrumbList',

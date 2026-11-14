@@ -10,12 +10,12 @@ import policeSans from '@fontsource-variable/libre-franklin/files/libre-franklin
 import { tousLesArticles } from '../lib/articles.mjs';
 import { RUBRIQUES } from '../lib/rubriques.mjs';
 
-const { titre, description = "Intime Conviction, journal consacré aux procès criminels : actualité des audiences, verdicts, analyses et archives judiciaires.", accueil = false, noindex = false, image, article, imageAlt = "Image d'Intime Conviction" } = Astro.props;
+const { titre, description = "Intime Conviction, journal consacré aux procès criminels : actualité des audiences, verdicts, analyses et archives judiciaires.", accueil = false, noindex = false, cheminCanonique = Astro.url.pathname, image, article, imageAlt = "Image d'Intime Conviction" } = Astro.props;
 // Le nom du journal est le titre principal (h1) de la seule page d'accueil ;
 // ailleurs c'est un paragraphe, le h1 revenant au titre de la page.
 const Marque = 'p';
 const titreComplet = titre ? `${titre} · Intime Conviction` : "Intime Conviction | Le journal des cours d'assises";
-const canonique = new URL(Astro.url.pathname, Astro.site);
+const canonique = new URL(cheminCanonique, Astro.site);
 // À l'accueil, une image éditoriale propre au journal ; chaque article pourra
 // fournir sa propre photographie sans illustration trompeuse.
 const imagePartage = image ? new URL(image, Astro.site).href : (accueil ? new URL(frontonAssises.src, Astro.site).href : null);
