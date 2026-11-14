@@ -48,6 +48,14 @@ export const photosArticles = {
     licence: 'Texte officiel',
     lienLicence: 'https://www.legifrance.gouv.fr/codes/id/LEGITEXT000006071154/',
   },
+  '/assises-premier-recit-charge-decharge/11/2026/': {
+    image: photoCode,
+    lieu: 'Code de procédure pénale',
+    auteur: 'Illustration générée pour Intime Conviction',
+    source: photoCode.src,
+    licence: 'Texte officiel',
+    lienLicence: 'https://www.legifrance.gouv.fr/codes/id/LEGITEXT000006071154/',
+  },
   '/assises-bulletin-blanc-vote-culpabilite/11/2026/': {
     image: photoCode,
     lieu: 'Code de procédure pénale',
