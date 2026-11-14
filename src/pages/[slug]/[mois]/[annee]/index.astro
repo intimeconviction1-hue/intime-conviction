@@ -97,7 +97,8 @@ const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCas
       </figure>
     )}
     <div class="corps" set:html={data.html} />
-    <nav class="retour-archives" aria-label="Parcourir les archives">
+    <nav class="retour-archives" aria-label="Parcourir les dossiers et les archives">
+      {redaction && data.rubrique === 'l-expose' && <a href="/dossiers/">Les dossiers de la rédaction</a>}
       {dossiers.map(dossier => <a href={`/dossiers/${dossier.slug}/`}>Suivre le dossier · {dossier.titre}</a>)}
       <a href={`/archives/${data.date.getFullYear()}/`}>Tous les articles de {data.date.getFullYear()}</a>
       <a href="/archives/presse/">Archives de presse</a>
