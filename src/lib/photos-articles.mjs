@@ -1,3 +1,4 @@
+import photoBordeaux from '../assets/assises-bordeaux.webp';
 import photoSalleVoltaire from '../assets/salle-voltaire.webp';
 import photoCode from '../assets/code-procedure-penale.webp';
 import croquisDelibere from '../assets/dossier-delibere-croquis.webp';
@@ -23,6 +24,14 @@ const photoPalaisBlois = {
 };
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/assises-entendre-un-proche-sans-serment/11/2026/': {
+    image: photoBordeaux,
+    lieu: 'Photo d’illustration · Salle de la cour d’assises, palais Thiac, Bordeaux',
+    auteur: 'Tiraden',
+    source: 'https://commons.wikimedia.org/wiki/File:Palais_Thiac,_Salle_d%27audience_de_la_cour_d%27assises.jpg',
+    licence: 'CC BY-SA 4.0',
+    lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
+  },
   '/assises-qui-parle-en-dernier/11/2026/': {
     image: photoSalleVoltaire,
     lieu: 'Photo d’illustration · Salle Voltaire de la cour d’assises, Paris',
