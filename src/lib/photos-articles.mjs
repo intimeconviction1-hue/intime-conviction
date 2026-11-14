@@ -111,4 +111,12 @@ export const photosArticles = {
     licence: 'CC BY-SA 4.0',
     lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
   },
+  '/ferreira-sollacaro-deux-manieres-deprouver-un-recit/11/2026/': {
+    image: photoSaintBrieuc,
+    lieu: 'Procès Ferreira · Palais de justice de Saint-Brieuc',
+    auteur: 'Presko',
+    source: 'https://commons.wikimedia.org/wiki/File:Saint-Brieuc-tribunal.JPG',
+    licence: 'CC BY-SA 4.0',
+    lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
+  },
 };
