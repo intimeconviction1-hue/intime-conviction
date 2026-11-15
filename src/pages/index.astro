@@ -74,17 +74,21 @@ const articlesUne = selectionUne.map(({data}) => ({
           <div class="une-editoriale-grille">
             {articlesUne.map(({data, photo, repere}, i) => (
               <article class="article-redaction-une">
-                {photo && (
-                  <figure class:list={{"une-croquis": photo.croquis}}>
+                <div class:list={["une-couverture", {"avec-photo": photo, "une-croquis": photo?.croquis}]}>
+                  {photo && (
                     <img src={photo.image.src} width={photo.image.width} height={photo.image.height}
                       alt={photo.lieu} loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} />
-                    <figcaption>{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a>{!photo.croquis && " · cadrée"}</figcaption>
-                  </figure>
+                  )}
+                  <div class="une-titre">
+                    <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
+                    {repere && <p class="repere-proces">{repere}</p>}
+                    <h3><a href={data.chemin}>{data.titre}</a></h3>
+                  </div>
+                </div>
+                {photo && (
+                  <p class="une-credit">{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a>{!photo.croquis && " · cadrée"}</p>
                 )}
                 <div class="une-editoriale-texte">
-                  <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
-                  {repere && <p class="repere-proces">{repere}</p>}
-                  <h3><a href={data.chemin}>{data.titre}</a></h3>
                   <p>{data.extrait}</p><a class="lire-une" href={data.chemin}>Lire l’article <span aria-hidden="true">↗</span></a>
                 </div>
               </article>
@@ -332,15 +336,19 @@ const articlesUne = selectionUne.map(({data}) => ({
   .une-editoriale-grille{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:1rem 1.8rem}
   .article-redaction-une{min-width:0;border-bottom:1px solid #c7bdb2;padding-bottom:1rem}
   .article-redaction-une:first-child{grid-row:span 2}
-  .article-redaction-une figure{margin:0 0 .55rem}
-  .article-redaction-une img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
-  .article-redaction-une:first-child img{aspect-ratio:2/1}
-  .article-redaction-une .une-croquis img{object-fit:contain;background:#fbfaf7}
-  .article-redaction-une figcaption{color:#554b47;font:500 .68rem/1.4 var(--sans);margin-top:.35rem}
-  .article-redaction-une figcaption a{text-decoration:underline}
-  .une-editoriale-texte time{color:#84323d;font:750 .76rem/1.4 var(--sans)}
-  .une-editoriale-texte h3{margin:.35rem 0 0;font:650 clamp(1.35rem,2.2vw,2rem)/1.1 var(--serif)}
-  .article-redaction-une:first-child h3{font-size:clamp(2rem,4.2vw,3.85rem);letter-spacing:-.025em}
+  .une-couverture{position:relative;display:grid;align-items:end;isolation:isolate}
+  .une-couverture.avec-photo{min-height:clamp(16rem,34vw,30rem);background:#554b47;color:#fff}
+  .une-couverture img,.une-couverture.avec-photo::after{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
+  .une-couverture img{object-fit:cover}
+  .une-couverture.une-croquis img{object-fit:contain;background:#fbfaf7}
+  .une-couverture.avec-photo::after{content:"";background:linear-gradient(to top,rgba(16,12,12,.94),rgba(16,12,12,.68) 46%,transparent 82%)}
+  .une-couverture.avec-photo .une-titre{padding:clamp(.85rem,3vw,2rem);text-shadow:0 1px 4px #161010}
+  .une-titre time{color:#84323d;font:750 .76rem/1.4 var(--sans)}
+  .avec-photo time{color:inherit}
+  .une-titre h3{margin:.35rem 0 0;font:650 clamp(1.35rem,2.2vw,2rem)/1.1 var(--serif);overflow-wrap:anywhere}
+  .article-redaction-une:first-child h3,.une-carrousel h3{font-size:clamp(1.65rem,4.2vw,3.85rem);letter-spacing:-.025em}
+  .une-credit{color:#554b47;font:500 .68rem/1.4 var(--sans);margin:.4rem 0 0}
+  .une-credit a{text-decoration:underline}
   .une-editoriale-texte p{max-width:65ch;margin:.7rem 0 0;font:500 1rem/1.55 var(--sans)}
   .une-editoriale a:hover{text-decoration:underline;text-underline-offset:.14em}
   @media(max-width:48rem){
@@ -403,21 +411,11 @@ const articlesUne = selectionUne.map(({data}) => ({
     .accueil-dossiers-grille,.greffe-accueil-cartes,.rubriques,.guide-assises,.selection-grille,.outils-accueil{grid-template-columns:minmax(0,1fr)}
     .guide-assises img{height:auto;min-height:0;aspect-ratio:16/9}
   }
-  .article-redaction-une:first-child{background:#262526;color:#fff;padding-bottom:0;border-bottom:0}
-  .article-redaction-une:first-child figure{margin:0}
-  .article-redaction-une:first-child figcaption{padding:.45rem 1rem;color:#e5d9cf}
-  .article-redaction-une:first-child .une-editoriale-texte{padding:clamp(1rem,3vw,2rem)}
-  .article-redaction-une:first-child time{color:#f1bebf}
-  .une-editoriale-texte .repere-proces{margin:.45rem 0;font:750 .72rem/1.45 var(--sans);letter-spacing:.06em;text-transform:uppercase}
+  .une-titre .repere-proces{margin:.45rem 0;font:750 .72rem/1.45 var(--sans);letter-spacing:.06em;text-transform:uppercase}
   .lire-une{display:inline-flex;align-items:center;gap:.7rem;min-height:44px;margin-top:1rem;padding:.45rem .85rem;background:#84323d;color:#fff;font:750 .85rem/1.3 var(--sans)}
-  .lire-une:focus-visible{outline:2px solid white;outline-offset:3px}
+  .lire-une:focus-visible{outline:2px solid #84323d;outline-offset:3px}
   .une-carrousel .une-editoriale-grille{display:block}
-  .une-carrousel .article-redaction-une{background:#262526;color:#fff;border:0;padding:0}
   .une-carrousel .article-redaction-une[hidden]{display:none}
-  .une-carrousel .une-editoriale-texte{padding:clamp(1rem,3vw,2rem)}
-  .une-carrousel .article-redaction-une :is(time,figcaption){color:#f1d7d5}
-  .une-carrousel .article-redaction-une figcaption{padding:.45rem 1rem}
-  .une-carrousel .article-redaction-une img{aspect-ratio:2.5/1;max-height:25rem}
   .commandes-une:not([hidden]){display:flex;justify-content:flex-end;gap:.4rem;margin:0 0 .65rem}
   .commandes-une button{min-width:44px;min-height:44px;padding:.4rem .75rem}
 </style>
