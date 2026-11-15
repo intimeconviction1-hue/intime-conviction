@@ -3,7 +3,8 @@
 import '@fontsource-variable/libre-franklin/wght.css';
 import '@fontsource-variable/newsreader/wght.css';
 import '../styles/global.css';
-import croquisEntete from '../assets/code-procedure-penale-croquis.webp';
+import croquisEntete from '../assets/croquis-audience-bandeau.webp';
+import croquisPanoramique from '../assets/croquis-audience-panoramique.webp';
 import frontonAssises from '../assets/fronton-cour-dassises.jpg';
 // Précharger la police d'interface, employée également pour les titres.
 import policeSans from '@fontsource-variable/libre-franklin/files/libre-franklin-latin-wght-normal.woff2?url';
@@ -145,7 +146,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     <slot name="fond" />
     <a class="evitement" href="#contenu">Aller au contenu</a>
     <header class="entete">
-      <div class:list={["barre", "cadre", { "barre-illustree": accueil }]} style={accueil ? `--croquis-entete: url("${croquisEntete.src}")` : undefined}>
+      <div class:list={["barre", "cadre", { "barre-illustree": accueil }]}>
         <div class="haut-edition">
           {edition && <p class="edition-date">Édition du <time datetime={edition.toISOString()}>{formatEdition.format(edition)} · {heureEdition.format(edition)}</time></p>}
           <nav class="reseaux-entete" aria-label="Réseaux sociaux">
@@ -174,6 +175,14 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
             <a class="edition-abonnement" href="/abonnement/">S’abonner</a>
           </nav>
         </div>
+        {accueil && (
+          <div class="illustration-entete" aria-hidden="true">
+            <picture>
+              <source media="(max-width: 47.99rem)" srcset={croquisEntete.src} />
+              <img src={croquisPanoramique.src} alt="" width={croquisPanoramique.width} height={croquisPanoramique.height} />
+            </picture>
+          </div>
+        )}
       </div>
       <div class="bande-navigation">
         <div class="cadre bande-navigation-interieur">
@@ -354,13 +363,17 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       display:grid;min-height:0;grid-template-columns:minmax(0,1fr) auto;
       gap:0 1.5rem;align-items:center
     }
-    .entete .barre-illustree{position:relative;isolation:isolate}
-    .barre-illustree::before{
-      content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-      background:linear-gradient(90deg,var(--papier-entete) 38%,#faf7f0ad 65%,#faf7f01a),
-        var(--croquis-entete) right 54% / min(59vw,53rem) auto no-repeat;
-      mix-blend-mode:multiply;opacity:.24
+    .entete .barre-illustree{
+      grid-template-columns:minmax(0,1fr) clamp(17rem,32vw,33rem);
+      grid-template-areas:"edition edition" "titre dessin" "actions dessin";
+      padding-bottom:.65rem
     }
+    .barre-illustree .haut-edition{grid-area:edition}
+    .barre-illustree .identite-journal{grid-area:titre}
+    .barre-illustree .liens-entete{grid-area:actions}
+    .illustration-entete{grid-area:dessin;align-self:center;margin-top:.6rem;overflow:hidden;border:1px solid #cdbab1;background:#eee2d6}
+    .illustration-entete img{display:block;width:100%;height:auto}
+    .barre-illustree .marque a{font-size:clamp(2.15rem,4.6vw,5rem)}
     .haut-edition{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:.4rem;border-bottom:1px solid #d8cbc2}
     .edition-date{margin:0;color:#5e474c;font:700 .74rem/1.45 var(--sans)}
     .reseaux-entete,.espace-entete{display:flex;align-items:center}
@@ -447,13 +460,21 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     @media(max-width:62rem){.pied>.cadre{grid-template-columns:minmax(0,1fr)}}
     @media(max-width:35rem){.pied-navigation{grid-template-columns:minmax(0,1fr);gap:1.4rem}}
     @media(max-width:63.99rem){
-      .entete .barre{grid-template-columns:minmax(0,1fr);gap:0}
+      .entete .barre:not(.barre-illustree){grid-template-columns:minmax(0,1fr);gap:0}
+      .entete .barre-illustree{column-gap:1rem}
       .identite-journal .marque a{font-size:clamp(2rem,7.4vw,4.5rem)}
       .liens-entete{margin:0 0 .65rem}
       .recherche-entete{flex:1;width:auto}
     }
     @media(max-width:47.99rem){
-      .barre-illustree::before{background-size:auto,27rem auto;opacity:.13}
+      .entete .barre-illustree{
+        grid-template-columns:minmax(0,1fr);
+        grid-template-areas:"edition" "titre" "actions" "dessin";
+        padding-bottom:.55rem
+      }
+      .barre-illustree .marque a{font-size:clamp(1.48rem,8.1vw,3.6rem)}
+      .illustration-entete{margin-top:0}
+      .illustration-entete img{height:clamp(64px,20vw,108px);object-fit:cover;object-position:center 40%}
       .edition-date{font-size:.68rem}
       .identite-journal{padding:.55rem 0 .65rem}
       .identite-journal .marque a{font-size:clamp(1.48rem,8.1vw,3.6rem)}
