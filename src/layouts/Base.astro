@@ -146,13 +146,9 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     <a class="evitement" href="#contenu">Aller au contenu</a>
     <header class="entete">
       <div class:list={["barre", "cadre", { "barre-illustree": accueil }]} style={accueil ? `--croquis-entete: url("${croquisEntete.src}")` : undefined}>
-        <div class="identite-journal">
-          <Marque class="marque"><a href="/" aria-label="Intime Conviction, accueil"><span class="marque-mot"><span class="marque-intime">INTIME</span><span class="marque-conviction">CONVICTION<span class="marque-point">.</span></span></span></a></Marque>
-          <p class="signature">Le journal des <strong>cours d’assises</strong></p>
+        <div class="haut-edition">
           {edition && <p class="edition-date">Édition du <time datetime={edition.toISOString()}>{formatEdition.format(edition)} · {heureEdition.format(edition)}</time></p>}
-        </div>
-        <nav class="liens-entete" aria-label="Recherche, réseaux sociaux et espace lecteur">
-          <a class="recherche-lien" href="/recherche/" aria-label="Rechercher dans les articles"><span>Rechercher</span><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></a>
+          <nav class="reseaux-entete" aria-label="Réseaux sociaux">
           <a class="edition-reseau" href={reseaux.x} aria-label="Intime Conviction sur X">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-7.5L5.4 22H2.3l7.3-8.4L1.8 2h6.5l4.4 6.8L18.9 2ZM17.8 20h1.7L7.3 4H5.5l12.3 16Z"/></svg>
           </a>
@@ -162,15 +158,28 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
           <a class="edition-reseau" href={reseaux.facebook} aria-label="Intime Conviction sur Facebook">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M14 22v-9h3l.5-3H14V8c0-.9.3-1.5 1.6-1.5H18V3.8c-.4-.1-1.6-.3-3-.3-3 0-5 1.8-5 5V10H7v3h3v9z"/></svg>
           </a>
-          <a href="/connexion/">Se connecter</a>
-          <a class="edition-abonnement" href="/abonnement/">S’abonner</a>
-        </nav>
+          </nav>
+        </div>
+        <div class="identite-journal">
+          <Marque class="marque"><a href="/" aria-label="Intime Conviction, accueil"><span class="marque-mot">INTIME CONVICTION<span class="marque-point">.</span></span></a></Marque>
+          <p class="signature">Le journal des cours d’assises</p>
+        </div>
+        <div class="liens-entete">
+          <form class="recherche-entete" action="/recherche/" method="get" role="search" aria-label="Rechercher dans le journal">
+            <input type="search" name="q" aria-label="Nom, ville ou affaire" placeholder="Rechercher" enterkeyhint="search" />
+            <button type="submit" aria-label="Lancer la recherche"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button>
+          </form>
+          <nav class="espace-entete" aria-label="Espace lecteur">
+            <a href="/connexion/">Se connecter</a>
+            <a class="edition-abonnement" href="/abonnement/">S’abonner</a>
+          </nav>
+        </div>
       </div>
       <div class="bande-navigation">
         <div class="cadre bande-navigation-interieur">
           <button class="navigation-bouton navigation-bouton-rubriques" type="button" aria-expanded="false" aria-controls="navigation-rubriques">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-            Rubriques
+            Menu
           </button>
           <nav id="navigation-rubriques" class="navigation-principale" aria-label="Navigation principale">
             <ul>
@@ -205,8 +214,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
           </details>
           <details class="navigation-acces">
             <summary class="navigation-bouton">
-              <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-              Aller au tribunal
+              Aller au tribunal <span aria-hidden="true">⌄</span>
             </summary>
             <nav class="acces-directs" aria-label="Aller au tribunal">
               <ul>
@@ -304,6 +312,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
         if (event.relatedTarget instanceof Node && !bande.contains(event.relatedTarget)) {
           fermerRubriques();
           acces.open = false;
+          if (presse) presse.open = false;
         }
       });
 
@@ -335,75 +344,89 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     }
   </script>
   <style is:global>
-    /* Identité éditoriale commune à l'ensemble du site. */
-    .entete,.avec-fond .entete{background:#f7f5f0;color:#22282a;border-top:3px solid #9b303d;border-bottom:0}
-    .entete .barre{min-height:124px;display:flex;align-items:center;justify-content:space-between;gap:.75rem 1.25rem;flex-wrap:wrap}
+    .entete,.avec-fond .entete{
+      --bordeaux-entete:#641e30;
+      --papier-entete:#faf7f0;
+      border:0;border-top:4px solid var(--bordeaux-entete);
+      background:var(--papier-entete);color:#232023
+    }
+    .entete .barre{
+      display:grid;min-height:0;grid-template-columns:minmax(0,1fr) auto;
+      gap:0 1.5rem;align-items:center
+    }
     .entete .barre-illustree{position:relative;isolation:isolate}
     .barre-illustree::before{
       content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-      background:linear-gradient(90deg,#f7f5f0 15%,#f7f5f000 65%),var(--croquis-entete) 75% 57% / clamp(34rem,62vw,62rem) auto no-repeat;
-      mix-blend-mode:multiply;opacity:.23
+      background:linear-gradient(90deg,var(--papier-entete) 38%,#faf7f0ad 65%,#faf7f01a),
+        var(--croquis-entete) right 54% / min(59vw,53rem) auto no-repeat;
+      mix-blend-mode:multiply;opacity:.24
     }
-    @media(max-width:47.99rem){
-      .barre-illustree::before{background-position:0 0, right 55%;background-size:auto,27rem auto;opacity:.16}
-    }
-    .edition-date{margin:.1rem 0 0;color:#565052;font:650 .73rem/1.4 var(--sans)}
-    .liens-entete{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem;margin-inline-start:auto}
-    .entete .liens-entete a:not(.recherche-lien){display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:.25rem .55rem;color:#303638;font:700 .75rem/1.3 var(--sans);white-space:nowrap}
-    .entete .liens-entete a:hover{text-decoration:underline}
-    .entete .liens-entete a:focus-visible{outline:2px solid #9b303d;outline-offset:2px}
-    .entete .liens-entete .edition-reseau{min-width:44px}
-    .entete .liens-entete .edition-abonnement:not(.recherche-lien){background:#a12c39;color:#fff;padding-inline:.75rem}
-    .identite-journal{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-width:0;padding:1.15rem 0 1rem;gap:.5rem}
+    .haut-edition{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:.4rem;border-bottom:1px solid #d8cbc2}
+    .edition-date{margin:0;color:#5e474c;font:700 .74rem/1.45 var(--sans)}
+    .reseaux-entete,.espace-entete{display:flex;align-items:center}
+    .entete .edition-reseau{display:grid;place-items:center;width:44px;min-height:44px;color:var(--bordeaux-entete)}
+    .entete .edition-reseau:hover{background:#efe2df;color:var(--bordeaux-entete)}
+    .identite-journal{min-width:0;padding:.8rem 0 1rem}
     .identite-journal .marque{margin:0}
-    .identite-journal .marque a{display:inline-flex;min-height:0;padding:0;font:750 clamp(2.2rem,4.3vw,4.1rem)/.98 var(--sans);letter-spacing:-.067em}
-    .identite-journal .marque-mot{display:inline-flex;align-items:center;gap:.13em;white-space:nowrap}
-    .identite-journal .marque-intime{color:#252a2d}
-    .identite-journal .marque-conviction{display:inline-block;background:#a12c39;color:#fff;padding:.13em .16em .16em;line-height:1}
-    .identite-journal .marque-point{color:#fff}
-    .identite-journal .signature,.avec-fond .identite-journal .signature{display:flex;align-items:center;gap:.85rem;margin:.23rem 0 0;padding:0;font:700 clamp(.96rem,1.32vw,1.12rem)/1.35 var(--sans);letter-spacing:.012em;text-transform:none;max-width:none;color:#363b3e}
-    .identite-journal .signature strong{font:700 1.23em/1.1 var(--serif);text-transform:uppercase;letter-spacing:.02em}
-    .identite-journal .signature{column-gap:.35rem}
-    .identite-journal .signature::before{content:'';display:block;flex:none;width:32px;height:3px;background:#a12c39}
-    .entete .recherche-lien{display:inline-flex;gap:.6rem;width:auto;min-width:0;min-height:44px;height:44px;border:1px solid #bbb4ad;color:#303638;border-radius:0;margin-left:auto;padding:.5rem .85rem;font:650 .75rem/1.3 var(--sans)}
-    .entete .recherche-lien span{position:static;width:auto;height:auto;overflow:visible;clip-path:none;white-space:nowrap}
-    .entete .recherche-lien svg{width:18px;height:18px}
-    .entete .recherche-lien:hover,.avec-fond .entete .recherche-lien:hover{background:#9b303d;border-color:#9b303d;color:#fff!important}
-    .bande-navigation{position:relative;z-index:20;background:#edeae4;border-block:1px solid #d8d2cb}
-    .bande-navigation-interieur{position:relative;display:flex;align-items:stretch;gap:.55rem}
+    .identite-journal .marque a{
+      display:inline-flex;min-height:0;padding:0;color:#2c2127;
+      font:750 clamp(2.8rem,5.2vw,5.5rem)/.91 var(--serif);letter-spacing:-.055em
+    }
+    .identite-journal .marque-mot{display:inline;white-space:nowrap}
+    .identite-journal .marque-point{color:#a12c39}
+    .identite-journal .signature,.avec-fond .identite-journal .signature{
+      display:flex;align-items:center;gap:.65rem;margin:.55rem 0 0;padding:0;
+      color:var(--bordeaux-entete);font:750 .72rem/1.35 var(--sans);letter-spacing:.13em;
+      text-transform:uppercase;max-width:none
+    }
+    .identite-journal .signature::before{content:"";flex:none;width:25px;height:2px;background:#a12c39}
+    .liens-entete{display:flex;align-items:center;gap:.55rem;min-width:0}
+    .recherche-entete{display:flex;width:clamp(9rem,13vw,13rem);min-width:0;border:1px solid #c8b7b7;background:#fffdf8}
+    .recherche-entete input{width:100%;min-width:0;min-height:44px;padding:.25rem .55rem;border:0;background:transparent;color:#2c2127;font:550 .9rem/1.25 var(--sans)}
+    .recherche-entete button{display:grid;place-items:center;flex:0 0 44px;min-height:44px;padding:0;background:transparent;border:0;color:var(--bordeaux-entete);cursor:pointer}
+    .recherche-entete button:hover{background:#efe2df}
+    .espace-entete{gap:.3rem}
+    .entete .espace-entete a{display:inline-flex;align-items:center;min-height:44px;padding-inline:.65rem;color:var(--bordeaux-entete);font:700 .76rem/1.2 var(--sans);white-space:nowrap}
+    .entete .espace-entete a:hover{text-decoration:underline;color:var(--bordeaux-entete)}
+    .entete .espace-entete .edition-abonnement{background:var(--bordeaux-entete);color:#fff}
+    .entete .espace-entete .edition-abonnement:hover{background:#481221;color:#fff}
+    .entete :is(.reseaux-entete a,.espace-entete a,.recherche-entete :is(input,button),.marque a):focus-visible{outline:2px solid #9b303d;outline-offset:-2px}
+    .bande-navigation{position:relative;z-index:20;background:var(--bordeaux-entete);border-bottom:1px solid #481221}
+    .bande-navigation-interieur{position:relative;display:flex;align-items:stretch;gap:.45rem}
     .bande-navigation ul{list-style:none;margin:0;padding:0}
     .navigation-principale{flex:1;min-width:0}
     .navigation-principale>ul{display:flex;align-items:stretch;justify-content:space-between;gap:.2rem}
     .navigation-principale>ul>li{position:relative;min-width:0}
     .navigation-entree{display:flex;align-items:stretch}
-    .bande-navigation :is(a,summary,button){display:flex;align-items:center;justify-content:center;gap:.35rem;min-height:44px;padding:.35rem .45rem;color:#303638;font:750 .76rem/1.25 var(--sans);text-transform:uppercase}
-    .entete .recherche-lien{text-transform:uppercase}
+    .bande-navigation :is(a,summary,button){display:flex;align-items:center;justify-content:center;gap:.35rem;min-height:44px;padding:.35rem .45rem;color:#fff6ef;font:730 .74rem/1.25 var(--sans);text-transform:uppercase;letter-spacing:.025em}
     .bande-navigation :is(summary,button){cursor:pointer;list-style:none}
     .bande-navigation summary::-webkit-details-marker{display:none}
     .navigation-sous-menu summary{min-width:32px;padding-inline:.35rem}
     .navigation-rubriques[open]>summary svg{transform:rotate(180deg)}
-    .bande-navigation :is(a,summary,button):hover,.bande-navigation a[aria-current="page"],.bande-navigation [aria-expanded="true"],.bande-navigation details[open]>summary{background:#e8ddd8;color:#842631}
-    .bande-navigation a[aria-current="page"]{box-shadow:inset 0 -2px #9b303d}
-    .bande-navigation :is(a,summary,button):focus-visible,.entete .recherche-lien:focus-visible,.entete .marque a:focus-visible{outline:2px solid #9b303d;outline-offset:-2px}
+    .bande-navigation :is(a,summary,button):hover,.bande-navigation a[aria-current="page"],.bande-navigation [aria-expanded="true"],.bande-navigation details[open]>summary{background:#491525;color:white}
+    .bande-navigation a[aria-current="page"]{box-shadow:inset 0 -2px #f0c490}
+    .bande-navigation :is(a,summary,button):focus-visible{outline:2px solid #d9a978;outline-offset:-2px}
     .bande-navigation .navigation-bouton-rubriques{display:none;border:0;background:transparent}
     .navigation-presse-menu{position:relative}
-    .bande-navigation .navigation-presse{background:#84323d;color:#fff;padding-inline:.8rem;text-align:center}
+    .bande-navigation .navigation-presse{background:#f3e1cf;color:#52172a;padding-inline:.8rem;text-align:center}
     .bande-navigation .navigation-presse:hover,.bande-navigation .navigation-presse[aria-current="page"]{background:#66232b;color:#fff}
     @media(max-width:23rem){
       .bande-navigation .navigation-presse,.bande-navigation .navigation-acces>summary{padding-inline:.35rem;font-size:.65rem}
       .navigation-acces>summary svg{display:none}
     }
-    .navigation-acces{position:relative;border-inline-start:1px solid #d8d2cb}
+    .navigation-acces{position:relative;border-inline-start:1px solid #ffffff35}
     .bande-navigation .navigation-acces>summary{padding-inline:.75rem;white-space:nowrap}
     .navigation-rubriques>ul,.acces-directs{position:absolute;top:100%;left:0;width:16rem;background:#f7f5f0;border:1px solid #c8bdb4;box-shadow:0 8px 18px #22282a26}
     .navigation-principale>ul>li:last-child .navigation-rubriques>ul,.acces-directs{left:auto;right:0}
-    .bande-navigation :is(.navigation-rubriques>ul,.acces-directs) a{justify-content:flex-start;text-align:start;padding-inline:.85rem}
+    .bande-navigation :is(.navigation-rubriques>ul,.acces-directs) a{justify-content:flex-start;text-align:start;padding-inline:.85rem;color:#492832}
     .acces-directs a span{margin-inline-start:auto;color:#84323d}
     @media(max-width:63.99rem){
       .bande-navigation-interieur{flex-wrap:wrap;justify-content:space-between}
       .bande-navigation.navigation-interactive .navigation-bouton-rubriques{display:flex;padding-inline:.65rem}
       .navigation-interactive .navigation-bouton-rubriques[aria-expanded="false"]+.navigation-principale{display:none}
-      .navigation-principale{order:1;flex-basis:100%}
+      .navigation-principale{order:1;flex-basis:100%;background:var(--papier-entete)}
+      .navigation-principale :is(a,summary){color:#492832}
+      .navigation-principale :is(a,summary):hover,.navigation-principale details[open]>summary,.navigation-principale a[aria-current="page"]{background:#f1e3df;color:#641e30}
       .navigation-interactive .navigation-principale{position:absolute;inset:100% 0 auto;width:100%;max-height:min(65vh,28rem);overflow:auto;overscroll-behavior:contain;background:#f7f5f0;border:1px solid #c8bdb4;box-shadow:0 8px 18px #22282a26}
       .navigation-principale>ul{display:block}
       .navigation-principale>ul>li+li,.acces-directs li+li{border-top:1px solid #d8d2cb}
@@ -424,24 +447,20 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     @media(max-width:62rem){.pied>.cadre{grid-template-columns:minmax(0,1fr)}}
     @media(max-width:35rem){.pied-navigation{grid-template-columns:minmax(0,1fr);gap:1.4rem}}
     @media(max-width:63.99rem){
-      .entete .barre{min-height:105px}
-      .identite-journal .marque a{font-size:clamp(1.75rem,4.4vw,3rem)}
+      .entete .barre{grid-template-columns:minmax(0,1fr);gap:0}
+      .identite-journal .marque a{font-size:clamp(2rem,7.4vw,4.5rem)}
+      .liens-entete{margin:0 0 .65rem}
+      .recherche-entete{flex:1;width:auto}
     }
     @media(max-width:47.99rem){
-      .entete .barre{min-height:88px;gap:.15rem .65rem;padding-block:.55rem}
-      .liens-entete{margin-inline-start:0}
-      .identite-journal .edition-date{margin-top:.1rem}
-      .identite-journal{padding:.2rem 0;gap:.35rem}
-      .identite-journal .marque a{font-size:clamp(1.28rem,5.35vw,2.1rem);letter-spacing:-.06em}
-      .identite-journal .marque-mot{gap:.1em}
-      .identite-journal .signature,.avec-fond .identite-journal .signature{font-size:clamp(.76rem,2.65vw,.9rem);letter-spacing:0;gap:.55rem}
-      .identite-journal .signature::before{width:21px;height:2px}
-      .entete .recherche-lien{min-width:42px;width:42px;height:42px;padding:0;justify-content:center;flex-shrink:0}
-      .entete .recherche-lien span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
-    }
-    @media(max-width:23rem){
-      .identite-journal .marque a{font-size:1.16rem}
-      .identite-journal .signature,.avec-fond .identite-journal .signature{font-size:.74rem}
+      .barre-illustree::before{background-size:auto,27rem auto;opacity:.13}
+      .edition-date{font-size:.68rem}
+      .identite-journal{padding:.55rem 0 .65rem}
+      .identite-journal .marque a{font-size:clamp(1.48rem,8.1vw,3.6rem)}
+      .identite-journal .signature,.avec-fond .identite-journal .signature{font-size:.62rem;letter-spacing:.09em}
+      .recherche-entete input{font-size:1rem}
+      .entete .espace-entete a{padding-inline:.4rem;font-size:.69rem}
+      .bande-navigation-interieur{gap:.15rem}
     }
   </style>
   </body>
