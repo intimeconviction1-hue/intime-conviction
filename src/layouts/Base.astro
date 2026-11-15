@@ -3,7 +3,6 @@
 import '@fontsource-variable/libre-franklin/wght.css';
 import '@fontsource-variable/newsreader/wght.css';
 import '../styles/global.css';
-import croquisManchette from '../assets/croquis-manchette.webp';
 import frontonAssises from '../assets/fronton-cour-dassises.jpg';
 // Précharger la police d'interface, employée également pour les titres.
 import policeSans from '@fontsource-variable/libre-franklin/files/libre-franklin-latin-wght-normal.woff2?url';
@@ -145,20 +144,9 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     <slot name="fond" />
     <a class="evitement" href="#contenu">Aller au contenu</a>
     <header class="entete">
-      <div class:list={["barre", "cadre", { "barre-illustree": accueil }]}>
+      <div class="barre cadre">
         <div class="haut-edition">
           {edition && <p class="edition-date">Édition du <time datetime={edition.toISOString()}>{formatEdition.format(edition)} · {heureEdition.format(edition)}</time></p>}
-          <nav class="reseaux-entete" aria-label="Réseaux sociaux">
-          <a class="edition-reseau" href={reseaux.x} aria-label="Intime Conviction sur X">
-            <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-7.5L5.4 22H2.3l7.3-8.4L1.8 2h6.5l4.4 6.8L18.9 2ZM17.8 20h1.7L7.3 4H5.5l12.3 16Z"/></svg>
-          </a>
-          <a class="edition-reseau" href={reseaux.instagram} aria-label="Intime Conviction sur Instagram">
-            <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-          </a>
-          <a class="edition-reseau" href={reseaux.facebook} aria-label="Intime Conviction sur Facebook">
-            <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M14 22v-9h3l.5-3H14V8c0-.9.3-1.5 1.6-1.5H18V3.8c-.4-.1-1.6-.3-3-.3-3 0-5 1.8-5 5V10H7v3h3v9z"/></svg>
-          </a>
-          </nav>
         </div>
         <div class="identite-journal">
           <Marque class="marque"><a href="/" aria-label="Intime Conviction, accueil"><span class="marque-mot">INTIME <span class="marque-conviction">CONVICTION</span></span></a></Marque>
@@ -174,11 +162,6 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
             <a class="edition-abonnement" href="/abonnement/">S’abonner</a>
           </nav>
         </div>
-        {accueil && (
-          <div class="illustration-entete" aria-hidden="true">
-            <img src={croquisManchette.src} alt="" width={croquisManchette.width} height={croquisManchette.height} />
-          </div>
-        )}
       </div>
       <div class="bande-navigation">
         <div class="cadre bande-navigation-interieur">
@@ -246,7 +229,17 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
             <ul>{groupe.liens.map(lien=><li><a href={lien.href}>{lien.titre}</a></li>)}</ul>
           </div>)}
         </nav>
-        <div class="pied-bas"><span>Intime Conviction · {annee}</span><a href={reseaux.x} rel="noopener">@IntimeConv sur X</a><a href="#contenu">Retour au contenu <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
+        <div class="pied-bas"><span>Intime Conviction · {annee}</span><nav class="reseaux-pied" aria-label="Réseaux sociaux">
+          <a class="pied-reseau" href={reseaux.x} aria-label="Intime Conviction sur X">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-7.5L5.4 22H2.3l7.3-8.4L1.8 2h6.5l4.4 6.8L18.9 2ZM17.8 20h1.7L7.3 4H5.5l12.3 16Z"/></svg>
+          </a>
+          <a class="pied-reseau" href={reseaux.instagram} aria-label="Intime Conviction sur Instagram">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a class="pied-reseau" href={reseaux.facebook} aria-label="Intime Conviction sur Facebook">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M14 22v-9h3l.5-3H14V8c0-.9.3-1.5 1.6-1.5H18V3.8c-.4-.1-1.6-.3-3-.3-3 0-5 1.8-5 5V10H7v3h3v9z"/></svg>
+          </a>
+          </nav><a href="#contenu">Retour au contenu <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
       </div>
     </footer>
   <script>
@@ -359,29 +352,9 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       display:grid;min-height:0;grid-template-columns:minmax(0,1fr) auto;
       gap:0 1.5rem;align-items:center
     }
-    .entete .barre-illustree{
-      position:relative;isolation:isolate;
-      grid-template-columns:minmax(0,57fr) minmax(0,43fr);
-      grid-template-areas:"edition edition" "titre ." "actions .";
-      padding-bottom:.65rem
-    }
-    .barre-illustree .haut-edition{grid-area:edition}
-    .barre-illustree .identite-journal{grid-area:titre}
-    .barre-illustree .liens-entete{grid-area:actions}
-    .illustration-entete{
-      position:absolute;inset:45px 0 0 18%;
-      width:auto;z-index:-1;pointer-events:none
-    }
-    .illustration-entete img{
-      display:block;width:100%;height:100%;object-fit:cover;object-position:center 29%;
-      mask-image:linear-gradient(90deg,transparent 35%,rgba(0,0,0,.25) 49%,#000 67%)
-    }
-    .barre-illustree .reseaux-entete{background:var(--papier-entete);border-radius:0 0 6px 6px}
-    .haut-edition{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:.4rem;border-bottom:1px solid #d8cbc2}
+    .haut-edition{grid-column:1/-1;padding:.45rem 0;border-bottom:1px solid #d8cbc2}
     .edition-date{margin:0;color:#5e474c;font:700 .74rem/1.45 var(--sans)}
-    .reseaux-entete,.espace-entete{display:flex;align-items:center}
-    .entete .edition-reseau{display:grid;place-items:center;width:44px;min-height:44px;color:var(--bordeaux-entete)}
-    .entete .edition-reseau:hover{background:#efe2df;color:var(--bordeaux-entete)}
+    .espace-entete{display:flex;align-items:center}
     .identite-journal{min-width:0;container-type:inline-size;padding:.8rem 0 1rem}
     .identite-journal .marque{margin:0}
     .identite-journal .marque a{
@@ -407,7 +380,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     .entete .espace-entete a:hover{text-decoration:underline;color:var(--bordeaux-entete)}
     .entete .espace-entete .edition-abonnement{background:var(--bordeaux-entete);color:#fff}
     .entete .espace-entete .edition-abonnement:hover{background:#481221;color:#fff}
-    .entete :is(.reseaux-entete a,.espace-entete a,.recherche-entete :is(input,button),.marque a):focus-visible{outline:2px solid #9b303d;outline-offset:-2px}
+    .entete :is(.espace-entete a,.recherche-entete :is(input,button),.marque a):focus-visible{outline:2px solid #9b303d;outline-offset:-2px}
     .bande-navigation{position:relative;z-index:20;background:var(--bordeaux-entete);border-bottom:1px solid #481221}
     .bande-navigation-interieur{position:relative;display:flex;align-items:stretch;gap:.45rem}
     .bande-navigation ul{list-style:none;margin:0;padding:0}
@@ -464,8 +437,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     @media(max-width:62rem){.pied>.cadre{grid-template-columns:minmax(0,1fr)}}
     @media(max-width:35rem){.pied-navigation{grid-template-columns:minmax(0,1fr);gap:1.4rem}}
     @media(max-width:63.99rem){
-      .entete .barre:not(.barre-illustree){grid-template-columns:minmax(0,1fr);gap:0}
-      .entete .barre-illustree{column-gap:1rem}
+      .entete .barre{grid-template-columns:minmax(0,1fr);gap:0}
       .liens-entete{margin:0 0 .65rem}
       .recherche-entete{flex:1;width:auto}
     }
@@ -473,6 +445,10 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     .pied>.cadre{grid-template-columns:minmax(0,1fr) minmax(0,2.5fr);gap:1.6rem 2rem}
     .pied .pied-nom{font:750 clamp(1.25rem,2.3vw,2rem)/1.1 var(--serif);letter-spacing:-.025em}
     .pied-intro p{margin-top:.65rem}
+    .reseaux-pied{display:flex;gap:.4rem}
+    .pied-bas .pied-reseau{display:grid;place-items:center;width:44px;min-height:44px;border:1px solid #68666a;border-radius:50%;color:var(--pied-texte)}
+    .pied-bas .pied-reseau:is(:hover,:focus-visible){background:#f0d5d4;color:#202529}
+    .pied-bas .pied-reseau:focus-visible{outline:2px solid #f0d5d4;outline-offset:3px}
     .pied-navigation{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.1rem}
     .pied-navigation h2{margin:0 0 .45rem;color:#f0d5d4;font:750 .8rem/1.35 var(--sans);text-transform:uppercase}
     .pied-navigation ul{columns:auto}
@@ -480,19 +456,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     @media(max-width:60rem){.pied>.cadre{grid-template-columns:minmax(0,1fr)}}
     @media(max-width:35rem){.pied-navigation{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:47.99rem){
-      .entete .barre-illustree{
-        grid-template-columns:minmax(0,1fr);
-        grid-template-areas:"edition" "titre" "actions";
-        padding-bottom:.55rem
-      }
-      .illustration-entete{inset:45px 0 0;width:auto}
-      .illustration-entete img{object-fit:cover;object-position:center 26%;mask-image:none}
-      .illustration-entete::after{
-        content:"";position:absolute;inset:0;
-        background:linear-gradient(100deg,#faf7f0 0%,#faf7f0f2 48%,#faf7f0cc 77%,#faf7f0a8 100%)
-      }
       .edition-date{font-size:.68rem}
-      .entete .edition-reseau{width:34px}
       .identite-journal{padding:.55rem 0 .65rem}
       .identite-journal .marque a{font-size:min(3.6rem,7.35cqi)}
       .identite-journal .signature,.avec-fond .identite-journal .signature{font-size:.62rem;letter-spacing:.09em}
