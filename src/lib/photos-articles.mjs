@@ -1,3 +1,4 @@
+import photoTulle from '../assets/palais-tulle.webp';
 import photoVannes from '../assets/palais-vannes.webp';
 import photoBordeaux from '../assets/assises-bordeaux.webp';
 import photoSalleVoltaire from '../assets/salle-voltaire.webp';
@@ -42,6 +43,14 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/mort-lyanna-tulle-proces-ajourne/11/2026/': {
+    image: photoTulle,
+    lieu: 'Palais de justice de Tulle',
+    auteur: 'Blood Destructor',
+    source: 'https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Tulle.jpg',
+    licence: 'CC BY-SA 3.0',
+    lienLicence: 'https://creativecommons.org/licenses/by-sa/3.0/',
+  },
   '/vannes-verdict-inceste-en-appel/11/2026/': {
     image: photoVannes,
     lieu: 'Palais de justice de Vannes',
