@@ -16,34 +16,68 @@ export function preparerIndex(articles) {
   }));
 }
 
-export function filtrerEtClasser(index, { q = '', rubrique = '', annee = '' } = {}) {
+const motsCourants = new Set(['a', 'au', 'aux', 'd', 'de', 'des', 'du', 'l', 'la', 'le', 'les', 'un', 'une', 'affaire']);
+const contientMot = (texte, mot) => ` ${texte} `.includes(` ${mot} `);
+
+function uneFaute(a, b) {
+  if (Math.abs(a.length - b.length) > 1) return false;
+  let i = 0;
+  while (i < a.length && a[i] === b[i]) i++;
+  if (a.length > b.length) return a.slice(i + 1) === b.slice(i);
+  if (b.length > a.length) return a.slice(i) === b.slice(i + 1);
+  return a.slice(i + 1) === b.slice(i + 1) ||
+    (a[i] === b[i + 1] && a[i + 1] === b[i] && a.slice(i + 2) === b.slice(i + 2));
+}
+
+export function chercherArticles(index, { q = '', rubrique = '', annee = '' } = {}, corps = new Map()) {
   const phrase = normaliser(q);
-  const mots = [...new Set(phrase.split(' ').filter(Boolean))];
-  const resultats = [];
-  for (const a of index) {
-    if (rubrique && a.rubrique !== rubrique) continue;
-    if (annee && String(a.annee) !== String(annee)) continue;
-    if (!mots.length) {
-      resultats.push({ article: a, score: 0 });
-      continue;
-    }
-    const titre = a.titreRecherche;
-    const extrait = a.extraitRecherche;
-    if (!mots.every((mot) => titre.includes(mot) || extrait.includes(mot))) continue;
-    let score = 0;
-    if (titre === phrase) score += 500;
-    else if (titre.includes(phrase)) score += 150;
-    else if (extrait.includes(phrase)) score += 22;
+  const termes = [...new Set(phrase.split(' ').filter(Boolean))];
+  const principaux = termes.filter(mot => !motsCourants.has(mot));
+  const mots = principaux.length ? principaux : termes;
+  const candidats = index.filter(a => (!rubrique || a.rubrique === rubrique) &&
+    (!annee || String(a.annee) === String(annee)));
+  if (!mots.length) return { articles: candidats, approximatif: false };
+
+  const exacts = [];
+  for (const article of candidats) {
+    const titre = article.titreRecherche, extrait = article.extraitRecherche;
+    let score = 0, trouve = true;
     for (const mot of mots) {
-      if ((' ' + titre + ' ').includes(' ' + mot + ' ')) score += 36;
-      else if (titre.includes(mot)) score += 18;
-      if ((' ' + extrait + ' ').includes(' ' + mot + ' ')) score += 6;
-      else if (extrait.includes(mot)) score += 2;
+      if (contientMot(titre, mot)) score += 36;
+      else if (contientMot(extrait, mot)) score += 10;
+      else if (contientMot(corps.get(article.chemin) ?? '', mot)) score += 2;
+      else { trouve = false; break; }
     }
-    resultats.push({ article: a, score });
+    if (!trouve) continue;
+    if (titre === phrase) score += 500;
+    else if (contientMot(titre, phrase)) score += 150;
+    exacts.push({ article, score });
   }
-  if (mots.length) resultats.sort((a, b) => b.score - a.score || a.article.ordre - b.article.ordre);
-  return resultats.map((r) => r.article);
+
+  const classer = resultats => resultats
+    .sort((a, b) => b.score - a.score || b.article.annee - a.article.annee || a.article.ordre - b.article.ordre)
+    .map(({ article }) => article);
+  if (exacts.length) return { articles: classer(exacts), approximatif: false };
+
+  const approches = [];
+  for (const article of candidats) {
+    const vocabulaire = article.titreRecherche.split(' ');
+    const exact = mots.filter(mot => vocabulaire.includes(mot)).length;
+    if (exact < mots.length - 1) continue;
+    const absent = mots.find(mot => !vocabulaire.includes(mot));
+    if (!absent || absent.length < 3) continue;
+    if (absent.length >= 4 && vocabulaire.some(mot => uneFaute(absent, mot))) {
+      approches.push({ article, score: 2 });
+    } else if (vocabulaire.some(mot => mot.startsWith(absent))) {
+      approches.push({ article, score: 1 });
+    }
+  }
+  const meilleur = Math.max(0, ...approches.map(({ score }) => score));
+  return { articles: classer(approches.filter(({ score }) => score === meilleur)), approximatif: meilleur > 0 };
+}
+
+export function filtrerEtClasser(index, options) {
+  return chercherArticles(index, options).articles;
 }
 
 const normaliserPresse = texte => texte.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('fr');
