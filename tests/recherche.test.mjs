@@ -47,3 +47,20 @@ test('une affaire peut remonter dans les dossiers et la presse sans article du j
   assert.deepEqual(filtrerPresse(presse, {q:'Jubillar', annee:'2026'}), [presse[0]]);
   assert.deepEqual(filtrerPresse(presse, {q:'radio nimes'}), [presse[2]]);
 });
+
+test('un article récent remonte avant les archives à pertinence égale', () => {
+  const articles = preparerIndex([
+    { titre: 'Une peine à Vannes', extrait: 'À Vannes', annee: 2009, chemin: '/ancien/' },
+    { titre: 'Un verdict à Vannes', extrait: 'La cour du Morbihan', annee: 2026, chemin: '/recent/' },
+  ]);
+  assert.equal(filtrerEtClasser(articles, { q: 'Vannes' })[0].chemin, '/recent/');
+  assert.equal(filtrerEtClasser(articles, { q: 'Vanes' })[0].chemin, '/recent/');
+});
+
+test('le nom dans le corps remonte même avec un mot introductif', async () => {
+  const { chercherArticles } = await import('../src/lib/recherche.mjs');
+  const articles = preparerIndex([{ titre: 'Affaire Pastor', extrait: 'Deux procès', chemin: '/pastor/' }]);
+  const resultat = chercherArticles(articles, { q: 'affaire Pascal Dauriac' }, new Map([['/pastor/', 'pascal dauriac']]));
+  assert.equal(resultat.articles[0].chemin, '/pastor/');
+  assert.equal(resultat.approximatif, false);
+});

@@ -5,7 +5,7 @@ import { tousLesArticles } from '../lib/articles.mjs';
 import { lireVeille } from '../lib/veille.mjs';
 
 const [articles, veille] = await Promise.all([tousLesArticles(), lireVeille()]);
-const index = articles.map(({data:d})=>({
+const index = articles.filter(({data}) => data.verificationEnCours !== true).map(({data:d})=>({
   titre:d.titre,chemin:d.chemin,rubrique:d.rubrique,
   rubriqueNom:trouverRubrique(d.rubrique).libelle,
   annee:d.date.getFullYear(),extrait:d.extrait
@@ -14,25 +14,29 @@ const annees = [...new Set([
   ...index.map(a=>String(a.annee)),
   ...veille.articles.map(a=>a.dateAlerte.slice(0,4))
 ])].sort((a,b)=>b.localeCompare(a));
-const total=articles.length.toLocaleString('fr-FR');
+const total=index.length.toLocaleString('fr-FR');
 ---
 <Base noindex titre="Rechercher sur Intime Conviction" description="Retrouvez les dossiers judiciaires, les articles du journal et les références de presse à partir d’une seule recherche.">
   <header class="titre-page recherche-intro">
-    <p class="etiquette">LE FONDS / INTIME CONVICTION</p>
-    <h1>RETROUVER<br /><span>UNE AFFAIRE.</span></h1>
+    <h1>Rechercher une affaire</h1>
     <p class="sous-titre">{total} articles. Une recherche par nom, ville ou sujet dans les dossiers judiciaires, les articles du journal et la revue de presse.</p>
   </header>
   <form id="recherche" class="recherche-form" role="search">
     <label>RECHERCHE
-      <input type="search" name="q" id="requete" placeholder="Ex. procès, jurés, verdict..." autocomplete="off" aria-controls="resultats" />
-    </label>
-    <label>RUBRIQUE DU JOURNAL
-      <select id="rubrique" name="rubrique"><option value="">Toutes les rubriques</option>{RUBRIQUES.map(r=><option value={r.slug}>{r.libelle}</option>)}</select>
-    </label>
-    <label>ANNÉE DE PUBLICATION OU D’ALERTE
-      <select id="annee" name="annee"><option value="">Toutes les années</option>{annees.map(a=><option value={a}>{a}</option>)}</select>
+      <input type="search" name="q" id="requete" placeholder="Ex. Hélène Pastor, Vannes…" autocomplete="off" enterkeyhint="search" aria-controls="resultats" />
     </label>
     <button type="submit">CHERCHER <span aria-hidden="true">↗</span></button>
+    <details class="filtres-recherche">
+      <summary>Filtrer par rubrique ou année</summary>
+      <div>
+        <label>RUBRIQUE DU JOURNAL
+          <select id="rubrique" name="rubrique"><option value="">Toutes les rubriques</option>{RUBRIQUES.map(r=><option value={r.slug}>{r.libelle}</option>)}</select>
+        </label>
+        <label>ANNÉE DE PUBLICATION OU D’ALERTE
+          <select id="annee" name="annee"><option value="">Toutes les années</option>{annees.map(a=><option value={a}>{a}</option>)}</select>
+        </label>
+      </div>
+    </details>
   </form>
   <button type="button" id="effacer" class="effacer-recherche" hidden>EFFACER LES FILTRES</button>
   <section id="dossiers-recherche" class="resultats-fonds" aria-labelledby="titre-dossiers" hidden>
@@ -55,7 +59,7 @@ const total=articles.length.toLocaleString('fr-FR');
   <script id="index-recherche" type="application/json" set:html={JSON.stringify(index).replaceAll('<','\\u003c')} />
 </Base>
 <script>
-import { preparerIndex, filtrerEtClasser, chargerIndexPresse, filtrerPresse } from '../lib/recherche.mjs';
+import { preparerIndex, chercherArticles, chargerIndexPresse, filtrerPresse } from '../lib/recherche.mjs';
 import { dossiersPourRecherche } from '../lib/dossiers.mjs';
 const index = preparerIndex(JSON.parse(document.querySelector('#index-recherche').textContent));
 const form = document.querySelector('#recherche');
@@ -113,13 +117,24 @@ async function chercherPresse(options) {
     if (demande === demandePresse && options.q === q.value.trim()) compteurPresse.textContent = 'La revue de presse est momentanément indisponible.';
   }
 }
-let matches = [], limite = 30, delai;
+let matches = [], limite = 30, delai, approximatif = false, demandeJournal = 0;
+let indexCorps;
+function chargerCorps() {
+  indexCorps ??= fetch('/index-corps-recherche.json').then(async reponse => {
+    if (!reponse.ok) throw new Error('Index du texte indisponible');
+    return new Map(await reponse.json());
+  }).catch(erreur => {
+    indexCorps = undefined;
+    throw erreur;
+  });
+  return indexCorps;
+}
 
 function affiche() {
   liste.replaceChildren();
   for (const a of matches.slice(0, limite)) {
     const li = document.createElement('li');
-    const titre = document.createElement('h2');
+    const titre = document.createElement('h3');
     const lien = document.createElement('a');
     const extrait = document.createElement('p');
     const meta = document.createElement('p');
@@ -136,14 +151,21 @@ function affiche() {
   const n = matches.length;
   if (!n) compteur.textContent = 'Aucun article du journal pour cette recherche.';
   else compteur.textContent = n.toLocaleString('fr-FR') + ' article' + (n > 1 ? 's' : '') + ' · ' + Math.min(limite, n).toLocaleString('fr-FR') + ' affiché' + (Math.min(limite,n) > 1 ? 's' : '');
+  if (approximatif) compteur.textContent = 'Résultats proches · ' + compteur.textContent;
   suite.hidden = n <= limite;
   effacer.hidden = !q.value.trim() && !rubrique.value && !annee.value;
 }
 
-function rechercher() {
+function afficherResultats(resultat) {
+  matches = resultat.articles;
+  approximatif = resultat.approximatif;
+  affiche();
+}
+
+async function rechercher() {
   clearTimeout(delai);
   const options = { q:q.value.trim(), rubrique:rubrique.value, annee:annee.value };
-  matches = filtrerEtClasser(index, options);
+  const demande = ++demandeJournal;
   limite = 30;
   const params = new URLSearchParams();
   if (options.q) params.set('q', options.q);
@@ -156,14 +178,26 @@ function rechercher() {
   for (const dossier of correspondances) {
     ajouterLien(listeDossiers, dossier.titre, '/dossiers/' + dossier.slug + '/');
   }
-  affiche();
+  afficherResultats(chercherArticles(index, options));
   chercherPresse(options);
+  if (!options.q) return;
+  try {
+    const corps = await chargerCorps();
+    if (demande === demandeJournal && options.q === q.value.trim()) {
+      afficherResultats(chercherArticles(index, options, corps));
+    }
+  } catch {
+    if (demande === demandeJournal && options.q === q.value.trim()) {
+      compteur.textContent += ' La recherche dans le texte intégral est momentanément indisponible.';
+    }
+  }
 }
 const params = new URLSearchParams(location.search);
 q.value = params.get('q') || '';
 rubrique.value = params.get('rubrique') || '';
 annee.value = params.get('annee') || '';
-form.addEventListener('submit', (e) => { e.preventDefault(); rechercher(); });
+form.querySelector('details').open = Boolean(rubrique.value || annee.value);
+form.addEventListener('submit', (e) => { e.preventDefault(); rechercher(); compteur.scrollIntoView({ block: 'nearest' }); });
 q.addEventListener('input', () => { clearTimeout(delai); delai = setTimeout(rechercher, 220); });
 rubrique.addEventListener('change', rechercher);
 annee.addEventListener('change', rechercher);
@@ -172,17 +206,17 @@ effacer.addEventListener('click', () => { q.value = ''; rubrique.value = ''; ann
 rechercher();
 </script>
 <style>
-.recherche-intro{background:#17191a;color:#fff;padding:clamp(2rem,5vw,5rem);margin:2rem 0 0;border:0}
-.recherche-intro .etiquette{background:#ffe100;color:#151515;margin-bottom:1.7rem}
-.recherche-intro h1{font:900 clamp(2.8rem,8vw,8rem)/.96 var(--sans);letter-spacing:-.08em;margin-bottom:1.5rem}
-.recherche-intro h1 span{color:#ffe100}
-.recherche-intro .sous-titre{font:600 clamp(.95rem,1.3vw,1.1rem)/1.7 var(--sans);max-width:68ch;color:#e6e7e4}
-.recherche-form{display:grid;grid-template-columns:2.5fr 1.1fr 1fr auto;gap:.7rem;align-items:end;margin:0;padding:1.8rem;background:#ffe100}
-.recherche-form label{font:900 .66rem/1.5 var(--sans);letter-spacing:.055em;color:#17191a;gap:.5rem}
-.recherche-form :is(input,select){min-height:54px;background:#fff;color:#17191a;border:2px solid #17191a;border-radius:0;font:600 .86rem/1.4 var(--sans)}
-.recherche-form button{min-height:54px;background:#17191a;color:#fff;border:2px solid #17191a;font:900 .72rem/1.2 var(--sans);letter-spacing:.05em;white-space:nowrap}
+.recherche-intro{background:#17191a;color:#fff;padding:clamp(1.1rem,3vw,2.5rem);margin:1rem 0 0;border:0}
+.recherche-intro h1{font:900 clamp(1.65rem,5vw,3.8rem)/1.05 var(--sans);letter-spacing:-.055em;margin:0 0 .45rem}
+.recherche-intro .sous-titre{font:600 .95rem/1.45 var(--sans);max-width:68ch;color:#e6e7e4;margin:0}
+.recherche-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.65rem;align-items:end;margin:0;padding:clamp(.8rem,2vw,1.5rem);background:#ffe100}
+.recherche-form label{display:grid;min-width:0;font:900 .66rem/1.5 var(--sans);letter-spacing:.055em;color:#17191a;gap:.3rem}
+.recherche-form :is(input,select){width:100%;min-height:48px;background:#fff;color:#17191a;border:2px solid #17191a;border-radius:0;font:600 1rem/1.4 var(--sans)}
+.recherche-form button{min-height:48px;background:#17191a;color:#fff;border:2px solid #17191a;font:900 .72rem/1.2 var(--sans);letter-spacing:.05em;white-space:nowrap}
 .recherche-form button:hover{background:#fff;color:#17191a}
-.recherche-form button span{font-size:1.15rem;margin-left:.55rem}
+.filtres-recherche{grid-column:1/-1}
+.filtres-recherche summary{display:list-item;cursor:pointer;min-height:44px;padding:.65rem 0;font-weight:750;font-size:.85rem}
+.filtres-recherche>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}
 .effacer-recherche{background:transparent;border:0;border-bottom:2px solid #17191a;color:#17191a;padding:.4rem 0;margin-top:1rem;font:850 .68rem/1.4 var(--sans)}
 .effacer-recherche:hover{background:#ffe100}
 .resultats-fonds{margin:2rem 0;border-top:4px solid #17191a;padding-top:1rem}
@@ -192,13 +226,12 @@ rechercher();
 .resultats-fonds a{text-decoration:underline;text-underline-offset:.18em}
 .role{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:2.4rem;list-style:none;padding:0;margin:0}
 :global(#resultats > li){border-bottom:2px solid #d1d2cd;padding:1.6rem 0}
-:global(#resultats h2){font:850 clamp(1.3rem,2.2vw,2rem)/1.17 var(--sans);letter-spacing:-.04em;margin:.6rem 0 .5rem}
-:global(#resultats h2 a:hover){background:#ffe100;color:#17191a}
+:global(#resultats h3){font:850 clamp(1.3rem,2.2vw,2rem)/1.17 var(--sans);letter-spacing:-.04em;margin:.6rem 0 .5rem}
+:global(#resultats h3 a:hover){background:#ffe100;color:#17191a}
 :global(#resultats .meta){font:850 .64rem/1.5 var(--sans);letter-spacing:.05em;text-transform:uppercase}
 :global(#resultats .extrait){font:450 .94rem/1.6 var(--sans);color:#454848;margin:0}
 .suite-resultats{display:block;margin:2rem auto 0;background:#17191a;color:#fff;border:2px solid #17191a;font:900 .72rem/1.4 var(--sans)}
 .suite-resultats:hover{background:#ffe100;color:#17191a}
 .suite-resultats[hidden],.effacer-recherche[hidden]{display:none}
-@media(max-width:63.99rem){.recherche-form{grid-template-columns:1fr 1fr}.recherche-form label:first-child{grid-column:1/-1}.recherche-form button{align-self:stretch}}
-@media(max-width:47.99rem){.recherche-intro{margin-top:1rem;padding:2rem 1.2rem}.recherche-intro h1{font-size:clamp(2.6rem,11vw,4.3rem)}.recherche-form{grid-template-columns:1fr;padding:1rem}.recherche-form label:first-child{grid-column:auto}.recherche-form button{min-height:50px}.role{grid-template-columns:1fr}}
+@media(max-width:47.99rem){.role,.filtres-recherche>div{grid-template-columns:1fr}.recherche-form button{padding-inline:.6rem}.recherche-form button span{display:none}}
 </style>
