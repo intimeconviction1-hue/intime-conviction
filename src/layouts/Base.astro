@@ -162,7 +162,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
           </nav>
         </div>
         <div class="identite-journal">
-          <Marque class="marque"><a href="/" aria-label="Intime Conviction, accueil"><span class="marque-mot">INTIME CONVICTION<span class="marque-point">.</span></span></a></Marque>
+          <Marque class="marque"><a href="/" aria-label="Intime Conviction, accueil"><span class="marque-mot">INTIME <span class="marque-conviction">CONVICTION</span></span></a></Marque>
           <p class="signature">Le journal des cours d’assises</p>
         </div>
         <div class="liens-entete">
@@ -243,14 +243,14 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
 
     <footer class="pied">
       <div class="cadre">
-        <div class="pied-intro"><a class="pied-nom" href="/">INTIME<br /><span>CONVICTION.</span></a><p>Le journal des cours d’assises. Actualité des procès criminels, analyses judiciaires et archives.</p></div>
+        <div class="pied-intro"><a class="pied-nom" href="/">INTIME <span>CONVICTION</span></a><p>Le journal des cours d’assises. Actualité des procès criminels, analyses judiciaires et archives.</p></div>
         <nav class="pied-navigation" aria-label="Pied de page">
           {piedNavigation.map(groupe=><div>
             <h2>{groupe.titre}</h2>
             <ul>{groupe.liens.map(lien=><li><a href={lien.href}>{lien.titre}</a></li>)}</ul>
           </div>)}
         </nav>
-        <div class="pied-bas"><span>Intime Conviction · {annee}</span><a href={reseaux.x} rel="noopener">@IntimeConv sur X</a><a href="#contenu">Retour en haut <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
+        <div class="pied-bas"><span>Intime Conviction · {annee}</span><a href={reseaux.x} rel="noopener">@IntimeConv sur X</a><a href="#contenu">Retour au contenu <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
       </div>
     </footer>
   <script>
@@ -373,15 +373,13 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     .barre-illustree .identite-journal{grid-area:titre}
     .barre-illustree .liens-entete{grid-area:actions}
     .illustration-entete{
-      position:absolute;inset:46px clamp(1rem,3.6vw,3.4rem) .45rem auto;
-      width:min(49%,44rem);z-index:-1;pointer-events:none
+      position:absolute;inset:45px 0 0;
+      width:auto;z-index:-1;pointer-events:none
     }
     .illustration-entete picture{display:block;width:100%;height:100%}
     .illustration-entete img{
-      display:block;width:100%;height:100%;object-fit:contain;object-position:right center;
-      mask-image:linear-gradient(90deg,transparent 0%,#000 14% 97%,transparent 100%),
-        linear-gradient(180deg,transparent,#000 5% 95%,transparent);
-      mask-composite:intersect
+      display:block;width:100%;height:100%;object-fit:cover;object-position:center 46%;
+      mask-image:linear-gradient(90deg,transparent 1%,rgba(0,0,0,.15) 32%,#000 71%)
     }
     .barre-illustree .reseaux-entete{background:var(--papier-entete);border-radius:0 0 6px 6px}
     .haut-edition{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:.4rem;border-bottom:1px solid #d8cbc2}
@@ -393,16 +391,16 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     .identite-journal .marque{margin:0}
     .identite-journal .marque a{
       display:block;width:max-content;max-width:100%;min-height:0;padding:0;color:#2c2127;
-      font:750 2rem/.96 var(--serif);font-size:min(5rem,7.7cqi);letter-spacing:-.055em
+      font:750 2rem/.96 var(--serif);font-size:min(5rem,7.35cqi);letter-spacing:-.055em
     }
     .identite-journal .marque-mot{overflow-wrap:anywhere}
-    .identite-journal .marque-point{color:#a12c39}
+    .identite-journal .marque-conviction{display:inline-block;background:#9b303d;color:#fffaf3;padding:.12em .12em .02em}
+    .edition-date time{white-space:nowrap}
     .identite-journal .signature,.avec-fond .identite-journal .signature{
       display:flex;align-items:center;gap:.65rem;margin:.55rem 0 0;padding:0;
       color:var(--bordeaux-entete);font:750 .72rem/1.35 var(--sans);letter-spacing:.13em;
       text-transform:uppercase;max-width:none
     }
-    .identite-journal .signature::before{content:"";flex:none;width:25px;height:2px;background:#a12c39}
     .liens-entete{display:flex;align-items:center;gap:.55rem;min-width:0}
     .recherche-entete{display:flex;width:clamp(9rem,13vw,13rem);min-width:0;border:1px solid #8c6873;background:#fffdf8}
     .recherche-entete input{width:100%;min-width:0;min-height:44px;padding:.25rem .55rem;border:0;background:transparent;color:#2c2127;font:550 .9rem/1.25 var(--sans)}
@@ -476,21 +474,32 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       .liens-entete{margin:0 0 .65rem}
       .recherche-entete{flex:1;width:auto}
     }
+    .pied{padding-top:2.3rem;margin-top:4rem}
+    .pied>.cadre{grid-template-columns:minmax(0,1fr) minmax(0,2.5fr);gap:1.6rem 2rem}
+    .pied .pied-nom{font:750 clamp(1.25rem,2.3vw,2rem)/1.1 var(--serif);letter-spacing:-.025em}
+    .pied-intro p{margin-top:.65rem}
+    .pied-navigation{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.1rem}
+    .pied-navigation h2{margin:0 0 .45rem;color:#f0d5d4;font:750 .8rem/1.35 var(--sans);text-transform:uppercase}
+    .pied-navigation ul{columns:auto}
+    .pied-navigation li a{font-weight:550;text-transform:none;font-size:.83rem;min-height:36px}
+    @media(max-width:60rem){.pied>.cadre{grid-template-columns:minmax(0,1fr)}}
+    @media(max-width:35rem){.pied-navigation{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:47.99rem){
       .entete .barre-illustree{
         grid-template-columns:minmax(0,1fr);
         grid-template-areas:"edition" "titre" "actions";
         padding-bottom:.55rem
       }
-      .illustration-entete{inset:0;width:auto}
+      .illustration-entete{inset:45px 0 0;width:auto}
       .illustration-entete img{object-fit:cover;object-position:center top;mask-image:none}
       .illustration-entete::after{
         content:"";position:absolute;inset:0;
-        background:linear-gradient(100deg,#faf7f0 0%,#faf7f0fa 50%,#faf7f0e6 77%,#faf7f0ad 100%)
+        background:linear-gradient(100deg,#faf7f0 0%,#faf7f0f2 48%,#faf7f0cc 77%,#faf7f0a8 100%)
       }
       .edition-date{font-size:.68rem}
+      .entete .edition-reseau{width:34px}
       .identite-journal{padding:.55rem 0 .65rem}
-      .identite-journal .marque a{font-size:min(3.6rem,7.7cqi)}
+      .identite-journal .marque a{font-size:min(3.6rem,7.35cqi)}
       .identite-journal .signature,.avec-fond .identite-journal .signature{font-size:.62rem;letter-spacing:.09em}
       .recherche-entete input{font-size:1rem}
       .entete .espace-entete a{padding-inline:.4rem;font-size:.69rem}

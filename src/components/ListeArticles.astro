@@ -1,15 +1,21 @@
 ---
+import { photosArticles, illustrationAssises } from '../lib/photos-articles.mjs';
+import VisuelAssises from './VisuelAssises.astro';
 import { rubrique } from '../lib/rubriques.mjs';
 import { dateLongue } from '../lib/articles.mjs';
 
 // `niveau` : 3 sous une section titrée en h2 (accueil), 2 directement sous le
 // h1 d'une page (rubrique) — un saut de niveau égare les lecteurs d'écran.
-const { articles, rubriqueVisible = true, extraits = true, niveau = 3, dateMiseAJourVisible = false } = Astro.props;
+const { articles, rubriqueVisible = true, extraits = true, niveau = 3, dateMiseAJourVisible = false, illustres = false } = Astro.props;
 const Titre = `h${niveau}`;
 ---
-<ul class="role">
+<ul class:list={["role", { "articles-illustres": illustres }]}>
   {articles.map(({ data }) => (
     <li>
+      {illustres && (() => {
+        const photo = photosArticles[data.chemin] ?? illustrationAssises;
+        return <VisuelAssises image={photo.image} alt={photo.lieu} source={photo.source} credit={photo.auteur} licence={photo.licence} licenceUrl={photo.lienLicence} />;
+      })()}
       <p class="meta">
         {rubriqueVisible && <><span class="etiquette">{rubrique(data.rubrique).libelle}</span>&ensp;</>}
         <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
@@ -20,3 +26,10 @@ const Titre = `h${niveau}`;
     </li>
   ))}
 </ul>
+<style>
+  .articles-illustres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5rem;list-style:none;padding:0}
+  .articles-illustres li{min-width:0}
+  .articles-illustres :global(img){width:100%;height:auto;aspect-ratio:16/9;object-fit:contain}
+  @media(max-width:58rem){.articles-illustres{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:37rem){.articles-illustres{grid-template-columns:minmax(0,1fr)}}
+</style>

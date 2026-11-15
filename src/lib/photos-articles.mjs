@@ -25,7 +25,7 @@ const photoPalaisBlois = {
   source: 'https://commons.wikimedia.org/wiki/File:Palais_Justice_-_Blois_(FR41)_-_2022-07-16_-_1.jpg',
   licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
 };
-const illustrationAssises = {
+export const illustrationAssises = {
   image: photoBordeaux,
   lieu: 'Photo d’illustration · Salle de la cour d’assises, palais Thiac, Bordeaux',
   auteur: 'Tiraden',

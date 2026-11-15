@@ -39,7 +39,7 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
   {dossiersRedaction.length > 0 && (
     <section class="repertoire" aria-labelledby="titre-redaction">
       <div class="barre"><h2 id="titre-redaction">Les dossiers de la rédaction</h2></div>
-      <ListeArticles articles={dossiersRedaction} rubriqueVisible={false} dateMiseAJourVisible />
+      <ListeArticles articles={dossiersRedaction} rubriqueVisible={false} dateMiseAJourVisible illustres />
     </section>
   )}
   <aside class="lien-chronologie">

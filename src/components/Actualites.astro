@@ -3,7 +3,7 @@ import { lienDirectPresse } from '../lib/fil-actualites.mjs';
 import { lireActualites } from '../lib/veille.mjs';
 import { hierarchiserPresse } from '../lib/hierarchiser-presse.mjs';
 import { rubrique } from '../lib/rubriques.mjs';
-const { rubriqueSlug = 'cours-du-jour', limite = 8, titre, lienRubrique = true, debut = 0, compacte = false } = Astro.props;
+const { rubriqueSlug = 'cours-du-jour', limite = 8, titre, lienRubrique = true, debut = 0, compacte = false, accueil = false } = Astro.props;
 const r = rubrique(rubriqueSlug);
 const titreAffiche = titre ?? r.libelle;
 const fil = await lireActualites();
@@ -12,12 +12,13 @@ const nouvelles = candidates.slice(0,limite);
 const afficher = nouvelles.length > 0 || rubriqueSlug === 'cours-du-jour';
 const formatDate = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'});
 ---
-{afficher && <section id="actualites" class:list={["actualites", { compacte }]} aria-labelledby="titre-actualites">
+{afficher && <section id="actualites" class:list={["actualites", { compacte, "presse-accueil": accueil }]} aria-labelledby="titre-actualites">
   <div class="titre-section">
     <h2 id="titre-actualites">{titreAffiche}</h2>
+    {accueil && <a href="/revue-de-presse/">Toute la revue de presse ↗</a>}
     {lienRubrique && <a href={`/rubrique/${r.slug}/`}>Toute la rubrique <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg></a>}
   </div>
-  <p class="provenance">Sélection de titres publiés par les médias cités. Les liens ouvrent les articles chez les médias ou passent par Google Actualités lorsque le lien direct manque.</p>
+  <p class="provenance">{accueil ? "Les derniers titres repérés sur les audiences, les verdicts et les procès criminels." : "Sélection de titres publiés par les médias cités. Les liens ouvrent les articles chez les médias ou passent par Google Actualités lorsque le lien direct manque."}</p>
   {nouvelles.length ? <ul class="nouvelles">
     {nouvelles.map(n => <li>
       <p class="meta"><span class="source">{n.source}</span><time datetime={n.date}>{n.dateAlerte ? "Référence du " : ""}{formatDate.format(new Date(n.date))}</time></p>
@@ -63,4 +64,13 @@ h3{font:850 clamp(1.1rem,1.7vw,1.5rem)/1.18 var(--sans);letter-spacing:-.04em;ma
 @media(max-width:63.99rem){.nouvelles{grid-template-columns:repeat(2,minmax(0,1fr))}.nouvelles li:first-child{grid-column:span 1}.nouvelles li:first-child h3{font-size:clamp(1.8rem,3.2vw,2.6rem)}}
 @media(max-width:47.99rem){.nouvelles{grid-template-columns:1fr}.nouvelles li{min-height:0;padding:1.3rem}.nouvelles li:first-child{grid-column:auto;grid-row:auto;padding:1.5rem}.nouvelles li:first-child h3{font-size:clamp(1.8rem,7vw,2.9rem)}}
 
+  .presse-accueil{padding:1.15rem clamp(1rem,3vw,2rem);border-top:4px solid #84323d;background:#f0e9e0}
+  .presse-accueil .titre-section{margin:0;border:0;padding:0}
+  .presse-accueil .titre-section h2{color:#641e30}
+  .presse-accueil .nouvelles{border:0;gap:1rem;margin-top:.85rem}
+  .presse-accueil .nouvelles li,.presse-accueil .nouvelles li:first-child{grid-column:auto;grid-row:auto;min-height:0;padding:1rem;border:1px solid #d2c8bf;background:#fffdf8;color:#252124}
+  .presse-accueil .nouvelles li:first-child .meta{color:inherit}
+  .presse-accueil .nouvelles h3,.presse-accueil .nouvelles li:first-child h3{font:650 clamp(1.15rem,2vw,1.5rem)/1.2 var(--serif);letter-spacing:normal;text-transform:none;margin:.5rem 0 0}
+  .presse-accueil .nouvelles h3 a:hover{color:#641e30;background:none;text-decoration:underline}
+  .presse-accueil .source{padding:0;color:#84323d;background:none}
 </style>
