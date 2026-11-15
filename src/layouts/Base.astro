@@ -3,8 +3,7 @@
 import '@fontsource-variable/libre-franklin/wght.css';
 import '@fontsource-variable/newsreader/wght.css';
 import '../styles/global.css';
-import croquisEntete from '../assets/croquis-audience-bandeau.webp';
-import croquisPanoramique from '../assets/croquis-audience-panoramique.webp';
+import croquisManchette from '../assets/croquis-manchette.webp';
 import frontonAssises from '../assets/fronton-cour-dassises.jpg';
 // Précharger la police d'interface, employée également pour les titres.
 import policeSans from '@fontsource-variable/libre-franklin/files/libre-franklin-latin-wght-normal.woff2?url';
@@ -177,10 +176,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
         </div>
         {accueil && (
           <div class="illustration-entete" aria-hidden="true">
-            <picture>
-              <source media="(max-width: 47.99rem)" srcset={croquisEntete.src} />
-              <img src={croquisPanoramique.src} alt="" width={croquisPanoramique.width} height={croquisPanoramique.height} />
-            </picture>
+            <img src={croquisManchette.src} alt="" width={croquisManchette.width} height={croquisManchette.height} />
           </div>
         )}
       </div>
@@ -373,13 +369,12 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     .barre-illustree .identite-journal{grid-area:titre}
     .barre-illustree .liens-entete{grid-area:actions}
     .illustration-entete{
-      position:absolute;inset:45px 0 0;
+      position:absolute;inset:45px 0 0 18%;
       width:auto;z-index:-1;pointer-events:none
     }
-    .illustration-entete picture{display:block;width:100%;height:100%}
     .illustration-entete img{
-      display:block;width:100%;height:100%;object-fit:cover;object-position:center 46%;
-      mask-image:linear-gradient(90deg,transparent 1%,rgba(0,0,0,.15) 32%,#000 71%)
+      display:block;width:100%;height:100%;object-fit:cover;object-position:center 29%;
+      mask-image:linear-gradient(90deg,transparent 35%,rgba(0,0,0,.25) 49%,#000 67%)
     }
     .barre-illustree .reseaux-entete{background:var(--papier-entete);border-radius:0 0 6px 6px}
     .haut-edition{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:.4rem;border-bottom:1px solid #d8cbc2}
@@ -491,7 +486,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
         padding-bottom:.55rem
       }
       .illustration-entete{inset:45px 0 0;width:auto}
-      .illustration-entete img{object-fit:cover;object-position:center top;mask-image:none}
+      .illustration-entete img{object-fit:cover;object-position:center 26%;mask-image:none}
       .illustration-entete::after{
         content:"";position:absolute;inset:0;
         background:linear-gradient(100deg,#faf7f0 0%,#faf7f0f2 48%,#faf7f0cc 77%,#faf7f0a8 100%)
