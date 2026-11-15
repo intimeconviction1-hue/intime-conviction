@@ -43,6 +43,7 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/tour-des-cours-9-au-13-mars-2020/03/2020/': photoAssisesParis,
   '/mort-lyanna-tulle-proces-ajourne/11/2026/': {
     image: photoTulle,
     lieu: 'Palais de justice de Tulle',
