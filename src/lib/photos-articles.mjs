@@ -1,3 +1,4 @@
+import photoLimoges from '../assets/palais-limoges.webp';
 import photoTulle from '../assets/palais-tulle.webp';
 import photoVannes from '../assets/palais-vannes.webp';
 import photoBordeaux from '../assets/assises-bordeaux.webp';
@@ -43,6 +44,14 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/saint-junien-verdict-coups-et-menaces/11/2026/': {
+    image: photoLimoges,
+    lieu: 'Palais de justice de Limoges, place d’Aine',
+    auteur: 'Olybrius',
+    source: 'https://commons.wikimedia.org/wiki/File:Limoges_-_Cour_d%27appel_-_20150517_(1).jpg',
+    licence: 'CC BY-SA 4.0',
+    lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
+  },
   '/tour-des-cours-9-au-13-mars-2020/03/2020/': photoAssisesParis,
   '/mort-lyanna-tulle-proces-ajourne/11/2026/': {
     image: photoTulle,
