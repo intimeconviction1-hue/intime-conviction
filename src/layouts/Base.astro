@@ -372,13 +372,13 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     .barre-illustree .haut-edition{grid-area:edition}
     .barre-illustree .identite-journal{grid-area:titre}
     .barre-illustree .liens-entete{grid-area:actions}
-    .illustration-entete{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
-    .illustration-entete img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 46%}
+    .illustration-entete{position:absolute;inset:0 0 0 20%;z-index:-1;overflow:hidden;pointer-events:none}
+    .illustration-entete img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top}
     .illustration-entete::after{
       content:"";position:absolute;inset:0;
-      background:linear-gradient(90deg,#faf7f0 0%,#faf7f0f2 43%,#faf7f0e8 65%,#faf7f024 88%,#faf7f000 100%)
+      background:linear-gradient(90deg,#faf7f0 0%,#faf7f0f5 31%,#faf7f0dd 56%,#faf7f052 75%,#faf7f02b 88%,#faf7f0 100%)
     }
-    .barre-illustree .reseaux-entete{background:var(--papier-entete)}
+    .barre-illustree .reseaux-entete{background:#faf7f0e8;border-radius:0 0 6px 6px}
     .haut-edition{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:.4rem;border-bottom:1px solid #d8cbc2}
     .edition-date{margin:0;color:#5e474c;font:700 .74rem/1.45 var(--sans)}
     .reseaux-entete,.espace-entete{display:flex;align-items:center}
@@ -477,7 +477,8 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
         grid-template-areas:"edition" "titre" "actions";
         padding-bottom:.55rem
       }
-      .illustration-entete img{object-position:center}
+      .illustration-entete{inset-inline-start:0}
+      .illustration-entete img{object-position:center top}
       .illustration-entete::after{background:linear-gradient(100deg,#faf7f0f7,#faf7f0e6 65%,#faf7f0c9)}
       .edition-date{font-size:.68rem}
       .identite-journal{padding:.55rem 0 .65rem}
