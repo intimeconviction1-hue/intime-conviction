@@ -376,9 +376,9 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     .illustration-entete img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top}
     .illustration-entete::after{
       content:"";position:absolute;inset:0;
-      background:linear-gradient(90deg,#faf7f0 0%,#faf7f0f5 31%,#faf7f0dd 56%,#faf7f052 75%,#faf7f02b 88%,#faf7f0 100%)
+      background:linear-gradient(90deg,#faf7f0 0% 45%,#faf7f0ed 53%,#faf7f045 68%,#faf7f000 77% 96%,#faf7f0 100%)
     }
-    .barre-illustree .reseaux-entete{background:#faf7f0e8;border-radius:0 0 6px 6px}
+    .barre-illustree .reseaux-entete{background:var(--papier-entete);border-radius:0 0 6px 6px}
     .haut-edition{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:.4rem;border-bottom:1px solid #d8cbc2}
     .edition-date{margin:0;color:#5e474c;font:700 .74rem/1.45 var(--sans)}
     .reseaux-entete,.espace-entete{display:flex;align-items:center}
@@ -399,9 +399,9 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     }
     .identite-journal .signature::before{content:"";flex:none;width:25px;height:2px;background:#a12c39}
     .liens-entete{display:flex;align-items:center;gap:.55rem;min-width:0}
-    .recherche-entete{display:flex;width:clamp(9rem,13vw,13rem);min-width:0;border:1px solid #c8b7b7;background:#fffdf8}
+    .recherche-entete{display:flex;width:clamp(9rem,13vw,13rem);min-width:0;border:1px solid #8c6873;background:#fffdf8}
     .recherche-entete input{width:100%;min-width:0;min-height:44px;padding:.25rem .55rem;border:0;background:transparent;color:#2c2127;font:550 .9rem/1.25 var(--sans)}
-    .recherche-entete input::placeholder{color:#59494e;opacity:1}
+    .recherche-entete input::placeholder{color:#423339;opacity:1}
     .recherche-entete button{display:grid;place-items:center;flex:0 0 44px;min-height:44px;padding:0;background:transparent;border:0;color:var(--bordeaux-entete);cursor:pointer}
     .recherche-entete button:hover{background:#efe2df}
     .espace-entete{gap:.3rem}
@@ -479,7 +479,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       }
       .illustration-entete{inset-inline-start:0}
       .illustration-entete img{object-position:center top}
-      .illustration-entete::after{background:linear-gradient(100deg,#faf7f0f7,#faf7f0e6 65%,#faf7f0c9)}
+      .illustration-entete::after{background:linear-gradient(100deg,#faf7f0 0%,#faf7f0fa 50%,#faf7f0e6 77%,#faf7f0ad 100%)}
       .edition-date{font-size:.68rem}
       .identite-journal{padding:.55rem 0 .65rem}
       .identite-journal .marque a{font-size:min(3.6rem,7.7cqi)}
