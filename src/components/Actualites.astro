@@ -7,6 +7,9 @@ import { photosArticles, illustrationNeutre } from '../lib/photos-articles.mjs';
 import croquisAudience from '../assets/croquis-audience-panoramique.webp';
 import croquisManchette from '../assets/croquis-manchette.webp';
 import croquisDossier from '../assets/dossier-delibere-croquis.webp';
+import croquisBandeau from '../assets/croquis-audience-bandeau.webp';
+import croquisCode from '../assets/code-procedure-penale-croquis.webp';
+import croquisAssises from '../assets/assises-landru.webp';
 const { rubriqueSlug = 'cours-du-jour', limite = 8, titre, lienRubrique = true, debut = 0, compacte = false, accueil = false } = Astro.props;
 const r = rubrique(rubriqueSlug);
 const titreAffiche = titre ?? r.libelle;
@@ -27,18 +30,31 @@ const visuelsParLieu = [
   [/\b(saint[- ]brieuc)\b/i, '/affaire-ferreira-ce-que-les-aveux-permettent-de-verifier/11/2026/'],
   [/\b(paris|zecler)\b/i, '/michel-zecler-les-excuses-face-aux-images/11/2026/'],
 ];
-const illustrationsGeneriques = [croquisAudience, croquisManchette, croquisDossier];
-function visuelPresse(titre, index) {
-  const correspondant = visuelsParLieu.find(([motif]) => motif.test(titre));
-  if (correspondant) {
-    const photo = photosArticles[correspondant[1]];
-    if (photo) return {...photo, estIllustration: true};
-  }
-  const image = illustrationsGeneriques[index % illustrationsGeneriques.length];
-  return {...illustrationNeutre, image, estIllustration: true,
-    lieu: 'Illustration judiciaire générique · Ne représente pas les faits rapportés',
-    source: image.src, lienLicence: image.src};
+const illustrationsGeneriques = [
+  croquisAudience, croquisManchette, croquisDossier,
+  croquisBandeau, croquisCode, croquisAssises,
+];
+// Attribution pour l'ensemble des cartes : une image ne peut être retenue
+// qu'une seule fois sur l'accueil, même lorsque deux titres citent le même lieu.
+function choisirVisuelsPresse(articles) {
+  const imagesUtilisees = new Set();
+  return articles.map(({titre}, index) => {
+    const correspondant = visuelsParLieu.find(([motif]) => motif.test(titre));
+    const photoLieu = correspondant && photosArticles[correspondant[1]];
+    if (photoLieu && !imagesUtilisees.has(photoLieu.image.src)) {
+      imagesUtilisees.add(photoLieu.image.src);
+      return {...photoLieu, estIllustration: true};
+    }
+    // Repli documentaire neutre, jamais un autre tribunal présenté comme le lieu du procès.
+    const image = illustrationsGeneriques.find(image => !imagesUtilisees.has(image.src));
+    if (!image) throw new Error('Photothèque insuffisante : impossible de proposer des visuels uniques à la une.');
+    imagesUtilisees.add(image.src);
+    return {...illustrationNeutre, image, estIllustration: true,
+      lieu: 'Illustration judiciaire générique · Ne représente pas les faits rapportés',
+      source: image.src, lienLicence: image.src};
+  });
 }
+const visuelsAccueil = accueil ? choisirVisuelsPresse(nouvelles) : [];
 
 ---
 {afficher && <section id="actualites" class:list={["actualites", { compacte, "presse-accueil": accueil }]} aria-labelledby="titre-actualites">
@@ -50,7 +66,7 @@ function visuelPresse(titre, index) {
   <p class="provenance">{accueil ? "Les derniers titres repérés sur les audiences, les verdicts et les procès criminels." : "Sélection de titres publiés par les médias cités. Les liens conduisent vers les publications des médias cités, directement ou par un lien de référencement."}</p>
   {nouvelles.length ? <ul class="nouvelles">
     {nouvelles.map((n, i) => <li>
-      {accueil && (() => { const photo = visuelPresse(n.titre, i); return <figure class="visuel-presse"><a href={n.lien} target="_blank" rel="noopener noreferrer" aria-label={`Lire l’article de ${n.source} : ${n.titre}`}><img src={photo.image.src} width={photo.image.width} height={photo.image.height} alt={photo.lieu} loading="lazy" decoding="async" /></a><figcaption>Illustration · <a href={photo.source} target="_blank" rel="noopener noreferrer">{photo.auteur}</a></figcaption></figure>; })()}
+      {accueil && (() => { const photo = visuelsAccueil[i]; return <figure class="visuel-presse"><a href={n.lien} target="_blank" rel="noopener noreferrer" aria-label={`Lire l’article de ${n.source} : ${n.titre}`}><img src={photo.image.src} width={photo.image.width} height={photo.image.height} alt={photo.lieu} loading="lazy" decoding="async" /></a><figcaption>Illustration · <a href={photo.source} target="_blank" rel="noopener noreferrer">{photo.auteur}</a></figcaption></figure>; })()}
 
       <p class="meta"><span class="source">{n.source}</span><time datetime={n.date}>{n.dateAlerte ? "Référence du " : ""}{formatDate.format(new Date(n.date))}</time></p>
       <h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> — {n.source} (nouvel onglet)</span>{!lienDirectPresse(n.lien) && <span class="meta"> · Repéré dans la presse</span>}</a></h3>
