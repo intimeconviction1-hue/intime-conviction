@@ -171,7 +171,7 @@ export const photosArticles = {
     auteur: 'Illustration générée pour Intime Conviction',
     source: croquisDelibere.src,
     licence: 'Visuel créé pour Intime Conviction',
-    lienLicence: photoCode.src,
+    lienLicence: croquisDelibere.src,
   },
   '/assises-quand-un-temoin-cite-manque/11/2026/': {
     image: croquisDelibere,
@@ -180,7 +180,7 @@ export const photosArticles = {
     auteur: 'Illustration générée pour Intime Conviction',
     source: croquisDelibere.src,
     licence: 'Visuel créé pour Intime Conviction',
-    lienLicence: photoCode.src,
+    lienLicence: croquisDelibere.src,
   },
   '/chateauneuf-les-martigues-ce-que-reconnait-un-accuse/11/2026/': photoPalaisAix,
   '/proces-sollacaro-et-tout-recommence-aux-assises/11/2026/': photoPalaisAix,
