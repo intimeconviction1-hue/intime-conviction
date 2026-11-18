@@ -45,6 +45,7 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/madjaliwa-safari-presence-barriere-role-conteste/11/2026/': illustrationAssises,
   '/michel-zecler-les-excuses-face-aux-images/11/2026/': {
     image: photoTribunalParis,
     lieu: 'Photo d’illustration · Tribunal de Paris vu du parc des Batignolles',
