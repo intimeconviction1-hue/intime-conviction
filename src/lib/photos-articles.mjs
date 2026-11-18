@@ -79,11 +79,11 @@ export const photosArticles = {
     licence: 'CC0', lienLicence: 'https://creativecommons.org/publicdomain/zero/1.0/',
   },
   '/maylis-daubon-pau-personnalite-et-preuve/11/2026/': {
-    image: croquisDelibere, croquis: true,
-    lieu: 'Illustration judiciaire générique · Ne représente pas le procès de Pau',
-    auteur: 'Illustration générée pour Intime Conviction',
-    source: croquisDelibere.src,
-    licence: 'Visuel créé pour Intime Conviction', lienLicence: croquisDelibere.src,
+    image: { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Paupalaisdejustice.jpg/1024px-Paupalaisdejustice.jpg', width: 1024, height: 768 },
+    lieu: 'Palais de justice de Pau · Photographie de 2007, non prise pendant le procès',
+    auteur: 'Florent Pécassou',
+    source: 'https://commons.wikimedia.org/wiki/File:Paupalaisdejustice.jpg',
+    licence: 'CC BY-SA 3.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/3.0/',
   },
   '/lourdes-pourquoi-le-verdict-a-ete-annule/11/2026/': {
     image: croquisDelibere, croquis: true,
@@ -191,9 +191,8 @@ export const photosArticles = {
     licence: 'CC0', lienLicence: 'https://creativecommons.org/publicdomain/zero/1.0/',
   },
   '/mort-dolivio-gomes-le-proces-en-appel-du-policier-souvre-a-nanterre/11/2026/': {
-    image: photoPoissy, lieu: 'Hôtel de ville de Poissy', auteur: 'Chabe01',
-    source: 'https://commons.wikimedia.org/wiki/File:Hôtel_Ville_-_Poissy_(FR78)_-_2025-07-12_-_3.jpg',
-    licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
+    ...illustrationNeutre,
+    lieu: 'Illustration judiciaire générique · Ni le lieu des faits à Poissy, ni la cour d’assises de Nanterre',
   },
   '/affaire-ferreira-ce-que-les-aveux-permettent-de-verifier/11/2026/': {
     image: photoSaintBrieuc,
