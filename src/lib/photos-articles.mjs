@@ -53,7 +53,13 @@ export const photosArticles = {
     lienLicence: croquisDelibere.src,
   },
 
-  '/madjaliwa-safari-presence-barriere-role-conteste/11/2026/': illustrationAssises,
+  '/madjaliwa-safari-presence-barriere-role-conteste/11/2026/': {
+    image: photoTribunalParis,
+    lieu: 'Photo d’illustration · Tribunal de Paris vu du parc des Batignolles',
+    auteur: 'Coppertarzan',
+    source: 'https://commons.wikimedia.org/wiki/File:Tribunal_de_Paris_seen_from_Batignolles_park.jpg',
+    licence: 'CC0', lienLicence: 'https://creativecommons.org/publicdomain/zero/1.0/',
+  },
   '/michel-zecler-les-excuses-face-aux-images/11/2026/': {
     image: photoTribunalParis,
     lieu: 'Photo d’illustration · Tribunal de Paris vu du parc des Batignolles',
@@ -61,8 +67,20 @@ export const photosArticles = {
     source: 'https://commons.wikimedia.org/wiki/File:Tribunal_de_Paris_seen_from_Batignolles_park.jpg',
     licence: 'CC0', lienLicence: 'https://creativecommons.org/publicdomain/zero/1.0/',
   },
-  '/maylis-daubon-pau-personnalite-et-preuve/11/2026/': photoAssisesParis,
-  '/lourdes-pourquoi-le-verdict-a-ete-annule/11/2026/': illustrationAssises,
+  '/maylis-daubon-pau-personnalite-et-preuve/11/2026/': {
+    image: croquisDelibere, croquis: true,
+    lieu: 'Illustration judiciaire générique · Ne représente pas le procès de Pau',
+    auteur: 'Illustration générée pour Intime Conviction',
+    source: croquisDelibere.src,
+    licence: 'Visuel créé pour Intime Conviction', lienLicence: croquisDelibere.src,
+  },
+  '/lourdes-pourquoi-le-verdict-a-ete-annule/11/2026/': {
+    image: croquisDelibere, croquis: true,
+    lieu: 'Illustration judiciaire générique · Ne représente pas le procès de Lourdes',
+    auteur: 'Illustration générée pour Intime Conviction',
+    source: croquisDelibere.src,
+    licence: 'Visuel créé pour Intime Conviction', lienLicence: croquisDelibere.src,
+  },
   '/saint-junien-verdict-coups-et-menaces/11/2026/': {
     image: photoLimoges,
     lieu: 'Palais de justice de Limoges, place d’Aine',
