@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { getCollection } from 'astro:content';
 import { resolve } from 'node:path';
 import { classerNouvelle } from './classer-nouvelles.mjs';
 import { lireFil, lienDirectPresse } from './fil-actualites.mjs';
@@ -45,8 +46,29 @@ export async function lireVeille() {
   })();
   return cache;
 }
+// Ne retirer un titre de presse que si une couverture de la rédaction est
+// réellement publiée et porte explicitement le sujet dans « sujetsPresse ».
+// Les rapprochements vagues (simple « procès », « assises », etc.) sont exclus.
+export function estCouvertParRedaction(titre, sujets = []) {
+  const normaliser = valeur => String(valeur ?? '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('fr').replace(/[^a-z0-9]+/g, ' ').trim();
+  const texte = ' ' + normaliser(titre) + ' ';
+  const termesGeneriques = new Set(['proces', 'assises', 'justice', 'verdict', 'appel', 'audience', 'meurtre', 'crime', 'police']);
+  return sujets.some(sujet => {
+    const cle = normaliser(sujet);
+    return cle.length >= 5 && !termesGeneriques.has(cle) && texte.includes(' ' + cle + ' ');
+  });
+}
+
 export async function lireActualites() {
-  const [fil,veille]=await Promise.all([lireFil(),lireVeille()]);
+  const [fil,veille,publications]=await Promise.all([lireFil(),lireVeille(),getCollection('articles')]);
+  const maintenant = Date.now();
+  const sujetsPublies = publications
+    .filter(({data}) => data.verificationEnCours !== true
+      && data.date.getTime() <= maintenant
+      && /^rédaction d[’']intime conviction$/iu.test(data.auteur.trim()))
+    .flatMap(({data}) => data.sujetsPresse ?? []);
   const seuil=Date.now()-7*86400000;
   const selection = actualitesVerifiees.map(a=>({...a,rubrique:classerNouvelle(a.titre)}));
   const recents = veille.articles.filter(a=>Date.parse(a.dateAlerte+'T12:00:00Z')>=seuil)
@@ -56,7 +78,7 @@ export async function lireActualites() {
   const directs = collectes.filter(a=>lienDirectPresse(a.lien));
   const viaGoogle = collectes.filter(a=>!lienDirectPresse(a.lien));
   for(const a of [...selection,...directs,...recents,...viaGoogle]) {
-    if (Date.parse(a.date) < seuil) continue;
+    if (Date.parse(a.date) < seuil || estCouvertParRedaction(a.titre,sujetsPublies)) continue;
     const cle=(a.source+'|'+a.titre).normalize('NFKC').toLocaleLowerCase('fr');
     if(vus.has(cle)||vus.has(a.lien))continue;vus.add(cle);vus.add(a.lien);articles.push(a);
   }
