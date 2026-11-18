@@ -1,7 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import { lireVeille } from '../../../lib/veille.mjs';
-import { DOSSIERS, dossiersPourArticle, referencesPourDossier, statistiquesDossier } from '../../../lib/dossiers.mjs';
+import { DOSSIERS, RECITS_DOSSIERS, dossiersPourArticle, referencesPourDossier, statistiquesDossier } from '../../../lib/dossiers.mjs';
 import { reperesPourDossier, VERIFICATION_AU } from '../../../lib/chronologie-judiciaire.mjs';
 import { juridictionsPourDossier } from '../../../lib/juridictions.mjs';
 import { articlesADiffuser } from '../../../lib/diffusion.mjs';
@@ -23,6 +23,7 @@ export async function getStaticPaths({ paginate }) {
 }
 
 const { page, dossier, statistiques, dernierArticle } = Astro.props;
+const recit = RECITS_DOSSIERS[dossier.slug];
 const reperes = reperesPourDossier(dossier.slug);
 const decision = reperes.findLast(repere => repere.type === 'decision');
 const dernierRepere = reperes.at(-1);
@@ -49,6 +50,29 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
 
     </div>
   </header>
+
+  {page.currentPage === 1 && recit && (
+    <article class="recit-dossier" aria-labelledby="titre-recit-dossier">
+      <div class="recit-dossier-entete">
+        <p class="recit-dossier-label">LE RÉCIT DE LA RÉDACTION</p>
+        <h2 id="titre-recit-dossier">{recit.titre}</h2>
+        <p class="recit-chapeau">{recit.chapeau}</p>
+      </div>
+      <div class="recit-corps">
+        {recit.sections.map(section => (
+          <section>
+            <h3>{section.titre}</h3>
+            <p>{section.texte}</p>
+          </section>
+        ))}
+      </div>
+      <footer class="recit-sources">
+        <h3>Sources de cette synthèse</h3>
+        <ul>{recit.sources.map(source => <li><a href={source.url} target="_blank" rel="noopener noreferrer">{source.titre} <span aria-hidden="true">↗</span></a></li>)}</ul>
+        <p>Vérification éditoriale : <time datetime={recit.verifieAu}>{date(recit.verifieAu)}</time>. Les éléments d'appel peuvent évoluer ; la revue de presse ci-dessous permet de suivre les publications ultérieures.</p>
+      </footer>
+    </article>
+  )}
 
   {page.currentPage === 1 && dernierRepere && (
     <section class="point-affaire" aria-labelledby="titre-point-affaire">
@@ -239,4 +263,18 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
   .point-affaire h2,.point-affaire p{margin:.3rem 0}
   .point-affaire h3{margin:.45rem 0;font:650 clamp(1.6rem,3vw,2.45rem)/1.15 var(--serif)}
   .point-affaire a{text-decoration:underline;text-underline-offset:.14em}
+  .recit-dossier{margin:1.5rem 0 2.5rem;padding:clamp(1.25rem,3.5vw,3rem);background:#fbf9f5;border-top:3px solid #96313b;border-bottom:1px solid #d3ccc5;color:#252525}
+  .recit-dossier-label{margin:0 0 .7rem;color:#96313b;font:750 .73rem/1.45 var(--sans);letter-spacing:.06em}
+  .recit-dossier h2{margin:0 0 1rem;font:650 clamp(2rem,4vw,3.4rem)/1.12 var(--serif);letter-spacing:-.03em}
+  .recit-chapeau{max-width:76ch;font:550 clamp(1.05rem,1.75vw,1.28rem)/1.65 var(--sans);margin:0 0 1.8rem}
+  .recit-corps{max-width:78ch}
+  .recit-corps section{margin:0 0 1.55rem}
+  .recit-corps h3{font:650 clamp(1.25rem,2vw,1.6rem)/1.2 var(--serif);margin:0 0 .5rem}
+  .recit-corps p{font:450 1rem/1.75 var(--sans);margin:0}
+  .recit-sources{border-top:1px solid #cfc6bd;padding-top:1.25rem;max-width:83ch}
+  .recit-sources h3{font:750 .9rem/1.4 var(--sans);margin:0 0 .6rem}
+  .recit-sources ul{margin:0;padding-left:1.2rem}
+  .recit-sources li{margin:.35rem 0;font:500 .85rem/1.55 var(--sans)}
+  .recit-sources a{text-decoration:underline;text-underline-offset:3px}
+  .recit-sources>p{margin:1rem 0 0;color:#5c5652;font:500 .78rem/1.55 var(--sans)}
 </style>
