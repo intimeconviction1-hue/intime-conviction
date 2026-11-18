@@ -1,3 +1,4 @@
+import photoTribunalParis from '../assets/tribunal-paris.webp';
 import photoLimoges from '../assets/palais-limoges.webp';
 import photoTulle from '../assets/palais-tulle.webp';
 import photoVannes from '../assets/palais-vannes.webp';
@@ -44,6 +45,13 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/michel-zecler-les-excuses-face-aux-images/11/2026/': {
+    image: photoTribunalParis,
+    lieu: 'Photo d’illustration · Tribunal de Paris vu du parc des Batignolles',
+    auteur: 'Coppertarzan',
+    source: 'https://commons.wikimedia.org/wiki/File:Tribunal_de_Paris_seen_from_Batignolles_park.jpg',
+    licence: 'CC0', lienLicence: 'https://creativecommons.org/publicdomain/zero/1.0/',
+  },
   '/maylis-daubon-pau-personnalite-et-preuve/11/2026/': photoAssisesParis,
   '/lourdes-pourquoi-le-verdict-a-ete-annule/11/2026/': illustrationAssises,
   '/saint-junien-verdict-coups-et-menaces/11/2026/': {
