@@ -29,6 +29,43 @@ export const DOSSIERS = Object.freeze([
   },
 ]);
 
+
+/**
+ * Synthèses rédactionnelles vérifiées manuellement.
+ * Ne jamais fabriquer ces récits à partir des titres de la veille.
+ * Les sources documentent les faits et sont affichées au lecteur.
+ */
+export const RECITS_DOSSIERS = Object.freeze({
+  'affaire-jubillar': {
+    titre: 'De la disparition au procès en appel',
+    chapeau: 'Pendant près de six ans, l’affaire Delphine Jubillar a été marquée par l’absence de corps et par les contestations de son mari. Après une première condamnation, les déclarations de Cédric Jubillar et la découverte de restes humains ont profondément modifié les données du procès à venir.',
+    sections: [
+      {
+        titre: 'Une disparition et des années d’enquête',
+        texte: 'Dans la nuit du 15 au 16 décembre 2020, Delphine Jubillar disparaît à Cagnac-les-Mines, dans le Tarn. Son mari, Cédric Jubillar, est poursuivi pour son meurtre. Pendant l’enquête et au premier procès, il conteste les faits. L’absence de corps occupe alors une place centrale dans les débats sur les preuves et la reconstitution des événements.'
+      },
+      {
+        titre: 'Un premier verdict, puis un appel',
+        texte: 'Le 17 octobre 2025, la cour d’assises du Tarn, réunie à Albi, reconnaît Cédric Jubillar coupable du meurtre de son épouse et le condamne à trente ans de réclusion criminelle. Il fait appel. Ce verdict de première instance n’est donc pas présenté ici comme une décision définitive.'
+      },
+      {
+        titre: 'Les événements de juillet 2026',
+        texte: 'En juillet 2026, après des années de dénégations, Cédric Jubillar reconnaît auprès de ses avocats puis des enquêteurs être à l’origine de la mort de Delphine. Le 16 juillet, des restes humains sont retrouvés sur ses indications près de Mailhoc. Ces développements conduisent la cour d’assises de Haute-Garonne à reporter le procès d’appel initialement prévu en septembre, afin de permettre des investigations supplémentaires.'
+      },
+      {
+        titre: 'Les questions du nouveau procès',
+        texte: 'Le procès d’appel est annoncé du 30 avril au 14 mai 2027 à Toulouse. La cour devra examiner les faits, les nouvelles déclarations de l’accusé et les résultats des investigations dans le cadre d’un débat contradictoire. La condamnation de première instance demeure susceptible d’être réexaminée en appel. La date annoncée reste un calendrier d’audience, et non la garantie que le procès se tiendra sans changement.'
+      }
+    ],
+    sources: [
+      { titre: 'RTL, 9 septembre 2026 : dates du procès en appel', url: 'https://www.rtl.fr/actu/justice-faits-divers/le-proces-en-appel-de-cedric-jubillar-fixe-du-30-avril-au-14-mai-2027-7900670787' },
+      { titre: 'TF1 Info, 21 juillet 2026 : report après les aveux', url: 'https://www.tf1info.fr/justice-faits-divers/le-proces-en-appel-de-cedric-jubillar-renvoye-au-premier-semestre-2027-2454292.html' },
+      { titre: 'La Dépêche, 9 septembre 2026 : nouveaux éléments et calendrier', url: 'https://www.ladepeche.fr/2026/09/09/affaire-jubillar-le-proces-en-appel-de-cedric-jubillar-se-tiendra-du-30-avril-au-14-mai-2027-13543297.php' }
+    ],
+    verifieAu: '2026-11-18'
+  }
+});
+
 // Délibérément strict : pas de rapprochement sur des termes génériques comme
 // « meurtre », « procès », « infirmier », « tribunal » ou « accusé ».
 const REGLES = {
