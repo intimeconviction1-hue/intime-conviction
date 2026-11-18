@@ -44,6 +44,7 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/maylis-daubon-pau-personnalite-et-preuve/11/2026/': photoAssisesParis,
   '/lourdes-pourquoi-le-verdict-a-ete-annule/11/2026/': illustrationAssises,
   '/saint-junien-verdict-coups-et-menaces/11/2026/': {
     image: photoLimoges,
