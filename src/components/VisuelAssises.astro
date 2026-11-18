@@ -1,8 +1,8 @@
 ---
-const { image, alt, source, credit, licence, licenceUrl, prioritaire = false } = Astro.props;
+const { image, fallbackImage, alt, source, credit, licence, licenceUrl, prioritaire = false } = Astro.props;
 ---
 <figure class="visuel-assises">
-  <img src={image.src} width={image.width} height={image.height} alt={alt} loading={prioritaire ? 'eager' : 'lazy'} decoding="async" />
+  <img src={image.src} width={image.width} height={image.height} alt={alt} loading={prioritaire ? 'eager' : 'lazy'} decoding="async" data-fallback-src={fallbackImage?.src} onerror="if (this.dataset.fallbackSrc && this.src !== this.dataset.fallbackSrc) { this.src = this.dataset.fallbackSrc; this.onerror = null; }" />
   <figcaption>{alt} · <a href={source}>{credit}</a>{licence && <> · <a href={licenceUrl}>{licence}</a></>}</figcaption>
 </figure>
 <style>
