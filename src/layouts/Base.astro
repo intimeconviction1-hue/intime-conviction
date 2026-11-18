@@ -145,12 +145,12 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     <a class="evitement" href="#contenu">Aller au contenu</a>
     <header class="entete">
       <div class="barre cadre">
-        <div class="haut-edition">
-          {edition && <p class="edition-date">Édition du <time datetime={edition.toISOString()}>{formatEdition.format(edition)} · {heureEdition.format(edition)}</time></p>}
-        </div>
         <div class="identite-journal">
           <Marque class="marque"><a href="/" aria-label="Intime Conviction, accueil"><span class="marque-mot">INTIME <span class="marque-conviction">CONVICTION</span></span></a></Marque>
-          <p class="signature">Le journal des cours d’assises</p>
+          <div class="identite-meta">
+            <p class="signature">Le journal des cours d’assises</p>
+            {edition && <p class="edition-date">Édition du <time datetime={edition.toISOString()}>{formatEdition.format(edition)} · {heureEdition.format(edition)}</time></p>}
+          </div>
         </div>
         <div class="liens-entete">
           <form class="recherche-entete" action="/recherche/" method="get" role="search" aria-label="Rechercher dans le journal">
@@ -352,10 +352,10 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       display:grid;min-height:0;grid-template-columns:minmax(0,1fr) auto;
       gap:0 1.5rem;align-items:center
     }
-    .haut-edition{grid-column:1/-1;padding:.45rem 0;border-bottom:1px solid #d8cbc2}
-    .edition-date{margin:0;color:#5e474c;font:700 .74rem/1.45 var(--sans)}
+    .edition-date{margin:0;color:#5e474c;font:700 .72rem/1.45 var(--sans);white-space:nowrap}
     .espace-entete{display:flex;align-items:center}
-    .identite-journal{min-width:0;container-type:inline-size;padding:.8rem 0 1rem}
+    .identite-journal{min-width:0;container-type:inline-size;padding:.6rem 0 .7rem}
+    .identite-meta{display:flex;align-items:baseline;flex-wrap:wrap;gap:.2rem 1rem;margin-top:.4rem}
     .identite-journal .marque{margin:0}
     .identite-journal .marque a{
       display:block;width:max-content;max-width:100%;min-height:0;padding:0;color:#2c2127;
@@ -365,7 +365,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     .identite-journal .marque-conviction{display:inline-block;background:#9b303d;color:#fffaf3;padding:.12em .12em .02em}
     .edition-date time{white-space:nowrap}
     .identite-journal .signature,.avec-fond .identite-journal .signature{
-      display:flex;align-items:center;gap:.65rem;margin:.55rem 0 0;padding:0;
+      display:flex;align-items:center;gap:.65rem;margin:0;padding:0;
       color:var(--bordeaux-entete);font:750 .72rem/1.35 var(--sans);letter-spacing:.13em;
       text-transform:uppercase;max-width:none
     }
