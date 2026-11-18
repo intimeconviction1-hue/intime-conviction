@@ -73,4 +73,14 @@ h3{font:850 clamp(1.1rem,1.7vw,1.5rem)/1.18 var(--sans);letter-spacing:-.04em;ma
   .presse-accueil .nouvelles h3,.presse-accueil .nouvelles li:first-child h3{font:650 clamp(1.15rem,2vw,1.5rem)/1.2 var(--serif);letter-spacing:normal;text-transform:none;margin:.5rem 0 0}
   .presse-accueil .nouvelles h3 a:hover{color:#641e30;background:none;text-decoration:underline}
   .presse-accueil .source{padding:0;color:#84323d;background:none}
+  /* Une référence principale puis quatre titres lisibles, sans rupture de style. */
+  .presse-accueil .nouvelles{grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}
+  .presse-accueil .nouvelles li:first-child{grid-column:1/-1;background:#faf4ea;border-left:4px solid #84323d;padding:clamp(1.1rem,2.4vw,1.65rem)}
+  .presse-accueil .nouvelles li:first-child h3{font-size:clamp(1.45rem,2.6vw,2.15rem);max-width:60ch}
+  .presse-accueil .nouvelles li{min-height:0}
+  .presse-accueil .nouvelles a:focus-visible{outline:3px solid #84323d;outline-offset:4px}
+  @media(max-width:47.99rem){
+    .presse-accueil .nouvelles{grid-template-columns:minmax(0,1fr)}
+    .presse-accueil .nouvelles li:first-child{grid-column:auto}
+  }
 </style>
