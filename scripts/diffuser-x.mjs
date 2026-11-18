@@ -3,6 +3,7 @@
 // sans publication au premier lancement. Voir .github/workflows/diffuser-x.yml.
 import fs from 'node:fs';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 
 const root = process.env.IC_ARTICLES || 'articles-prives/articles';
 const statePath = process.env.X_PUBLICATION_STATE || '.x-publications.json';
@@ -12,6 +13,7 @@ const dryRun = process.env.X_DRY_RUN === 'true';
 const maxPerRun = Number(process.env.X_MAX_PER_RUN || 5);
 const site = 'https://www.intimeconviction.fr';
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+const articleKey = url => createHash('sha256').update(url).digest('hex');
 
 function collect(dir) {
   if (!fs.existsSync(dir)) throw new Error('Dossier des articles introuvable : ' + dir);
@@ -77,15 +79,15 @@ async function schedule(a, n) {
 async function main() {
   const articles = collect(root).sort((a, b) => a.time - b.time || a.url.localeCompare(b.url));
   if (!fs.existsSync(statePath)) {
-    fs.writeFileSync(statePath, JSON.stringify({ version: 1, initializedAt: new Date().toISOString(),
-      seen: Object.fromEntries(articles.map(a => [a.url, { baseline: true }])) }, null, 2) + '\n');
+    fs.writeFileSync(statePath, JSON.stringify({ version: 2, initializedAt: new Date().toISOString(),
+      seen: Object.fromEntries(articles.map(a => [articleKey(a.url), { baseline: true }])) }, null, 2) + '\n');
     console.log('Initialisation : ' + articles.length + ' articles existants exclus de X.');
     return;
   }
   const state = JSON.parse(fs.readFileSync(statePath, 'utf8'));
-  if (state.version !== 1 || !state.seen || typeof state.seen !== 'object')
+  if (state.version !== 2 || !state.seen || typeof state.seen !== 'object')
     throw new Error('État X invalide : arrêt par sécurité.');
-  const candidates = articles.filter(a => !(a.url in state.seen) && a.time >= Date.now() - 14 * 86400000);
+  const candidates = articles.filter(a => !(articleKey(a.url) in state.seen) && a.time >= Date.now() - 14 * 86400000);
   if (candidates.length && !dryRun && (!apiKey || !channelId))
     throw new Error('BUFFER_API_KEY ou BUFFER_CHANNEL_ID manquant.');
   let count = 0;
@@ -97,7 +99,7 @@ async function main() {
     if (dryRun) { console.log('Simulation : ' + a.url); continue; }
     try {
       const id = await schedule(a, count);
-      state.seen[a.url] = { bufferPostId: id, queuedAt: new Date().toISOString() };
+      state.seen[articleKey(a.url)] = { bufferPostId: id, queuedAt: new Date().toISOString() };
       fs.writeFileSync(statePath, JSON.stringify(state, null, 2) + '\n');
       console.log('Programmé : ' + a.url + ' ; Buffer post ' + id);
       count++;
