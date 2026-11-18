@@ -1,0 +1,26 @@
+name: Vérifier Buffer sans publier
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/verifier-buffer.mjs'
+      - '.github/workflows/verifier-buffer.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verifier:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Vérifier clé et identité du compte X
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_CHANNEL_ID: 6a2e623338b557934593b475
+        run: node scripts/verifier-buffer.mjs
