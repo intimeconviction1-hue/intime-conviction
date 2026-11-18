@@ -45,6 +45,14 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/semaine-18-novembre-ce-que-les-preuves-laissent-a-juger/11/2026/': {
+    image: croquisDelibere, croquis: true,
+    lieu: 'Dossier judiciaire fermé sur un code · Illustration générée',
+    auteur: 'Illustration générée pour Intime Conviction',
+    source: croquisDelibere.src, licence: 'Visuel créé pour Intime Conviction',
+    lienLicence: croquisDelibere.src,
+  },
+
   '/madjaliwa-safari-presence-barriere-role-conteste/11/2026/': illustrationAssises,
   '/michel-zecler-les-excuses-face-aux-images/11/2026/': {
     image: photoTribunalParis,
