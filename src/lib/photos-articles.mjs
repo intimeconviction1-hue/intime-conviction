@@ -34,6 +34,17 @@ export const illustrationAssises = {
   licence: 'CC BY-SA 4.0',
   lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
 };
+// Repli neutre : ne pas faire passer la salle de Bordeaux pour le lieu d'une affaire.
+export const illustrationNeutre = {
+  image: croquisDelibere,
+  croquis: true,
+  lieu: 'Illustration judiciaire générique · Ne représente pas une audience réelle',
+  auteur: 'Illustration générée pour Intime Conviction',
+  source: croquisDelibere.src,
+  licence: 'Visuel créé pour Intime Conviction',
+  lienLicence: croquisDelibere.src,
+};
+
 const photoAssisesParis = {
   image: photoSalleVoltaire,
   lieu: 'Photo d’illustration · Salle Voltaire de la cour d’assises, Paris',
@@ -109,9 +120,9 @@ export const photosArticles = {
   '/dettes-cupidite-et-jalousie-le-proces-de-lassassinat-de-la-milliardaire-helene-pastor/09/2018/': photoPalaisAix,
   '/viol-du-36/01/2019/': photoAssisesParis,
   '/yvan-colonna-acte-iii/11/2015/': photoAssisesParis,
-  '/dominique-cottrez/07/2015/': illustrationAssises,
-  '/le-bebe-dans-le-coffre/11/2018/': illustrationAssises,
-  '/assises-entendre-un-proche-sans-serment/11/2026/': illustrationAssises,
+  '/dominique-cottrez/07/2015/': illustrationNeutre,
+  '/le-bebe-dans-le-coffre/11/2018/': illustrationNeutre,
+  '/assises-entendre-un-proche-sans-serment/11/2026/': illustrationNeutre,
   '/assises-qui-parle-en-dernier/11/2026/': photoAssisesParis,
   '/assises-piece-a-conviction-a-la-barre/11/2026/': {
     image: photoSalleVoltaire,
