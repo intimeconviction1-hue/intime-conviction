@@ -9,7 +9,6 @@ import croquisDelibere from '../assets/dossier-delibere-croquis.webp';
 import photoAix from '../assets/palais-verdun-aix.webp';
 import photoBlois from '../assets/blois.webp';
 import photoParis from '../assets/rue-de-la-paix.webp';
-import photoPoissy from '../assets/poissy.webp';
 import photoSaintBrieuc from '../assets/saint-brieuc-tribunal.webp';
 
 const photoPalaisAix = {
@@ -80,6 +79,7 @@ export const photosArticles = {
   },
   '/maylis-daubon-pau-personnalite-et-preuve/11/2026/': {
     image: { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Paupalaisdejustice.jpg/1024px-Paupalaisdejustice.jpg', width: 1024, height: 768 },
+    fallbackImage: croquisDelibere,
     lieu: 'Palais de justice de Pau · Photographie de 2007, non prise pendant le procès',
     auteur: 'Florent Pécassou',
     source: 'https://commons.wikimedia.org/wiki/File:Paupalaisdejustice.jpg',
@@ -137,32 +137,32 @@ export const photosArticles = {
     lieu: 'Code de procédure pénale',
     auteur: 'Illustration générée pour Intime Conviction',
     source: photoCode.src,
-    licence: 'Texte officiel',
-    lienLicence: 'https://www.legifrance.gouv.fr/codes/id/LEGITEXT000006071154/',
+    licence: 'Visuel créé pour Intime Conviction',
+    lienLicence: photoCode.src,
   },
   '/crepol-ce-que-grenoble-reexamine/11/2026/': {
     image: photoCode,
     lieu: 'Code de procédure pénale',
     auteur: 'Illustration générée pour Intime Conviction',
     source: photoCode.src,
-    licence: 'Texte officiel',
-    lienLicence: 'https://www.legifrance.gouv.fr/codes/id/LEGITEXT000006071154/',
+    licence: 'Visuel créé pour Intime Conviction',
+    lienLicence: photoCode.src,
   },
   '/assises-premier-recit-charge-decharge/11/2026/': {
     image: photoCode,
     lieu: 'Code de procédure pénale',
     auteur: 'Illustration générée pour Intime Conviction',
     source: photoCode.src,
-    licence: 'Texte officiel',
-    lienLicence: 'https://www.legifrance.gouv.fr/codes/id/LEGITEXT000006071154/',
+    licence: 'Visuel créé pour Intime Conviction',
+    lienLicence: photoCode.src,
   },
   '/assises-bulletin-blanc-vote-culpabilite/11/2026/': {
     image: photoCode,
     lieu: 'Code de procédure pénale',
     auteur: 'Illustration générée pour Intime Conviction',
     source: photoCode.src,
-    licence: 'Texte officiel',
-    lienLicence: 'https://www.legifrance.gouv.fr/codes/id/LEGITEXT000006071154/',
+    licence: 'Visuel créé pour Intime Conviction',
+    lienLicence: photoCode.src,
   },
   '/assises-quand-le-dossier-revient-au-delibere/11/2026/': {
     image: croquisDelibere,
@@ -170,8 +170,8 @@ export const photosArticles = {
     lieu: 'Dossier judiciaire fermé sur un code',
     auteur: 'Illustration générée pour Intime Conviction',
     source: croquisDelibere.src,
-    licence: 'Texte officiel',
-    lienLicence: 'https://www.legifrance.gouv.fr/codes/id/LEGITEXT000006071154/',
+    licence: 'Visuel créé pour Intime Conviction',
+    lienLicence: photoCode.src,
   },
   '/assises-quand-un-temoin-cite-manque/11/2026/': {
     image: croquisDelibere,
@@ -179,8 +179,8 @@ export const photosArticles = {
     lieu: 'Dossier judiciaire fermé sur un code',
     auteur: 'Illustration générée pour Intime Conviction',
     source: croquisDelibere.src,
-    licence: 'Texte officiel',
-    lienLicence: 'https://www.legifrance.gouv.fr/codes/id/LEGITEXT000006071154/',
+    licence: 'Visuel créé pour Intime Conviction',
+    lienLicence: photoCode.src,
   },
   '/chateauneuf-les-martigues-ce-que-reconnait-un-accuse/11/2026/': photoPalaisAix,
   '/proces-sollacaro-et-tout-recommence-aux-assises/11/2026/': photoPalaisAix,
