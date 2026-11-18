@@ -55,6 +55,8 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/tour-des-cours-fevrier-2015/03/2015/': photoAssisesParis,
+
   '/semaine-18-novembre-ce-que-les-preuves-laissent-a-juger/11/2026/': {
     image: croquisDelibere, croquis: true,
     lieu: 'Dossier judiciaire fermé sur un code · Illustration générée',
