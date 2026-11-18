@@ -1,5 +1,4 @@
 import { readFile } from 'node:fs/promises';
-import { getCollection } from 'astro:content';
 import { resolve } from 'node:path';
 import { classerNouvelle } from './classer-nouvelles.mjs';
 import { lireFil, lienDirectPresse } from './fil-actualites.mjs';
@@ -62,7 +61,8 @@ export function estCouvertParRedaction(titre, sujets = []) {
 }
 
 export async function lireActualites() {
-  const [fil,veille,publications]=await Promise.all([lireFil(),lireVeille(),getCollection('articles')]);
+  const [{ getCollection },fil,veille]=await Promise.all([import('astro:content'),lireFil(),lireVeille()]);
+  const publications = await getCollection('articles');
   const maintenant = Date.now();
   const sujetsPublies = publications
     .filter(({data}) => data.verificationEnCours !== true
