@@ -1,5 +1,5 @@
 ---
-import { photosArticles, illustrationAssises } from '../lib/photos-articles.mjs';
+import { photosArticles, illustrationNeutre } from '../lib/photos-articles.mjs';
 import VisuelAssises from './VisuelAssises.astro';
 import { rubrique } from '../lib/rubriques.mjs';
 import { dateLongue } from '../lib/articles.mjs';
@@ -13,7 +13,7 @@ const Titre = `h${niveau}`;
   {articles.map(({ data }) => (
     <li>
       {illustres && (() => {
-        const photo = photosArticles[data.chemin] ?? illustrationAssises;
+        const photo = photosArticles[data.chemin] ?? illustrationNeutre;
         return <VisuelAssises image={photo.image} alt={photo.lieu} source={photo.source} credit={photo.auteur} licence={photo.licence} licenceUrl={photo.lienLicence} />;
       })()}
       <p class="meta">
