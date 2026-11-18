@@ -1,0 +1,88 @@
+name: Diffuser les articles sur X
+
+on:
+  workflow_run:
+    workflows: ["Publier le site"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: intimeconviction-x-publication
+  cancel-in-progress: false
+
+jobs:
+  buffer:
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Code de publication
+        uses: actions/checkout@v4
+
+      - name: Articles originaux privés (lecture seule)
+        uses: actions/checkout@v4
+        with:
+          repository: intimeconviction1-hue/intime-conviction-articles
+          ssh-key: ${{ secrets.ARTICLES_DEPLOY_KEY }}
+          path: articles-prives
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Restaurer la liste anti-doublons
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh api "repos/$GITHUB_REPOSITORY/contents/x-published.json?ref=x-publication-state" --jq '.content' > /tmp/x-state-base64 2>/dev/null; then
+            base64 -d /tmp/x-state-base64 > .x-publications.json
+            cp .x-publications.json /tmp/x-state-before.json
+          else
+            echo "Premier passage : les archives ne seront pas diffusées."
+          fi
+
+      - name: Détecter et programmer les nouveaux articles
+        id: publication
+        continue-on-error: true
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_CHANNEL_ID: 6a2e623338b557934593b475
+          IC_ARTICLES: articles-prives/articles
+          X_PUBLICATION_STATE: .x-publications.json
+          X_MAX_PER_RUN: '5'
+        run: node scripts/diffuser-x.mjs
+
+      - name: Sauvegarder la protection anti-doublons
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test -f .x-publications.json || exit 1
+          if test -f /tmp/x-state-before.json && cmp -s .x-publications.json /tmp/x-state-before.json; then
+            echo "Aucune modification à enregistrer."
+            exit 0
+          fi
+          if ! gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/x-publication-state" >/dev/null 2>&1; then
+            gh api -X POST "repos/$GITHUB_REPOSITORY/git/refs" \
+              -f ref=refs/heads/x-publication-state -f sha="$GITHUB_SHA" >/dev/null
+          fi
+          FILE_SHA="$(gh api "repos/$GITHUB_REPOSITORY/contents/x-published.json?ref=x-publication-state" --jq '.sha' 2>/dev/null || true)"
+          CONTENT="$(base64 -w0 .x-publications.json)"
+          if [ -n "$FILE_SHA" ]; then
+            gh api -X PUT "repos/$GITHUB_REPOSITORY/contents/x-published.json" \
+              -f message="Actualiser les articles transmis à Buffer" \
+              -f branch=x-publication-state -f sha="$FILE_SHA" \
+              -f content="$CONTENT" >/dev/null
+          else
+            gh api -X PUT "repos/$GITHUB_REPOSITORY/contents/x-published.json" \
+              -f message="Initialiser la liste anti-doublons X" \
+              -f branch=x-publication-state -f content="$CONTENT" >/dev/null
+          fi
+
+      - name: Signaler une erreur de programmation
+        if: steps.publication.outcome == 'failure'
+        run: |
+          echo "::error::La programmation Buffer a échoué. Les publications réussies sont enregistrées."
+          exit 1
