@@ -118,9 +118,10 @@ const articlesUne = selectionUne.map(({data}) => ({
 
     <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
       <div class="accueil-dossiers-entete">
-        <h2 id="titre-dossiers-accueil">Les affaires à suivre</h2>
+        <h2 id="titre-dossiers-accueil">Dossiers judiciaires</h2>
         <a href="/dossiers/">Tous les dossiers <span aria-hidden="true">↗</span></a>
       </div>
+      <p class="section-intro">Retrouver les grandes affaires, leurs développements judiciaires et les références de presse qui les documentent.</p>
       <div class="dossiers-visuel">
         <VisuelAssises image={photoDossiers} alt="Salle de la cour d’assises du palais Thiac, Bordeaux"
           source="https://commons.wikimedia.org/wiki/File:Palais_Thiac,_Salle_d%27audience_de_la_cour_d%27assises.jpg"
@@ -137,16 +138,14 @@ const articlesUne = selectionUne.map(({data}) => ({
                 </div>
                 <p id={`accueil-dossier-repere-${d.slug}`}>{d.derniere.titre}</p>
                 <span class="accueil-dossiers-total">
-                  {d.derniere.source} · <time datetime={d.derniere.dateAlerte}>{dateLongue(new Date(d.derniere.dateAlerte + "T12:00:00Z"))}</time>
+                  Dernière référence de presse : {d.derniere.source} · <time datetime={d.derniere.dateAlerte}>{dateLongue(new Date(d.derniere.dateAlerte + "T12:00:00Z"))}</time>
                 </span>
               </a>
             </li>
           ))}
         </ul>
       )}
-      <div class="accueil-dossiers-liens">
-        <a href="/chronologie/">Chronologie judiciaire <span aria-hidden="true">↗</span></a>
-      </div>
+
     </section>
 
 
@@ -171,9 +170,10 @@ const articlesUne = selectionUne.map(({data}) => ({
     {archiveUne && (
       <section class="selection" aria-labelledby="titre-selection">
         <div class="selection-entete">
-          <h2 id="titre-selection">À relire dans nos archives</h2>
+          <h2 id="titre-selection">Les archives du journal</h2>
           <a href="/archives/">Archives du journal <span aria-hidden="true">↗</span></a>
         </div>
+        <p class="section-intro">Des articles publiés précédemment, à retrouver par affaire et par année.</p>
         <div class:list={['selection-grille', { 'selection-grille-simple': derniers.length === 0 }]}>
           <article class="archive-vedette">
             <a href={archiveUne.data.chemin} aria-labelledby="titre-archive-vedette">
@@ -249,18 +249,15 @@ const articlesUne = selectionUne.map(({data}) => ({
       </ul>
     </section>
 
-    <div class="outils-accueil">
-      <form class="accueil-recherche" action="/recherche/" method="get" role="search" aria-labelledby="titre-recherche-accueil">
-        <label id="titre-recherche-accueil" for="recherche-accueil">Retrouver un article ou une affaire</label>
-        <div class="accueil-recherche-champs">
-          <input id="recherche-accueil" type="search" name="q" placeholder="Nom ou mot-clé" />
-          <button type="submit">Rechercher</button>
-        </div>
-      </form>
-      <nav aria-label="Consulter les archives">
-        <a href="/archives/presse/">Archives de presse <span aria-hidden="true">↗</span></a>
-      </nav>
-    </div>
+    <nav class="outils-accueil" aria-label="Explorer le fonds judiciaire">
+      <h2>Explorer le fonds judiciaire</h2>
+      <ul>
+        <li><a href="/chronologie/">Chronologie des affaires <span aria-hidden="true">↗</span></a></li>
+        <li><a href="/carte/">Carte des affaires <span aria-hidden="true">↗</span></a></li>
+        <li><a href="/annuaire/#repertoire">Annuaire des juridictions <span aria-hidden="true">↗</span></a></li>
+        <li><a href="/archives/presse/">Archives de presse <span aria-hidden="true">↗</span></a></li>
+      </ul>
+    </nav>
 
   </div></div>
 </Base>
@@ -311,6 +308,7 @@ const articlesUne = selectionUne.map(({data}) => ({
   .ouverture{background:linear-gradient(155deg,#f0e9e0,#fcfaf6 66%)}
   .surface-lecture{background:#fcfaf6}
   .dossiers-visuel{margin-bottom:1rem;background:#e8ded1}
+  .section-intro{max-width:78ch;margin:.25rem 0 1rem;color:#534943;font:500 .96rem/1.55 var(--sans)}
   .dossiers-visuel :global(img){max-height:17rem;object-fit:cover;object-position:center 56%}
   .ouverture-interieur{padding-top:clamp(1rem,2.5vw,2rem)}
   .journal-corps{padding-bottom:3rem}
@@ -376,12 +374,13 @@ const articlesUne = selectionUne.map(({data}) => ({
   .rubrique-carte{padding:.85rem 0;border-top:1px solid #c9bcb1}
   .rubrique-carte h3 a{display:flex;justify-content:space-between;gap:.65rem}
   .rubrique-lectures li{margin:.5rem 0;font:650 .85rem/1.4 var(--sans)}
-  .outils-accueil{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:end;gap:1rem;padding:1.2rem;background:#f1ede6}
-  .outils-accueil label{display:block;margin-bottom:.45rem;font:700 .95rem/1.4 var(--sans)}
-  .accueil-recherche-champs{display:flex;min-height:44px}
-  .accueil-recherche input{flex:1;min-width:0;padding:.65rem;border:1px solid #847872;background:#fff;color:#252525;font:500 1rem/1.3 var(--sans)}
-  .accueil-recherche button{padding:.65rem;background:#84323d;color:#fff;border:0;cursor:pointer;font:700 .8rem var(--sans)}
-  .outils-accueil nav{display:grid;gap:.45rem;font:700 .85rem/1.4 var(--sans)}
+  .outils-accueil{padding:clamp(1.1rem,2.5vw,1.7rem);background:#f1ede6;border-top:2px solid #84323d}
+  .outils-accueil h2{margin:0 0 1rem}
+  .outils-accueil ul{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.65rem;list-style:none;margin:0;padding:0}
+  .outils-accueil a{display:flex;justify-content:space-between;gap:.7rem;align-items:center;min-height:56px;padding:.8rem;background:#fffdf8;border:1px solid #d2c8bf;color:#641e30;font:700 .86rem/1.35 var(--sans)}
+  .outils-accueil a:focus-visible{outline:3px solid #84323d;outline-offset:2px}
+  @media(max-width:62rem){.outils-accueil ul{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:36rem){.outils-accueil ul{grid-template-columns:minmax(0,1fr)}}
   .journal-corps a:hover{text-decoration:underline;text-underline-offset:.15em}
   @media(max-width:48rem){
     .accueil-dossiers-grille,.greffe-accueil-cartes,.rubriques,.guide-assises,.selection-grille,.outils-accueil{grid-template-columns:minmax(0,1fr)}
