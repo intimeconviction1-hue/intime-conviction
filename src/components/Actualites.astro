@@ -2,6 +2,7 @@
 import { lienDirectPresse } from '../lib/fil-actualites.mjs';
 import { lireActualites } from '../lib/veille.mjs';
 import { hierarchiserPresse } from '../lib/hierarchiser-presse.mjs';
+import { regrouperPresseAccueil } from '../lib/regrouper-presse.mjs';
 import { rubrique } from '../lib/rubriques.mjs';
 import { photosArticles, illustrationNeutre } from '../lib/photos-articles.mjs';
 import croquisAudience from '../assets/croquis-audience-panoramique.webp';
@@ -15,24 +16,7 @@ const r = rubrique(rubriqueSlug);
 const titreAffiche = titre ?? r.libelle;
 const fil = await lireActualites();
 const candidates = hierarchiserPresse((fil?.articles ?? []).filter(n=>n.rubrique === rubriqueSlug)).slice(debut);
-// Sur l'accueil uniquement, ne pas répéter plusieurs dépêches sur le même
-// verdict explicitement identifié. Les autres références restent consultables
-// dans la revue de presse et ses archives. La clé est volontairement précise :
-// aucun rapprochement par mots génériques ou patronyme seul.
-const sujetsMemeVerdict = [
-  { cle: 'olivio-gomes-verdict-appel', motif: /\bolivio\s+gomes\b/i, verdict: /\b(condamn[eé]|r[eé]clusion|huit ans|8 ans|verdict)\b/i },
-];
-function eviterDoublonsAccueil(articles) {
-  const vus = new Set();
-  return articles.filter(article => {
-    const sujet = sujetsMemeVerdict.find(({ motif, verdict }) => motif.test(article.titre) && verdict.test(article.titre));
-    if (!sujet) return true;
-    if (vus.has(sujet.cle)) return false;
-    vus.add(sujet.cle);
-    return true;
-  });
-}
-const nouvelles = (accueil ? eviterDoublonsAccueil(candidates) : candidates).slice(0,limite);
+const nouvelles = (accueil ? regrouperPresseAccueil(candidates) : candidates).slice(0,limite);
 const afficher = nouvelles.length > 0 || rubriqueSlug === 'cours-du-jour';
 const formatDate = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'});
 
