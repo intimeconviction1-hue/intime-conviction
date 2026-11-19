@@ -108,10 +108,12 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       isAccessibleForFree:true,
       inLanguage:'fr-FR'
     })} />}
+    <meta name="twitter:site" content="@IntimeConv" />
     <meta name="twitter:card" content={imagePartage ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={titreComplet} />
     <meta name="twitter:description" content={description} />
     {imagePartage && <meta name="twitter:image" content={imagePartage} />}
+    {imagePartage && <meta name="twitter:image:alt" content={image ? imageAlt : "Fronton d'une cour d'assises"} />}
     {accueil && <script type="application/ld+json" set:html={JSON.stringify({ '@context':'https://schema.org', '@type':'WebSite', '@id':'https://www.intimeconviction.fr/#site', name:'Intime Conviction', alternateName:'Le journal des cours d’assises', url:'https://www.intimeconviction.fr/', description, inLanguage:'fr-FR' })} />}
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context':'https://schema.org',
