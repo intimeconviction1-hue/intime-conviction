@@ -1,3 +1,4 @@
+import croquisDigne from '../assets/assises-landru.webp';
 import croquisHeaulme from '../assets/croquis-manchette.webp';
 import photoTribunalParis from '../assets/tribunal-paris.webp';
 import photoLimoges from '../assets/palais-limoges.webp';
@@ -56,6 +57,11 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/manosque-deux-chocs-intention-contestee-digne/11/2026/': {
+    ...illustrationNeutre, image: croquisDigne,
+    lieu: 'Illustration judiciaire générée · Ne représente ni cette audience ni les personnes citées',
+    source: croquisDigne.src, lienLicence: croquisDigne.src,
+  },
   '/jean-joseph-clement-heaulme-aveux-renvoi-conteste/11/2026/': {
     ...illustrationNeutre, image: croquisHeaulme,
     lieu: 'Illustration judiciaire générée · Ne représente ni l’audience ni les personnes citées',
