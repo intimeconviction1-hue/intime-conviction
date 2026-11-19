@@ -43,6 +43,42 @@ console.log('Posts enregistrés : '+posts.length);
 console.log('Réponses API exploitables : '+results.filter(x=>x.status==='ok').length);
 console.log('Posts avec des mesures : '+results.filter(x=>x.status==='ok'&&x.metrics.length).length);
 console.log('Diagnostic des indisponibilités (sans informations sensibles) : '+JSON.stringify(results.filter(x=>x.status!=='ok').map(x=>String(x.reason||'inconnue').slice(0,180))));
-const resume=results.map(x=>({postId:x.id,status:x.status,mesures:(x.metrics||[]).map(m=>({type:m.type,valeur:m.value})),dateMesures:x.metricsUpdatedAt||null}));
-console.log('MESURES_BUFFER_JSON='+JSON.stringify(resume));
+const totals={};
+for(const key of ['impressions','clicks','reactions','comments','reposts']) {
+  const available=results.filter(r=>r.status==='ok'&&r.metrics.some(m=>m.type===key&&Number.isFinite(Number(m.value))));
+  totals[key]={postsWithData:available.length,value:available.reduce((sum,r)=>sum+Number(r.metrics.find(m=>m.type===key).value),0)};
+}
+const dates=results.flatMap(r=>r.metricsUpdatedAt?[r.metricsUpdatedAt]:[]);
+const latestMetricsAt=dates.length?dates.sort().at(-1):null;
+const summary={
+  date:new Date().toISOString().slice(0,10), measuredAt:new Date().toISOString(),
+  postsWithMetrics:results.filter(r=>r.status==='ok'&&r.metrics.length).length,
+  postsQueued:posts.length, totals, latestMetricsAt
+};
+fs.writeFileSync('buffer-metrics-summary.json',JSON.stringify(summary,null,2)+'\n');
+const fmt=n=>new Intl.NumberFormat('fr-FR').format(n);
+const rows=[
+  ['Impressions','impressions'],['Clics signalés par Buffer','clicks'],
+  ['Réactions','reactions'],['Commentaires','comments'],['Reposts','reposts']
+];
+const lines=[
+  '# X / Intime Conviction : relevé des performances',
+  '',
+  '> Données expérimentales de Buffer. Les clics ne sont pas des visites confirmées sur le site. Ne pas additionner les instantanés entre les jours : les compteurs peuvent être cumulatifs.',
+  '',
+  '| Indicateur | Total rapporté | Posts avec données |',
+  '|---|---:|---:|',
+  ...rows.map(([label,key])=>'| '+label+' | '+(totals[key].postsWithData ? fmt(totals[key].value) : 'Indisponible')+' | '+totals[key].postsWithData+'/'+posts.length+' |'),
+  '',
+  'Publications enregistrées : **'+posts.length+'**. Publications avec au moins une métrique : **'+summary.postsWithMetrics+'**.',
+  '',
+  'Dernière actualisation des métriques connue : **'+(latestMetricsAt||'inconnue')+'**.',
+  '',
+  'Pour déterminer les visites réelles, connecter Google Analytics 4 au site puis consulter la campagne articles_redaction et la source x / social.',
+  ''
+];
+const markdown=lines.join('\n');
+fs.writeFileSync('buffer-metrics-summary.md',markdown);
+if(process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,markdown);
+console.log('Résumé quotidien enregistré : '+JSON.stringify({posts:summary.postsQueued,withMetrics:summary.postsWithMetrics,totals:summary.totals,latestMetricsAt}));
 console.log('Rapport expérimental écrit, aucun post créé.');
