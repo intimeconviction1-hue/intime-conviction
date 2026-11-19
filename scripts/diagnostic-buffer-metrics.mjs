@@ -42,4 +42,5 @@ fs.writeFileSync(process.env.METRICS_REPORT||'buffer-metrics.json',JSON.stringif
 console.log('Posts enregistrés : '+posts.length);
 console.log('Réponses API exploitables : '+results.filter(x=>x.status==='ok').length);
 console.log('Posts avec des mesures : '+results.filter(x=>x.status==='ok'&&x.metrics.length).length);
+console.log('Diagnostic des indisponibilités (sans informations sensibles) : '+JSON.stringify(results.filter(x=>x.status!=='ok').map(x=>String(x.reason||'inconnue').slice(0,180))));
 console.log('Rapport expérimental écrit, aucun post créé.');
