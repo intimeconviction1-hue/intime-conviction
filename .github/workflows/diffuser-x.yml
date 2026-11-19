@@ -32,6 +32,9 @@ jobs:
         with:
           node-version: '24'
 
+      - name: Contrôler les accroches avant toute publication
+        run: node --test scripts/x-copy.test.mjs
+
       - name: Restaurer la liste anti-doublons
         env:
           GH_TOKEN: ${{ github.token }}
