@@ -1,3 +1,4 @@
+import croquisHeaulme from '../assets/croquis-manchette.webp';
 import photoTribunalParis from '../assets/tribunal-paris.webp';
 import photoLimoges from '../assets/palais-limoges.webp';
 import photoTulle from '../assets/palais-tulle.webp';
@@ -55,6 +56,11 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/jean-joseph-clement-heaulme-aveux-renvoi-conteste/11/2026/': {
+    ...illustrationNeutre, image: croquisHeaulme,
+    lieu: 'Illustration judiciaire générée · Ne représente ni l’audience ni les personnes citées',
+    source: croquisHeaulme.src, lienLicence: croquisHeaulme.src,
+  },
   '/question-nouvelle-zecler-lourdes-droits-defense/11/2026/': {
     image: photoCode, croquis: true,
     lieu: 'Code de procédure pénale · Illustration générée',
