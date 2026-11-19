@@ -55,6 +55,12 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/question-nouvelle-zecler-lourdes-droits-defense/11/2026/': {
+    image: photoCode, croquis: true,
+    lieu: 'Code de procédure pénale · Illustration générée',
+    auteur: 'Illustration générée pour Intime Conviction',
+    source: photoCode.src, licence: 'Visuel créé pour Intime Conviction', lienLicence: photoCode.src,
+  },
   '/tour-des-cours-fevrier-2015/03/2015/': photoAssisesParis,
 
   '/semaine-18-novembre-ce-que-les-preuves-laissent-a-juger/11/2026/': {
