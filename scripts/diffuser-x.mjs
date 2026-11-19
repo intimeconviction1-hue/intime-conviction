@@ -4,6 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
+import { composeXPost } from './x-copy.mjs';
 
 const root = process.env.IC_ARTICLES || 'articles-prives/articles';
 const statePath = process.env.X_PUBLICATION_STATE || '.x-publications.json';
@@ -27,20 +28,13 @@ function collect(dir) {
       if (!a.titre || !a.date || !/^\/[^?#]+\/$/.test(a.chemin || '')) return [];
       const time = Date.parse(a.date);
       if (!Number.isFinite(time) || time > Date.now() + 300000) return [];
-      return [{ url: new URL(a.chemin, site).href, title: a.titre.trim(), time }];
+      return [{ url: new URL(a.chemin, site).href, title: a.titre.trim(), excerpt: (a.extrait || '').trim(), time }];
     } catch (error) {
       throw new Error('Article illisible ' + file + ' : ' + error.message);
     }
   });
 }
 
-function postText(a) {
-  const url = a.url;
-  // Garder une marge pour le comptage des liens par X.
-  const limit = 245 - 25;
-  const title = a.title.length > limit ? a.title.slice(0, limit - 1).trimEnd() + '…' : a.title;
-  return title + '\n\n' + url;
-}
 
 async function pageIsPublic(url) {
   try {
@@ -63,7 +57,7 @@ async function schedule(a, n) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + apiKey },
     body: JSON.stringify({ query, variables: { input: {
-      text: postText(a), channelId, schedulingType: 'automatic',
+      text: composeXPost(a), channelId, schedulingType: 'automatic',
       mode: 'customScheduled', dueAt,
     } } }),
     signal: AbortSignal.timeout(20000),
