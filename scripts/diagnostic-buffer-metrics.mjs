@@ -43,4 +43,6 @@ console.log('Posts enregistrés : '+posts.length);
 console.log('Réponses API exploitables : '+results.filter(x=>x.status==='ok').length);
 console.log('Posts avec des mesures : '+results.filter(x=>x.status==='ok'&&x.metrics.length).length);
 console.log('Diagnostic des indisponibilités (sans informations sensibles) : '+JSON.stringify(results.filter(x=>x.status!=='ok').map(x=>String(x.reason||'inconnue').slice(0,180))));
+const resume=results.map(x=>({postId:x.id,status:x.status,mesures:(x.metrics||[]).map(m=>({type:m.type,valeur:m.value})),dateMesures:x.metricsUpdatedAt||null}));
+console.log('MESURES_BUFFER_JSON='+JSON.stringify(resume));
 console.log('Rapport expérimental écrit, aucun post créé.');
