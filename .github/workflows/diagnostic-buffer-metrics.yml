@@ -1,0 +1,41 @@
+name: Diagnostic métriques Buffer X
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/diagnostic-buffer-metrics.mjs'
+      - '.github/workflows/diagnostic-buffer-metrics.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Charger l'état des publications X
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/contents/x-published.json?ref=x-publication-state" \
+            --jq '.content' | base64 -d > .x-publications.json
+      - name: Lire les métriques expérimentales, sans publier
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_CHANNEL_ID: 6a2e623338b557934593b475
+          X_PUBLICATION_STATE: .x-publications.json
+        run: node scripts/diagnostic-buffer-metrics.mjs
+      - name: Conserver le diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnostic-metrics-buffer-x
+          path: buffer-metrics.json
+          retention-days: 14
+          if-no-files-found: warn
