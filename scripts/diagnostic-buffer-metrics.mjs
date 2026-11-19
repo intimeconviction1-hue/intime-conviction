@@ -7,7 +7,7 @@ if (!token) throw new Error('BUFFER_API_KEY absent');
 const channel=process.env.BUFFER_CHANNEL_ID;
 const state=JSON.parse(fs.readFileSync(process.env.X_PUBLICATION_STATE||'.x-publications.json','utf8'));
 const posts=Object.entries(state.seen||{}).filter(([,v])=>v.bufferPostId).map(([fingerprint,v])=>({fingerprint,id:v.bufferPostId,queuedAt:v.queuedAt}));
-const query = `query GetPostMetrics($id: ID!) {
+const query = `query GetPostMetrics($id: PostId!) {
   post(input: { id: $id }) {
     id
     channelId
