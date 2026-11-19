@@ -57,6 +57,14 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/caro-coups-au-telephone-version-defense/11/2026/': {
+    image: photoVannes,
+    lieu: 'Palais de justice de Vannes · Photographie du lieu, non prise pendant ce procès',
+    auteur: 'Quoique',
+    source: 'https://commons.wikimedia.org/wiki/File:Palais-Justice-Vannes.jpg',
+    licence: 'CC BY-SA 3.0',
+    lienLicence: 'https://creativecommons.org/licenses/by-sa/3.0/',
+  },
   '/manosque-deux-chocs-intention-contestee-digne/11/2026/': {
     ...illustrationNeutre, image: croquisDigne,
     lieu: 'Illustration judiciaire générée · Ne représente ni cette audience ni les personnes citées',
