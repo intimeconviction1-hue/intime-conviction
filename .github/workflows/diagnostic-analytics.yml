@@ -1,0 +1,58 @@
+name: Diagnostic technique Google Analytics
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/diagnostic-analytics.yml
+permissions:
+  contents: read
+jobs:
+  diagnostic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --no-save --ignore-scripts playwright@1.56.1
+      - run: npx playwright install --with-deps chromium
+      - name: Inspecter les requêtes réelles sans envoyer d'événements GA
+        run: |
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright';
+          import assert from 'node:assert/strict';
+          const browser = await chromium.launch({headless:true,args:['--no-sandbox']});
+          const context = await browser.newContext({locale:'fr-FR'});
+          const page = await context.newPage();
+          const log = [];
+          const errors = [];
+          page.on('pageerror',e=>errors.push(String(e)));
+          page.on('request',r=>{
+            if (/google(analytics|tagmanager)\.com/.test(r.url())) log.push({event:'request',url:r.url().split('?')[0],method:r.method()});
+          });
+          page.on('response',r=>{
+            if (/google(analytics|tagmanager)\.com/.test(r.url())) log.push({event:'response',status:r.status(),url:r.url().split('?')[0]});
+          });
+          await context.route(/(google-analytics\.com|analytics\.google\.com)\/(g\/collect|collect)/,route=>route.abort('blockedbyclient'));
+          try {
+            await page.goto('https://www.intimeconviction.fr/',{waitUntil:'domcontentloaded',timeout:45000});
+            await page.waitForTimeout(1500);
+            const before=log.filter(x=>x.event==='request').length;
+            assert.equal(before,0,'Requête Google avant consentement');
+            const banner=page.locator('#consentement-editorial');
+            await banner.waitFor({state:'visible'});
+            await page.getByRole('button',{name:'Tout accepter'}).click();
+            await page.waitForTimeout(6000);
+            const scripts=await page.locator('script[src*="googletagmanager.com/gtag/js"]').evaluateAll(es=>es.map(e=>e.src));
+            const gaScript=scripts.find(s=>s.includes('G-LBH06QWG2R'));
+            const tagResponse=log.find(x=>x.event==='response'&&x.url.includes('googletagmanager.com/gtag/js')&&x.status===200);
+            const report={before,scripts,tagResponse:!!tagResponse,network:log,errors};
+            console.log('RAPPORT_ANALYTICS='+JSON.stringify(report));
+            assert(gaScript,'Balise GA absente après consentement');
+            assert(tagResponse,'Balise Google non chargée avec HTTP 200');
+            await page.reload({waitUntil:'domcontentloaded'});
+            await page.waitForTimeout(1000);
+            assert(await page.locator('script[src*="gtag/js"]').count()>0,'Consentement non conservé après recharge');
+          } finally { await browser.close(); }
+          NODE
