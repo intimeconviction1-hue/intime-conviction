@@ -60,7 +60,11 @@ try {
       await mesurer(page,`une-${taille}-${i+1}`,taille);
       await page.screenshot({path:`${folder}/une-${taille}-${i+1}.png`,fullPage:false});
     }
+    await page.locator('.presse-accueil').scrollIntoViewIfNeeded();
+    await page.locator('.presse-accueil .visuel-presse img').first().waitFor({state:'visible'});
+    await page.waitForFunction(() => [...document.querySelectorAll('.presse-accueil .visuel-presse img')].every(el => el.complete && el.naturalWidth > 0),null,{timeout:15000});
     const actuel=resultats[resultats.length-1];
+    actuel.imagesPresse=await page.locator('.presse-accueil .visuel-presse img').evaluateAll(elements=>elements.map(el=>{const r=el.getBoundingClientRect();return {rect:{x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom},chargee:el.complete&&el.naturalWidth>0};}));
     if(taille===375){
       if(actuel.imagesPresse.length!==5)erreurs.push('Presse mobile : nombre de photos différent de cinq');
       actuel.imagesPresse.forEach((im,i)=>{
