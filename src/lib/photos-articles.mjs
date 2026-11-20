@@ -199,13 +199,16 @@ export const photosArticles = {
     lienLicence: photoCode.src,
   },
   '/assises-quand-le-dossier-revient-au-delibere/11/2026/': {
-    image: croquisDelibere,
-    croquis: true,
-    lieu: 'Dossier judiciaire fermé sur un code',
-    auteur: 'Illustration générée pour Intime Conviction',
-    source: croquisDelibere.src,
-    licence: 'Visuel créé pour Intime Conviction',
-    lienLicence: croquisDelibere.src,
+    // Identifié dans IMAGES.zip / les +belles ; provenance recoupée avec Wikimedia Commons.
+    image: {
+      src: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Abraham_Solomon_%28British_-_Waiting_for_the_Verdict_-_Google_Art_Project.jpg/960px-Abraham_Solomon_%28British_-_Waiting_for_the_Verdict_-_Google_Art_Project.jpg',
+      width: 960, height: 793,
+    },
+    lieu: 'L’Attente du verdict, Abraham Solomon, 1859 · Tableau historique illustratif, sans lien avec une audience contemporaine',
+    auteur: 'Abraham Solomon · J. Paul Getty Museum / Google Art Project',
+    source: 'https://commons.wikimedia.org/wiki/File:Abraham_Solomon_(British_-_Waiting_for_the_Verdict_-_Google_Art_Project.jpg',
+    licence: 'Domaine public',
+    lienLicence: 'https://creativecommons.org/publicdomain/mark/1.0/',
   },
   '/assises-quand-un-temoin-cite-manque/11/2026/': {
     image: croquisDelibere,
