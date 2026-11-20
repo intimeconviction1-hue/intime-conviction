@@ -40,3 +40,43 @@ export function hierarchiserPresse(references = []) {
     return a.index-b.index;
   }).map(x=>x.reference);
 }
+
+
+/**
+ * Choix de la vitrine uniquement. La revue complète conserve le classement
+ * chronologique. Une décision précise, un titre complet et un lien direct
+ * peuvent dépasser une simple mention récente d'audience.
+ * L'âge est calculé relativement à la référence la plus récente : pas
+ * d'horloge cachée ni de date d'audience inventée.
+ */
+export function selectionnerPresseAccueil(references = [], limite = 5) {
+  if (!Number.isInteger(limite) || limite <= 0) return [];
+  const sourceNorm = valeur => normaliser(valeur).replace(/\s+/g, ' ').trim();
+  const dates = references.map(a => Date.parse(String(a.date ?? '')))
+    .filter(Number.isFinite);
+  const plusRecent = dates.length ? Math.max(...dates) : 0;
+  const pointage = (reference, index) => {
+    const titre = String(reference.titre ?? '');
+    const date = Date.parse(String(reference.date ?? ''));
+    const jours = Number.isFinite(date) ? Math.max(0, (plusRecent - date) / 86400000) : 10;
+    const complet = !TITRE_ABREGE.test(titre);
+    const rang = rangJudiciaire(titre);
+    // Une décision publiée pèse davantage qu'un titre générique plus récent ;
+    // un sujet vieux de plusieurs jours ne monopolise toutefois pas l'accueil.
+    const pertinence = rang * 4 + (complet ? 3 : -5) - jours * 1.5;
+    return {reference, index, pertinence, date:Number.isFinite(date) ? date : 0};
+  };
+  const candidats = references.map(pointage).sort((a,b) =>
+    b.pertinence-a.pertinence || b.date-a.date || a.index-b.index);
+  const selection = [], compteurSources = new Map();
+  while (candidats.length && selection.length < limite) {
+    const nouveaute = candidats.findIndex(x =>
+      (compteurSources.get(sourceNorm(x.reference.source)) ?? 0) < 2);
+    const position = nouveaute === -1 ? 0 : nouveaute;
+    const [choisi] = candidats.splice(position,1);
+    selection.push(choisi.reference);
+    const media = sourceNorm(choisi.reference.source);
+    compteurSources.set(media,(compteurSources.get(media) ?? 0)+1);
+  }
+  return selection;
+}
