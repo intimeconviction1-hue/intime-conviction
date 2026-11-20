@@ -106,8 +106,6 @@ const articlesUne = selectionUne.map(({data}) => ({
   </section>
 
   <div class="surface-lecture"><div class="cadre journal-corps">
-    <Actualites accueil titre="Revue de presse" limite={5} lienRubrique={false} imagesExclues={[...articlesUne, ...dernieresPublications.map(({data}) => ({photo: photosArticles[data.chemin]}))].map(({photo}) => photo?.image?.src)} />
-
     {dernieresPublications.length > 0 && (
       <section class="dernieres-publications" aria-labelledby="titre-dernieres-publications">
         <div class="selection-entete">
@@ -117,6 +115,8 @@ const articlesUne = selectionUne.map(({data}) => ({
         <ListeArticles articles={dernieresPublications} rubriqueVisible={false} illustres />
       </section>
     )}
+
+    <Actualites accueil titre="Revue de presse" limite={5} lienRubrique={false} imagesExclues={[...articlesUne, ...dernieresPublications.map(({data}) => ({photo: photosArticles[data.chemin]}))].map(({photo}) => photo?.image?.src)} />
 
     <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
       <div class="accueil-dossiers-entete">
