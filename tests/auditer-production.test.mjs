@@ -25,3 +25,12 @@ test('ne compte pas deux fois le même chemin',()=>{
   assert.equal(r.jours[0].nombre,1);
   assert.ok(r.anomalies.some(x=>x.code==='identifiant_absent_ou_duplique'));
 });
+
+test('deux chemins différents avec un même titre ne remplissent pas deux places',()=>{
+  const r=bilanEditorial([
+    article('meme-titre','2026-11-20T09:00:00Z'),
+    article('meme-titre','2026-11-20T10:00:00Z',{chemin:'/deuxieme-article/'})
+  ],{jours:1,dateReference:reference});
+  assert.equal(r.jours[0].nombre,1);
+  assert.ok(r.anomalies.some(x=>x.code==='titre_absent_ou_identique'));
+});
