@@ -2,8 +2,6 @@
 import { DATE_CONTROLE_AGENDA, SESSIONS_AGENDA, sessionsAvenir, dateLocaleAgenda, contactCourAppel } from '../lib/agenda-sessions.mjs';
 
 const sessions = sessionsAvenir(SESSIONS_AGENDA, dateLocaleAgenda()).slice(0, 3);
-const joursDepuisControle = Math.floor((Date.parse(dateLocaleAgenda() + 'T12:00:00Z') - Date.parse(DATE_CONTROLE_AGENDA + 'T12:00:00Z')) / 86400000);
-const controleAncien = joursDepuisControle > 7;
 const dateComplete = new Intl.DateTimeFormat('fr-FR', { day:'numeric', month:'long', year:'numeric', timeZone:'UTC' });
 const dateSansAnnee = new Intl.DateTimeFormat('fr-FR', { day:'numeric', month:'long', timeZone:'UTC' });
 const jour = new Intl.DateTimeFormat('fr-FR', { day:'numeric', timeZone:'UTC' });
@@ -42,7 +40,7 @@ const debutPeriode = (debut, fin) => {
       ))}
     </ol>
   ) : <p class="agenda-bref-vide">Aucune session à venir dans notre sélection. Les coordonnées des cours d’appel figurent dans l’agenda.</p>}
-  <p class="agenda-bref-note">Sources consultées le <time datetime={DATE_CONTROLE_AGENDA}>{dateComplete.format(dateUtc(DATE_CONTROLE_AGENDA))}</time>. {controleAncien && <strong>Vérification datant de plus de sept jours : consulter le rôle officiel ou contacter le greffe avant tout déplacement.</strong>} Une période de session ne garantit ni la tenue d’un procès précis ni l’accès à une audience.</p>
+  <p class="agenda-bref-note">Sources consultées le <time datetime={DATE_CONTROLE_AGENDA}>{dateComplete.format(dateUtc(DATE_CONTROLE_AGENDA))}</time>. Une période de session ne garantit ni la tenue d’un procès précis ni l’accès à une audience.</p>
 </section>
 <style>
 .agenda-bref{margin:clamp(1.5rem,3.5vw,3rem) 0 3rem;border-top:2px solid #943440;padding:1.3rem 0 0}
