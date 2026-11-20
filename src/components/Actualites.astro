@@ -55,7 +55,39 @@ function choisirVisuelsPresse(articles) {
       source: image.src, lienLicence: image.src};
   });
 }
-const visuelsAccueil = accueil ? choisirVisuelsPresse(nouvelles) : [];
+// La photothèque privée fournit une sélection de visuels d'archives neutres,
+// distincts de ceux des articles de la rédaction. Aucune autre image privée
+// n'est accessible au composant ou à la page publique.
+let imagesPressePrivees = [];
+try {
+  const { readFileSync, existsSync } = await import('node:fs');
+  if (existsSync('.cache/photos-presse.json')) {
+    imagesPressePrivees = JSON.parse(readFileSync('.cache/photos-presse.json', 'utf8'));
+  }
+} catch (erreur) {
+  throw new Error('Sélection photographique de presse invalide : ' + erreur.message);
+}
+const selectionPresse = (articles) => {
+  if (!imagesPressePrivees.length) return choisirVisuelsPresse(articles);
+  const reserve = new Set(imagesExclues.filter(Boolean));
+  const choix = [];
+  // Privilégier une variété stable sur chaque affichage, plutôt que
+  // réutiliser systématiquement les cinq premières photographies.
+  for (const article of articles) {
+    const texte = [article.titre, article.source, article.lien].join('|');
+    let h = 2166136261;
+    for (const char of texte) h = Math.imul(h ^ char.charCodeAt(0), 16777619) >>> 0;
+    const debut = h % imagesPressePrivees.length;
+    const photo = Array.from({length:imagesPressePrivees.length}, (_, i) =>
+      imagesPressePrivees[(debut + i) % imagesPressePrivees.length]
+    ).find(item => !reserve.has(item.image.src));
+    if (!photo) throw new Error('Sélection presse insuffisante pour illustrer toutes les cartes sans doublon.');
+    reserve.add(photo.image.src);
+    choix.push(photo);
+  }
+  return choix;
+};
+const visuelsAccueil = accueil ? selectionPresse(nouvelles) : [];
 
 ---
 {afficher && <section id="actualites" class:list={["actualites", { compacte, "presse-accueil": accueil }]} aria-labelledby="titre-actualites">
