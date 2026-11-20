@@ -27,6 +27,9 @@ jobs:
           const page = await context.newPage();
           const log = [];
           const errors = [];
+          const failed = [];
+          page.on('requestfailed',r=>failed.push({url:r.url().split('?')[0],failure:r.failure()?.errorText}));
+          page.on('console',m=>{if(m.type()==='error') errors.push('console: '+m.text());});
           page.on('pageerror',e=>errors.push(String(e)));
           page.on('request',r=>{
             if (/(google-analytics|googletagmanager)\.com/.test(r.url())) log.push({event:'request',url:r.url().split('?')[0],method:r.method()});
@@ -47,7 +50,8 @@ jobs:
             const scripts=await page.locator('script[src*="googletagmanager.com/gtag/js"]').evaluateAll(es=>es.map(e=>e.src));
             const gaScript=scripts.find(s=>s.includes('G-LBH06QWG2R'));
             const tagResponse=log.find(x=>x.event==='response'&&x.url.includes('googletagmanager.com/gtag/js')&&x.status===200);
-            const report={before,scripts,tagResponse:!!tagResponse,network:log,errors};
+            const layer=await page.evaluate(()=>({dataLayer:window.dataLayer?.map(x=>Array.from(x).map((v,i)=>i===2&&typeof v==='object'?Object.keys(v):v)).slice(0,12),hasGtag:typeof window.gtag,resources:performance.getEntriesByType('resource').map(x=>x.name.split('?')[0]).filter(x=>/google|gtag/.test(x)).slice(0,30)}));
+            const report={before,scripts,tagResponse:!!tagResponse,network:log,errors,failed,layer};
             console.log('RAPPORT_ANALYTICS='+JSON.stringify(report));
             assert(gaScript,'Balise GA absente après consentement');
             assert(tagResponse,'Balise Google non chargée avec HTTP 200');
