@@ -29,10 +29,10 @@ jobs:
           const errors = [];
           page.on('pageerror',e=>errors.push(String(e)));
           page.on('request',r=>{
-            if (/google(analytics|tagmanager)\.com/.test(r.url())) log.push({event:'request',url:r.url().split('?')[0],method:r.method()});
+            if (/(google-analytics|googletagmanager)\.com/.test(r.url())) log.push({event:'request',url:r.url().split('?')[0],method:r.method()});
           });
           page.on('response',r=>{
-            if (/google(analytics|tagmanager)\.com/.test(r.url())) log.push({event:'response',status:r.status(),url:r.url().split('?')[0]});
+            if (/(google-analytics|googletagmanager)\.com/.test(r.url())) log.push({event:'response',status:r.status(),url:r.url().split('?')[0]});
           });
           await context.route(/(google-analytics\.com|analytics\.google\.com)\/(g\/collect|collect)/,route=>route.abort('blockedbyclient'));
           try {
