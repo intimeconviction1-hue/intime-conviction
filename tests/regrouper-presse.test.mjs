@@ -62,8 +62,9 @@ test('après sélection, une carte redondante laisse place à une autre affaire'
     ref('Affaire Sollacaro : de nouveaux témoins'),
     ref('Mickaël Ettori : réquisitions'),
     ref('Procès Michel Zecler : audience'),
+    ref('Madjaliwa Safari : ouverture du procès'),
   ];
-  assert.deepEqual(diversifierAffairesAccueil(items, 3), [items[0],items[2],items[3]]);
+  assert.deepEqual(diversifierAffairesAccueil(items, 3), [items[0],items[3],items[4]]);
 });
 
 test('aucune fusion sur un terme judiciaire générique ou une ville seule', () => {
