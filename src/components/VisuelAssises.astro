@@ -1,13 +1,22 @@
 ---
-const { image, fallbackImage, alt, source, credit, licence, licenceUrl, prioritaire = false } = Astro.props;
+const { image, fallbackImage, alt, source, credit, licence, licenceUrl, prioritaire = false, legendeCompacte = false } = Astro.props;
 ---
 <figure class="visuel-assises">
   <img src={image.src} width={image.width} height={image.height} alt={alt} loading={prioritaire ? 'eager' : 'lazy'} decoding="async" data-fallback-src={fallbackImage?.src} onerror="if (this.dataset.fallbackSrc && this.src !== this.dataset.fallbackSrc) { this.src = this.dataset.fallbackSrc; this.onerror = null; }" />
-  <figcaption>{alt} · <a href={source}>{credit}</a>{licence && <> · <a href={licenceUrl}>{licence}</a></>}</figcaption>
+  <figcaption>
+    {legendeCompacte ? <>
+      <span>Illustration d’archives</span>
+      <details class="credits-photo"><summary>Crédits photo</summary><span>{alt}{credit && <> · <a href={source}>{credit}</a></>}{licence && <> · <a href={licenceUrl}>{licence}</a></>}</span></details>
+    </> : <>{alt} · <a href={source}>{credit}</a>{licence && <> · <a href={licenceUrl}>{licence}</a></>}</>}
+  </figcaption>
 </figure>
 <style>
   .visuel-assises{margin:0;background:#f7f3ec;min-width:0;color:#34302c}
   img{display:block;width:100%;height:auto;max-height:24rem;object-fit:contain}
   figcaption{padding:.65rem .8rem;font:.76rem/1.45 var(--sans);border-top:1px solid #d9cfc3}
   a{text-decoration:underline;text-underline-offset:.14em}
+  .credits-photo{display:inline;margin-left:.45rem}
+  .credits-photo summary{display:inline;cursor:pointer;text-decoration:underline;text-underline-offset:.14em}
+  .credits-photo summary::marker{content:''}
+  .credits-photo[open] span{display:block;margin-top:.3rem}
 </style>
