@@ -87,7 +87,7 @@ const ALIAS_AFFAIRES = [
   ['crepol', /\bcrepol\b/u],
   ['inass-touloub', /\b(?:inass|touloub|inconnue de l.a10|martyre de l.a10)\b/u],
   ['olivio-gomes', /\b(?:olivio gomes|olivio)\b/u],
-  ['sollacaro', /\bsollacaro\b/u],
+  ['sollacaro', /\b(?:sollacaro|mickael ettori)\b/u],
   ['dominique-bernard', /\bdominique bernard\b/u],
   ['francis-heaulme', /\b(?:francis heaulme|jean.joseph clement)\b/u],
   ['madjaliwa-safari', /\bmadjaliwa safari\b/u],
