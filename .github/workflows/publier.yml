@@ -65,6 +65,22 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+      - name: Auditer la production éditoriale en interne
+        continue-on-error: true
+        run: node scripts/auditer-production.mjs
+        env:
+          IC_ARTICLES: articles-prives/articles
+          IC_AUDIT_PRODUCTION_OUTPUT: audit-production/rapport.json
+
+      - name: Conserver le bilan interne agrégé
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bilan-production-editoriale
+          path: audit-production/rapport.json
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Retrouver le dernier relevé d’actualités
         uses: actions/cache@v6
         with:
