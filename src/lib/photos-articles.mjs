@@ -1,5 +1,6 @@
 import croquisDigne from '../assets/assises-landru.webp';
 import croquisAudienceKaren from '../assets/croquis-audience-panoramique.webp';
+import croquisAudienceSarah from '../assets/croquis-audience-bandeau.webp';
 import croquisHeaulme from '../assets/croquis-manchette.webp';
 import photoTribunalParis from '../assets/tribunal-paris.webp';
 import photoLimoges from '../assets/palais-limoges.webp';
@@ -58,6 +59,13 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/sarah-sadani-temoin-rescapee-fusillade-proces-aix/11/2026/': {
+    ...illustrationNeutre,
+    image: croquisAudienceSarah,
+    lieu: 'Illustration judiciaire du journal · Ne représente ni le procès de Sarah Sadani ni les personnes citées',
+    source: croquisAudienceSarah.src,
+    lienLicence: croquisAudienceSarah.src,
+  },
   '/karen-baldi-proces-chambery-protection-premeditation/11/2026/': {
     ...illustrationNeutre,
     image: croquisAudienceKaren,
