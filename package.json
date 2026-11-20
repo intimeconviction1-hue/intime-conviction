@@ -11,8 +11,7 @@
     "prebuild": "node scripts/actualites.mjs",
     "actualites": "node scripts/actualites.mjs",
     "test": "node --test tests/*.test.mjs",
-    "audit:archives": "node scripts/auditer-archives.mjs",
-    "phototheque:import": "node scripts/importer-phototheque.mjs"
+    "audit:archives": "node scripts/auditer-archives.mjs"
   },
   "dependencies": {
     "@fontsource-variable/libre-franklin": "5.3.0",
