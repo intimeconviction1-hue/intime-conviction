@@ -1,0 +1,27 @@
+name: Recette consentement lecteurs
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Publier le site"]
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  consentement:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Installer le navigateur de test
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Vérifier desktop et mobile sans données envoyées à Google
+        run: node tests/e2e-consent.mjs
