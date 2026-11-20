@@ -81,7 +81,14 @@
       allow_google_signals: false,
       allow_ad_personalization_signals: false,
       anonymize_ip: true,
-      cookie_expires: 15552000
+      cookie_expires: 15552000,
+      // La page vue est émise explicitement une seule fois après l'accord.
+      send_page_view: false
+    });
+    gtag('event', 'page_view', {
+      send_to: GA_ID,
+      page_location: location.origin + location.pathname,
+      page_title: document.title
     });
     const script = document.createElement('script');
     script.async = true;
