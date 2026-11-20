@@ -14,7 +14,7 @@ const Titre = `h${niveau}`;
     <li>
       {illustres && (() => {
         const photo = photosArticles[data.chemin] ?? illustrationNeutre;
-        return <VisuelAssises image={photo.image} fallbackImage={photo.fallbackImage} alt={photo.lieu} source={photo.source} credit={photo.auteur} licence={photo.licence} licenceUrl={photo.lienLicence} />;
+        return <VisuelAssises image={photo.image} fallbackImage={photo.fallbackImage} alt={photo.lieu} source={photo.source} credit={photo.auteur} licence={photo.licence} licenceUrl={photo.lienLicence} legendeCompacte />;
       })()}
       <p class="meta">
         {rubriqueVisible && <><span class="etiquette">{rubrique(data.rubrique).libelle}</span>&ensp;</>}
