@@ -51,6 +51,8 @@ const [articlesRecents, articlesArchives] = articlesVerifies.filter(article => !
     groupe.push(article);
     return [recents, anciens];
   }, [[], []]);
+// Les chapeaux sont ceux de la rédaction : les cartes reprennent les extraits
+// des articles vérifiés, sans résumé automatique depuis les flux de presse.
 const dernieresPublications = articlesRecents.slice(0, 5);
 const [archiveUne, ...derniers] = articlesArchives.slice(0, 4);
 const vus = new Set([...selectionUne, ...dernieresPublications, archiveUne, ...derniers].filter(Boolean).map(a => a.data.slug));
