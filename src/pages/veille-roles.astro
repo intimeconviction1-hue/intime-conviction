@@ -15,10 +15,10 @@ for(const r of ROLES_OFFICIELS) {
 const surveillees=[...sources.values()].sort((a,b)=>a.ressorts[0].localeCompare(b.ressorts[0],'fr'));
 const suivisSansDate = new Map(SOURCES_A_COMPLETER.map(s=>[s.source,s.statut]));
 ---
-<Base titre="Sources de l’agenda judiciaire" description="Revue éditoriale des rôles d’assises publiés par les cours d’appel : sources officielles à consulter et vérification humaine avant toute publication." rubriqueActive="cours-du-jour">
+<Base titre="Rôles officiels et vérifications" description="Revue éditoriale des rôles d’assises publiés par les cours d’appel : sources officielles à consulter et vérification humaine avant toute publication." rubriqueActive="cours-du-jour">
   <header class="entete-veille">
     <p>INTIME CONVICTION / RÔLES D’AUDIENCE</p>
-    <h1>LES SOURCES<br /><span>DE L’AGENDA.</span></h1>
+    <h1>LES RÔLES<br /><span>OFFICIELS.</span></h1>
     <p class="introduction">Retrouvez les cours d’appel dont nous suivons les publications et les coordonnées pour demander au greffe le programme des audiences.</p>
     <div class="chiffres"><span><strong>{surveillees.length}</strong> pages institutionnelles à vérifier</span><span><strong>{new Set(surveillees.flatMap(s=>s.codes)).size}</strong> départements couverts</span></div>
   </header>
