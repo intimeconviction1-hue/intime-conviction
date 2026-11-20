@@ -23,3 +23,14 @@ test('écarte les titres sur une affaire déjà traitée, même si le prénom es
  assert.equal(estCouvertParRedaction('Justice : un autre procès devant les assises',sujets),false);
  assert.equal(estCouvertParRedaction('Procès du policier dans une autre affaire',sujets),false);
 });
+
+test('les alertes Gmail conservées pour la veille utilisent les liens directs, sans données de boîte mail',()=>{
+ const rows=normaliserVeille([
+  {...item,titre:'À Roubaix, quatre accusés devant les assises pour tentative de meurtre',source:'La Voix du Nord',lien:'https://www.lavoixdunord.fr/1756458/article/2026-11-19/quatre-accuses-devant-la-cour-d-assises',dateAlerte:'2026-11-20',email_id:'1a1f86e9b51a5992'},
+  {...item,titre:'Un autre article judiciaire à Roubaix',source:'La Voix du Nord',lien:'https://www.lavoixdunord.fr/1756458/article/2026-11-19/quatre-accuses-devant-la-cour-d-assises?utm_source=googlealerts',dateAlerte:'2026-11-20'}
+ ]);
+ assert.equal(rows.length,1);
+ assert.equal(rows[0].dateAlerte,'2026-11-20');
+ assert.equal(rows[0].lien,'https://www.lavoixdunord.fr/1756458/article/2026-11-19/quatre-accuses-devant-la-cour-d-assises');
+ assert.equal('email_id' in rows[0],false);
+});
