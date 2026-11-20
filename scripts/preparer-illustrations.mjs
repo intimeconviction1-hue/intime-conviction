@@ -82,7 +82,7 @@ if (existsSync(selectionPresse)) {
     });
   }
 }
-await writeFile(resolve('.cache/photos-presse.json'), JSON.stringify(visuelsPresse, null, 2) + '\\n');
+await writeFile(resolve('.cache/photos-presse.json'), JSON.stringify(visuelsPresse, null, 2) + '\n');
 
 await writeFile(cache, JSON.stringify(resultat, null, 2) + '\n');
 console.log('Images retenues publiées : ' + Object.keys(resultat).length + ' ; autres images privées : non copiées.');
