@@ -16,7 +16,7 @@ const r = rubrique(rubriqueSlug);
 const titreAffiche = titre ?? r.libelle;
 const fil = await lireActualites();
 const candidates = hierarchiserPresse((fil?.articles ?? []).filter(n=>n.rubrique === rubriqueSlug)).slice(debut);
-const nouvelles = (accueil ? regrouperPresseAccueil(candidates) : candidates).slice(0,limite);
+const nouvelles = regrouperPresseAccueil(candidates).slice(0, limite);
 const afficher = nouvelles.length > 0 || rubriqueSlug === 'cours-du-jour';
 const formatDate = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'});
 
