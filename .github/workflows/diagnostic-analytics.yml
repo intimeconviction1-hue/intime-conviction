@@ -28,6 +28,15 @@ jobs:
           const log = [];
           const errors = [];
           const failed = [];
+          const attemptedCollect = [];
+          await context.route('**/*', async route => {
+            const u=route.request().url();
+            if (/\/(g\/collect|collect|j\/collect)(\?|$)/.test(u) || /analytics\.google\.com|google-analytics\.com/.test(u)) {
+              attemptedCollect.push({host:new URL(u).host,path:new URL(u).pathname,method:route.request().method()});
+              return route.abort('blockedbyclient');
+            }
+            return route.continue();
+          });
           page.on('requestfailed',r=>failed.push({url:r.url().split('?')[0],failure:r.failure()?.errorText}));
           page.on('console',m=>{if(m.type()==='error') errors.push('console: '+m.text());});
           page.on('pageerror',e=>errors.push(String(e)));
@@ -37,7 +46,7 @@ jobs:
           page.on('response',r=>{
             if (/(google-analytics|googletagmanager)\.com/.test(r.url())) log.push({event:'response',status:r.status(),url:r.url().split('?')[0]});
           });
-          await context.route(/(google-analytics\.com|analytics\.google\.com)\/(g\/collect|collect)/,route=>route.abort('blockedbyclient'));
+          
           try {
             await page.goto('https://www.intimeconviction.fr/',{waitUntil:'domcontentloaded',timeout:45000});
             await page.waitForTimeout(1500);
@@ -50,8 +59,10 @@ jobs:
             const scripts=await page.locator('script[src*="googletagmanager.com/gtag/js"]').evaluateAll(es=>es.map(e=>e.src));
             const gaScript=scripts.find(s=>s.includes('G-LBH06QWG2R'));
             const tagResponse=log.find(x=>x.event==='response'&&x.url.includes('googletagmanager.com/gtag/js')&&x.status===200);
+            await page.evaluate(()=>window.dataLayer?.push(['event','diagnostic_ga4_test',{send_to:'G-LBH06QWG2R'}]));
+            await page.waitForTimeout(2500);
             const layer=await page.evaluate(()=>({dataLayer:window.dataLayer?.map(x=>Array.from(x).map((v,i)=>i===2&&typeof v==='object'?Object.keys(v):v)).slice(0,12),hasGtag:typeof window.gtag,resources:performance.getEntriesByType('resource').map(x=>x.name.split('?')[0]).filter(x=>/google|gtag/.test(x)).slice(0,30)}));
-            const report={before,scripts,tagResponse:!!tagResponse,network:log,errors,failed,layer};
+            const report={before,scripts,tagResponse:!!tagResponse,network:log,errors,failed,attemptedCollect,layer};
             console.log('RAPPORT_ANALYTICS='+JSON.stringify(report));
             assert(gaScript,'Balise GA absente après consentement');
             assert(tagResponse,'Balise Google non chargée avec HTTP 200');
