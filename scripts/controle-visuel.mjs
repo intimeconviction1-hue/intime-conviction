@@ -38,13 +38,25 @@ try {
         return st.position!=='fixed'&&st.display!=='none'&&st.visibility!=='hidden'&&
           !el.classList.contains('evitement')&&!defilementHorizontal(el);
       }).map(el=>({el,rect:el.getBoundingClientRect()}));
-      const fautifs=rects.filter(({rect})=>rect.width>0&&(rect.right>innerWidth+2||rect.left< -2))
+      // Un sous-menu mobile fermé est placé intentionnellement hors écran à gauche.
+      // Il ne crée pas de défilement horizontal : ne pas le signaler comme débordement.
+      const fautifs=rects.filter(({rect})=>rect.width>0&&rect.right>innerWidth+2)
         .slice(0,8).map(({el,rect})=>({balise:el.tagName.toLowerCase(),classe:String(el.className||'').slice(0,90),gauche:Math.round(rect.left),droite:Math.round(rect.right)}));
       return {largeurFenetre:innerWidth,largeurDocument:doc.scrollWidth,debordements:fautifs,
         titre:document.querySelector('h1')?.textContent?.trim()??'',
         liensDossiers:[...document.querySelectorAll('a[href^="/dossiers/"]')].length};
     });
     if(c.nom.startsWith('agenda-')){
+      if(await page.locator('header .navigation-acces').count()>0)throw Error('Ancien menu Infos pratiques en doublon.');
+      for(const href of ['/agenda/#sessions-annoncees','/agenda/#audiences-a-verifier','/veille-roles/','/annuaire/#repertoire','/assister/']){
+        if(await page.locator('header .navigation-principale a[href="'+href+'"]').count()===0){
+          throw Error('Accès manquant dans le menu Agenda : '+href);
+        }
+      }
+      if(await page.locator('.visite-assises a[href="/annuaire/#repertoire"]').count()===0 ||
+         await page.locator('.visite-assises a[href="/assister/"]').count()===0){
+        throw Error('Liens pratiques absents du parcours Agenda.');
+      }
       const departement=page.locator('#filtre-departement');
       const mois=page.locator('#filtre-mois');
       await departement.waitFor();
