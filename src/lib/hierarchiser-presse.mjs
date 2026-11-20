@@ -80,3 +80,18 @@ export function selectionnerPresseAccueil(references = [], limite = 5) {
   }
   return selection;
 }
+
+
+/**
+ * Exclusion de faux positifs avérés de la vitrine française :
+ * congrès intitulés « assises » et audiences explicitement situées hors
+ * des juridictions françaises. Les références restent dans le relevé source.
+ * La règle est volontairement étroite pour ne pas écarter un vrai procès.
+ */
+export function pertinentPourAccueilPresse(reference) {
+  const titre = normaliser(reference?.titre);
+  if (!titre.trim()) return false;
+  if (/\bassises (?:de |des |sur |pour )?(?:la |l'|les )?protection de l'enfance\b/u.test(titre)) return false;
+  if (/\b(?:assises|cour d'assises) de liege\b|\bhouffalize\b/u.test(titre)) return false;
+  return true;
+}
