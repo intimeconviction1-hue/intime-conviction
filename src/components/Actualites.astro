@@ -2,7 +2,7 @@
 import { lienDirectPresse } from '../lib/fil-actualites.mjs';
 import { lireActualites } from '../lib/veille.mjs';
 import { hierarchiserPresse } from '../lib/hierarchiser-presse.mjs';
-import { presenterTitrePresse } from '../lib/presentation-presse.mjs';
+import { presenterTitrePresse, extraitPresseValide } from '../lib/presentation-presse.mjs';
 import { regrouperPresseAccueil } from '../lib/regrouper-presse.mjs';
 import { rubrique } from '../lib/rubriques.mjs';
 import { photosArticles, illustrationNeutre } from '../lib/photos-articles.mjs';
@@ -105,6 +105,7 @@ const visuelsAccueil = accueil ? selectionPresse(nouvelles) : [];
       <p class="meta"><span class="source">{n.source}</span><time datetime={n.date}>{n.dateAlerte ? "Référence du " : ""}{formatDate.format(new Date(n.date))}</time></p>
       {(() => { const presentation = presenterTitrePresse(n.titre, n.source); return <>
         <h3><a href={n.lien} target="_blank" rel="noopener noreferrer" title={presentation.original}>{presentation.titre}<span class="sr-only"> — Lire chez {n.source} (nouvel onglet)</span></a></h3>
+        {extraitPresseValide(n) && <p class="chapeau-presse">{extraitPresseValide(n)}</p>}
         {presentation.abrege && <p class="precision-titre">Titre abrégé dans le relevé · <a href={n.lien} target="_blank" rel="noopener noreferrer">Lire le titre complet chez {n.source}</a></p>}
         {!lienDirectPresse(n.lien) && <p class="precision-titre">Référence repérée dans la presse · <a href={n.lien} target="_blank" rel="noopener noreferrer">Consulter la source</a></p>}
       </>; })()}
@@ -112,6 +113,7 @@ const visuelsAccueil = accueil ? selectionPresse(nouvelles) : [];
   </ul> : <p>Aucun article à afficher dans cette sélection. <a class="secours" href="/archives/presse/">Consulter les archives de presse.</a></p>}
 </section>}
 <style>
+  .chapeau-presse{font:400 .96rem/1.55 var(--serif);color:var(--encre);margin:.55rem 0 0;max-width:66ch}
   .precision-titre{font:500 .77rem/1.5 var(--sans);color:var(--encre-2);margin:.4rem 0 0}
   .precision-titre a{text-decoration:underline;text-underline-offset:.15em}
   .actualites { scroll-margin-top:2rem; }
