@@ -18,13 +18,34 @@ const articles = await tousLesArticles();
 const veille = await lireVeille();
 const maintenant = Date.now();
 const articlesVerifies = articles.filter(({data}) => articleVisible(data, maintenant));
-const selectionUne = articlesVerifies.slice(0, 3);
+// Une même affaire ne doit pas occuper deux emplacements du carrousel.
+// Les chroniques transversales sont écartées si elles reprennent une affaire
+// déjà choisie. La sélection reste fondée sur des articles réellement publiés.
+const affairesUne = [
+  'zecler','heaulme','clement','safari','daubon','gomes','sollacaro',
+  'ferreira','crepol','lourdes','inass','touloub','lyanna','piaget',
+  'vannes','saint-junien','chateauneuf','manosque','luca'
+];
+const etiquettesUne = article => {
+  const texte = (article.data.titre + ' ' + article.data.slug).toLocaleLowerCase('fr')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  return affairesUne.filter(mot => texte.includes(mot));
+};
+const selectionUne = [];
+const dejaUne = new Set();
+for (const article of articlesVerifies) {
+  const etiquettes = etiquettesUne(article);
+  if (etiquettes.some(mot => dejaUne.has(mot))) continue;
+  selectionUne.push(article);
+  etiquettes.forEach(mot => dejaUne.add(mot));
+  if (selectionUne.length === 3) break;
+}
 // Sept dates civiles, aujourd’hui compris, selon l’heure de Paris.
 const dateParis = new Intl.DateTimeFormat('fr-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' });
 const debutSemaine = new Date(dateParis.format(new Date()) + 'T00:00:00Z');
 debutSemaine.setUTCDate(debutSemaine.getUTCDate() - 6);
 const limiteRecente = debutSemaine.toISOString().slice(0, 10);
-const [articlesRecents, articlesArchives] = articlesVerifies.slice(selectionUne.length)
+const [articlesRecents, articlesArchives] = articlesVerifies.filter(article => !selectionUne.includes(article))
   .reduce(([recents, anciens], article) => {
     const groupe = dateParis.format(article.data.date) >= limiteRecente ? recents : anciens;
     groupe.push(article);
