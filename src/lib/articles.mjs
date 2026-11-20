@@ -1,4 +1,5 @@
 import { getCollection } from 'astro:content';
+import { articlesNonProgrammes } from './article-visible.mjs';
 
 let cache;
 
@@ -6,7 +7,9 @@ let cache;
 // construction : 3 436 pages qui relisent chacune la collection, c'est 3 436
 // fois le même tri.
 export async function tousLesArticles() {
-  cache ??= (await getCollection('articles')).sort((a, b) => b.data.date - a.data.date);
+  // Garde les publications futures exclusivement dans le dépôt privé,
+  // sans routes publiques, recherche, archives, index ni sitemap.
+  cache ??= articlesNonProgrammes(await getCollection('articles')).sort((a, b) => b.data.date - a.data.date);
   return cache;
 }
 
