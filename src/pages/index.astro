@@ -91,7 +91,10 @@ const articlesUne = selectionUne.map(({data}) => ({
                   </div>
                 </div>
                 {photo && (
-                  <p class="une-credit">{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a>{!photo.croquis && " · cadrée"}</p>
+                  <div class="une-credit">
+                    <span>Illustration d’archives</span>
+                    <details><summary>Crédits photo</summary><span>{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a></span></details>
+                  </div>
                 )}
                 <div class="une-editoriale-texte">
                   <p>{data.extrait}</p><a class="lire-une" href={data.chemin}>Lire l’article <span aria-hidden="true">↗</span></a>
@@ -335,6 +338,10 @@ const articlesUne = selectionUne.map(({data}) => ({
   .article-redaction-une:first-child h3,.une-carrousel h3{font-size:clamp(1.65rem,4.2vw,3.85rem);letter-spacing:-.025em}
   .une-credit{color:#554b47;font:500 .68rem/1.4 var(--sans);margin:.4rem 0 0}
   .une-credit a{text-decoration:underline}
+  .une-credit details{display:inline;margin-left:.45rem}
+  .une-credit summary{display:inline;cursor:pointer;text-decoration:underline;text-underline-offset:.14em}
+  .une-credit summary::marker{content:''}
+  .une-credit details[open] span{display:block;margin-top:.3rem}
   .une-editoriale-texte p{max-width:65ch;margin:.7rem 0 0;font:500 1rem/1.55 var(--sans)}
   .une-editoriale a:hover{text-decoration:underline;text-underline-offset:.14em}
   @media(max-width:48rem){
