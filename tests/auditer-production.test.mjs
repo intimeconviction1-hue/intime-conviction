@@ -11,7 +11,8 @@ test('compte les articles par date de Paris, sans compter les titres de presse',
   ],{jours:2,dateReference:reference});
   assert.equal(r.jours[0].nombre,2);
   assert.equal(r.jours[1].nombre,0);
-  assert.equal(r.jours[0].manque,null);
+  assert.equal(r.jours[0].manque,3);
+  assert.equal(r.jours[0].objectifAtteint,false);
   assert.equal(r.jours[0].jourEnCours,true);
   assert.equal(r.jours[1].manque,5);
 });
@@ -35,4 +36,11 @@ test('deux chemins différents avec un même titre ne remplissent pas deux place
   ],{jours:1,dateReference:reference});
   assert.equal(r.jours[0].nombre,1);
   assert.ok(r.anomalies.some(x=>x.code==='titre_absent_ou_identique'));
+});
+
+test('le quota atteint est indiqué sans confondre retouches et nouveaux articles',()=>{
+  const r=bilanEditorial(Array.from({length:5},(_,i)=>article('papier-'+i,'2026-11-20T10:00:00Z')),{jours:1,dateReference:reference});
+  assert.equal(r.jours[0].nombre,5);
+  assert.equal(r.jours[0].manque,0);
+  assert.equal(r.jours[0].objectifAtteint,true);
 });
