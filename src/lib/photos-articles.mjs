@@ -253,3 +253,19 @@ export const photosArticles = {
     lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
   },
 };
+
+/**
+ * Choix éditoriaux du dépôt privé, générés au build :
+ * une seule photo choisie pour chaque article, jamais l'ensemble du ZIP.
+ * Sans catalogue privé, conserver les illustrations déjà en service.
+ */
+try {
+  const { readFileSync, existsSync } = await import('node:fs');
+  const chemin = '.cache/photos-publiees.json';
+  if (existsSync(chemin)) {
+    const attributions = JSON.parse(readFileSync(chemin, 'utf8'));
+    Object.assign(photosArticles, attributions);
+  }
+} catch (erreur) {
+  throw new Error('Attributions photographiques invalides : ' + erreur.message);
+}
