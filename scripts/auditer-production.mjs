@@ -68,10 +68,11 @@ export function bilanEditorial(articles, { jours = 7, dateReference = new Date()
     alertesStylistiques,
     jours:[...parJour].map(([date,publications])=>({
       date, nombre:publications.length, jourEnCours:date===borne,
-      manque:date===borne ? null : Math.max(0,5-publications.length)
+      manque:Math.max(0,5-publications.length),
+      objectifAtteint:publications.length>=5
     })),
     anomalies,
-    note:'Comptage basé sur la date déclarée des articles signés par la rédaction. Ne prouve pas la date effective de mise en ligne ni l’originalité du texte. Les actualisations d’un fichier existant ne deviennent pas de nouveaux articles. Les alertes stylistiques demandent une relecture humaine et ne prouvent pas une erreur.'
+    note:'Comptage basé sur la date déclarée des articles signés par la rédaction. Ne prouve pas la date effective de mise en ligne ni l’originalité du texte. Le manque du jour est un état provisoire, non un échec définitif. Les actualisations d’un fichier existant ne deviennent pas de nouveaux articles. Les alertes stylistiques demandent une relecture humaine et ne prouvent pas une erreur.'
   };
 }
 
