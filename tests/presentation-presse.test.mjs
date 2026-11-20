@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { presenterTitrePresse } from '../src/lib/presentation-presse.mjs';
+import { presenterTitrePresse, extraitPresseValide } from '../src/lib/presentation-presse.mjs';
 
 test('supprime uniquement un suffixe de source rigoureusement identique', () => {
   assert.deepEqual(presenterTitrePresse('Procès de la cour - BFM', 'BFM'), {
@@ -15,4 +15,15 @@ test('signale explicitement les titres coupés sans inventer de fin', () => {
 });
 test('préserve les tirets et noms propres à l’intérieur du titre', () => {
   assert.equal(presenterTitrePresse('Jean-Pierre à Saint-Brieuc : le verdict', 'Le Monde').titre,'Jean-Pierre à Saint-Brieuc : le verdict');
+});
+
+test('ne fabrique aucun résumé à partir d’un simple titre ou d’un flux RSS', () => {
+  assert.equal(extraitPresseValide({titre:'Procès et verdict',source:'Journal',lien:'https://example.fr/a'}),null);
+  assert.equal(extraitPresseValide({titre:'Procès',extrait:'Texte non vérifié par la rédaction, sans lecture de la source.',lien:'https://example.fr/a'}),null);
+});
+test('accepte seulement un extrait rédigé et vérifié avec lien vers sa source', () => {
+  const extrait='La juridiction doit examiner les éléments de l’accusation et de la défense, selon le compte rendu du média cité.';
+  assert.equal(extraitPresseValide({lien:'https://example.fr/a',extrait,extraitVerifie:true}),extrait);
+  assert.equal(extraitPresseValide({lien:'javascript:alert(1)',extrait,extraitVerifie:true}),null);
+  assert.equal(extraitPresseValide({lien:'https://example.fr/a',extrait:'Trop court',extraitVerifie:true}),null);
 });
