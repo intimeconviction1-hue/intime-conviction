@@ -441,12 +441,13 @@ const articlesUne = selectionUne.map(({data}) => ({
   .une-carrousel .une-editoriale-grille{display:block}
   /* La grille porte les dimensions, jamais les proportions natives des fichiers. */
   .une-carrousel .article-redaction-une{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:0;align-items:stretch;background:#f6f1e9;border:1px solid #d7cdc3;padding:0}
-  .une-carrousel .une-visuel-cadre{min-width:0;min-height:0;display:flex;flex-direction:column;background:#ebe4db}
+  .une-carrousel .une-visuel-cadre{min-width:0;min-height:0;display:flex;flex-direction:column;background:#fbf9f5}
+  /* L'image occupe exactement toute la hauteur restante : aucun vide marron sous la photo. */
   .une-carrousel .une-couverture,
-  .une-carrousel .une-couverture.avec-photo{position:relative;display:block;width:100%;height:auto;min-height:0;aspect-ratio:16/10;overflow:hidden;background:#e9e1d6}
+  .une-carrousel .une-couverture.avec-photo{position:relative;display:block;flex:1 1 auto;width:100%;height:auto;min-height:clamp(17rem,28vw,27rem);aspect-ratio:auto;overflow:hidden;background:#fbf9f5}
   .une-carrousel .une-couverture.avec-photo{color:#252525}
   .une-carrousel .une-couverture img{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center}
-  .une-carrousel .une-couverture.une-croquis img{object-fit:contain}
+  .une-carrousel .une-couverture.une-croquis img{object-fit:cover}
   .une-carrousel .une-couverture.avec-photo::after{content:none}
   .une-carrousel .une-edito{min-width:0;display:flex;flex-direction:column;justify-content:center;padding:clamp(1.4rem,3.7vw,3.4rem);background:#fbf9f5}
   .une-carrousel .une-titre time{font:700 .74rem/1.4 var(--sans);color:#853142}
@@ -467,7 +468,7 @@ const articlesUne = selectionUne.map(({data}) => ({
   @media(max-width:49rem){
     .une-carrousel .article-redaction-une{grid-template-columns:minmax(0,1fr)}
     .une-carrousel .une-couverture,
-    .une-carrousel .une-couverture.avec-photo{aspect-ratio:16/9;height:auto;min-height:0}
+    .une-carrousel .une-couverture.avec-photo{flex:none;aspect-ratio:16/9;height:auto;min-height:0}
     .une-carrousel .une-edito{padding:1.25rem 1.2rem 1.6rem}
     .une-carrousel .une-titre h3{font-size:clamp(1.7rem,6vw,2.6rem)}
   }
