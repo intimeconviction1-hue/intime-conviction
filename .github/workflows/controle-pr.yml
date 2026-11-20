@@ -6,6 +6,7 @@ on:
     paths:
       - 'scripts/auditer-production.mjs'
       - 'src/lib/article-visible.mjs'
+      - 'src/lib/photos-articles.mjs'
       - 'src/pages/index.astro'
       - 'tests/auditer-production.test.mjs'
       - 'tests/article-visible.test.mjs'
@@ -16,6 +17,7 @@ on:
     paths:
       - 'scripts/auditer-production.mjs'
       - 'src/lib/article-visible.mjs'
+      - 'src/lib/photos-articles.mjs'
       - 'src/pages/index.astro'
       - 'tests/auditer-production.test.mjs'
       - 'tests/article-visible.test.mjs'
@@ -32,6 +34,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - name: Vérifier la syntaxe des attributions photographiques
+        run: node --check src/lib/photos-articles.mjs
       - name: Vérifier les contrôles éditoriaux
         shell: bash
         run: |

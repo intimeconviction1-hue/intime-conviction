@@ -99,11 +99,17 @@ export const photosArticles = {
     licence: 'CC0', lienLicence: 'https://creativecommons.org/publicdomain/zero/1.0/',
   },
   '/michel-zecler-les-excuses-face-aux-images/11/2026/': {
-    image: photoTribunalParis,
-    lieu: 'Photo d’illustration · Tribunal de Paris vu du parc des Batignolles',
-    auteur: 'Coppertarzan',
-    source: 'https://commons.wikimedia.org/wiki/File:Tribunal_de_Paris_seen_from_Batignolles_park.jpg',
-    licence: 'CC0', lienLicence: 'https://creativecommons.org/publicdomain/zero/1.0/',
+    // Vue distincte pour éviter deux couvertures identiques dans la sélection récente.
+    image: {
+      src: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/Parvis_Tribunal_Paris_-_Paris_XVII_%28FR75%29_-_2021-08-20_-_1.jpg/960px-Parvis_Tribunal_Paris_-_Paris_XVII_%28FR75%29_-_2021-08-20_-_1.jpg',
+      width: 960, height: 720,
+    },
+    // Même photographie, version originale, pour préserver l'attribution si le CDN miniature échoue.
+    fallbackImage: { src: 'https://upload.wikimedia.org/wikipedia/commons/e/e6/Parvis_Tribunal_Paris_-_Paris_XVII_%28FR75%29_-_2021-08-20_-_1.jpg' },
+    lieu: 'Photo d’illustration · Parvis du tribunal de Paris en 2021, hors audience',
+    auteur: 'Chabe01',
+    source: 'https://commons.wikimedia.org/wiki/File:Parvis_Tribunal_Paris_-_Paris_XVII_(FR75)_-_2021-08-20_-_1.jpg',
+    licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/',
   },
   '/maylis-daubon-pau-personnalite-et-preuve/11/2026/': {
     image: { src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Paupalaisdejustice.jpg/1024px-Paupalaisdejustice.jpg', width: 1024, height: 768 },
