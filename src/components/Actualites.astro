@@ -2,6 +2,7 @@
 import { lienDirectPresse } from '../lib/fil-actualites.mjs';
 import { lireActualites } from '../lib/veille.mjs';
 import { hierarchiserPresse } from '../lib/hierarchiser-presse.mjs';
+import { presenterTitrePresse } from '../lib/presentation-presse.mjs';
 import { regrouperPresseAccueil } from '../lib/regrouper-presse.mjs';
 import { rubrique } from '../lib/rubriques.mjs';
 import { photosArticles, illustrationNeutre } from '../lib/photos-articles.mjs';
@@ -102,11 +103,17 @@ const visuelsAccueil = accueil ? selectionPresse(nouvelles) : [];
       {accueil && (() => { const photo = visuelsAccueil[i]; return <figure class="visuel-presse"><a href={n.lien} target="_blank" rel="noopener noreferrer" aria-label={`Lire l’article de ${n.source} : ${n.titre}`}><img src={photo.image.src} width={photo.image.width} height={photo.image.height} alt={photo.lieu} loading="lazy" decoding="async" /></a><figcaption>Illustration · <a href={photo.source} target="_blank" rel="noopener noreferrer">{photo.auteur}</a></figcaption></figure>; })()}
 
       <p class="meta"><span class="source">{n.source}</span><time datetime={n.date}>{n.dateAlerte ? "Référence du " : ""}{formatDate.format(new Date(n.date))}</time></p>
-      <h3><a href={n.lien} target="_blank" rel="noopener noreferrer">{n.titre}<span class="sr-only"> — {n.source} (nouvel onglet)</span>{!lienDirectPresse(n.lien) && <span class="meta"> · Repéré dans la presse</span>}</a></h3>
+      {(() => { const presentation = presenterTitrePresse(n.titre, n.source); return <>
+        <h3><a href={n.lien} target="_blank" rel="noopener noreferrer" title={presentation.original}>{presentation.titre}<span class="sr-only"> — Lire chez {n.source} (nouvel onglet)</span></a></h3>
+        {presentation.abrege && <p class="precision-titre">Titre abrégé dans le relevé · <a href={n.lien} target="_blank" rel="noopener noreferrer">Lire le titre complet chez {n.source}</a></p>}
+        {!lienDirectPresse(n.lien) && <p class="precision-titre">Référence repérée dans la presse · <a href={n.lien} target="_blank" rel="noopener noreferrer">Consulter la source</a></p>}
+      </>; })()}
     </li>)}
   </ul> : <p>Aucun article à afficher dans cette sélection. <a class="secours" href="/archives/presse/">Consulter les archives de presse.</a></p>}
 </section>}
 <style>
+  .precision-titre{font:500 .77rem/1.5 var(--sans);color:var(--encre-2);margin:.4rem 0 0}
+  .precision-titre a{text-decoration:underline;text-underline-offset:.15em}
   .actualites { scroll-margin-top:2rem; }
   .provenance { font-size:1.0625rem; color:var(--encre-2); margin:0.5rem 0; }
   .releve { font-size:0.625rem; margin:0.5rem 0 1.5rem; }
