@@ -120,6 +120,35 @@
     ouvrirDepuisPied?.focus();
   }
 
+  // Signaux éditoriaux uniquement après consentement. Il s'agit de clics,
+  // et non de preuves qu'un article a réellement été partagé sur le réseau.
+  document.addEventListener('click', (event) => {
+    if (!charge || lireDecision() !== 'accepter') return;
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const shareX = target.closest('a.partager-x');
+    const shareWhatsApp = target.closest('a.partager-whatsapp');
+    const archiveToNews = target.closest('.passerelle-archives a[href]');
+    if (!shareX && !shareWhatsApp && !archiveToNews) return;
+    const w = window as Window & { dataLayer?: unknown[] };
+    if (!Array.isArray(w.dataLayer)) return;
+    // Ne transmettre que le chemin public de l'article, jamais les paramètres
+    // de recherche, les données personnelles ou l'identité du lecteur.
+    const item_id = location.pathname;
+    if (shareX || shareWhatsApp) {
+      w.dataLayer.push(['event', 'share', {
+        method: shareX ? 'x' : 'whatsapp',
+        content_type: 'article',
+        item_id
+      }]);
+    } else {
+      w.dataLayer.push(['event', 'select_content', {
+        content_type: 'archive_to_news',
+        item_id
+      }]);
+    }
+  });
+
   document.querySelector<HTMLButtonElement>('[data-consent="accepter"]')?.addEventListener('click', () => terminer('accepter'));
   document.querySelector<HTMLButtonElement>('[data-consent="refuser"]')?.addEventListener('click', () => terminer('refuser'));
   parametrer?.addEventListener('click', () => {
