@@ -84,3 +84,9 @@ test('la vitrine garde un seul sujet pour Mathy, Sadani et Karen Baldi', () => {
   ];
   assert.deepEqual(diversifierAffairesAccueil(items, 5),[items[0],items[2],items[4]]);
 });
+
+test('deux récits d’une même délibération du jury ne font qu’une référence', () => {
+  const a=ref('Assises de Liège : le jury délibère sur Brandon Mathy');
+  const b=ref('Le jury est entré en délibération sur la culpabilité de Brandon Mathy');
+  assert.deepEqual(regrouperPresseAccueil([a,b]),[a]);
+});
