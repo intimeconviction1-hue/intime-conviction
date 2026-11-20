@@ -16,3 +16,7 @@ test('les dates absentes ou invalides ne deviennent jamais des publications', ()
   assert.equal(articleVisible({date:new Date('invalid')}, maintenant), false);
   assert.equal(articleVisible({}, maintenant), false);
 });
+
+test('un article daté exactement à l’instant de publication est visible', () => {
+  assert.equal(articleVisible({date:new Date(maintenant)}, maintenant), true);
+});
