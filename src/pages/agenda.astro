@@ -28,7 +28,6 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
     <h1>L’Agenda <span>des assises</span></h1>
     <p>Les dates des prochaines sessions, les procès inscrits au rôle et les juridictions où ils doivent se tenir. Un calendrier des assises à consulter par date et par département.</p>
     <p class="reserve-agenda">Les rôles sont susceptibles de changement. Certaines sources ne sont pas accessibles actuellement : les dates qui en proviennent ne valent pas confirmation de tenue d’audience.</p>
-    <p class="liens-agenda"><a href="/assister/">Comment assister à un procès d’assises</a> · <a href="/dossiers/">Suivre les affaires du journal</a></p>
     <p id="alerte-actualite" class="alerte-actualite" data-date-generation={dateDuJour} data-date-verification={DATE_CONTROLE_AGENDA} hidden role="status"></p>
     <p class="date-controle">Sources vérifiées le <time datetime={DATE_CONTROLE_AGENDA}>{formatDate(DATE_CONTROLE_AGENDA)}</time>. Sessions non terminées au <time datetime={dateDuJour}>{formatDate(dateDuJour)}</time>, date de génération de cette page.</p>
   </header>
@@ -88,6 +87,17 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
         </li>
       ))}</ol>
     )}
+  </section>
+  <section class="visite-assises" aria-labelledby="titre-visite-assises">
+    <div>
+      <p class="rubrique-agenda">Pour se rendre aux assises</p>
+      <h2 id="titre-visite-assises">Préparer sa venue</h2>
+      <p>Repérez la cour compétente, puis renseignez-vous sur l’accès du public et les conditions de l’audience.</p>
+    </div>
+    <div class="visite-assises-liens">
+      <a href="/annuaire/#repertoire">Trouver une cour d’assises <span aria-hidden="true">↗</span></a>
+      <a href="/assister/">Assister à une audience <span aria-hidden="true">↗</span></a>
+    </div>
   </section>
   <aside class="precautions">
     <h2>Avant de se déplacer</h2>
@@ -214,7 +224,12 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
 .parcours-agenda a:hover,.parcours-agenda a:focus-visible{background:#e8e1d8}
 .parcours-agenda strong{font:650 clamp(1rem,1.8vw,1.3rem)/1.25 var(--serif);color:#26282a}
 .parcours-agenda span{font:450 .75rem/1.5 var(--sans);color:#555b5f}
-@media(max-width:44rem){.parcours-agenda{grid-template-columns:1fr;gap:.4rem}.parcours-agenda a{padding:.8rem 1rem}}
+@media(max-width:44rem){
+  .parcours-agenda{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(11rem,71%);grid-template-columns:none;gap:.5rem;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:thin;padding-bottom:.5rem}
+  .parcours-agenda a{scroll-snap-align:start;padding:.75rem .85rem}
+  .parcours-agenda strong{font-size:1.08rem}
+  .parcours-agenda span{font-size:.73rem}
+}
 
 /* Composition éditoriale : la date et la ville guident la lecture. */
 .rubrique-agenda{margin:0 0 .45rem;color:#84323d;font:700 .72rem/1.3 var(--sans);letter-spacing:.04em;text-transform:uppercase}
@@ -242,4 +257,12 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
 .periode{flex-direction:column;align-items:flex-start;gap:.18rem}
 .periode time:first-of-type{font-size:1.35rem}
 }
+
+.visite-assises{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:1rem 2rem;align-items:center;border-top:2px solid #a12c39;border-bottom:1px solid #d9d5cf;padding:1.6rem 0;margin:3.2rem 0 1.5rem}
+.visite-assises h2{font:650 clamp(1.65rem,3vw,2.5rem)/1.1 var(--serif);margin:0 0 .5rem}
+.visite-assises p:not(.rubrique-agenda){font:450 .9rem/1.6 var(--sans);margin:.3rem 0;max-width:55ch}
+.visite-assises-liens{display:grid;gap:.55rem}
+.visite-assises-liens a{display:flex;justify-content:space-between;gap:1rem;align-items:center;padding:.9rem 1rem;background:#f3f0eb;font:650 .83rem/1.4 var(--sans);min-height:48px;border-left:3px solid #a12c39}
+.visite-assises-liens a:hover,.visite-assises-liens a:focus-visible{background:#e8e1d8}
+@media(max-width:44rem){.visite-assises{grid-template-columns:1fr;gap:1rem;margin-top:2.2rem}.visite-assises-liens a{font-size:.82rem}}
 </style>
