@@ -24,24 +24,23 @@ export function bilanEditorial(articles, { jours = 7, dateReference = new Date()
     const data=a.data ?? a;
     if (!/^rédaction d[’']intime conviction$/iu.test(String(data.auteur ?? '').trim())) continue;
     const date = new Date(data.date);
-    if (!Number.isFinite(date.getTime())) { anomalies.push({code:'date_invalide',fichier:a.fichier??''});continue; }
+    if (!Number.isFinite(date.getTime())) { anomalies.push({code:'date_invalide'});continue; }
     if (date > dateReference || data.verificationEnCours === true) continue;
     const jour = dateParis.format(date);
     if (!parJour.has(jour)) continue;
     const id=String(data.chemin ?? data.slug ?? a.fichier ?? '').trim();
-    if (!id || identifiants.has(id)) { anomalies.push({code:'identifiant_absent_ou_duplique',jour,fichier:a.fichier??''});continue; }
+    if (!id || identifiants.has(id)) { anomalies.push({code:'identifiant_absent_ou_duplique',jour});continue; }
     identifiants.add(id);
     const titre=String(data.titre??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
     const cle=jour+'|'+titre;
-    if (!titre || titresParJour.has(cle)) anomalies.push({code:'titre_absent_ou_identique',jour,fichier:a.fichier??''});
+    if (!titre || titresParJour.has(cle)) anomalies.push({code:'titre_absent_ou_identique',jour});
     titresParJour.set(cle,id);
-    parJour.get(jour).push({titre:data.titre,chemin:id});
+    parJour.get(jour).push(true);
   }
   return {
     objectifQuotidien:5,
     jours:[...parJour].map(([date,publications])=>({
-      date, nombre:publications.length, manque:Math.max(0,5-publications.length),
-      publications
+      date, nombre:publications.length, manque:Math.max(0,5-publications.length)
     })),
     anomalies,
     note:'Comptage basé sur la date déclarée des articles signés par la rédaction. Ne prouve pas la date effective de mise en ligne ni l’originalité du texte. Les actualisations d’un fichier existant ne deviennent pas de nouveaux articles.'
