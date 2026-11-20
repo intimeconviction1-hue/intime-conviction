@@ -1,7 +1,7 @@
 ---
 import { lienDirectPresse } from '../lib/fil-actualites.mjs';
 import { lireActualites } from '../lib/veille.mjs';
-import { hierarchiserPresse } from '../lib/hierarchiser-presse.mjs';
+import { hierarchiserPresse, selectionnerPresseAccueil } from '../lib/hierarchiser-presse.mjs';
 import { presenterTitrePresse, extraitPresseValide } from '../lib/presentation-presse.mjs';
 import { regrouperPresseAccueil } from '../lib/regrouper-presse.mjs';
 import { rubrique } from '../lib/rubriques.mjs';
@@ -17,7 +17,8 @@ const r = rubrique(rubriqueSlug);
 const titreAffiche = titre ?? r.libelle;
 const fil = await lireActualites();
 const candidates = hierarchiserPresse((fil?.articles ?? []).filter(n=>n.rubrique === rubriqueSlug)).slice(debut);
-const nouvelles = regrouperPresseAccueil(candidates).slice(0, limite);
+const regroupes = regrouperPresseAccueil(candidates);
+const nouvelles = accueil ? selectionnerPresseAccueil(regroupes, limite) : regroupes.slice(0, limite);
 const afficher = nouvelles.length > 0 || rubriqueSlug === 'cours-du-jour';
 const formatDate = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'});
 
