@@ -37,6 +37,7 @@ function evenement(titre) {
   if (/\b(cassation|pourvoi|casse|annulation)\b/.test(t)) return 'cassation';
   if (/\b(renvoi|reporte|reportee|ajourne|ajournee)\b/.test(t)) return 'renvoi';
   if (/\b(requisitions?|peine requise|reclame \d+ ans)\b/.test(t)) return 'requisitions';
+  if (/\b(delibere|deliberation|entree? en deliberation|entre en deliberation)\b/.test(t)) return 'delibere';
   if (/\b(verdict|condamne|condamnee|condamnation|acquitte|acquittee|acquittement|reclusion)\b/.test(t))
     return /\b(en appel|proces en appel|verdict en appel)\b/.test(t) ? 'verdict-appel' : 'verdict';
   if (/\b(ouverture du proces|debut du proces|s ouvre|commence)\b/.test(t)) return 'ouverture';
