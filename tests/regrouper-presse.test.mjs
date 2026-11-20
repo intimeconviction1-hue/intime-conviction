@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { regrouperPresseAccueil } from '../src/lib/regrouper-presse.mjs';
+import { regrouperPresseAccueil, diversifierAffairesAccueil } from '../src/lib/regrouper-presse.mjs';
 
 const ref = (titre, date = '2026-11-18') => ({ titre, date, lien: 'https://example.org/' + encodeURIComponent(titre) });
 
@@ -43,4 +43,31 @@ test('ne modifie ni les références ni leur ordre', () => {
   const items = [ref('Verdict : Olivio Gomes condamné'), ref('Verdict : Olivio Gomes condamné')];
   assert.equal(regrouperPresseAccueil(items)[0], items[0]);
   assert.equal(items.length, 2);
+});
+
+test('la vitrine ne montre pas deux fois la même affaire avec des étapes différentes', () => {
+  const items = [
+    ref('Procès Michel Zecler : audience du matin'),
+    ref('Procès Zecler : réquisitions du parquet'),
+    ref('Affaire Olivio Gomes : verdict en appel'),
+    ref('Un autre procès sans identité certaine'),
+  ];
+  assert.deepEqual(diversifierAffairesAccueil(items, 3), [items[0],items[2],items[3]]);
+  assert.equal(items.length, 4);
+});
+
+test('après sélection, une carte redondante laisse place à une autre affaire', () => {
+  const items = [
+    ref('Antoine Sollacaro : ouverture des débats'),
+    ref('Affaire Sollacaro : de nouveaux témoins'),
+    ref('Mickaël Ettori : réquisitions'),
+    ref('Procès Michel Zecler : audience'),
+  ];
+  assert.deepEqual(diversifierAffairesAccueil(items, 3), [items[0],items[2],items[3]]);
+});
+
+test('aucune fusion sur un terme judiciaire générique ou une ville seule', () => {
+  const items = [ref('Verdict à Paris'),ref('Ouverture des assises de Paris'),ref('Audience sur un meurtre')];
+  assert.deepEqual(diversifierAffairesAccueil(items, 5), items);
+  assert.deepEqual(diversifierAffairesAccueil(items, 0), []);
 });
