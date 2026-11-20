@@ -104,7 +104,8 @@ export const photosArticles = {
       src: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e6/Parvis_Tribunal_Paris_-_Paris_XVII_%28FR75%29_-_2021-08-20_-_1.jpg/960px-Parvis_Tribunal_Paris_-_Paris_XVII_%28FR75%29_-_2021-08-20_-_1.jpg',
       width: 960, height: 720,
     },
-    fallbackImage: photoTribunalParis,
+    // Même photographie, version originale, pour préserver l'attribution si le CDN miniature échoue.
+    fallbackImage: { src: 'https://upload.wikimedia.org/wikipedia/commons/e/e6/Parvis_Tribunal_Paris_-_Paris_XVII_%28FR75%29_-_2021-08-20_-_1.jpg' },
     lieu: 'Photo d’illustration · Parvis du tribunal de Paris en 2021, hors audience',
     auteur: 'Chabe01',
     source: 'https://commons.wikimedia.org/wiki/File:Parvis_Tribunal_Paris_-_Paris_XVII_(FR75)_-_2021-08-20_-_1.jpg',
