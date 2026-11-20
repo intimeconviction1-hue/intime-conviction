@@ -72,6 +72,11 @@ jobs:
           IC_ARTICLES: articles-prives/articles
           IC_AUDIT_PRODUCTION_OUTPUT: audit-production/rapport.json
 
+      - name: Afficher l’objectif rédactionnel du jour dans le bilan Actions
+        run: node scripts/rapport-production-actions.mjs
+        env:
+          IC_AUDIT_PRODUCTION_OUTPUT: audit-production/rapport.json
+
       - name: Conserver le bilan interne agrégé
         if: always()
         uses: actions/upload-artifact@v4
