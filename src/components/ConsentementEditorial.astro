@@ -7,26 +7,20 @@
 <section id="consentement-editorial" class="consentement-editorial" role="dialog" aria-modal="false" aria-labelledby="consentement-titre" aria-describedby="consentement-texte" hidden>
   <div class="consentement-interieur">
     <div class="consentement-intro">
-      <div class="consentement-sceau" aria-hidden="true">
-        <svg viewBox="0 0 64 64" fill="none"><path d="M12 45h40M16 50h32M23 40V25m18 15V25M19 25h26M21 21h22M15 16l17-7 17 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="consentement-entete">
-        <p class="consentement-surtitre">INTIME CONVICTION <span aria-hidden="true">/</span> INFORMATION AUX LECTEURS</p>
-        <h2 id="consentement-titre">Avez-vous une intime conviction&nbsp;?</h2>
-        <p class="consentement-chapeau">Ici, le choix appartient au lecteur.</p>
-      </div>
+      <p class="consentement-surtitre">LE CHOIX DU LECTEUR</p>
+      <h2 id="consentement-titre">Avez-vous une intime conviction&nbsp;?</h2>
+      <p id="consentement-texte" class="consentement-texte">Avec votre accord, Google Analytics nous aide à mesurer la fréquentation et l’origine des visites. Vous pouvez refuser et lire librement le journal.</p>
     </div>
-    <p id="consentement-texte" class="consentement-texte">Avec votre accord, le journal utilise <strong>Google Analytics</strong> pour mesurer sa fréquentation, comprendre les articles consultés et connaître l’origine des visites, notamment depuis X. <strong>Vous pouvez refuser sans perdre l’accès au journal.</strong> Aucun outil de mesure n’est chargé avant votre accord.</p>
     <div class="consentement-actions">
       <button type="button" data-consent="refuser" class="consentement-choix">Tout refuser</button>
       <button type="button" data-consent="accepter" class="consentement-choix">Tout accepter</button>
-      <button type="button" id="consentement-parametrer" class="consentement-parametrer" aria-controls="consentement-details" aria-expanded="false">Personnaliser mes choix</button>
+      <button type="button" id="consentement-parametrer" class="consentement-parametrer" aria-controls="consentement-details" aria-expanded="false">Personnaliser</button>
     </div>
     <div id="consentement-details" class="consentement-details" hidden>
       <div class="consentement-detail-ligne">
         <div>
           <strong>Mesure d’audience</strong>
-          <p>Google Analytics 4. Uniquement après votre autorisation.</p>
+          <p>Google Analytics 4. Activé uniquement après votre accord.</p>
         </div>
         <label class="consentement-option">
           <input type="checkbox" id="consentement-mesure" />
@@ -35,7 +29,7 @@
       </div>
       <button type="button" id="consentement-enregistrer" class="consentement-enregistrer">Enregistrer mon choix</button>
     </div>
-    <p class="consentement-note">Votre décision est conservée 6 mois. Vous pouvez la modifier à tout moment via «&nbsp;Gérer mes cookies&nbsp;» en bas du site. <a href="/confidentialite/">En savoir plus sur les données personnelles.</a></p>
+    <p class="consentement-note">Choix conservé 6 mois, modifiable dans «&nbsp;Gérer mes cookies&nbsp;». <a href="/confidentialite/">Confidentialité</a></p>
   </div>
 </section>
 
@@ -151,45 +145,39 @@
 <style>
   #consentement-editorial[hidden],#consentement-details[hidden]{display:none!important}
   .consentement-editorial{
-    position:fixed;z-index:10000;inset:auto max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left));
-    width:min(860px,calc(100% - 2rem));margin-inline:auto;max-height:min(85dvh,740px);overflow:auto;
-    background:#fcf9f3;color:#292125;border:1px solid #9b857f;border-top:5px solid #641e30;
-    box-shadow:0 20px 60px #170b12a8,0 2px 10px #170b1233;
-    font-family:var(--sans);font-size:1rem;line-height:1.55;text-align:left;overscroll-behavior:contain
+    position:fixed;z-index:10000;bottom:max(.75rem,env(safe-area-inset-bottom));right:max(.75rem,env(safe-area-inset-right));left:auto;
+    width:min(780px,calc(100vw - 1.5rem));max-height:min(60dvh,420px);overflow:auto;
+    background:#fbf9f4;color:#292125;border:1px solid #d3c8bf;border-left:3px solid #641e30;
+    box-shadow:0 5px 22px #1b18212b;
+    font-family:var(--sans);font-size:.87rem;line-height:1.45;text-align:left;overscroll-behavior:contain
   }
-  .consentement-interieur{padding:clamp(1.15rem,3.8vw,2rem)}
-  .consentement-intro{display:flex;align-items:flex-start;gap:1.15rem}
-  .consentement-sceau{display:grid;place-items:center;width:58px;height:65px;flex:0 0 58px;color:#672239;border:1px solid #b39d91;background:#f5eee2}
-  .consentement-sceau svg{width:42px}
-  .consentement-surtitre{margin:0 0 .55rem;font:750 .68rem/1.4 var(--sans);letter-spacing:.12em;color:#672239}
-  .consentement-surtitre span{padding-inline:.35rem;color:#846369}
-  .consentement-editorial h2{margin:0;font:550 clamp(1.55rem,3.4vw,2.4rem)/1.06 var(--serif);letter-spacing:-.025em;color:#27191f}
-  .consentement-chapeau{margin:.45rem 0 0;color:#672239;font:600 .86rem/1.4 var(--sans)}
-  .consentement-texte{margin:1.15rem 0 1.25rem;font:450 .93rem/1.55 var(--sans);color:#393035}
-  .consentement-texte strong{font-weight:750}
-  .consentement-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.65rem}
-  .consentement-choix{width:100%;min-height:48px;padding:.65rem .75rem;cursor:pointer;color:#fffdf9;background:#641e30;border:1px solid #641e30;font:750 .87rem/1.25 var(--sans);text-align:center}
-  .consentement-choix:hover{background:#491523}
-  .consentement-choix:focus-visible,.consentement-parametrer:focus-visible,.consentement-enregistrer:focus-visible,.consentement-option:focus-within{outline:3px solid #aa5f37;outline-offset:3px}
-  .consentement-parametrer{grid-column:1/-1;justify-self:center;min-height:44px;background:transparent;color:#641e30;border:0;border-bottom:1px solid currentColor;padding:.4rem .25rem;cursor:pointer;font:700 .83rem/1.2 var(--sans)}
-  .consentement-details{border:1px solid #d9c9bd;margin-top:.8rem;padding:.95rem;background:#f6f0e8}
+  .consentement-interieur{display:grid;grid-template-columns:minmax(0,1fr) 255px;align-items:center;gap:.3rem 1.25rem;padding:.85rem 1rem .7rem}
+  .consentement-intro{min-width:0}
+  .consentement-surtitre{margin:0 0 .15rem;font:750 .59rem/1.3 var(--sans);letter-spacing:.12em;color:#641e30}
+  .consentement-editorial h2{margin:0;font:550 clamp(1.15rem,2.2vw,1.4rem)/1.12 var(--serif);letter-spacing:-.02em;color:#27191f}
+  .consentement-texte{margin:.3rem 0 0;font:450 .79rem/1.4 var(--sans);color:#383136}
+  .consentement-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-content:center;gap:.4rem}
+  .consentement-choix{width:100%;min-height:44px;padding:.5rem .2rem;cursor:pointer;color:#fffdf9;background:#641e30;border:1px solid #641e30;font:720 .75rem/1.2 var(--sans);text-align:center}
+  .consentement-choix:hover{background:#4a1726}
+  .consentement-choix:focus-visible,.consentement-parametrer:focus-visible,.consentement-enregistrer:focus-visible,.consentement-option:focus-within{outline:3px solid #aa5f37;outline-offset:2px}
+  .consentement-parametrer{grid-column:1/-1;justify-self:center;min-height:36px;background:transparent;color:#641e30;border:0;padding:.25rem .35rem;cursor:pointer;font:650 .74rem/1.2 var(--sans);text-decoration:underline;text-underline-offset:.15rem}
+  .consentement-details{grid-column:1/-1;border-top:1px solid #d9c9bd;margin-top:.25rem;padding:.7rem 0 .2rem;background:transparent}
   .consentement-detail-ligne{display:flex;justify-content:space-between;gap:1rem;align-items:center}
-  .consentement-detail-ligne strong{font:750 .88rem/1.3 var(--sans)}
-  .consentement-detail-ligne p{margin:.3rem 0 0;font:450 .8rem/1.45 var(--sans)}
-  .consentement-option{display:flex;align-items:center;gap:.45rem;cursor:pointer;font:650 .84rem/1.2 var(--sans)}
+  .consentement-detail-ligne strong{font:750 .81rem/1.3 var(--sans)}
+  .consentement-detail-ligne p{margin:.2rem 0 0;font:450 .77rem/1.45 var(--sans)}
+  .consentement-option{display:flex;align-items:center;gap:.45rem;cursor:pointer;font:650 .78rem/1.2 var(--sans)}
   .consentement-option input{width:20px;height:20px;accent-color:#641e30}
-  .consentement-enregistrer{width:100%;min-height:44px;margin-top:.8rem;background:#fdfaf4;color:#641e30;border:1px solid #641e30;cursor:pointer;font:750 .85rem/1.25 var(--sans)}
-  .consentement-note{margin:1rem 0 0;padding-top:.8rem;border-top:1px solid #d3c6bc;font:450 .74rem/1.55 var(--sans);color:#50474b}
+  .consentement-enregistrer{min-height:44px;margin-top:.5rem;padding:.45rem 1rem;background:#641e30;color:#fffdf9;border:1px solid #641e30;cursor:pointer;font:730 .78rem/1.25 var(--sans)}
+  .consentement-note{grid-column:1/-1;margin:.1rem 0 0;font:450 .68rem/1.4 var(--sans);color:#62565b}
   .consentement-note a{text-decoration:underline;text-underline-offset:2px;color:#641e30}
-  @media(max-width:520px){
-    .consentement-editorial{width:calc(100% - 1rem);inset:auto .5rem max(.5rem,env(safe-area-inset-bottom));max-height:87dvh}
-    .consentement-interieur{padding:1.1rem}
-    .consentement-intro{gap:.65rem}
-    .consentement-sceau{width:43px;flex-basis:43px;height:51px}
-    .consentement-sceau svg{width:32px}
-    .consentement-editorial h2{font-size:1.6rem}
-    .consentement-texte{font-size:.85rem}
-    .consentement-choix{font-size:.8rem}
+  @media(max-width:670px){
+    .consentement-editorial{right:.5rem;bottom:max(.5rem,env(safe-area-inset-bottom));width:calc(100vw - 1rem);max-height:min(55dvh,340px)}
+    .consentement-interieur{grid-template-columns:minmax(0,1fr);gap:.45rem;padding:.75rem .85rem .65rem}
+    .consentement-actions{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+    .consentement-parametrer{min-height:30px}
+    .consentement-editorial h2{font-size:1.22rem}
+    .consentement-texte{font-size:.77rem;line-height:1.35}
+    .consentement-note{font-size:.66rem}
   }
-  @media(prefers-reduced-motion:reduce){.consentement-editorial *{scroll-behavior:auto}}
 </style>
+
