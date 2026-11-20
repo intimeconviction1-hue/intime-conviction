@@ -52,6 +52,18 @@ urlPartage.searchParams.set('utm_medium', 'social');
 urlPartage.searchParams.set('utm_campaign', 'partage_lecteurs');
 const lienWhatsApp = new URL('https://wa.me/');
 lienWhatsApp.searchParams.set('text', `${data.titre} — ${urlPartage}`);
+
+const urlPartageX = new URL(data.chemin, Astro.site);
+urlPartageX.searchParams.set('utm_source', 'x');
+urlPartageX.searchParams.set('utm_medium', 'social');
+urlPartageX.searchParams.set('utm_campaign', 'partage_lecteurs');
+const lienX = new URL('https://twitter.com/intent/tweet');
+const titrePartageX = data.titre.length > 165 ? data.titre.slice(0, 162).trimEnd() + '…' : data.titre;
+lienX.searchParams.set('text', titrePartageX);
+lienX.searchParams.set('url', urlPartageX.href);
+lienX.searchParams.set('via', 'IntimeConv');
+const archiveHistorique = data.date.getTime() < Date.now() - 365 * 86400000;
+
 const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCase('fr') === 'intime conviction' ? null : (signatureArchive || null));
 ---
 <Base cheminCanonique={data.chemin} image={photo?.image.src} imageAlt={photo?.lieu} titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} noindex={data.verificationEnCours === true} article={{ headline:data.titre,datePublished:data.date.toISOString(),dateModified:data.dateMiseAJour?.toISOString(),author:auteurIdentifie, authorType:redaction ? 'Organization' : 'Person', type:redaction && data.rubrique === 'cours-du-jour' ? 'NewsArticle' : 'Article' }}>
@@ -89,7 +101,7 @@ const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCas
         <p>{formatArchive.explication}</p>
       </aside>
     )}
-    <div class="outils-lecture"><span>Confort de lecture</span><button id="taille-texte" type="button" aria-pressed="false">Agrandir le texte</button>{data.verificationEnCours !== true && <a class="partager-whatsapp" href={lienWhatsApp.href}>Partager sur WhatsApp</a>}<button id="copier-lien" type="button">Copier le lien</button><span id="partage-statut" role="status"></span></div>
+    <div class="outils-lecture"><span>Confort de lecture</span><button id="taille-texte" type="button" aria-pressed="false">Agrandir le texte</button>{data.verificationEnCours !== true && <a class="partager-x" href={lienX.href} target="_blank" rel="noopener noreferrer" aria-label="Partager cet article sur X, nouvel onglet">Partager sur X</a>}{data.verificationEnCours !== true && <a class="partager-whatsapp" href={lienWhatsApp.href}>Partager sur WhatsApp</a>}<button id="copier-lien" type="button">Copier le lien</button><span id="partage-statut" role="status"></span></div>
     {photo && (
       <figure class="photo-article">
         <img src={photo.image.src} width={photo.image.width} height={photo.image.height} alt={photo.lieu} fetchpriority="high" />
@@ -97,6 +109,12 @@ const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCas
       </figure>
     )}
     <div class="corps" set:html={data.html} />
+    {archiveHistorique && data.verificationEnCours !== true && (
+      <aside class="passerelle-archives" aria-label="Actualité du journal">
+        <span>POURSUIVRE LA LECTURE</span>
+        <a href="/rubrique/cours-du-jour/#articles-redaction">Découvrir les dernières actualités judiciaires du journal</a>
+      </aside>
+    )}
     <nav class="retour-archives" aria-label="Parcourir les dossiers et les archives">
       {redaction && data.rubrique === 'l-expose' && <a href="/dossiers/">Les dossiers de la rédaction</a>}
       {dossiers.map(dossier => <a href={`/dossiers/${dossier.slug}/`}>Suivre le dossier · {dossier.titre}</a>)}
@@ -139,7 +157,11 @@ function progression(){const r=article.getBoundingClientRect();barre.style.width
 .fil-ariane{font:650 .69rem/1.6 var(--sans);letter-spacing:0;text-transform:none;color:#565b5e}
 .fil-ariane a{border-bottom:1px solid #a12c39}
 .fil-ariane a:hover{background:transparent;color:#a12c39}
-.partager-whatsapp{font:inherit;color:inherit;text-decoration:underline;text-underline-offset:.2em}
+.partager-whatsapp,.partager-x{font:inherit;color:inherit;text-decoration:underline;text-underline-offset:.2em}
+.passerelle-archives{margin-top:2.15rem;padding:.9rem 0;border-top:1px solid var(--filet);border-bottom:1px solid var(--filet);font-family:var(--sans)}
+.passerelle-archives span{display:block;font-size:.65rem;font-weight:750;letter-spacing:.08em;color:var(--encre-2);margin-bottom:.3rem}
+.passerelle-archives a{font-size:.95rem;line-height:1.4;color:var(--encre);text-decoration:underline;text-decoration-color:#873147;text-underline-offset:.2em}
+.passerelle-archives a:hover{color:var(--rouge)}
 .outils-lecture :is(button,a):focus-visible{outline:3px solid #a12c39}
 
 
