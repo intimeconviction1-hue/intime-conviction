@@ -106,7 +106,7 @@ const articlesUne = selectionUne.map(({data}) => ({
   </section>
 
   <div class="surface-lecture"><div class="cadre journal-corps">
-    <Actualites accueil titre="Revue de presse" limite={5} lienRubrique={false} />
+    <Actualites accueil titre="Revue de presse" limite={5} lienRubrique={false} imagesExclues={[...articlesUne, ...dernieresPublications.map(({data}) => ({photo: photosArticles[data.chemin]}))].map(({photo}) => photo?.image?.src)} />
 
     {dernieresPublications.length > 0 && (
       <section class="dernieres-publications" aria-labelledby="titre-dernieres-publications">
