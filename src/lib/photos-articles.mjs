@@ -57,6 +57,11 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/luca-toulouse-soiree-amis-premeditation-verdict/11/2026/': {
+    ...illustrationNeutre,
+    lieu: 'Illustration judiciaire générée · Ne représente ni le procès de Luca ni les personnes citées',
+  },
+
   '/caro-coups-au-telephone-version-defense/11/2026/': {
     image: photoVannes,
     lieu: 'Palais de justice de Vannes · Photographie du lieu, non prise pendant ce procès',
