@@ -66,7 +66,7 @@ if (existsSync(selectionPresse)) {
   const imagesRedaction = new Set(Object.values(resultat).map(x => basename(x.image.src)));
   const dejaVues = new Set();
   for (const fichier of images) {
-    if (typeof fichier !== 'string' || !/^[a-z0-9._-]+\\.webp$/.test(fichier) || basename(fichier) !== fichier)
+    if (typeof fichier !== 'string' || !/^[a-z0-9._-]+$/.test(fichier) || !fichier.endsWith('.webp') || basename(fichier) !== fichier)
       throw new Error('Nom de visuel presse invalide : ' + fichier);
     const details = index.get(fichier);
     if (!details) throw new Error('Image presse absente du catalogue : ' + fichier);
