@@ -33,7 +33,10 @@ export function bilanEditorial(articles, { jours = 7, dateReference = new Date()
     identifiants.add(id);
     const titre=String(data.titre??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
     const cle=jour+'|'+titre;
-    if (!titre || titresParJour.has(cle)) anomalies.push({code:'titre_absent_ou_identique',jour});
+    if (!titre || titresParJour.has(cle)) {
+      anomalies.push({code:'titre_absent_ou_identique',jour});
+      continue;
+    }
     titresParJour.set(cle,id);
     parJour.get(jour).push(true);
   }
