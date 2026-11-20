@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { hierarchiserPresse, selectionnerPresseAccueil } from '../src/lib/hierarchiser-presse.mjs';
+import { hierarchiserPresse, selectionnerPresseAccueil, pertinentPourAccueilPresse } from '../src/lib/hierarchiser-presse.mjs';
 
 const ref = (titre, date) => ({ titre, date, source:'Journal', lien:'https://example.fr/article' });
 
@@ -89,4 +89,12 @@ test('l’accueil varie les médias et ne supprime aucune référence du relevé
   assert.equal(selection.some(a=>a.source==='Journal C'),true);
   assert.equal(liste.length,6);
   assert.deepEqual(selectionnerPresseAccueil([],5),[]);
+});
+
+test('la vitrine écarte les congrès nommés assises et les procès étrangers identifiés', () => {
+  assert.equal(pertinentPourAccueilPresse({titre:'Assises de la Protection de l’enfance : une nouvelle convention'}),false);
+  assert.equal(pertinentPourAccueilPresse({titre:'Assises de Liège : le jury délibère sur Brandon Mathy'}),false);
+  assert.equal(pertinentPourAccueilPresse({titre:'Le verdict à Houffalize'}),false);
+  assert.equal(pertinentPourAccueilPresse({titre:'Assises du Haut-Rhin : 22 ans en appel'}),true);
+  assert.equal(pertinentPourAccueilPresse({titre:'Au procès de Sarah Sadani, un témoin appelé à la barre'}),true);
 });
