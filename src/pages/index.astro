@@ -439,11 +439,13 @@ const articlesUne = selectionUne.map(({data}) => ({
   /* Une : une photographie pleine largeur dans sa colonne, un éditorial sur papier clair. */
   .une-carrousel{border-bottom:1px solid #d7cdc3;padding-bottom:1rem}
   .une-carrousel .une-editoriale-grille{display:block}
-  .une-carrousel .article-redaction-une{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:0;background:#f6f1e9;border:1px solid #d7cdc3;padding:0}
-  .une-carrousel .une-visuel-cadre{min-width:0;background:#ebe4db}
-  .une-carrousel .une-couverture{min-height:0;height:100%;aspect-ratio:1.35;background:#e9e1d6}
+  /* La grille porte les dimensions, jamais les proportions natives des fichiers. */
+  .une-carrousel .article-redaction-une{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:0;align-items:stretch;background:#f6f1e9;border:1px solid #d7cdc3;padding:0}
+  .une-carrousel .une-visuel-cadre{min-width:0;min-height:0;display:flex;flex-direction:column;background:#ebe4db}
+  .une-carrousel .une-couverture,
+  .une-carrousel .une-couverture.avec-photo{position:relative;display:block;width:100%;height:auto;min-height:0;aspect-ratio:16/10;overflow:hidden;background:#e9e1d6}
   .une-carrousel .une-couverture.avec-photo{color:#252525}
-  .une-carrousel .une-couverture img{position:static;display:block;width:100%;height:100%;object-fit:cover}
+  .une-carrousel .une-couverture img{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center}
   .une-carrousel .une-couverture.une-croquis img{object-fit:contain}
   .une-carrousel .une-couverture.avec-photo::after{content:none}
   .une-carrousel .une-edito{min-width:0;display:flex;flex-direction:column;justify-content:center;padding:clamp(1.4rem,3.7vw,3.4rem);background:#fbf9f5}
@@ -464,7 +466,8 @@ const articlesUne = selectionUne.map(({data}) => ({
   .une-compteur{color:#716663;font-size:.72rem;min-width:2.5rem}
   @media(max-width:49rem){
     .une-carrousel .article-redaction-une{grid-template-columns:minmax(0,1fr)}
-    .une-carrousel .une-couverture{aspect-ratio:16/9;height:auto}
+    .une-carrousel .une-couverture,
+    .une-carrousel .une-couverture.avec-photo{aspect-ratio:16/9;height:auto;min-height:0}
     .une-carrousel .une-edito{padding:1.25rem 1.2rem 1.6rem}
     .une-carrousel .une-titre h3{font-size:clamp(1.7rem,6vw,2.6rem)}
   }
