@@ -22,20 +22,20 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
   label:new Intl.DateTimeFormat('fr-FR',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(value+'-01T12:00:00Z'))
 }));
 ---
-<Base titre="Agenda judiciaire : assises et cours criminelles" description="Sessions annoncées et audiences mentionnées dans les calendriers judiciaires. Dates, juridictions, état de vérification et coordonnées des cours d’appel." rubriqueActive="cours-du-jour">
+<Base titre="L’Agenda des assises" description="Sessions annoncées et audiences mentionnées dans les calendriers judiciaires. Dates, juridictions, état de vérification et coordonnées des cours d’appel." rubriqueActive="cours-du-jour">
   <header class="tete-agenda">
-    <p class="sur-titre">Agenda judiciaire / Assises et cours criminelles</p>
-    <h1>Agenda <span>judiciaire</span></h1>
+    <p class="sur-titre">Le journal des cours d’assises / Calendrier des procès</p>
+    <h1>L’Agenda <span>des assises</span></h1>
     <p>Retrouvez les périodes de session annoncées par les juridictions et les audiences figurant dans les calendriers consultés. Ces deux informations ne constituent pas une confirmation de tenue d’un procès précis.</p>
     <p>Plusieurs pages de publication des rôles sont en maintenance. Les liens ci-dessous donnent les coordonnées des cours d’appel pour vérifier les dates auprès du greffe.</p>
     <p class="liens-agenda"><a href="/assister/">Comment assister à un procès d’assises</a> · <a href="/dossiers/">Suivre les affaires du journal</a></p>
     <p id="alerte-actualite" class="alerte-actualite" data-date-generation={dateDuJour} data-date-verification={DATE_CONTROLE_AGENDA} hidden role="status"></p>
     <p class="date-controle">Sources vérifiées le <time datetime={DATE_CONTROLE_AGENDA}>{formatDate(DATE_CONTROLE_AGENDA)}</time>. Sessions non terminées au <time datetime={dateDuJour}>{formatDate(dateDuJour)}</time>, date de génération de cette page.</p>
   </header>
-  <nav class="parcours-agenda" aria-label="Dans l’agenda judiciaire">
-    <a href="#sessions-annoncees"><strong>Sessions annoncées</strong><span>Les périodes de session, sans procès individuel confirmé</span></a>
-    <a href="#audiences-a-verifier"><strong>Audiences à vérifier</strong><span>Dates issues de calendriers dont le maintien reste incertain</span></a>
-    <a href="/veille-roles/"><strong>Rôles officiels</strong><span>Sources et coordonnées pour vérifier les informations</span></a>
+  <nav class="parcours-agenda" aria-label="Dans l’Agenda des assises">
+    <a href="#sessions-annoncees"><strong>Les sessions</strong><span>Calendrier des cours d’assises et cours criminelles</span></a>
+    <a href="#audiences-a-verifier"><strong>Les procès au rôle</strong><span>Affaires figurant aux calendriers des juridictions</span></a>
+    <a href="/veille-roles/"><strong>Les rôles</strong><span>Calendriers publiés par les juridictions</span></a>
   </nav>
   <form class="filtres-agenda" id="filtres-agenda" aria-label="Filtrer les sessions et audiences">
     <div>
@@ -56,7 +56,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
     <p id="resultats-agenda" role="status" aria-live="polite">Affichage de toutes les périodes répertoriées.</p>
   </form>
   <section id="sessions-annoncees" class="sessions" aria-labelledby="titre-sessions">
-    <div class="titre-liste"><h2 id="titre-sessions">Sessions annoncées</h2><span id="compteur-sessions">{dates.length} période{dates.length > 1 ? 's' : ''} répertoriée{dates.length > 1 ? 's' : ''}</span></div>
+    <div class="titre-liste"><h2 id="titre-sessions">Les sessions</h2><span id="compteur-sessions">{dates.length} période{dates.length > 1 ? 's' : ''} répertoriée{dates.length > 1 ? 's' : ''}</span></div>
     {dates.length === 0 && <p class="agenda-vide">Aucune session future ou en cours ne figure dans notre sélection actuellement vérifiée. Consultez les rôles officiels pour les nouvelles dates.</p>}
     <ol>
       {dates.map(s=>(
@@ -74,7 +74,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
     </ol>
   </section>
   <section id="audiences-a-verifier" class="audiences-indicatives" aria-labelledby="titre-audiences-indicatives">
-    <div class="titre-liste"><h2 id="titre-audiences-indicatives">Audiences à vérifier</h2><span>Quimper et Rennes · Bretagne</span></div>
+    <div class="titre-liste"><h2 id="titre-audiences-indicatives">Les procès au rôle</h2><span>Quimper et Rennes · Bretagne</span></div>
     <p>Ces dates et qualifications proviennent de calendriers publics de la cour d’appel de Rennes. Dernières mises à jour affichées : 8 juin 2026 pour le Finistère et 16 septembre 2026 pour l’Ille-et-Vilaine. Lors du contrôle du 7 novembre 2026, leurs pages directes renvoyaient une maintenance. <strong>Le maintien de ces audiences n’est donc pas reconfirmé.</strong> Avant tout déplacement, consulter le greffe. Les audiences devant la cour d’assises des mineurs sont exclues de cette sélection ; une audience évoquant des victimes mineures ne relève pas nécessairement de cette juridiction.</p>
     {audiences.length === 0 ? <p>Aucune date non échue ne subsiste dans cette sélection.</p> : (
       <ol>{audiences.map(a=>(
