@@ -18,7 +18,7 @@ export function composeXPost(article) {
   url.searchParams.set('utm_source', 'x');
   url.searchParams.set('utm_medium', 'social');
   url.searchParams.set('utm_campaign', 'articles_redaction');
-  const titre = raccourcir(article.title, 112);
+  const titre = (article.isUpdate ? 'Mise à jour · ' : '') + raccourcir(article.title, article.isUpdate ? 99 : 112);
   const contexte = raccourcir(article.excerpt, 96);
   const publication = [titre, contexte && contexte.toLocaleLowerCase('fr') !== titre.toLocaleLowerCase('fr') ? contexte : '', url.href].filter(Boolean).join('\n\n');
   // X ramène les URL à 23 caractères environ, quelle que soit leur longueur réelle.

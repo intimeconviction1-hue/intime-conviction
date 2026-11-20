@@ -28,3 +28,9 @@ test('Résiste aux titres longs et rejette les URL externes',()=>{
   assert.ok(texte.replace(/https?:\/\/[^\s]+/g,'x'.repeat(23)).length<=280);
   assert.throws(()=>composeXPost({title:'Faux',url:'https://example.com/article'}),/hors du domaine/);
 });
+
+test('Identifie une mise à jour sans inventer ni dépasser le format X', () => {
+  const texte = composeXPost({ title: 'Titre '.repeat(70), excerpt: 'Contexte '.repeat(50), url: 'https://www.intimeconviction.fr/test/11/2026/', isUpdate: true });
+  assert.match(texte, /^Mise à jour · /);
+  assert.ok(texte.replace(/https?:\/\/[^\s]+/g, 'x'.repeat(23)).length <= 280);
+});

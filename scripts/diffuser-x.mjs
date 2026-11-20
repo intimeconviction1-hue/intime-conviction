@@ -3,7 +3,7 @@
 // sans publication au premier lancement. Voir .github/workflows/diffuser-x.yml.
 import fs from 'node:fs';
 import path from 'node:path';
-import { createHash } from 'node:crypto';
+import { articleKey, contentFingerprint, publicationCandidates, markQueued } from './x-publication-state.mjs';
 import { composeXPost } from './x-copy.mjs';
 
 const root = process.env.IC_ARTICLES || 'articles-prives/articles';
@@ -14,7 +14,6 @@ const dryRun = process.env.X_DRY_RUN === 'true';
 const maxPerRun = Number(process.env.X_MAX_PER_RUN || 5);
 const site = 'https://www.intimeconviction.fr';
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-const articleKey = url => createHash('sha256').update(url).digest('hex');
 
 function collect(dir) {
   if (!fs.existsSync(dir)) throw new Error('Dossier des articles introuvable : ' + dir);
@@ -28,7 +27,9 @@ function collect(dir) {
       if (!a.titre || !a.date || !/^\/[^?#]+\/$/.test(a.chemin || '')) return [];
       const time = Date.parse(a.date);
       if (!Number.isFinite(time) || time > Date.now() + 300000) return [];
-      return [{ url: new URL(a.chemin, site).href, title: a.titre.trim(), excerpt: (a.extrait || '').trim(), time }];
+      const article = { url: new URL(a.chemin, site).href, title: a.titre.trim(), excerpt: (a.extrait || '').trim(), time, updatedTime: Date.parse(a.dateMiseAJour), html: a.html };
+      article.fingerprint = contentFingerprint(article);
+      return [article];
     } catch (error) {
       throw new Error('Article illisible ' + file + ' : ' + error.message);
     }
@@ -36,11 +37,16 @@ function collect(dir) {
 }
 
 
-async function pageIsPublic(url) {
+async function pageIsPublic(article) {
+  const url = article.url;
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(18000), headers: { 'User-Agent': 'IntimeConviction-X-Publisher/1.0' } });
     if (!res.ok) return false;
     const html = await res.text();
+    if (article.isUpdate) {
+      const modified = html.match(/<meta\b[^>]*property=["']article:modified_time["'][^>]*content=["']([^"']+)/i)?.[1];
+      if (Date.parse(modified) !== article.updatedTime) return false;
+    }
     return /<html[\s>]/i.test(html) && !/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(html);
   } catch { return false; }
 }
@@ -74,28 +80,29 @@ async function main() {
   const articles = collect(root).sort((a, b) => a.time - b.time || a.url.localeCompare(b.url));
   if (!fs.existsSync(statePath)) {
     fs.writeFileSync(statePath, JSON.stringify({ version: 2, initializedAt: new Date().toISOString(),
-      seen: Object.fromEntries(articles.map(a => [articleKey(a.url), { baseline: true }])) }, null, 2) + '\n');
+      seen: Object.fromEntries(articles.map(a => [articleKey(a.url), { baseline: true, fingerprint: a.fingerprint }])) }, null, 2) + '\n');
     console.log('Initialisation : ' + articles.length + ' articles existants exclus de X.');
     return;
   }
   const state = JSON.parse(fs.readFileSync(statePath, 'utf8'));
   if (state.version !== 2 || !state.seen || typeof state.seen !== 'object')
     throw new Error('État X invalide : arrêt par sécurité.');
-  const candidates = articles.filter(a => !(articleKey(a.url) in state.seen) && a.time >= Date.now() - 14 * 86400000);
+  const candidates = publicationCandidates(articles, state);
+  if (!dryRun) fs.writeFileSync(statePath, JSON.stringify(state, null, 2) + '\n');
   if (candidates.length && !dryRun && (!apiKey || !channelId))
     throw new Error('BUFFER_API_KEY ou BUFFER_CHANNEL_ID manquant.');
   let count = 0;
   for (const a of candidates.slice(0, maxPerRun)) {
-    if (!(await pageIsPublic(a.url))) {
+    if (!(await pageIsPublic(a))) {
       console.log('Page non accessible, report : ' + a.url);
       continue;
     }
     if (dryRun) { console.log('Simulation : ' + a.url); continue; }
     try {
       const id = await schedule(a, count);
-      state.seen[articleKey(a.url)] = { bufferPostId: id, queuedAt: new Date().toISOString() };
+      markQueued(state, a, id);
       fs.writeFileSync(statePath, JSON.stringify(state, null, 2) + '\n');
-      console.log('Programmé : ' + a.url + ' ; Buffer post ' + id);
+      console.log((a.isUpdate ? 'Mise à jour programmée : ' : 'Programmé : ') + a.url + ' ; Buffer post ' + id);
       count++;
       await sleep(300);
     } catch (error) {
@@ -105,6 +112,6 @@ async function main() {
       break;
     }
   }
-  console.log('Bilan : ' + count + ' publication(s) programmée(s), ' + candidates.length + ' nouvel(le)(s) article(s) détecté(s).');
+  console.log('Bilan : ' + count + ' publication(s) programmée(s), ' + candidates.length + ' article(s) ou mise(s) à jour détecté(s).');
 }
 await main();

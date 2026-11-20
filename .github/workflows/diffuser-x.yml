@@ -33,7 +33,7 @@ jobs:
           node-version: '24'
 
       - name: Contrôler les accroches avant toute publication
-        run: node --test scripts/x-copy.test.mjs
+        run: node --test scripts/x-copy.test.mjs scripts/x-publication-state.test.mjs
 
       - name: Restaurer la liste anti-doublons
         env:
