@@ -1,0 +1,195 @@
+---
+/*
+ * Information éditoriale et choix de mesure d'audience.
+ * Aucun appel Google ne part avant un consentement explicite.
+ */
+---
+<section id="consentement-editorial" class="consentement-editorial" role="dialog" aria-modal="false" aria-labelledby="consentement-titre" aria-describedby="consentement-texte" hidden>
+  <div class="consentement-interieur">
+    <div class="consentement-intro">
+      <div class="consentement-sceau" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none"><path d="M12 45h40M16 50h32M23 40V25m18 15V25M19 25h26M21 21h22M15 16l17-7 17 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="consentement-entete">
+        <p class="consentement-surtitre">INTIME CONVICTION <span aria-hidden="true">/</span> INFORMATION AUX LECTEURS</p>
+        <h2 id="consentement-titre">Avez-vous une intime conviction&nbsp;?</h2>
+        <p class="consentement-chapeau">Ici, le choix appartient au lecteur.</p>
+      </div>
+    </div>
+    <p id="consentement-texte" class="consentement-texte">Avec votre accord, le journal utilise <strong>Google Analytics</strong> pour mesurer sa fréquentation, comprendre les articles consultés et connaître l’origine des visites, notamment depuis X. <strong>Vous pouvez refuser sans perdre l’accès au journal.</strong> Aucun outil de mesure n’est chargé avant votre accord.</p>
+    <div class="consentement-actions">
+      <button type="button" data-consent="refuser" class="consentement-choix">Tout refuser</button>
+      <button type="button" data-consent="accepter" class="consentement-choix">Tout accepter</button>
+      <button type="button" id="consentement-parametrer" class="consentement-parametrer" aria-controls="consentement-details" aria-expanded="false">Personnaliser mes choix</button>
+    </div>
+    <div id="consentement-details" class="consentement-details" hidden>
+      <div class="consentement-detail-ligne">
+        <div>
+          <strong>Mesure d’audience</strong>
+          <p>Google Analytics 4. Uniquement après votre autorisation.</p>
+        </div>
+        <label class="consentement-option">
+          <input type="checkbox" id="consentement-mesure" />
+          <span>Autoriser</span>
+        </label>
+      </div>
+      <button type="button" id="consentement-enregistrer" class="consentement-enregistrer">Enregistrer mon choix</button>
+    </div>
+    <p class="consentement-note">Votre décision est conservée 6 mois. Vous pouvez la modifier à tout moment via «&nbsp;Gérer mes cookies&nbsp;» en bas du site. <a href="/confidentialite/">En savoir plus sur les données personnelles.</a></p>
+  </div>
+</section>
+
+<script>
+  // Mode strict : aucune requête Google, ni ping de consentement avant opt-in.
+  const KEY = 'ic:analytics:consent:v1';
+  const DUREE = 180 * 24 * 60 * 60 * 1000;
+  const GA_ID = 'G-LBH06QWG2R';
+
+  const boite = document.querySelector<HTMLElement>('#consentement-editorial');
+  const details = document.querySelector<HTMLElement>('#consentement-details');
+  const parametrer = document.querySelector<HTMLButtonElement>('#consentement-parametrer');
+  const mesure = document.querySelector<HTMLInputElement>('#consentement-mesure');
+  const ouvrirDepuisPied = document.querySelector<HTMLButtonElement>('#gestion-confidentialite');
+
+  type Decision = 'accepter' | 'refuser';
+  function lireDecision(): Decision | null {
+    try {
+      const brut = localStorage.getItem(KEY);
+      if (!brut) return null;
+      const choix = JSON.parse(brut);
+      if ((choix.value === 'accepter' || choix.value === 'refuser') && Number.isFinite(choix.at) && Date.now() - choix.at < DUREE && choix.at <= Date.now()) return choix.value;
+      localStorage.removeItem(KEY);
+    } catch { /* stockage indisponible : demander à nouveau */ }
+    return null;
+  }
+
+  function garderDecision(value: Decision) {
+    try { localStorage.setItem(KEY, JSON.stringify({ value, at: Date.now() })); }
+    catch { /* Choix valable sur cette page uniquement si le stockage est bloqué */ }
+  }
+
+  // Cette fonction n'est appelée QUE pour une décision d'acceptation explicite.
+  let charge = false;
+  function chargerAnalytics() {
+    if (charge) return;
+    charge = true;
+    const w = window as Window & { dataLayer?: unknown[] };
+    w.dataLayer = w.dataLayer || [];
+    function gtag(...args: unknown[]) { w.dataLayer!.push(args); }
+    gtag('consent', 'default', {
+      analytics_storage: 'granted',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied'
+    });
+    gtag('js', new Date());
+    gtag('config', GA_ID, {
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false,
+      anonymize_ip: true,
+      cookie_expires: 15552000
+    });
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_ID);
+    document.head.append(script);
+  }
+
+  function effacerCookiesGA() {
+    // Le rechargement stoppe les scripts Analytics déjà chargés.
+    const prefixes = ['_ga', '_gid', '_gat', '_gac_'];
+    document.cookie.split(';').forEach(item => {
+      const nom = item.split('=')[0]?.trim();
+      if (nom && prefixes.some(p => nom === p || nom.startsWith(p + '_'))) {
+        document.cookie = encodeURIComponent(nom) + '=; Max-Age=0; Path=/; SameSite=Lax; Secure';
+        document.cookie = encodeURIComponent(nom) + '=; Max-Age=0; Path=/; Domain=.intimeconviction.fr; SameSite=Lax; Secure';
+      }
+    });
+  }
+
+  function fermer() {
+    if (boite) boite.hidden = true;
+    if (details) details.hidden = true;
+    if (parametrer) parametrer.setAttribute('aria-expanded', 'false');
+  }
+
+  function terminer(value: Decision) {
+    const ancienne = lireDecision();
+    garderDecision(value);
+    fermer();
+    if (value === 'accepter') {
+      chargerAnalytics();
+    } else if (charge || ancienne === 'accepter') {
+      effacerCookiesGA();
+      location.reload();
+    }
+    ouvrirDepuisPied?.focus();
+  }
+
+  document.querySelector<HTMLButtonElement>('[data-consent="accepter"]')?.addEventListener('click', () => terminer('accepter'));
+  document.querySelector<HTMLButtonElement>('[data-consent="refuser"]')?.addEventListener('click', () => terminer('refuser'));
+  parametrer?.addEventListener('click', () => {
+    if (!details) return;
+    details.hidden = !details.hidden;
+    parametrer.setAttribute('aria-expanded', String(!details.hidden));
+    if (!details.hidden) mesure?.focus();
+  });
+  document.querySelector<HTMLButtonElement>('#consentement-enregistrer')?.addEventListener('click', () => terminer(mesure?.checked ? 'accepter' : 'refuser'));
+  ouvrirDepuisPied?.addEventListener('click', () => {
+    if (!boite) return;
+    boite.hidden = false;
+    if (mesure) mesure.checked = lireDecision() === 'accepter';
+    document.querySelector<HTMLButtonElement>('[data-consent="refuser"]')?.focus();
+  });
+
+  const choix = lireDecision();
+  if (choix === 'accepter') chargerAnalytics();
+  else if (choix === null && boite) boite.hidden = false;
+  // Si l'internaute refuse, même la bibliothèque gtag n'est pas téléchargée.
+</script>
+
+<style>
+  #consentement-editorial[hidden],#consentement-details[hidden]{display:none!important}
+  .consentement-editorial{
+    position:fixed;z-index:10000;inset:auto max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left));
+    width:min(860px,calc(100% - 2rem));margin-inline:auto;max-height:min(85dvh,740px);overflow:auto;
+    background:#fcf9f3;color:#292125;border:1px solid #9b857f;border-top:5px solid #641e30;
+    box-shadow:0 20px 60px #170b12a8,0 2px 10px #170b1233;
+    font-family:var(--sans);font-size:1rem;line-height:1.55;text-align:left;overscroll-behavior:contain
+  }
+  .consentement-interieur{padding:clamp(1.15rem,3.8vw,2rem)}
+  .consentement-intro{display:flex;align-items:flex-start;gap:1.15rem}
+  .consentement-sceau{display:grid;place-items:center;width:58px;height:65px;flex:0 0 58px;color:#672239;border:1px solid #b39d91;background:#f5eee2}
+  .consentement-sceau svg{width:42px}
+  .consentement-surtitre{margin:0 0 .55rem;font:750 .68rem/1.4 var(--sans);letter-spacing:.12em;color:#672239}
+  .consentement-surtitre span{padding-inline:.35rem;color:#846369}
+  .consentement-editorial h2{margin:0;font:550 clamp(1.55rem,3.4vw,2.4rem)/1.06 var(--serif);letter-spacing:-.025em;color:#27191f}
+  .consentement-chapeau{margin:.45rem 0 0;color:#672239;font:600 .86rem/1.4 var(--sans)}
+  .consentement-texte{margin:1.15rem 0 1.25rem;font:450 .93rem/1.55 var(--sans);color:#393035}
+  .consentement-texte strong{font-weight:750}
+  .consentement-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.65rem}
+  .consentement-choix{width:100%;min-height:48px;padding:.65rem .75rem;cursor:pointer;color:#fffdf9;background:#641e30;border:1px solid #641e30;font:750 .87rem/1.25 var(--sans);text-align:center}
+  .consentement-choix:hover{background:#491523}
+  .consentement-choix:focus-visible,.consentement-parametrer:focus-visible,.consentement-enregistrer:focus-visible,.consentement-option:focus-within{outline:3px solid #aa5f37;outline-offset:3px}
+  .consentement-parametrer{grid-column:1/-1;justify-self:center;min-height:44px;background:transparent;color:#641e30;border:0;border-bottom:1px solid currentColor;padding:.4rem .25rem;cursor:pointer;font:700 .83rem/1.2 var(--sans)}
+  .consentement-details{border:1px solid #d9c9bd;margin-top:.8rem;padding:.95rem;background:#f6f0e8}
+  .consentement-detail-ligne{display:flex;justify-content:space-between;gap:1rem;align-items:center}
+  .consentement-detail-ligne strong{font:750 .88rem/1.3 var(--sans)}
+  .consentement-detail-ligne p{margin:.3rem 0 0;font:450 .8rem/1.45 var(--sans)}
+  .consentement-option{display:flex;align-items:center;gap:.45rem;cursor:pointer;font:650 .84rem/1.2 var(--sans)}
+  .consentement-option input{width:20px;height:20px;accent-color:#641e30}
+  .consentement-enregistrer{width:100%;min-height:44px;margin-top:.8rem;background:#fdfaf4;color:#641e30;border:1px solid #641e30;cursor:pointer;font:750 .85rem/1.25 var(--sans)}
+  .consentement-note{margin:1rem 0 0;padding-top:.8rem;border-top:1px solid #d3c6bc;font:450 .74rem/1.55 var(--sans);color:#50474b}
+  .consentement-note a{text-decoration:underline;text-underline-offset:2px;color:#641e30}
+  @media(max-width:520px){
+    .consentement-editorial{width:calc(100% - 1rem);inset:auto .5rem max(.5rem,env(safe-area-inset-bottom));max-height:87dvh}
+    .consentement-interieur{padding:1.1rem}
+    .consentement-intro{gap:.65rem}
+    .consentement-sceau{width:43px;flex-basis:43px;height:51px}
+    .consentement-sceau svg{width:32px}
+    .consentement-editorial h2{font-size:1.6rem}
+    .consentement-texte{font-size:.85rem}
+    .consentement-choix{font-size:.8rem}
+  }
+  @media(prefers-reduced-motion:reduce){.consentement-editorial *{scroll-behavior:auto}}
+</style>
