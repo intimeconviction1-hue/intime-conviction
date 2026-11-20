@@ -76,3 +76,46 @@ export function regrouperPresseAccueil(references = []) {
   }
   return conserves;
 }
+
+
+// La vitrine de cinq cartes est plus sélective que la revue complète :
+// une seule histoire par affaire, même si audience et verdict sont distincts.
+// Les étapes restent disponibles dans la revue intégrale et les archives.
+// Aliases limités à des affaires identifiables sans ambiguïté dans ce corpus.
+const ALIAS_AFFAIRES = [
+  ['zecler', /\bzecler\b/u],
+  ['crepol', /\bcrepol\b/u],
+  ['inass-touloub', /\b(?:inass|touloub|inconnue de l.a10|martyre de l.a10)\b/u],
+  ['olivio-gomes', /\b(?:olivio gomes|olivio)\b/u],
+  ['sollacaro', /\bsollacaro\b/u],
+  ['dominique-bernard', /\bdominique bernard\b/u],
+  ['francis-heaulme', /\b(?:francis heaulme|jean.joseph clement)\b/u],
+  ['madjaliwa-safari', /\bmadjaliwa safari\b/u],
+];
+
+function clesAffaire(titre) {
+  const texte = sansAccents(titre).replace(/[’‘]/g, "'");
+  const alias = ALIAS_AFFAIRES.filter(([,motif]) => motif.test(texte)).map(([cle]) => cle);
+  // Un nom complet, présent dans les deux titres, est un indice suffisamment
+  // précis. Un mot générique ou une simple ville ne doit jamais suffire.
+  return new Set([...identites(titre), ...alias]);
+}
+
+/**
+ * À appliquer APRÈS le classement éditorial : conserve pour chaque affaire
+ * la référence la mieux classée et remplace les autres par de nouveaux sujets.
+ * Sans identité certaine, la référence reste visible.
+ */
+export function diversifierAffairesAccueil(references = [], limite = 5) {
+  if (!Number.isInteger(limite) || limite <= 0) return [];
+  const deja = new Set();
+  const selection = [];
+  for (const reference of references) {
+    const cles = clesAffaire(reference.titre);
+    if ([...cles].some(cle => deja.has(cle))) continue;
+    selection.push(reference);
+    cles.forEach(cle => deja.add(cle));
+    if (selection.length === limite) break;
+  }
+  return selection;
+}
