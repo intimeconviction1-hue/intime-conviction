@@ -88,6 +88,11 @@ jobs:
           key: actualites-v1-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: actualites-v1-
 
+      - name: Copier exclusivement les images attribuées aux articles publiés
+        run: node scripts/preparer-illustrations.mjs
+        env:
+          IC_ARTICLES: articles-prives/articles
+
       - name: Construire
         run: npm run build
         env:
