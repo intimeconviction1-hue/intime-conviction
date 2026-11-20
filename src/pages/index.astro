@@ -12,10 +12,12 @@ import { lireVeille } from '../lib/veille.mjs';
 import { RUBRIQUES, rubrique } from '../lib/rubriques.mjs';
 import { DOSSIERS, referencesPourDossier } from '../lib/dossiers.mjs';
 import { tousLesArticles, dateLongue } from '../lib/articles.mjs';
+import { articleVisible } from '../lib/article-visible.mjs';
 
 const articles = await tousLesArticles();
 const veille = await lireVeille();
-const articlesVerifies = articles.filter(({data}) => data.verificationEnCours !== true);
+const maintenant = Date.now();
+const articlesVerifies = articles.filter(({data}) => articleVisible(data, maintenant));
 const selectionUne = articlesVerifies.slice(0, 3);
 // Sept dates civiles, aujourd’hui compris, selon l’heure de Paris.
 const dateParis = new Intl.DateTimeFormat('fr-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' });
@@ -42,7 +44,7 @@ const descriptionsRubriques = {
 const rubriques = RUBRIQUES.map(r=>{
   const archives=articles.filter(a=>a.data.rubrique===r.slug);
   const titres = archives
-    .filter(({data}) => data.verificationEnCours !== true && !vus.has(data.slug))
+    .filter(({data}) => articleVisible(data, maintenant) && !vus.has(data.slug))
     .slice(0, 2);
   return {...r,titres};
 });
