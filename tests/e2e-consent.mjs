@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 
 const URL = process.env.TEST_SITE_URL || 'https://www.intimeconviction.fr/';
 const ID = 'G-LBH06QWG2R';
+const ARTICLE = 'https://www.intimeconviction.fr/dix-sept-ans-de-reclusion-pour-le-crime-de-deraison/11/2009/';
 const CASES = [
   { name: 'ordinateur', viewport: { width: 1360, height: 900 } },
   { name: 'mobile', viewport: { width: 390, height: 844 } },
@@ -70,6 +71,32 @@ try {
     const consentAccepted=await page.evaluate(()=>JSON.parse(localStorage.getItem('ic:analytics:consent:v1')||'{}').value);
     assert.equal(consentAccepted,'accepter',name+': accord non conservé');
 
+    // Tester les événements de partage avec une acceptation réelle dans la
+    // session de test, mais des requêtes vers Google systématiquement bloquées.
+    await page.goto(ARTICLE,{waitUntil:'domcontentloaded',timeout:45000});
+    await page.waitForFunction(()=>!!document.querySelector('script[src*="googletagmanager.com/gtag/js"]'),{timeout:10000});
+    const observed = await page.evaluate(()=>{
+      function clickWithoutNavigation(selector) {
+        const el=document.querySelector(selector);
+        if(!el) throw new Error('Lien absent : '+selector);
+        el.addEventListener('click',e=>e.preventDefault(),{capture:true,once:true});
+        el.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));
+      }
+      clickWithoutNavigation('a.partager-x');
+      clickWithoutNavigation('a.partager-whatsapp');
+      clickWithoutNavigation('.passerelle-archives a[href]');
+      return (window.dataLayer||[]).filter(v=>Array.isArray(v)&&v[0]==='event').map(v=>({name:v[1],parameters:v[2]}));
+    });
+    const shares=observed.filter(x=>x.name==='share');
+    const moves=observed.filter(x=>x.name==='select_content');
+    assert.equal(shares.length,2,name+': attendus deux clics de partage suivis');
+    assert.deepEqual(shares.map(x=>x.parameters?.method),['x','whatsapp'],name+': méthodes de partage mal étiquetées');
+    assert.equal(moves.length,1,name+': passage archive vers actualité non mesuré');
+    assert.equal(moves[0]?.parameters?.content_type,'archive_to_news',name+': type de passage incorrect');
+    assert(shares.every(x=>x.parameters?.item_id===new URL(ARTICLE).pathname),name+': identifiants de page incohérents');
+
+
+
     await page.locator('#gestion-confidentialite').click();
     await page.getByRole('button',{name:'Tout refuser'}).click();
     await page.waitForLoadState('domcontentloaded');
@@ -77,6 +104,16 @@ try {
     assert.equal(await page.locator('script[src*="gtag/js"]').count(),0,name+': Google chargé après retrait et rechargement');
     const consentRefused=await page.evaluate(()=>JSON.parse(localStorage.getItem('ic:analytics:consent:v1')||'{}').value);
     assert.equal(consentRefused,'refuser',name+': refus non conservé');
+
+    const ignored = await page.evaluate(()=>{
+      const x=document.querySelector('a.partager-x');
+      if(!x)throw new Error('Lien partage X absent après retrait');
+      x.addEventListener('click',e=>e.preventDefault(),{capture:true,once:true});
+      x.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));
+      return (window.dataLayer||[]).some(v=>Array.isArray(v)&&v[0]==='event'&&v[1]==='share');
+    });
+    assert.equal(ignored,false,name+': événement de partage envoyé après retrait du consentement');
+
     console.log('OK '+name+' : taille maîtrisée, boutons symétriques, refus, acceptation et retrait, aucun signal de test envoyé à Google.');
     await context.close();
   }
