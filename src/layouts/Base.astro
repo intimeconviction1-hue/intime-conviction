@@ -41,6 +41,8 @@ const navigation = [
     {titre:'Les sessions',href:'/agenda/#sessions-annoncees'},
     {titre:'Les procès au rôle',href:'/agenda/#audiences-a-verifier'},
     {titre:'Les rôles',href:'/veille-roles/'},
+    {titre:'Trouver une cour d’assises',href:'/annuaire/#repertoire'},
+    {titre:'Assister à une audience',href:'/assister/'},
   ] },
   { titre: 'Dossiers', href: '/dossiers/', liens: [
     {titre:'Chronologie des affaires',href:'/chronologie/'},
@@ -52,21 +54,17 @@ const navigation = [
   ] },
   { titre: 'Archives', href: '/archives/', liens: [] },
 ];
-const accesDirects = [
-  { href: '/annuaire/#repertoire', titre: 'Trouver une cour d’assises' },
-  { href: '/assister/', titre: 'Assister à un procès' },
-];
 const piedNavigation = [
   { titre: 'Le journal', liens: [
     ...RUBRIQUES.map(r=>({titre:r.libelle,href:`/rubrique/${r.slug}/`})),
     {titre:'Archives du journal',href:'/archives/'},
     {titre:'Revue de presse',href:'/revue-de-presse/'},
   ] },
-  { titre: 'Infos pratiques', liens: [
-    {titre:'L’Agenda des assises',href:'/agenda/'},
+  { titre: 'Agenda et accès aux assises', liens: [
+    {titre:'Les sessions et les procès au rôle',href:'/agenda/'},
+    {titre:'Les rôles',href:'/veille-roles/'},
+    {titre:'Trouver une cour d’assises',href:'/annuaire/#repertoire'},
     {titre:'Assister à une audience',href:'/assister/'},
-    {titre:'Liste des juridictions',href:'/annuaire/#repertoire'},
-    {titre:'Carte des affaires',href:'/carte/'},
   ] },
   { titre: 'À propos', liens: [
     {titre:'Ligne éditoriale',href:'/ligne-editoriale/'},
@@ -203,18 +201,6 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
               <ul>
                 <li><a href="/revue-de-presse/" aria-current={courant("/revue-de-presse/")}>Derniers articles de presse</a></li>
                 <li><a href="/archives/presse/" aria-current={courant("/archives/presse/")}>Archives de presse</a></li>
-              </ul>
-            </nav>
-          </details>
-          <details class="navigation-acces">
-            <summary class="navigation-bouton">
-              Infos pratiques <span aria-hidden="true">⌄</span>
-            </summary>
-            <nav class="acces-directs" aria-label="Informations pratiques pour assister à un procès">
-              <ul>
-                {accesDirects.map(({href, titre}) => (
-                  <li><a href={href}>{titre}<span aria-hidden="true">↗</span></a></li>
-                ))}
               </ul>
             </nav>
           </details>
