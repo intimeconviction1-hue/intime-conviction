@@ -1,0 +1,41 @@
+name: Contrôle mobile de l'accueil
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/pages/index.astro'
+      - 'src/components/Actualites.astro'
+      - 'src/components/ListeArticles.astro'
+      - 'scripts/controle-accueil-mobile.mjs'
+      - '.github/workflows/controle-accueil-mobile.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  accueil:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Installer navigateur
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Vérifier le carrousel et la presse à 375px et 1440px
+        run: node scripts/controle-accueil-mobile.mjs
+        env:
+          IC_VISUAL_BASE_URL: https://www.intimeconviction.fr
+      - name: Conserver captures et rapport
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: controle-mobile-accueil
+          path: controle-mobile-accueil/
+          if-no-files-found: warn
+          retention-days: 14
