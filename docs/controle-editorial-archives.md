@@ -28,3 +28,13 @@ Le fonds éditorial est stocké dans le dépôt privé `intime-conviction-articl
 Cinq articles corrigés portent désormais un champ `dateMiseAJour`, distinct de leur date de publication historique. L'affichage de l'article et les données structurées `Article.dateModified` doivent refléter cette correction, sans changer l'URL ni la date initiale. La recherche interne, les listes et l'accueil utilisent les titres et extraits du fonds privé au moment de chaque compilation, sans ancienne table de titres conservée en parallèle.
 
 La notice du 8 janvier 2025 relative à Grasse possède `verificationEnCours: true` : son URL historique reste accessible, avec une directive `noindex,follow`; cette URL n'est plus ajoutée au sitemap. Il s'agit d'une décision de prudence éditoriale, et non d'une décision judiciaire sur l'affaire.
+
+
+## Révision des sélections de janvier 2025 — 20 novembre 2026
+
+Deux compilations ont été réécrites en chroniques d'archives structurées, sans altération des slugs ni des dates de publication d'origine :
+
+- `articles/2025/cours-du-jour-6-janvier-2025.json` : les cinq dossiers ont chacun un paragraphe autonome, avec les suites judiciaires datées et les références en fin d'article.
+- `articles/2025/cours-du-jour-17-janvier-2025.json` : quatre affaires distinctes, distinction des audiences à venir, décisions rendues et issues non confirmées, références en bas de page.
+
+Ces pages restent des sélections historiques, non des reportages de première main. Les références externes sont conservées pour vérification ; tout enrichissement ultérieur doit se fonder sur des pièces spécifiques à chaque affaire. Les archives de liens de 2017 ont déjà été classées comme revues de presse historiques, sans transformation artificielle en chroniques de prétoire.
