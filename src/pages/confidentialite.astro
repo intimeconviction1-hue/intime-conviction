@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base titre="Confidentialité et cookies" description="Comment Intime Conviction traite les données des lecteurs et gère les mesures d’audience.">
+  <article class="politique">
+    <header>
+      <p class="surtitre">INFORMATION AUX LECTEURS</p>
+      <h1>Confidentialité et cookies</h1>
+      <p>Le journal respecte votre choix. Les mesures d’audience restent facultatives.</p>
+    </header>
+
+    <section>
+      <h2>Responsable du traitement</h2>
+      <p>Le site <strong>intimeconviction.fr</strong> est édité par <strong>FACILE PAPIERS</strong>, 100 avenue du Général-Leclerc, lot 120, 93500 Pantin, France. Pour toute question relative aux données personnelles ou à vos droits : <a href="mailto:intimeconviction1@gmail.com">intimeconviction1@gmail.com</a>. Voir également les <a href="/mentions-legales/">mentions légales</a>.</p>
+    </section>
+
+    <section>
+      <h2>Mesure d’audience : Google Analytics 4</h2>
+      <p>Avec votre consentement, Intime Conviction utilise <strong>Google Analytics 4</strong> pour connaître la fréquentation du journal, les pages consultées et l’origine des visites, par exemple lorsqu’un article est ouvert depuis X. Les données traitées par ce service peuvent notamment inclure des informations sur la navigation et l’appareil utilisé, ainsi que des identifiants de mesure.</p>
+      <p>Cette mesure repose sur votre <strong>consentement préalable</strong>. En l’absence d’accord ou après un refus, le site ne charge pas la bibliothèque Google Analytics au titre de ce dispositif. Le refus n’empêche pas la lecture des articles. Aucune publicité personnalisée n’est activée par cette intégration.</p>
+      <p>Google fournit ce service. Pour les modalités de traitement appliquées par Google, consultez les <a href="https://policies.google.com/privacy?hl=fr" target="_blank" rel="noopener noreferrer">règles de confidentialité de Google</a>. Des transferts de données hors de l’Espace économique européen peuvent intervenir dans le cadre de ce service ; ils doivent être évalués au regard des garanties applicables.</p>
+    </section>
+
+    <section>
+      <h2>Vos choix et leur durée</h2>
+      <p>Vous pouvez accepter, refuser ou personnaliser la mesure d’audience sur le premier panneau qui vous est présenté. Les boutons « Tout accepter » et « Tout refuser » sont accessibles au même niveau et avec le même poids visuel. La case de consentement est désactivée par défaut.</p>
+      <p>Votre décision est enregistrée <strong>localement sur votre appareil pendant 180 jours</strong> pour ne pas vous demander votre choix à chaque page. Aucun identifiant publicitaire n’est nécessaire pour mémoriser ce choix. Si vous acceptez, la configuration du journal limite la durée des cookies Google Analytics à 180 jours ; leur présence et leur suppression restent soumises au fonctionnement du navigateur.</p>
+      <p>Vous pouvez modifier ou retirer votre accord à tout moment avec le bouton <strong>« Gérer mes cookies »</strong> présent en pied de chaque page. Si vous retirez votre accord, les cookies Google Analytics accessibles au site sont supprimés et la page est rechargée pour arrêter les scripts déjà chargés.</p>
+    </section>
+
+    <section>
+      <h2>Liens provenant des réseaux sociaux</h2>
+      <p>Les liens partagés par le journal peuvent contenir des paramètres de campagne, tels que <code>utm_source=x</code>, pour identifier l’origine d’une visite dans les statistiques lorsque la mesure d’audience a été autorisée. Ces paramètres ne déclenchent pas, à eux seuls, le chargement de Google Analytics.</p>
+    </section>
+
+    <section>
+      <h2>Vos droits</h2>
+      <p>Conformément au RGPD, vous pouvez, selon votre situation, demander l’accès, la rectification, l’effacement ou la limitation de vos données et vous opposer à certains traitements. Pour les traitements fondés sur votre consentement, vous pouvez le retirer à tout moment. Contact : <a href="mailto:intimeconviction1@gmail.com">intimeconviction1@gmail.com</a>. Vous pouvez également saisir la <a href="https://www.cnil.fr/fr/plaintes" target="_blank" rel="noopener noreferrer">CNIL</a>.</p>
+      <p>Le site peut aussi utiliser des stockages strictement nécessaires à certaines fonctions techniques. Leur nature doit être examinée au regard des autres fonctionnalités proposées.</p>
+    </section>
+    <p class="fin">Dernière mise à jour : novembre 2026.</p>
+  </article>
+</Base>
+<style>
+.politique{width:min(790px,calc(100% - 2rem));margin:3.1rem auto 5rem}
+.politique header{border-bottom:2px solid #641e30;padding-bottom:1.9rem;margin-bottom:1.5rem}
+.politique .surtitre{font:750 .72rem/1.5 var(--sans);letter-spacing:.12em;color:#7d273b;margin:0 0 .7rem}
+.politique h1{margin:0 0 .8rem;font-size:clamp(2.45rem,5vw,4.5rem)}
+.politique header>p:last-child{font-size:1.15rem;color:var(--encre-2)}
+.politique section{padding:1.55rem 0;border-bottom:1px solid var(--filet)}
+.politique h2{margin:0 0 .8rem;font-size:clamp(1.5rem,3vw,1.85rem)}
+.politique section p{font-size:1.04rem;line-height:1.65;margin:.75rem 0}
+.politique a{text-decoration:underline;text-underline-offset:.15em;text-decoration-color:#9b303d}
+.politique code{font-size:.84rem;padding:.1rem .25rem;background:var(--papier-2);overflow-wrap:anywhere}
+.politique .fin{font:550 .78rem/1.5 var(--sans);color:var(--encre-2);margin:1.5rem 0}
+</style>
