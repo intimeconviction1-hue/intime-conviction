@@ -72,3 +72,15 @@ test('aucune fusion sur un terme judiciaire générique ou une ville seule', () 
   assert.deepEqual(diversifierAffairesAccueil(items, 5), items);
   assert.deepEqual(diversifierAffairesAccueil(items, 0), []);
 });
+
+test('la vitrine garde un seul sujet pour Mathy, Sadani et Karen Baldi', () => {
+  const items=[
+    ref('Brandon Mathy accusé aux assises de Liège'),
+    ref('Le meurtre d’Orlan Mélon devant les jurés'),
+    ref('Sarah Sadani : les témoins sont entendus'),
+    ref('Au procès du meurtre de Sarah Sadani, ouverture des débats'),
+    ref('Procès de la policière Karen à Nice'),
+    ref('Karen Baldi : son assassin devant la cour')
+  ];
+  assert.deepEqual(diversifierAffairesAccueil(items, 5),[items[0],items[2],items[4]]);
+});
