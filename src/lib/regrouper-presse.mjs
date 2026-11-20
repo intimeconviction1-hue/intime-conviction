@@ -84,6 +84,9 @@ export function regrouperPresseAccueil(references = []) {
 // Aliases limités à des affaires identifiables sans ambiguïté dans ce corpus.
 const ALIAS_AFFAIRES = [
   ['zecler', /\bzecler\b/u],
+  ['brandon-mathy', /\b(?:brandon mathy|orlan melon)\b/u],
+  ['sarah-sadani', /\b(?:sarah sadani|meurtre de sarah sadani)\b/u],
+  ['karen-baldi', /\b(?:karen baldi|policiere karen|assassin de karen)\b/u],
   ['crepol', /\bcrepol\b/u],
   ['inass-touloub', /\b(?:inass|touloub|inconnue de l.a10|martyre de l.a10)\b/u],
   ['olivio-gomes', /\b(?:olivio gomes|olivio)\b/u],
