@@ -29,6 +29,8 @@ jobs:
           const errors = [];
           const failed = [];
           const attemptedCollect = [];
+          const tagBodies = [];
+          page.on('response',async r=>{if(r.url().includes('googletagmanager.com/gtag/js')){try{const body=await r.body();tagBodies.push({size:body.length,prefix:body.toString('utf8',0,110),contentType:r.headers()['content-type']});}catch(e){tagBodies.push({error:String(e)});}}});
           await context.route('**/*', async route => {
             const u=route.request().url();
             if (/\/(g\/collect|collect|j\/collect)(\?|$)/.test(u) || /analytics\.google\.com|google-analytics\.com/.test(u)) {
@@ -61,8 +63,8 @@ jobs:
             const tagResponse=log.find(x=>x.event==='response'&&x.url.includes('googletagmanager.com/gtag/js')&&x.status===200);
             await page.evaluate(()=>window.dataLayer?.push(['event','diagnostic_ga4_test',{send_to:'G-LBH06QWG2R'}]));
             await page.waitForTimeout(2500);
-            const layer=await page.evaluate(()=>({dataLayer:window.dataLayer?.map(x=>Array.from(x).map((v,i)=>i===2&&typeof v==='object'?Object.keys(v):v)).slice(0,12),hasGtag:typeof window.gtag,resources:performance.getEntriesByType('resource').map(x=>x.name.split('?')[0]).filter(x=>/google|gtag/.test(x)).slice(0,30)}));
-            const report={before,scripts,tagResponse:!!tagResponse,network:log,errors,failed,attemptedCollect,layer};
+            const layer=await page.evaluate(()=>({dataLayer:window.dataLayer?.map(x=>Array.from(x).map((v,i)=>i===2&&typeof v==='object'?Object.keys(v):v)).slice(0,12),hasGtag:typeof window.gtag,hasGoogleTagManager:typeof window.google_tag_manager,pushSource:String(window.dataLayer?.push).slice(0,120),gaCookies:document.cookie.split(';').filter(x=>x.trim().startsWith('_ga')).map(x=>x.split('=')[0]), visibility:document.visibilityState,resources:performance.getEntriesByType('resource').map(x=>x.name.split('?')[0]).filter(x=>/google|gtag/.test(x)).slice(0,30)}));
+            const report={before,scripts,tagResponse:!!tagResponse,network:log,errors,failed,attemptedCollect,tagBodies,layer};
             console.log('RAPPORT_ANALYTICS='+JSON.stringify(report));
             assert(gaScript,'Balise GA absente après consentement');
             assert(tagResponse,'Balise Google non chargée avec HTTP 200');
