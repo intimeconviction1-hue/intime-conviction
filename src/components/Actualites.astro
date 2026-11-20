@@ -1,7 +1,7 @@
 ---
 import { lienDirectPresse } from '../lib/fil-actualites.mjs';
 import { lireActualites } from '../lib/veille.mjs';
-import { hierarchiserPresse, selectionnerPresseAccueil } from '../lib/hierarchiser-presse.mjs';
+import { hierarchiserPresse, selectionnerPresseAccueil, pertinentPourAccueilPresse } from '../lib/hierarchiser-presse.mjs';
 import { presenterTitrePresse, extraitPresseValide } from '../lib/presentation-presse.mjs';
 import { regrouperPresseAccueil, diversifierAffairesAccueil } from '../lib/regrouper-presse.mjs';
 import { rubrique } from '../lib/rubriques.mjs';
@@ -19,7 +19,7 @@ const fil = await lireActualites();
 const candidates = hierarchiserPresse((fil?.articles ?? []).filter(n=>n.rubrique === rubriqueSlug)).slice(debut);
 const regroupes = regrouperPresseAccueil(candidates);
 const nouvelles = accueil
-  ? diversifierAffairesAccueil(selectionnerPresseAccueil(regroupes, regroupes.length), limite)
+  ? diversifierAffairesAccueil(selectionnerPresseAccueil(regroupes.filter(pertinentPourAccueilPresse), regroupes.length), limite)
   : regroupes.slice(0, limite);
 const afficher = nouvelles.length > 0 || rubriqueSlug === 'cours-du-jour';
 const formatDate = new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'});
