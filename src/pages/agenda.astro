@@ -22,11 +22,11 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
   label:new Intl.DateTimeFormat('fr-FR',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(value+'-01T12:00:00Z'))
 }));
 ---
-<Base titre="Agenda des sessions criminelles" description="Dates de sessions publiées par les cours d’appel. Sources officielles identifiées, sans déduire les audiences individuelles ni les décisions." rubriqueActive="cours-du-jour">
+<Base titre="Agenda judiciaire : assises et cours criminelles" description="Sessions annoncées et audiences mentionnées dans les calendriers judiciaires. Dates, juridictions, état de vérification et coordonnées des cours d’appel." rubriqueActive="cours-du-jour">
   <header class="tete-agenda">
-    <p class="sur-titre">Les juridictions / Les sessions annoncées</p>
-    <h1>Agenda des <span>sessions criminelles</span></h1>
-    <p>Les périodes ci-dessous proviennent des intitulés de rôles publiés par les cours d’appel. Une période de session ne confirme ni la tenue d’un procès particulier ni l’accès du public à chaque audience.</p>
+    <p class="sur-titre">Agenda judiciaire / Assises et cours criminelles</p>
+    <h1>Agenda <span>judiciaire</span></h1>
+    <p>Retrouvez les périodes de session annoncées par les juridictions et les audiences figurant dans les calendriers consultés. Ces deux informations ne constituent pas une confirmation de tenue d’un procès précis.</p>
     <p>Plusieurs pages de publication des rôles sont en maintenance. Les liens ci-dessous donnent les coordonnées des cours d’appel pour vérifier les dates auprès du greffe.</p>
     <p class="liens-agenda"><a href="/assister/">Comment assister à un procès d’assises</a> · <a href="/dossiers/">Suivre les affaires du journal</a></p>
     <p id="alerte-actualite" class="alerte-actualite" data-date-generation={dateDuJour} data-date-verification={DATE_CONTROLE_AGENDA} hidden role="status"></p>
@@ -51,7 +51,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
     <p id="resultats-agenda" role="status" aria-live="polite">Affichage de toutes les périodes répertoriées.</p>
   </form>
   <section class="sessions" aria-labelledby="titre-sessions">
-    <div class="titre-liste"><h2 id="titre-sessions">Sessions non terminées</h2><span id="compteur-sessions">{dates.length} période{dates.length > 1 ? 's' : ''} répertoriée{dates.length > 1 ? 's' : ''}</span></div>
+    <div class="titre-liste"><h2 id="titre-sessions">Sessions annoncées</h2><span id="compteur-sessions">{dates.length} période{dates.length > 1 ? 's' : ''} répertoriée{dates.length > 1 ? 's' : ''}</span></div>
     {dates.length === 0 && <p class="agenda-vide">Aucune session future ou en cours ne figure dans notre sélection actuellement vérifiée. Consultez les rôles officiels pour les nouvelles dates.</p>}
     <ol>
       {dates.map(s=>(
@@ -69,7 +69,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
     </ol>
   </section>
   <section class="audiences-indicatives" aria-labelledby="titre-audiences-indicatives">
-    <div class="titre-liste"><h2 id="titre-audiences-indicatives">Audiences à reconfirmer</h2><span>Quimper et Rennes · Bretagne</span></div>
+    <div class="titre-liste"><h2 id="titre-audiences-indicatives">Audiences à vérifier</h2><span>Quimper et Rennes · Bretagne</span></div>
     <p>Ces dates et qualifications proviennent de calendriers publics de la cour d’appel de Rennes. Dernières mises à jour affichées : 8 juin 2026 pour le Finistère et 16 septembre 2026 pour l’Ille-et-Vilaine. Lors du contrôle du 7 novembre 2026, leurs pages directes renvoyaient une maintenance. <strong>Le maintien de ces audiences n’est donc pas reconfirmé.</strong> Avant tout déplacement, consulter le greffe. Les audiences devant la cour d’assises des mineurs sont exclues de cette sélection ; une audience évoquant des victimes mineures ne relève pas nécessairement de cette juridiction.</p>
     {audiences.length === 0 ? <p>Aucune date non échue ne subsiste dans cette sélection.</p> : (
       <ol>{audiences.map(a=>(
@@ -89,7 +89,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
   <aside class="precautions">
     <h2>Avant de se déplacer</h2>
     <p>Les rôles peuvent être modifiés, notamment à l’approche des audiences. Plusieurs documents d’une même cour peuvent présenter des périodes qui se chevauchent : ils ne désignent pas nécessairement des procès différents. Vérifiez directement auprès du greffe ou de la cour d’appel les dates, la juridiction compétente et les conditions d’accès. Certaines audiences, notamment celles concernant des mineurs, ne sont pas publiques.</p>
-    <a href="/veille-roles/">Voir les sources de l’agenda et les rôles à vérifier</a>
+    <a href="/veille-roles/">Consulter les rôles officiels et les vérifications</a>
   </aside>
 </Base>
 <script>
