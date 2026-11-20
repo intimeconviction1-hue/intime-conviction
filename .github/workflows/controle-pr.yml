@@ -1,0 +1,43 @@
+# Tests ciblés sans accès au dépôt privé et sans publication de site.
+name: Valider les correctifs éditoriaux
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/auditer-production.mjs'
+      - 'src/lib/article-visible.mjs'
+      - 'src/pages/index.astro'
+      - 'tests/auditer-production.test.mjs'
+      - 'tests/article-visible.test.mjs'
+      - '.github/workflows/controle-pr.yml'
+  push:
+    branches:
+      - 'amelioration/**'
+    paths:
+      - 'scripts/auditer-production.mjs'
+      - 'src/lib/article-visible.mjs'
+      - 'src/pages/index.astro'
+      - 'tests/auditer-production.test.mjs'
+      - 'tests/article-visible.test.mjs'
+      - '.github/workflows/controle-pr.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Vérifier les contrôles éditoriaux
+        shell: bash
+        run: |
+          set -euo pipefail
+          for fichier in tests/article-visible.test.mjs tests/auditer-production.test.mjs; do
+            if [[ -f "$fichier" ]]; then
+              node --test "$fichier"
+            fi
+          done
