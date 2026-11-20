@@ -93,7 +93,7 @@ try {
     assert.deepEqual(shares.map(x=>x.parameters?.method),['x','whatsapp'],name+': méthodes de partage mal étiquetées');
     assert.equal(moves.length,1,name+': passage archive vers actualité non mesuré');
     assert.equal(moves[0]?.parameters?.content_type,'archive_to_news',name+': type de passage incorrect');
-    assert(shares.every(x=>x.parameters?.item_id===new URL(ARTICLE).pathname),name+': identifiants de page incohérents');
+    assert(shares.every(x=>x.parameters?.item_id===new globalThis.URL(ARTICLE).pathname),name+': identifiants de page incohérents');
 
 
 
