@@ -1,5 +1,4 @@
 import croquisDigne from '../assets/assises-landru.webp';
-import croquisAudienceKaren from '../assets/croquis-audience-panoramique.webp';
 import croquisAudienceSarah from '../assets/croquis-audience-bandeau.webp';
 import croquisHeaulme from '../assets/croquis-manchette.webp';
 import photoTribunalParis from '../assets/tribunal-paris.webp';
@@ -68,10 +67,10 @@ export const photosArticles = {
   },
   '/karen-baldi-proces-chambery-protection-premeditation/11/2026/': {
     ...illustrationNeutre,
-    image: croquisAudienceKaren,
-    source: croquisAudienceKaren.src,
-    lienLicence: croquisAudienceKaren.src,
-    lieu: 'Illustration judiciaire créée pour le journal · Sans lien avec l’audience annoncée à Chambéry',
+    image: photoCode,
+    source: photoCode.src,
+    lienLicence: photoCode.src,
+    lieu: 'Code de procédure pénale · Illustration graphique sans lien documentaire avec le procès de Chambéry',
   },
   '/luca-toulouse-soiree-amis-premeditation-verdict/11/2026/': {
     ...illustrationNeutre,
