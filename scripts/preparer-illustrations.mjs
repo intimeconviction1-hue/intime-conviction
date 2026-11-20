@@ -55,5 +55,34 @@ if (existsSync(source)) {
     };
   }
 }
+// Réserver aussi les quelques photos choisies pour les cartes de presse.
+// Le reste de la photothèque demeure privé et ne passe jamais dans dist/.
+const selectionPresse = join(dossier, 'selection-presse.json');
+const visuelsPresse = [];
+if (existsSync(selectionPresse)) {
+  const { images = [] } = JSON.parse(await readFile(selectionPresse, 'utf8'));
+  const inventaire = JSON.parse(await readFile(join(dossier, 'inventaire.json'), 'utf8'));
+  const index = new Map(inventaire.images.filter(x => x.statut === 'unique').map(x => [x.image, x]));
+  const imagesRedaction = new Set(Object.values(resultat).map(x => basename(x.image.src)));
+  const dejaVues = new Set();
+  for (const fichier of images) {
+    if (typeof fichier !== 'string' || !/^[a-z0-9._-]+\\.webp$/.test(fichier) || basename(fichier) !== fichier)
+      throw new Error('Nom de visuel presse invalide : ' + fichier);
+    const details = index.get(fichier);
+    if (!details) throw new Error('Image presse absente du catalogue : ' + fichier);
+    if (imagesRedaction.has(fichier)) throw new Error('Photo presse déjà attribuée à la rédaction : ' + fichier);
+    if (dejaVues.has(fichier)) throw new Error('Photo presse répétée dans la sélection : ' + fichier);
+    dejaVues.add(fichier);
+    await copyFile(join(dossier, 'images', fichier), join(destination, fichier));
+    visuelsPresse.push({
+      image: {src:'/illustrations-articles/' + fichier, width:details.largeur_origine, height:details.hauteur_origine},
+      lieu:'Illustration judiciaire d’archives · Ne représente pas les faits ou l’audience rapportés',
+      auteur:'Photothèque Intime Conviction',
+      source:'/illustrations-articles/' + fichier
+    });
+  }
+}
+await writeFile(resolve('.cache/photos-presse.json'), JSON.stringify(visuelsPresse, null, 2) + '\\n');
+
 await writeFile(cache, JSON.stringify(resultat, null, 2) + '\n');
 console.log('Images retenues publiées : ' + Object.keys(resultat).length + ' ; autres images privées : non copiées.');
