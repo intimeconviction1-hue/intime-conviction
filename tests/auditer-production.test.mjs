@@ -11,7 +11,9 @@ test('compte les articles par date de Paris, sans compter les titres de presse',
   ],{jours:2,dateReference:reference});
   assert.equal(r.jours[0].nombre,2);
   assert.equal(r.jours[1].nombre,0);
-  assert.equal(r.jours[0].manque,3);
+  assert.equal(r.jours[0].manque,null);
+  assert.equal(r.jours[0].jourEnCours,true);
+  assert.equal(r.jours[1].manque,5);
 });
 test('écarte les contenus futurs ou en vérification',()=>{
   const r=bilanEditorial([
