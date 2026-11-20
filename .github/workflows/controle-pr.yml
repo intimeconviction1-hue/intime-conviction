@@ -6,6 +6,7 @@ on:
     paths:
       - 'scripts/auditer-production.mjs'
       - 'src/lib/article-visible.mjs'
+      - 'src/lib/articles.mjs'
       - 'src/lib/photos-articles.mjs'
       - 'src/pages/index.astro'
       - 'tests/auditer-production.test.mjs'
@@ -17,6 +18,7 @@ on:
     paths:
       - 'scripts/auditer-production.mjs'
       - 'src/lib/article-visible.mjs'
+      - 'src/lib/articles.mjs'
       - 'src/lib/photos-articles.mjs'
       - 'src/pages/index.astro'
       - 'tests/auditer-production.test.mjs'
