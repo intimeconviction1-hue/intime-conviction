@@ -85,7 +85,7 @@ const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCas
     <h1>{data.titre}</h1>
     <p class="meta">
       <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
-      {data.dateMiseAJour && <> · Mis à jour le <time datetime={data.dateMiseAJour.toISOString()}>{dateLongue(data.dateMiseAJour)}</time></>}
+      {/* Les corrections sont tracées dans dateModified des données structurées, sans second horodatage dans la signature éditoriale. */}
       {auteurIdentifie && <> · {auteurIdentifie}</>}
       · {minutesDeLecture(data.mots)} min de lecture
     </p>
