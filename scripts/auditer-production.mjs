@@ -43,7 +43,8 @@ export function bilanEditorial(articles, { jours = 7, dateReference = new Date()
   return {
     objectifQuotidien:5,
     jours:[...parJour].map(([date,publications])=>({
-      date, nombre:publications.length, manque:Math.max(0,5-publications.length)
+      date, nombre:publications.length, jourEnCours:date===borne,
+      manque:date===borne ? null : Math.max(0,5-publications.length)
     })),
     anomalies,
     note:'Comptage basé sur la date déclarée des articles signés par la rédaction. Ne prouve pas la date effective de mise en ligne ni l’originalité du texte. Les actualisations d’un fichier existant ne deviennent pas de nouveaux articles.'
