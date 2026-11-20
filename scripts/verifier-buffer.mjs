@@ -24,6 +24,7 @@ for (const org of orgs) {
   channels.push(...(data.channels||[]));
 }
 console.log('Organisations Buffer trouvées : '+orgs.length);
+console.log('Canaux Facebook accessibles : '+JSON.stringify(channels.filter(x=>x.service==='facebook').map(({id,name,displayName})=>({id,name,displayName}))));
 console.log('Canaux X/Twitter trouvés : '+channels.filter(x=>x.service==='twitter').length);
 const selected=channels.find(x=>x.id===expectedId);
 if (!selected) throw new Error('Le canal indiqué dans GitHub ne correspond à aucun canal Buffer : vérifier son identifiant API.');
