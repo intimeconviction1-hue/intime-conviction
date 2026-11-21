@@ -36,6 +36,7 @@ const reseaux = {
 const navigation = [
   { titre: 'Actualité', href: '/rubrique/cours-du-jour/#articles-redaction', liens: [
     {titre:'Chroniques d’audience',href:'/rubrique/la-cour-se-leve/'},
+    {titre:'Revue de presse',href:'/revue-de-presse/'},
   ] },
   { titre: 'Agenda', href: '/agenda/', liens: [
     {titre:'Les sessions',href:'/agenda/#sessions-annoncees'},
@@ -52,7 +53,9 @@ const navigation = [
     {titre:'Les jurés et les acteurs du procès',href:'/rubrique/le-banc-des-jures/'},
     {titre:'Jurisprudence',href:'/jurisprudence/'},
   ] },
-  { titre: 'Archives', href: '/archives/', liens: [] },
+  { titre: 'Archives', href: '/archives/', liens: [
+    {titre:'Archives de presse',href:'/archives/presse/'},
+  ] },
 ];
 const piedNavigation = [
   { titre: 'Le journal', liens: [
@@ -195,15 +198,6 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
               </li>
             </ul>
           </nav>
-          <details class="navigation-presse-menu">
-            <summary class="navigation-presse">Revue de presse <span aria-hidden="true">⌄</span></summary>
-            <nav class="acces-directs" aria-label="Revue de presse">
-              <ul>
-                <li><a href="/revue-de-presse/" aria-current={courant("/revue-de-presse/")}>Derniers articles de presse</a></li>
-                <li><a href="/archives/presse/" aria-current={courant("/archives/presse/")}>Archives de presse</a></li>
-              </ul>
-            </nav>
-          </details>
         </div>
       </div>
     </header>
