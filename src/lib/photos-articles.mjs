@@ -59,6 +59,13 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/rue-des-rosiers-extradition-appel-renvoi/11/2026/': {
+    ...illustrationNeutre,
+    image: photoCode,
+    lieu: 'Code de procédure pénale · Illustration générée',
+    source: photoCode.src,
+    lienLicence: photoCode.src,
+  },
   '/sainte-rose-minorite-quinze-ans/11/2026/': {
     image: photoCodePenal1810,
     lieu: "Page de titre du Code pénal de 1810, édition de Bruxelles · Illustration d’archives. Les dispositions en vigueur sont citées dans l’article.",
