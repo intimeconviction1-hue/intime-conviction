@@ -193,6 +193,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
                       const href = `/rubrique/${r.slug}/`;
                       return <li><a href={href} aria-current={courant(href)}>{r.libelle}</a></li>;
                     })}
+                    <li><a href="/culture/videos/" aria-current={courant('/culture/videos/')}>À voir et à écouter</a></li>
                   </ul>
                 </details>
               </li>
