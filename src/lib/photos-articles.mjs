@@ -58,6 +58,7 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/chahinez-daoud-boutaa-perigueux-discernement/11/2026/': illustrationNeutre,
   '/evry-meurtre-sabine-appel-au-17/11/2026/': { ...illustrationAssises, lieu: 'Photo d’illustration · Salle du palais Thiac à Bordeaux, hors procès d’Évry' },
   '/sarah-sadani-temoin-rescapee-fusillade-proces-aix/11/2026/': {
     ...illustrationNeutre,
