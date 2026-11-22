@@ -36,13 +36,13 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
 .marqueur-date span{font:850 .59rem/1.5 var(--sans);letter-spacing:.055em;color:var(--encre-2)}
 .etiquettes-repere{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem}
 .etiquettes-repere span{display:inline-block;font:850 .61rem/1.3 var(--sans);letter-spacing:.045em;text-transform:uppercase;background:#e6e7e4;color:#151718;padding:.4rem .55rem}
-.etiquettes-repere span:first-child{background:#ffe100}
+.etiquettes-repere span:first-child{background:var(--action);color:var(--sur-action)}
 .corps-repere h3{font:900 clamp(1.3rem,2.35vw,1.85rem)/1.15 var(--sans);letter-spacing:-.045em;margin:.85rem 0 .6rem}
 .corps-repere>p{font:500 .95rem/1.6 var(--sans);max-width:75ch;margin:0 0 1rem}
 .corps-repere .juridiction{font:800 .72rem/1.45 var(--sans);letter-spacing:.015em;color:var(--encre-2);text-transform:uppercase}
 .source-repere{display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem 1rem;border-top:1px solid var(--filet);padding-top:.75rem;color:var(--encre-2);font:750 .66rem/1.5 var(--sans)}
 .source-repere a{font-weight:900;color:var(--encre);text-decoration:underline;text-underline-offset:3px}
-.source-repere a:hover{background:#ffe100;color:#151718}
+.source-repere a:hover{background:var(--action);color:var(--sur-action)}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 .frise-evenements li[hidden]{display:none}
 @media(max-width:47.99rem){.frise-evenements li{grid-template-columns:1fr;gap:.9rem}.marqueur-date{border-left-width:4px}.marqueur-date time{font-size:1.25rem}.source-repere{flex-direction:column}}

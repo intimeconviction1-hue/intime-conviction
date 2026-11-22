@@ -118,12 +118,12 @@ const suite = page.data.filter(article => article.data !== chroniqueVedette && !
   .ressources-rubrique a:hover,.ressources-rubrique a:focus-visible{border-color:var(--rouge);color:var(--rouge)}
   .ressources-rubrique a span{margin-left:.6rem}
 
-  .lecture-jures{background:#17191a;color:#fff;padding:clamp(1.4rem,4vw,3rem);margin:2rem 0 3rem;border-left:8px solid #ffe100}
-  .lecture-jures-surtitre{font:800 .7rem/1.4 var(--sans);letter-spacing:.08em;color:#ffe100;margin:0 0 1rem}
+  .lecture-jures{background:#17191a;color:#fff;padding:clamp(1.4rem,4vw,3rem);margin:2rem 0 3rem;border-left:8px solid var(--action)}
+  .lecture-jures-surtitre{font:800 .7rem/1.4 var(--sans);letter-spacing:.08em;color:var(--pied-survol);margin:0 0 1rem}
   .lecture-jures h2{font:800 clamp(1.8rem,3.1vw,3.2rem)/1.1 var(--serif);letter-spacing:-.025em;max-width:24ch;margin:0 0 1rem}
-  .lecture-jures h2 a:hover,.lecture-jures h2 a:focus-visible{color:#ffe100}
+  .lecture-jures h2 a:hover,.lecture-jures h2 a:focus-visible{color:var(--pied-survol)}
   .lecture-jures>p:not(.lecture-jures-surtitre){font:450 1.02rem/1.65 var(--sans);max-width:70ch;color:#e0e0df}
-  .lecture-jures-action{display:inline-flex;align-items:center;min-height:44px;padding-bottom:.4rem;margin-top:.4rem;border-bottom:3px solid #ffe100;font:800 .75rem/1.3 var(--sans);text-transform:uppercase;letter-spacing:.05em}
+  .lecture-jures-action{display:inline-flex;align-items:center;min-height:44px;padding-bottom:.4rem;margin-top:.4rem;border-bottom:3px solid var(--action);font:800 .75rem/1.3 var(--sans);text-transform:uppercase;letter-spacing:.05em}
   .ouverture-illustree{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);align-items:center;gap:clamp(1rem,3vw,2.5rem)}
   @media(max-width:52rem){.ouverture-illustree{grid-template-columns:minmax(0,1fr)}}
   .chronique-vedette{background:#f3ede5;border-top:3px solid #84323d;margin:0 0 2rem}

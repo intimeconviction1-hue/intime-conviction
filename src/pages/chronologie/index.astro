@@ -88,25 +88,25 @@ const date = s => new Intl.DateTimeFormat('fr-FR', {
   filtrer();
 </script>
 <style>
-.chronologie-une{background:#151718;color:#fff;padding:clamp(1.5rem,5vw,5rem);margin-top:1.5rem;border-top:9px solid #ffe100}
-.marque-une{font:900 .66rem/1.45 var(--sans);color:#ffe100;letter-spacing:.1em;margin:0 0 3rem}
+.chronologie-une{background:#151718;color:#fff;padding:clamp(1.5rem,5vw,5rem);margin-top:1.5rem;border-top:9px solid var(--action)}
+.marque-une{font:900 .66rem/1.45 var(--sans);color:var(--pied-survol);letter-spacing:.1em;margin:0 0 3rem}
 .chronologie-une h1{font:900 clamp(2.6rem,7.4vw,7.2rem)/.95 var(--sans);letter-spacing:-.08em;margin:0 0 2rem}
-.chronologie-une h1 span{color:#ffe100}
+.chronologie-une h1 span{color:var(--pied-survol)}
 .chronologie-une>p:not(.marque-une){font:600 clamp(.98rem,1.5vw,1.25rem)/1.6 var(--sans);max-width:69ch;color:#e5e6e2}
 .totaux{display:flex;gap:1.5rem 3rem;flex-wrap:wrap;border-top:1px solid #676967;margin-top:2rem;padding-top:1.2rem}
 .totaux span{display:flex;align-items:baseline;gap:.6rem;font:900 .7rem/1.5 var(--sans);text-transform:uppercase}
-.totaux strong{font:900 2.2rem/1 var(--sans);color:#ffe100}
+.totaux strong{font:900 2.2rem/1 var(--sans);color:var(--pied-survol)}
 .verification{font:650 .8rem/1.6 var(--sans);color:var(--encre-2);margin:2rem 0}
 .entete-frise{display:grid;grid-template-columns:1.25fr 1fr;gap:3rem;align-items:end;border-top:7px solid #151718;padding:1.5rem 0 2rem}
 .entete-frise div>span{font:900 .69rem/1.45 var(--sans);letter-spacing:.08em}
 .entete-frise h2{font:900 clamp(2.3rem,5.5vw,5rem)/.96 var(--sans);letter-spacing:-.065em;margin:.8rem 0 0}
-.entete-frise mark{background:#ffe100;color:#151718}
+.entete-frise mark{background:var(--action);color:var(--sur-action)}
 .entete-frise>p{font:550 .93rem/1.6 var(--sans);max-width:55ch;margin:0}
 .filtres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:.7rem;padding:1.4rem;background:#f0f0eb;color:#151718;border:2px solid #151718;align-items:end}
 .filtres label{font:900 .65rem/1.4 var(--sans);display:flex;flex-direction:column;gap:.45rem}
 .filtres select{appearance:auto;width:100%;min-height:48px;background:#fff;color:#151718;border:2px solid #151718;border-radius:0;font:650 .8rem/1.45 var(--sans);padding:.6rem}
 .filtres button{min-height:48px;background:#151718;color:#fff;border:2px solid #151718;font:900 .68rem/1.45 var(--sans);cursor:pointer}
-.filtres button:hover{background:#ffe100;color:#151718}
+.filtres button:hover{background:var(--action);color:var(--sur-action)}
 .resultat-filtre{font:900 .7rem/1.5 var(--sans);text-transform:uppercase;letter-spacing:.04em;margin:1.5rem 0}
 .annee-judiciaire{margin:0 0 3rem}
 .annee-judiciaire[hidden],#aucun-evenement[hidden]{display:none}
@@ -116,4 +116,4 @@ const date = s => new Intl.DateTimeFormat('fr-FR', {
 #aucun-evenement{padding:2rem;font:700 1rem/1.55 var(--sans);background:#f2f2ef}
 @media(max-width:63.99rem){.filtres{grid-template-columns:repeat(2,minmax(0,1fr))}.filtres button{grid-column:2}}
 @media(max-width:47.99rem){.chronologie-une{padding:2rem 1.2rem}.chronologie-une h1{font-size:clamp(2.4rem,9vw,4.5rem)}.marque-une{margin-bottom:1.7rem}.entete-frise{grid-template-columns:1fr}.entete-frise{gap:1.2rem}.filtres{grid-template-columns:1fr;padding:1rem}.filtres button{grid-column:auto}.millesime span{font-size:3.4rem}.totaux{gap:1.5rem}}
-.carto-liens{background:#151718;color:#fff;margin:3rem 0;padding:2rem;display:grid;grid-template-columns:1fr 1.4fr;gap:1rem 2rem;align-items:end;border-left:7px solid #ffe100}.carto-liens strong{font:900 1.8rem/1.1 var(--sans);letter-spacing:-.04em}.carto-liens p{font:500 .9rem/1.55 var(--sans)}.carto-liens a{background:#ffe100;color:#151718;grid-column:1/-1;padding:1rem;font:900 .72rem/1.45 var(--sans);display:flex;justify-content:space-between}.carto-liens a:hover{background:#fff;color:#151718}@media(max-width:48rem){.carto-liens{grid-template-columns:1fr}}</style>
+.carto-liens{background:#151718;color:#fff;margin:3rem 0;padding:2rem;display:grid;grid-template-columns:1fr 1.4fr;gap:1rem 2rem;align-items:end;border-left:7px solid var(--action)}.carto-liens strong{font:900 1.8rem/1.1 var(--sans);letter-spacing:-.04em}.carto-liens p{font:500 .9rem/1.55 var(--sans)}.carto-liens a{background:var(--action);color:var(--sur-action);grid-column:1/-1;padding:1rem;font:900 .72rem/1.45 var(--sans);display:flex;justify-content:space-between}.carto-liens a:hover{background:#fff;color:#151718}@media(max-width:48rem){.carto-liens{grid-template-columns:1fr}}</style>

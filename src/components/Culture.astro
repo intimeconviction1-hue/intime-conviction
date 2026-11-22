@@ -25,11 +25,11 @@ const { titre = 'Livres, films et histoire' } = Astro.props;
 ul{gap:0;grid-template-columns:repeat(3,minmax(0,1fr));border:2px solid #111314;background:#111314}
 li,li:first-child{background:#17191a;color:#fff;border:0;border-right:2px solid #333;padding:2rem;min-height:380px}
 li:last-child{border-right:0}
-li::before{background:#ffe100;display:inline-flex;align-self:start;color:#111314;padding:.3rem .56rem;font:900 1rem/1.2 var(--sans);margin-bottom:3rem}
-li .meta{font-weight:850;letter-spacing:.07em;text-transform:uppercase;color:#ffe100}
+li::before{background:var(--action);display:inline-flex;align-self:start;color:var(--sur-action);padding:.3rem .56rem;font:900 1rem/1.2 var(--sans);margin-bottom:3rem}
+li .meta{font-weight:850;letter-spacing:.07em;text-transform:uppercase;color:var(--pied-survol)}
 li>p:not(.meta){color:#d0d0cc;font:450 .93rem/1.65 var(--sans)}
 h3,li:first-child h3{font:900 clamp(1.7rem,2.7vw,2.65rem)/1.08 var(--sans);letter-spacing:-.055em;text-transform:uppercase}
-li a:hover{color:#ffe100}
+li a:hover{color:var(--pied-survol)}
 .ouvrir{color:#fff;font:850 .7rem/1.45 var(--sans);text-transform:uppercase;letter-spacing:.03em;border-color:#555}
 @media(max-width:63.99rem){li,li:first-child{padding:1.3rem;min-height:360px}}
 @media(max-width:47.99rem){ul{grid-template-columns:1fr}li,li:first-child{min-height:0;padding:1.5rem;border-right:0;border-bottom:2px solid #515151}li::before{margin-bottom:1.5rem}li:last-child{border-bottom:0}}

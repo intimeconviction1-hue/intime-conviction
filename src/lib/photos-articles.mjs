@@ -61,9 +61,9 @@ const photoAssisesParis = {
 export const photosArticles = {
   '/sainte-rose-minorite-quinze-ans/11/2026/': {
     image: photoCodePenal1810,
-    lieu: "Première page du Code pénal de 1810 · Illustration d’archives. Les dispositions en vigueur sont citées dans l’article.",
-    auteur: "Imprimerie nationale · Fondation Napoléon via Wikimedia Commons",
-    source: "https://commons.wikimedia.org/wiki/File:Code_p%C3%A9nal_1810.jpg",
+    lieu: "Page de titre du Code pénal de 1810, édition de Bruxelles · Illustration d’archives. Les dispositions en vigueur sont citées dans l’article.",
+    auteur: "Gambier, Bruxelles, 1810 · numérisation Google via Wikimedia Commons",
+    source: "https://commons.wikimedia.org/wiki/File:Code_p%C3%A9nal_(Gambier,_1810).pdf",
     licence: 'Domaine public',
     lienLicence: 'https://creativecommons.org/publicdomain/mark/1.0/',
   },

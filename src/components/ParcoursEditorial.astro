@@ -76,14 +76,14 @@ const parcours = [
 /* Section broadcast : typographie en capitales, cellules franches et reperes jaunes. */
 .parcours-editoriaux{border-top:8px solid #111314;padding-top:1.3rem}
 .parcours-editoriaux-intro{grid-template-columns:1.6fr .7fr;gap:2rem}
-.sur-titre{display:inline-block;background:#ffe100;color:#111314;padding:.4rem .6rem;font-size:.7rem;font-weight:900;letter-spacing:.1em}
+.sur-titre{display:inline-block;background:var(--action);color:var(--sur-action);padding:.4rem .6rem;font-size:.7rem;font-weight:900;letter-spacing:.1em}
 .parcours-editoriaux h2{font:900 clamp(2.4rem,4.65vw,5.2rem)/.99 var(--sans);letter-spacing:-.075em;text-transform:uppercase}
-.parcours-editoriaux h2 span{color:#111314;background:#ffe100;padding:.02em .12em .07em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.parcours-editoriaux h2 span{color:var(--sur-action);background:var(--action);padding:.02em .12em .07em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 .parcours-editoriaux-intro>p{font:700 1rem/1.6 var(--sans);text-transform:uppercase;color:#454747;max-width:29ch}
 .parcours-editoriaux-grille{background:#111314;border:2px solid #111314;gap:2px}
 .parcours-editorial{background:#efefeb;padding:2rem;min-height:380px}
 .parcours-editorial:nth-child(2){background:#111314;color:#fff}
-.numero{background:#ffe100;display:inline-flex;align-self:start;color:#111314;padding:.36rem .6rem;font:900 .77rem/1.3 var(--sans);letter-spacing:0}
+.numero{background:var(--action);display:inline-flex;align-self:start;color:var(--sur-action);padding:.36rem .6rem;font:900 .77rem/1.3 var(--sans);letter-spacing:0}
 .parcours-editorial h3{font:900 clamp(1.9rem,2.45vw,2.9rem)/1.02 var(--sans);text-transform:uppercase;letter-spacing:-.055em;margin:2rem 0 1.3rem}
 .accroche{font:750 1.04rem/1.45 var(--sans)}
 .detail{font:500 .88rem/1.6 var(--sans);color:#434646}
@@ -91,7 +91,7 @@ const parcours = [
 .parcours-editorial nav{border-top:1px solid #9e9e98}
 .parcours-editorial nav a{font:850 .66rem/1.45 var(--sans);text-transform:uppercase;letter-spacing:.015em;border-color:#b5b7b0}
 .parcours-editorial:nth-child(2) nav a{border-color:#565656}
-.parcours-editorial nav a:hover{background:#ffe100;color:#111314;text-decoration:none}
+.parcours-editorial nav a:hover{background:var(--action);color:var(--sur-action);text-decoration:none}
 .parcours-editorial nav a span{color:inherit}
 .note{font:650 .66rem/1.55 var(--sans);text-transform:uppercase}
 @media(max-width:63.99rem){.parcours-editorial{padding:1.5rem;min-height:0}}

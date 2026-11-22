@@ -87,17 +87,17 @@ import Base from '../../../layouts/Base.astro';
  if(champ.value.trim().length>=2)rechercher();
 </script>
 <style>
-.recherche-presse-tete{margin:1.5rem 0 0;background:#151718;color:#fff;padding:clamp(1.5rem,5vw,4rem);border-top:8px solid #ffe100}
-.recherche-presse-tete>p:first-child{font:900 .67rem/1.4 var(--sans);letter-spacing:.09em;color:#ffe100;margin:0 0 2rem}
+.recherche-presse-tete{margin:1.5rem 0 0;background:#151718;color:#fff;padding:clamp(1.5rem,5vw,4rem);border-top:8px solid var(--action)}
+.recherche-presse-tete>p:first-child{font:900 .67rem/1.4 var(--sans);letter-spacing:.09em;color:var(--pied-survol);margin:0 0 2rem}
 .recherche-presse-tete h1{font:900 clamp(2.8rem,7vw,7rem)/.96 var(--sans);letter-spacing:-.075em;margin:0}
-.recherche-presse-tete h1 span{color:#ffe100}
+.recherche-presse-tete h1 span{color:var(--pied-survol)}
 .recherche-presse-tete .intro{font:650 clamp(.98rem,1.5vw,1.25rem)/1.6 var(--sans);max-width:68ch;margin:1.5rem 0}
 .recherche-presse-tete>a{font:900 .67rem/1.5 var(--sans);border-top:1px solid #777;display:inline-block;padding-top:1rem}
-.recherche-presse-tete>a:hover{color:#ffe100}
+.recherche-presse-tete>a:hover{color:var(--pied-survol)}
 .mise-en-garde{display:grid;grid-template-columns:1fr 2fr;gap:2rem;padding:2rem 0;border-bottom:3px solid #151718}
 .mise-en-garde strong{font:900 1.15rem/1.3 var(--sans)}
 .mise-en-garde p{font:500 .9rem/1.6 var(--sans);margin:0}
-.filtres-presse{background:#ffe100;display:grid;grid-template-columns:2fr 1fr auto;gap:.8rem;align-items:end;padding:1.5rem;color:#151718;margin-top:2rem}
+.filtres-presse{background:var(--action);display:grid;grid-template-columns:2fr 1fr auto;gap:.8rem;align-items:end;padding:1.5rem;color:var(--sur-action);margin-top:2rem}
 .filtres-presse label{font:900 .66rem/1.4 var(--sans);display:flex;flex-direction:column;gap:.5rem}
 .filtres-presse :is(input,select){min-height:52px;width:100%;border:2px solid #151718;color:#151718;background:#fff;padding:.7rem;border-radius:0;font:650 .82rem/1.5 var(--sans)}
 .filtres-presse button{min-height:52px;padding:0 1.2rem;border:2px solid #151718;background:#151718;color:#fff;font:900 .69rem/1.3 var(--sans);cursor:pointer}
@@ -110,14 +110,14 @@ import Base from '../../../layouts/Base.astro';
 .resultats-presse li{border-bottom:1px solid var(--filet);padding:1.4rem 0}
 .resultats-presse .meta{font:900 .65rem/1.5 var(--sans);letter-spacing:.045em;text-transform:uppercase}
 .resultats-presse h2{font:850 clamp(1.15rem,1.95vw,1.7rem)/1.23 var(--sans);letter-spacing:-.03em;margin:.6rem 0 0}
-.resultats-presse a:hover{background:#ffe100;color:#151718}
-.plus{display:block;margin:2rem auto;background:#ffe100;border:2px solid #151718;color:#151718;padding:1.2rem;font:900 .75rem/1.4 var(--sans);cursor:pointer}
+.resultats-presse a:hover{background:var(--action);color:var(--sur-action)}
+.plus{display:block;margin:2rem auto;background:var(--action);border:2px solid #151718;color:var(--sur-action);padding:1.2rem;font:900 .75rem/1.4 var(--sans);cursor:pointer}
 .plus:hover{background:#151718;color:#fff}
 .lien-double{display:grid;grid-template-columns:1.5fr 1fr;gap:2rem;align-items:end;margin:3rem 0;background:#151718;color:white;padding:clamp(1.5rem,3vw,3rem)}
-.lien-double span{font:900 .7rem/1.4 var(--sans);color:#ffe100}
+.lien-double span{font:900 .7rem/1.4 var(--sans);color:var(--pied-survol)}
 .lien-double h2{font:900 clamp(1.5rem,3vw,2.5rem)/1.1 var(--sans);letter-spacing:-.05em;margin:.7rem 0}
 .lien-double p{font:500 .84rem/1.6 var(--sans)}
-.lien-double a{background:#ffe100;color:#151718;padding:1.2rem;display:flex;gap:1rem;justify-content:space-between;font:900 .68rem/1.4 var(--sans)}
+.lien-double a{background:var(--action);color:var(--sur-action);padding:1.2rem;display:flex;gap:1rem;justify-content:space-between;font:900 .68rem/1.4 var(--sans)}
 .lien-double a:hover{background:#fff;color:#151718}
 @media(max-width:48rem){.recherche-presse-tete{padding:2rem 1.2rem}.mise-en-garde,.filtres-presse,.resultats-presse,.lien-double{grid-template-columns:1fr}.mise-en-garde{gap:.7rem}.filtres-presse{padding:1rem}}
 </style>

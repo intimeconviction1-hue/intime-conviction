@@ -152,7 +152,7 @@ button,input,select { font:inherit; }button { cursor:pointer; min-height:44px; b
     --papier:#f4f4f1;--papier-2:#e5e5df;--encre:#131516;
     --encre-2:#4e5151;--filet:#c7c9c4;--filet-fort:#171819;
     --rouge:#131516;--pied:#111214;--pied-texte:#f8f8f4;
-    --pied-2:#b4b7b5;--pied-survol:#ffe100;color-scheme:light;
+    --pied-2:#b4b7b5;--pied-survol:#f0d5d4;color-scheme:light;
   }
 }
 /* Rien en italique, meme dans les anciens articles. */
@@ -306,3 +306,7 @@ a.pied-nom{padding-block:1px}
 .outils-lecture>:is(.partager-x,.partager-whatsapp){padding-block:3px}
 .explication>a,.resultats-fonds>a{padding-block:3px}
 .etapes-fiche li a{padding-block:4px}
+/* Listes de liens des anciens articles WordPress : une ligne = un lien,
+   20 px de haut. Même rembourrage que les autres liens isolés. */
+.corps li>a:only-child{padding-block:3px}
+.passerelle-archives a,.sous-titre>a{padding-block:3px}

@@ -86,12 +86,12 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
 .archives-tete{background:#151718;color:#fff;border:0;margin:1.5rem 0 0;padding:clamp(2rem,5vw,5rem)}
 .archives-tete .etiquette{margin-bottom:1.8rem}
 .archives-tete h1{font:900 clamp(3rem,8vw,8rem)/.91 var(--sans);letter-spacing:-.085em}
-.archives-tete h1 span{color:#ffe100}
+.archives-tete h1 span{color:var(--pied-survol)}
 .archives-tete .sous-titre{font:700 clamp(1rem,1.5vw,1.3rem)/1.5 var(--sans);text-transform:uppercase;max-width:38ch;margin:1.6rem 0 0;color:#eee}
 .fonds-legende{display:grid;grid-template-columns:1fr 1fr;border:3px solid #151718;gap:0;margin-bottom:3rem}
 .fonds-legende section{padding:clamp(1.3rem,3vw,2.8rem);min-width:0;display:flex;flex-direction:column}
 .fonds-original{background:#f0f0eb;color:#151718;border-right:3px solid #151718}
-.fonds-presse{background:#ffe100;color:#151718}
+.fonds-presse{background:var(--action);color:var(--sur-action)}
 .fonds-chiffre{font:900 clamp(2.5rem,5vw,5rem)/1 var(--sans);letter-spacing:-.08em}
 .fonds-legende h2{font:900 clamp(1.2rem,2vw,1.8rem)/1.1 var(--sans);letter-spacing:-.04em;margin:.8rem 0}
 .fonds-legende p{font:500 .91rem/1.65 var(--sans);max-width:49ch;margin:0 0 1.2rem}
@@ -109,12 +109,12 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
 .annee-acces a strong{font:850 clamp(.95rem,1.4vw,1.25rem)/1.25 var(--sans);letter-spacing:-.025em}
 .lien-original{background:#fff;color:#151718}
 .lien-original:hover{background:#e6e7e3;color:#151718}
-.lien-presse{background:#ffe100;color:#151718}
-.lien-presse:hover{background:#ffeb65;color:#151718}
+.lien-presse{background:var(--action);color:#151718}
+.lien-presse:hover{background:#e5dfd5;color:#151718}
 .annee-acces .fleche{position:absolute;right:1rem;top:1rem;font:900 1.3rem/1 var(--sans)}
 .aucun-original{align-self:center;margin:0;padding:1rem 1.2rem;font:650 .79rem/1.5 var(--sans);color:#545852}
 @media(max-width:47.99rem){.archives-tete{padding:2rem 1.2rem}.archives-tete h1{font-size:clamp(2.7rem,11vw,4.5rem)}.fonds-legende{grid-template-columns:1fr}.fonds-original{border-right:0;border-bottom:3px solid #151718}.chronologie-tete{align-items:start;flex-direction:column}.annees>li{grid-template-columns:1fr;gap:.7rem}.annee-acces{grid-template-columns:1fr}.annee-acces a{min-height:90px}.annee{font-size:3.5rem}.aucun-original{align-self:start;padding:.4rem 0}}
-.acces-dossiers{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#151718;color:#fff;padding:1.5rem 2rem;margin:1.5rem 0 3rem}.acces-dossiers div{display:flex;flex-direction:column;gap:.6rem}.acces-dossiers div span{font:850 .7rem/1.4 var(--sans);letter-spacing:.08em;color:#ffe100}.acces-dossiers div strong{font:900 clamp(1rem,1.8vw,1.6rem)/1.2 var(--sans);letter-spacing:-.04em}.acces-dossiers a{flex-shrink:0;display:flex;gap:1rem;justify-content:space-between;align-items:center;background:#ffe100;color:#151718;font:900 .7rem/1.4 var(--sans);padding:1.2rem}.acces-dossiers a:hover{background:white;color:#151718}@media(max-width:48rem){.acces-dossiers{flex-direction:column;align-items:stretch;padding:1.3rem}.acces-dossiers a{flex-shrink:1}}
+.acces-dossiers{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#151718;color:#fff;padding:1.5rem 2rem;margin:1.5rem 0 3rem}.acces-dossiers div{display:flex;flex-direction:column;gap:.6rem}.acces-dossiers div span{font:850 .7rem/1.4 var(--sans);letter-spacing:.08em;color:var(--pied-survol)}.acces-dossiers div strong{font:900 clamp(1rem,1.8vw,1.6rem)/1.2 var(--sans);letter-spacing:-.04em}.acces-dossiers a{flex-shrink:0;display:flex;gap:1rem;justify-content:space-between;align-items:center;background:var(--action);color:var(--sur-action);font:900 .7rem/1.4 var(--sans);padding:1.2rem}.acces-dossiers a:hover{background:white;color:#151718}@media(max-width:48rem){.acces-dossiers{flex-direction:column;align-items:stretch;padding:1.3rem}.acces-dossiers a{flex-shrink:1}}
 
 .archives-tete{background:#f0eee9;color:#202529;border:0;border-top:3px solid #a12c39;padding:clamp(1.8rem,4vw,3.5rem)}
 .archives-tete .etiquette{background:transparent;color:#a12c39;padding:0}

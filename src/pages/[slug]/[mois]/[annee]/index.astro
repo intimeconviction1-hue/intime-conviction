@@ -7,6 +7,7 @@ import Base from '../../../../layouts/Base.astro';
 import { photosArticles } from '../../../../lib/photos-articles.mjs';
 import ListeArticles from '../../../../components/ListeArticles.astro';
 import { rubrique } from '../../../../lib/rubriques.mjs';
+import { corpsAffiche } from '../../../../lib/corps-article.mjs';
 import { provenanceVerifiee } from '../../../../lib/provenance-archives.mjs';
 import { formatArchiveVerifie } from '../../../../lib/formats-archives.mjs';
 import { tousLesArticles, dateLongue, minutesDeLecture } from '../../../../lib/articles.mjs';
@@ -108,7 +109,7 @@ const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCas
         <figcaption>{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a></figcaption>
       </figure>
     )}
-    <div class="corps" set:html={data.html} />
+    <div class="corps" set:html={corpsAffiche(data.html, data.date)} />
     {archiveHistorique && data.verificationEnCours !== true && (
       <aside class="passerelle-archives" aria-label="Actualité du journal">
         <span>POURSUIVRE LA LECTURE</span>
@@ -147,8 +148,8 @@ function progression(){const r=article.getBoundingClientRect();barre.style.width
 
 .fil-ariane{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;max-width:var(--mesure);margin:2rem auto 0;font:850 .63rem/1.5 var(--sans);letter-spacing:.045em;text-transform:uppercase}
 .fil-ariane span[aria-hidden]{color:#787b77}
-.fil-ariane a{border-bottom:2px solid #ffe100;padding-bottom:.15rem}
-.fil-ariane a:hover{background:#ffe100;color:#151515}
+.fil-ariane a{border-bottom:2px solid var(--action);padding-bottom:.15rem}
+.fil-ariane a:hover{background:var(--action);color:var(--sur-action)}
 .article{margin-top:2rem}
 .outils-lecture{border-bottom:1px solid var(--filet);padding-bottom:1rem}
 @media(max-width:47.99rem){.fil-ariane{margin-top:1.5rem;font-size:.6rem;gap:.5rem}.article{margin-top:1.3rem}}
