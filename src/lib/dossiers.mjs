@@ -97,6 +97,26 @@ export function dossiersPourArticle(article) {
   return dossiersPourRecherche(article.titre);
 }
 
+// Liens examinés : comparaisons avec une autre affaire, faits distincts à Mazan,
+// ou dossiers pénaux distincts concernant la même personne. Les liens restent
+// dans le fonds de veille d'origine ; ils ne sont exclus QUE du dossier Mazan.
+const REFERENCES_HORS_DOSSIER = Object.freeze({
+  'viols-de-mazan': new Set([
+    "https://rmc.bfmtv.com/actualites/police-justice/faits-divers/vouloir-en-decoudre-ce-n-est-pas-vouloir-tuer-au-proces-du-meurtre-d-aramburu-le-priol-et-bouvier-refutent-la-premeditation_AV-202609250240.html",
+    "https://www.lemonde.fr/societe/article/2026/06/13/a-lyon-au-proces-d-un-alter-ego-de-dominique-pelicot-la-mecanique-perverse-de-la-domination-masculine_6701426_3224.html",
+    "https://www.20minutes.fr/justice/4224088-20260518-air-proces-pelicot-laetitia-r-violee-torturee-prostituee-refuse-huis-clos-grand-dam-defense",
+    "https://www.laprovence.com/article/faits-divers-justice/4014453826746614/meurtre-de-jesse-vivaldi-a-mazan-son-ami-d-enfance-condamne-a-20-ans-de-reclusion-criminelle-par-la-cour-d-assises",
+    "https://www.midilibre.fr/2025/12/28/retrospective-2025-cedric-jubillar-condamne-proces-en-appel-des-viols-de-mazan-les-trois-actualites-incontournables-du-mois-doctobre-13121378.php",
+    "https://www.letemps.ch/societe/cedric-jubillar-condamne-le-mystere-qui-aura-prive-le-feminicide-de-son-proces-pelicot",
+    "https://www.lepoint.fr/societe/les-rates-affligeants-de-la-justice-face-a-dominique-pelicot-03-05-2025-2588760_23.php",
+    "https://www.bfmtv.com/police-justice/une-traque-morbide-pelicot-le-scouarnec-ces-auteurs-d-abus-sexuels-collectionneurs-des-preuves-de-leurs-agressions_AN-202504250045.html",
+    "https://www.midilibre.fr/2025/04/17/cold-case-dominique-pelicot-veut-faire-exhumer-le-corps-dune-jeune-femme-quil-nie-avoir-tuee-en-1991-12642405.php",
+    "https://www.midilibre.fr/2025/01/06/la-mort-atroce-damandine-dans-lherault-laffaire-jubillar-et-les-viols-de-mazan-rejuges-a-nimes-tous-les-proces-de-2025-12423294.php",
+    "https://www.bfmtv.com/police-justice/proces/cedric-jubillar-nicolas-sarkozy-viols-de-mazan-les-grands-proces-a-venir-en-2025_AN-202501010269.html",
+    "https://actu.fr/societe/un-deuxieme-viol-comme-gisele-pelicot-ces-victimes-accusees-d-etre-coupables-au-proces_61683030.html"
+])
+});
+
 export function referencesPourDossier(dossier, references = []) {
   const regle = REGLES[dossier?.slug];
   if (!regle || !Array.isArray(references)) return [];
@@ -104,6 +124,7 @@ export function referencesPourDossier(dossier, references = []) {
   for (const r of references) {
     if (!r || typeof r.titre !== 'string' || !regle.test(normaliserTitre(r.titre))) continue;
     if (typeof r.lien !== 'string' || !/^https?:\/\//i.test(r.lien)) continue;
+    if (REFERENCES_HORS_DOSSIER[dossier.slug]?.has(r.lien)) continue;
     if (typeof r.source !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(r.dateAlerte ?? '')) continue;
     // Ne jamais recopier les corps, identifiants ou métadonnées Gmail.
     const reference = { titre: r.titre, source: r.source, lien: r.lien, dateAlerte: r.dateAlerte };
