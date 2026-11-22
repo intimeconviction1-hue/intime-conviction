@@ -93,17 +93,6 @@ const articlesUne = selectionUne.map(({data}) => ({
       {articlesUne.length > 0 && (
         <section class="une-editoriale" aria-labelledby="une-editoriale-titre">
           <h2 id="une-editoriale-titre">À la une</h2>
-          <div class="commandes-une" hidden aria-label="Navigation de la une">
-            <div class="une-pagination" role="group" aria-label="Choisir un article">
-              {articlesUne.map((_, i) => <button type="button" data-aller={i} aria-label={`Afficher l’article ${i + 1}`} aria-pressed={i === 0 ? 'true' : 'false'}><span class="sr-only">Article {i + 1}</span></button>)}
-            </div>
-            <div class="une-commandes-droite">
-              <span class="une-compteur" data-compteur aria-live="polite" aria-atomic="true"></span>
-              <button class="une-fleche" type="button" data-precedent aria-label="Article précédent">←</button>
-              <button class="une-fleche" type="button" data-suivant aria-label="Article suivant">→</button>
-              <button class="une-pause" type="button" data-pause aria-pressed="false">Pause</button>
-            </div>
-          </div>
           <div class="une-editoriale-grille">
             {articlesUne.map(({data, photo, repere}, i) => (
               <article class="article-redaction-une">
@@ -309,46 +298,33 @@ const articlesUne = selectionUne.map(({data}) => ({
 <script>
   const carrousel = document.querySelector('.une-editoriale');
   const cartes = [...(carrousel?.querySelectorAll<HTMLElement>('.article-redaction-une') ?? [])];
-  const commandes = carrousel?.querySelector<HTMLElement>('.commandes-une');
-  const pause = commandes?.querySelector<HTMLButtonElement>('[data-pause]');
-  const compteur = commandes?.querySelector<HTMLElement>('[data-compteur]');
-  if (carrousel && commandes && pause && cartes.length > 1) {
+  if (carrousel && cartes.length > 1) {
     const mouvement = window.matchMedia('(prefers-reduced-motion: reduce)');
     let index = 0;
-    let enPause = mouvement.matches;
     let survol = false;
+    let focus = false;
     let timer: number | undefined;
     const afficher = (position: number) => {
       index = (position + cartes.length) % cartes.length;
       cartes.forEach((carte, i) => { carte.hidden = i !== index; });
-      if (compteur) compteur.textContent = `${index + 1} / ${cartes.length}`;
-      commandes.querySelectorAll<HTMLButtonElement>('[data-aller]').forEach((bouton, i) =>
-        bouton.setAttribute('aria-pressed', String(i === index)));
     };
     const regler = () => {
       window.clearInterval(timer);
-      pause.textContent = enPause ? 'Lecture' : 'Pause';
-      pause.setAttribute('aria-pressed', String(enPause));
-      if (!enPause && !survol && !document.hidden) timer = window.setInterval(() => afficher(index + 1), 8000);
+      if (!mouvement.matches && !survol && !focus && !document.hidden)
+        timer = window.setInterval(() => afficher(index + 1), 8000);
     };
-    const parcourir = (pas: number) => {
-      enPause = true;
-      afficher(index + pas);
-      regler();
-    };
-    commandes.querySelectorAll<HTMLButtonElement>('[data-aller]').forEach(bouton => {
-      bouton.addEventListener('click', () => { enPause = true; afficher(Number(bouton.dataset.aller)); regler(); });
-    });
-    commandes.querySelector('[data-precedent]')?.addEventListener('click', () => parcourir(-1));
-    commandes.querySelector('[data-suivant]')?.addEventListener('click', () => parcourir(1));
-    pause.addEventListener('click', () => { enPause = !enPause; regler(); });
-    carrousel.querySelector('.une-editoriale-grille')?.addEventListener('focusin', () => { enPause = true; regler(); });
     carrousel.addEventListener('mouseenter', () => { survol = true; regler(); });
     carrousel.addEventListener('mouseleave', () => { survol = false; regler(); });
-    mouvement.addEventListener('change', () => { if (mouvement.matches) { enPause = true; regler(); } });
+    carrousel.addEventListener('focusin', () => { focus = true; regler(); });
+    carrousel.addEventListener('focusout', event => {
+      if (!(event.relatedTarget instanceof Node) || !carrousel.contains(event.relatedTarget)) {
+        focus = false;
+        regler();
+      }
+    });
+    mouvement.addEventListener('change', regler);
     document.addEventListener('visibilitychange', regler);
     carrousel.classList.add('une-carrousel');
-    commandes.hidden = false;
     afficher(0);
     regler();
   }
