@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import { presseSansRedite } from '../lib/doublons-une.mjs';
-import { lienDirectPresse } from '../lib/fil-actualites.mjs';
 import { lireActualites } from '../lib/veille.mjs';
 import { hierarchiserPresse, selectionnerPresseAccueil, pertinentPourAccueilPresse } from '../lib/hierarchiser-presse.mjs';
 import { presenterTitrePresse, extraitPresseValide } from '../lib/presentation-presse.mjs';
@@ -105,7 +104,6 @@ const visuelsAccueil = accueil ? selectionPresse(nouvelles) : [];
     {accueil && <a href="/revue-de-presse/">Toute la revue de presse →</a>}
     {lienRubrique && <a href={`/rubrique/${r.slug}/`}>Toute la rubrique <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg></a>}
   </div>
-  <p class="provenance">{accueil ? "Les derniers titres repérés sur les audiences, les verdicts et les procès criminels." : "Sélection de titres publiés par les médias cités. Les liens conduisent vers les publications des médias cités, directement ou par un lien de référencement."}</p>
   {nouvelles.length ? <ul class="nouvelles">
     {nouvelles.map((n, i) => <li>
       {accueil && (() => { const photo = visuelsAccueil[i]; return <figure class="visuel-presse"><a href={n.lien} target="_blank" rel="noopener noreferrer" aria-label={`Lire l’article de ${n.source} : ${n.titre}`}><img src={photo.image.src} width={photo.image.width} height={photo.image.height} alt={photo.lieu} loading="lazy" decoding="async" /></a><figcaption>Illustration d’archives <details class="credits-presse"><summary>Crédits photo</summary><span>{photo.lieu} · <a href={photo.source} target="_blank" rel="noopener noreferrer">{photo.auteur}</a></span></details></figcaption></figure>; })()}
@@ -114,8 +112,6 @@ const visuelsAccueil = accueil ? selectionPresse(nouvelles) : [];
       {(() => { const presentation = presenterTitrePresse(n.titre, n.source); return <>
         <h3><a href={n.lien} target="_blank" rel="noopener noreferrer" title={presentation.original}>{presentation.titre}<span class="sr-only"> — Lire chez {n.source} (nouvel onglet)</span></a></h3>
         {extraitPresseValide(n) && <p class="chapeau-presse">{extraitPresseValide(n)}</p>}
-        {presentation.abrege && <p class="precision-titre">Titre abrégé dans le relevé · <a href={n.lien} target="_blank" rel="noopener noreferrer">Lire le titre complet chez {n.source}</a></p>}
-        {!lienDirectPresse(n.lien) && <p class="precision-titre">Référence repérée dans la presse · <a href={n.lien} target="_blank" rel="noopener noreferrer">Consulter la source</a></p>}
       </>; })()}
     </li>)}
   </ul> : <p>Aucun article à afficher dans cette sélection. <a class="secours" href="/archives/presse/">Consulter les archives de presse.</a></p>}

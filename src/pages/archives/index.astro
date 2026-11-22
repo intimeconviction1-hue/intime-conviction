@@ -37,13 +37,11 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
   <div class="fonds-legende" aria-label="Comprendre les deux collections">
     <section class="fonds-original">
       <span class="fonds-chiffre">{totalArticles}</span>
-      <h2>FONDS HISTORIQUE</h2>
-      <p>Parcourez les articles conservés dans les archives d’Intime Conviction.</p>
+      <h2>ARTICLES DU JOURNAL</h2>
     </section>
     <section class="fonds-presse">
       <span class="fonds-chiffre">{totalPresse}</span>
       <h2>REVUE DE PRESSE</h2>
-      <p>Retrouvez les articles consacrés aux procès criminels dans la presse française.</p>
       <a href="/archives/presse/">PARCOURIR TOUTE LA REVUE DE PRESSE <span aria-hidden="true">→</span></a>
     </section>
   </div>
@@ -61,13 +59,11 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
           <div class="annee-acces">
             {documents > 0 ? (
               <a class="lien-original" href={`/archives/${an}/`}>
-                <span>DOCUMENTS HISTORIQUES</span>
-                <strong>{documents.toLocaleString('fr-FR')} document{documents > 1 ? 's' : ''}</strong>
+                <span>ARTICLES DU JOURNAL</span>
+                <strong>{documents.toLocaleString('fr-FR')} article{documents > 1 ? 's' : ''}</strong>
                 <span aria-hidden="true" class="fleche">→</span>
               </a>
-            ) : (
-              <p class="aucun-original">Aucun document historique conservé pour cette année</p>
-            )}
+            ) : null}
             {references > 0 && (
               <a class="lien-presse" href={`/archives/presse/${an}/`}>
                 <span>REVUE DE PRESSE</span>

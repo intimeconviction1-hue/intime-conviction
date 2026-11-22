@@ -19,7 +19,7 @@ const total=index.length.toLocaleString('fr-FR');
 <Base noindex titre="Rechercher" description="Retrouvez les dossiers judiciaires, les articles du journal et les références de presse à partir d’une seule recherche.">
   <header class="titre-page recherche-intro">
     <h1>Rechercher une affaire</h1>
-    <p class="sous-titre">{total} articles. Une recherche par nom, ville ou sujet dans les dossiers judiciaires, les articles du journal et la revue de presse.</p>
+    <p class="sous-titre">Recherchez un nom, une ville ou un sujet.</p>
   </header>
   <form id="recherche" class="recherche-form" role="search">
     <label>RECHERCHE
@@ -32,7 +32,7 @@ const total=index.length.toLocaleString('fr-FR');
         <label>RUBRIQUE DU JOURNAL
           <select id="rubrique" name="rubrique"><option value="">Toutes les rubriques</option>{RUBRIQUES.map(r=><option value={r.slug}>{r.libelle}</option>)}</select>
         </label>
-        <label>ANNÉE DE PUBLICATION OU D’ALERTE
+        <label>ANNÉE
           <select id="annee" name="annee"><option value="">Toutes les années</option>{annees.map(a=><option value={a}>{a}</option>)}</select>
         </label>
       </div>
