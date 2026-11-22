@@ -116,4 +116,32 @@ const date = s => new Intl.DateTimeFormat('fr-FR', {
 #aucun-evenement{padding:2rem;font:700 1rem/1.55 var(--sans);background:#f2f2ef}
 @media(max-width:63.99rem){.filtres{grid-template-columns:repeat(2,minmax(0,1fr))}.filtres button{grid-column:2}}
 @media(max-width:47.99rem){.chronologie-une{padding:2rem 1.2rem}.chronologie-une h1{font-size:clamp(2.4rem,9vw,4.5rem)}.marque-une{margin-bottom:1.7rem}.entete-frise{grid-template-columns:1fr}.entete-frise{gap:1.2rem}.filtres{grid-template-columns:1fr;padding:1rem}.filtres button{grid-column:auto}.millesime span{font-size:3.4rem}.totaux{gap:1.5rem}}
-.carto-liens{background:#151718;color:#fff;margin:3rem 0;padding:2rem;display:grid;grid-template-columns:1fr 1.4fr;gap:1rem 2rem;align-items:end;border-left:7px solid var(--action)}.carto-liens strong{font:900 1.8rem/1.1 var(--sans);letter-spacing:-.04em}.carto-liens p{font:500 .9rem/1.55 var(--sans)}.carto-liens a{background:var(--action);color:var(--sur-action);grid-column:1/-1;padding:1rem;font:900 .72rem/1.45 var(--sans);display:flex;justify-content:space-between}.carto-liens a:hover{background:#fff;color:#151718}@media(max-width:48rem){.carto-liens{grid-template-columns:1fr}}</style>
+.carto-liens{background:#151718;color:#fff;margin:3rem 0;padding:2rem;display:grid;grid-template-columns:1fr 1.4fr;gap:1rem 2rem;align-items:end;border-left:7px solid var(--action)}.carto-liens strong{font:900 1.8rem/1.1 var(--sans);letter-spacing:-.04em}.carto-liens p{font:500 .9rem/1.55 var(--sans)}.carto-liens a{background:var(--action);color:var(--sur-action);grid-column:1/-1;padding:1rem;font:900 .72rem/1.45 var(--sans);display:flex;justify-content:space-between}.carto-liens a:hover{background:#fff;color:#151718}@media(max-width:48rem){.carto-liens{grid-template-columns:1fr}}
+/* Même vocabulaire visuel que Dossiers et Carte des affaires. */
+.chronologie-une{background:#f5f2ed;color:#202427;border-top:3px solid #a12c39;padding:clamp(1.5rem,4vw,3.4rem)}
+.marque-une{color:#96313b;font:700 .77rem/1.5 var(--sans);letter-spacing:.025em;margin-bottom:1.35rem}
+.chronologie-une h1{font:650 clamp(2.65rem,6vw,5.2rem)/1.05 var(--serif);letter-spacing:-.045em;margin-bottom:1.4rem}
+.chronologie-une h1 span{color:#96313b}
+.chronologie-une>p:not(.marque-une){color:#3b4145;font:450 clamp(1rem,1.6vw,1.18rem)/1.65 var(--sans)}
+.totaux{border-top:1px solid #c8c3bd}
+.totaux span{font:550 .83rem/1.5 var(--sans);text-transform:none}
+.totaux strong{color:#96313b;font:650 2rem/1 var(--sans)}
+.entete-frise{border-top:2px solid #a12c39}
+.entete-frise div>span{color:#96313b;font:650 .75rem/1.5 var(--sans);letter-spacing:.015em}
+.entete-frise h2{font:650 clamp(1.8rem,3.5vw,3rem)/1.14 var(--serif);letter-spacing:-.035em}
+.entete-frise mark{background:transparent;color:#96313b}
+.filtres{background:#f3f0eb;border:1px solid #d7d1cb;border-radius:4px}
+.filtres label{font:650 .75rem/1.5 var(--sans)}
+.filtres select{border:1px solid #b9b2aa;border-radius:3px;font:550 .85rem/1.45 var(--sans)}
+.filtres button{background:#a12c39;border:1px solid #a12c39;border-radius:3px;color:#fff;font:650 .76rem/1.4 var(--sans)}
+.filtres button:hover{background:#202427;color:#fff}
+.resultat-filtre{color:#96313b;font:650 .8rem/1.5 var(--sans);text-transform:none;letter-spacing:0}
+.millesime{border-bottom:2px solid #a12c39}
+.millesime span{font:650 clamp(2.5rem,5vw,4rem)/1 var(--serif);letter-spacing:-.04em}
+.millesime small{font:550 .75rem/1.4 var(--sans)}
+.carto-liens{background:#f3f0eb;color:#202427;border-left:3px solid #a12c39}
+.carto-liens strong{font:650 1.8rem/1.15 var(--serif);letter-spacing:-.025em}
+.carto-liens a{background:#a12c39;color:#fff;font:650 .8rem/1.45 var(--sans);border-radius:3px}
+.carto-liens a:hover{background:#202427;color:#fff}
+
+</style>
