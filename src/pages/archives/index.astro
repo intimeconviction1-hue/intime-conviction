@@ -44,11 +44,11 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
       <span class="fonds-chiffre">{totalPresse}</span>
       <h2>REVUE DE PRESSE</h2>
       <p>Retrouvez les articles consacrés aux procès criminels dans la presse française.</p>
-      <a href="/archives/presse/">PARCOURIR TOUTE LA REVUE DE PRESSE <span aria-hidden="true">↗</span></a>
+      <a href="/archives/presse/">PARCOURIR TOUTE LA REVUE DE PRESSE <span aria-hidden="true">→</span></a>
     </section>
   </div>
 
-  <aside class="acces-dossiers" aria-label="Dossiers par affaire"><div><span>LES AFFAIRES / PAR THÈME</span><strong>Consulter les dossiers judiciaires</strong></div><a href="/dossiers/">OUVRIR LES DOSSIERS JUDICIAIRES <span aria-hidden="true">↗</span></a></aside>
+  <aside class="acces-dossiers" aria-label="Dossiers par affaire"><div><span>LES AFFAIRES / PAR THÈME</span><strong>Consulter les dossiers judiciaires</strong></div><a href="/dossiers/">OUVRIR LES DOSSIERS JUDICIAIRES <span aria-hidden="true">→</span></a></aside>
   <section class="chronologie" aria-labelledby="titre-chronologie">
     <div class="chronologie-tete">
       <h2 id="titre-chronologie">Archives par année</h2>
@@ -63,7 +63,7 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
               <a class="lien-original" href={`/archives/${an}/`}>
                 <span>DOCUMENTS HISTORIQUES</span>
                 <strong>{documents.toLocaleString('fr-FR')} document{documents > 1 ? 's' : ''}</strong>
-                <span aria-hidden="true" class="fleche">↗</span>
+                <span aria-hidden="true" class="fleche">→</span>
               </a>
             ) : (
               <p class="aucun-original">Aucun document historique conservé pour cette année</p>
@@ -72,7 +72,7 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
               <a class="lien-presse" href={`/archives/presse/${an}/`}>
                 <span>REVUE DE PRESSE</span>
                 <strong>{references.toLocaleString('fr-FR')} références</strong>
-                <span aria-hidden="true" class="fleche">↗</span>
+                <span aria-hidden="true" class="fleche">→</span>
               </a>
             )}
           </div>

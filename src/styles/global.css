@@ -278,3 +278,11 @@ button:hover{background:#dfc500;color:#131516}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
+
+/* Étiquette de rubrique : son encre noire était calée sur l'ancien jaune ;
+   sur le bordeaux actuel elle tombait à 2,55:1. Blanc : 7,6:1. */
+.etiquette,.etiquette a{color:var(--sur-action,#fff)}
+
+/* Titre d'article : en capitales à 82 px il occupait un écran entier et se
+   lisait mal. Casse normale, taille de titre de presse. */
+.article h1{text-transform:none;letter-spacing:-.02em;font-size:clamp(2rem,4.6vw + 1rem,3.6rem);line-height:1.08;text-wrap:balance}

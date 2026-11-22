@@ -16,7 +16,7 @@ const annees = [...new Set([
 ])].sort((a,b)=>b.localeCompare(a));
 const total=index.length.toLocaleString('fr-FR');
 ---
-<Base noindex titre="Rechercher sur Intime Conviction" description="Retrouvez les dossiers judiciaires, les articles du journal et les références de presse à partir d’une seule recherche.">
+<Base noindex titre="Rechercher" description="Retrouvez les dossiers judiciaires, les articles du journal et les références de presse à partir d’une seule recherche.">
   <header class="titre-page recherche-intro">
     <h1>Rechercher une affaire</h1>
     <p class="sous-titre">{total} articles. Une recherche par nom, ville ou sujet dans les dossiers judiciaires, les articles du journal et la revue de presse.</p>
@@ -25,7 +25,7 @@ const total=index.length.toLocaleString('fr-FR');
     <label>RECHERCHE
       <input type="search" name="q" id="requete" placeholder="Ex. Hélène Pastor, Vannes…" autocomplete="off" enterkeyhint="search" aria-controls="resultats" />
     </label>
-    <button type="submit">CHERCHER <span aria-hidden="true">↗</span></button>
+    <button type="submit">CHERCHER <span aria-hidden="true">→</span></button>
     <details class="filtres-recherche">
       <summary>Filtrer par rubrique ou année</summary>
       <div>
@@ -53,15 +53,14 @@ const total=index.length.toLocaleString('fr-FR');
     <h2 id="titre-presse">Revue de presse</h2>
     <p id="compteur-presse" class="meta" role="status"></p>
     <ul id="apercu-presse"></ul>
-    <a id="suite-presse" href="/archives/presse/rechercher/">Voir tous les résultats presse ↗</a>
+    <a id="suite-presse" href="/archives/presse/rechercher/">Voir tous les résultats presse →</a>
   </section>
   <noscript>Cette recherche nécessite JavaScript. Vous pouvez consulter <a href="/archives/">les archives par année</a>.</noscript>
-  <script id="index-recherche" type="application/json" set:html={JSON.stringify(index).replaceAll('<','\\u003c')} />
 </Base>
 <script>
 import { preparerIndex, chercherArticles, chargerIndexPresse, filtrerPresse } from '../lib/recherche.mjs';
 import { dossiersPourRecherche } from '../lib/dossiers.mjs';
-const index = preparerIndex(JSON.parse(document.querySelector('#index-recherche').textContent));
+let index = [];
 const form = document.querySelector('#recherche');
 const q = document.querySelector('#requete');
 const rubrique = document.querySelector('#rubrique');
@@ -118,7 +117,17 @@ async function chercherPresse(options) {
   }
 }
 let matches = [], limite = 30, delai, approximatif = false, demandeJournal = 0;
-let indexCorps;
+let indexCorps, indexTitres;
+function chargerIndex() {
+  indexTitres ??= fetch('/index-recherche.json').then(async reponse => {
+    if (!reponse.ok) throw new Error('Index indisponible');
+    return preparerIndex(await reponse.json());
+  }).catch(erreur => {
+    indexTitres = undefined;
+    throw erreur;
+  });
+  return indexTitres;
+}
 function chargerCorps() {
   indexCorps ??= fetch('/index-corps-recherche.json').then(async reponse => {
     if (!reponse.ok) throw new Error('Index du texte indisponible');
@@ -178,6 +187,13 @@ async function rechercher() {
   for (const dossier of correspondances) {
     ajouterLien(listeDossiers, dossier.titre, '/dossiers/' + dossier.slug + '/');
   }
+  try {
+    index = await chargerIndex();
+  } catch {
+    if (demande === demandeJournal) compteur.textContent = 'La recherche est momentanément indisponible. Vous pouvez consulter les archives par année.';
+    return;
+  }
+  if (demande !== demandeJournal) return;
   afficherResultats(chercherArticles(index, options));
   chercherPresse(options);
   if (!options.q) return;

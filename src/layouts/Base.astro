@@ -238,7 +238,9 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
     const resumeAcces = acces?.querySelector('summary');
     const compact = window.matchMedia('(max-width: 63.99rem)');
 
-    if (bande && bouton && rubriques && acces && resumeAcces) {
+    // Le menu « accès directs » est facultatif : il a été retiré, et l’exiger ici
+    // désactivait tout le script — le bouton Menu ne marchait plus sur téléphone.
+    if (bande && bouton && rubriques) {
       bande.classList.add('navigation-interactive');
 
       function fermerSousMenus() {
@@ -256,18 +258,18 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
         if (bouton.getAttribute('aria-expanded') === 'true') {
           fermerRubriques();
         } else {
-          acces.open = false;
+          if (acces) acces.open = false;
           if (presse) presse.open = false;
           bouton.setAttribute('aria-expanded', 'true');
         }
       });
 
-      resumeAcces.addEventListener('click', () => {
-        if (!acces.open) { fermerRubriques(); if (presse) presse.open = false; }
+      resumeAcces?.addEventListener('click', () => {
+        if (acces && !acces.open) { fermerRubriques(); if (presse) presse.open = false; }
       });
 
       presse?.querySelector('summary')?.addEventListener('click', () => {
-        if (!presse.open) { fermerRubriques(); acces.open = false; }
+        if (!presse.open) { fermerRubriques(); if (acces) acces.open = false; }
       });
 
       bande.addEventListener('keydown', event => {
@@ -279,9 +281,9 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
         } else if (presse?.open) {
           presse.open = false;
           presse.querySelector('summary')?.focus();
-        } else if (acces.open) {
-          acces.open = false;
-          resumeAcces.focus();
+        } else if (acces?.open) {
+          if (acces) acces.open = false;
+          resumeAcces?.focus();
         } else if (bouton.getAttribute('aria-expanded') === 'true') {
           fermerRubriques();
           bouton.focus();
@@ -296,7 +298,7 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       bande.addEventListener('focusout', event => {
         if (event.relatedTarget instanceof Node && !bande.contains(event.relatedTarget)) {
           fermerRubriques();
-          acces.open = false;
+          if (acces) acces.open = false;
           if (presse) presse.open = false;
         }
       });
@@ -304,18 +306,18 @@ const courant = href => Astro.url.pathname === href ? 'page' : undefined;
       document.addEventListener('pointerdown', event => {
         if (!(event.target instanceof Node)) return;
         if (!rubriques.contains(event.target) && !bouton.contains(event.target)) fermerRubriques();
-        if (!acces.contains(event.target)) acces.open = false;
+        if (acces && !acces.contains(event.target)) acces.open = false;
         if (presse && !presse.contains(event.target)) presse.open = false;
       });
 
       bande.addEventListener('click', event => {
         if (event.target instanceof Element && event.target.closest('a[href]')) {
           // Les liens d’ancrage gardent la même page ouverte.
-          if (acces.contains(event.target)) resumeAcces.focus();
+          if (acces?.contains(event.target)) resumeAcces?.focus();
           else if (compact.matches) bouton.focus();
           else event.target.closest('details')?.querySelector('summary')?.focus();
           fermerRubriques();
-          acces.open = false;
+          if (acces) acces.open = false;
         }
       });
 

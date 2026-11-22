@@ -102,7 +102,7 @@ const visuelsAccueil = accueil ? selectionPresse(nouvelles) : [];
 {afficher && <section id="actualites" class:list={["actualites", { compacte, "presse-accueil": accueil }]} aria-labelledby="titre-actualites">
   <div class="titre-section">
     <h2 id="titre-actualites">{titreAffiche}</h2>
-    {accueil && <a href="/revue-de-presse/">Toute la revue de presse ↗</a>}
+    {accueil && <a href="/revue-de-presse/">Toute la revue de presse →</a>}
     {lienRubrique && <a href={`/rubrique/${r.slug}/`}>Toute la rubrique <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg></a>}
   </div>
   <p class="provenance">{accueil ? "Les derniers titres repérés sur les audiences, les verdicts et les procès criminels." : "Sélection de titres publiés par les médias cités. Les liens conduisent vers les publications des médias cités, directement ou par un lien de référencement."}</p>

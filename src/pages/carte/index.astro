@@ -34,7 +34,7 @@ const cartouche="CARTE ÉDITORIALE / FRANCE MÉTROPOLITAINE";
   <section class="methode-carte" aria-label="Comprendre la carte">
     <h2>Ce que montre la carte</h2>
     <div><p>Les points indiquent les <strong>villes des juridictions</strong> associées aux étapes judiciaires déjà documentées, pas le lieu où les faits se seraient déroulés. Le dessin est une <strong>carte schématique</strong> de la France métropolitaine. Les coordonnées sont celles des centres-villes, pas celles des salles d’audience. Les adresses institutionnelles et les liens officiels figurent sous la carte.</p>
-    <p><a href="/annuaire/#repertoire">Voir la liste des juridictions par département ↗</a></p></div>
+    <p><a href="/annuaire/#repertoire">Voir la liste des juridictions par département →</a></p></div>
   </section>
 
   <section class="carte-section" aria-labelledby="titre-carte">
@@ -112,13 +112,13 @@ const cartouche="CARTE ÉDITORIALE / FRANCE MÉTROPOLITAINE";
           )}
           <div class="liens-fiche">
             <a href={p.urlInstitutionnelle} target="_blank" rel="noopener noreferrer">FICHE DE LA JURIDICTION <span aria-hidden="true">↗</span><span class="sr-only"> (site externe)</span></a>
-            <a href={'/dossiers/'+p.dossier+'/'}>CONSULTER LE DOSSIER <span aria-hidden="true">↗</span></a>
+            <a href={'/dossiers/'+p.dossier+'/'}>CONSULTER LE DOSSIER <span aria-hidden="true">→</span></a>
           </div>
         </article>
       ))}
     </div>
   </section>
-  <aside class="fin-carto"><div><span>NE PAS CONFONDRE</span><strong>LE LIEU DU PROCÈS N’EST PAS LE LIEU DES FAITS.</strong><p>La géographie judiciaire suit des règles de compétence et des choix de procédure. Notre carte ne permet pas de tirer de conclusion sur l’origine géographique d’une affaire ou l’identité de personnes concernées.</p></div><a href="/chronologie/">RETROUVER LES ÉTAPES DES PROCÈS <span aria-hidden="true">↗</span></a></aside>
+  <aside class="fin-carto"><div><span>NE PAS CONFONDRE</span><strong>LE LIEU DU PROCÈS N’EST PAS LE LIEU DES FAITS.</strong><p>La géographie judiciaire suit des règles de compétence et des choix de procédure. Notre carte ne permet pas de tirer de conclusion sur l’origine géographique d’une affaire ou l’identité de personnes concernées.</p></div><a href="/chronologie/">RETROUVER LES ÉTAPES DES PROCÈS <span aria-hidden="true">→</span></a></aside>
 </Base>
 <script>
   const boutons=[...document.querySelectorAll<HTMLButtonElement>('.filtres-lieux button')];

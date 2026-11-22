@@ -16,13 +16,13 @@ import Base from '../../../layouts/Base.astro';
  <label>ANNÉE DE L’ALERTE
   <select id="filtre-annee" name="annee"><option value="">Toutes les années</option></select>
  </label>
- <button type="submit">CHERCHER <span aria-hidden="true">↗</span></button>
+ <button type="submit">CHERCHER <span aria-hidden="true">→</span></button>
 </form>
 <div class="ligne-resultats"><p id="nombre" role="status" aria-live="polite">Saisissez au moins deux caractères pour lancer une recherche dans les titres.</p><button type="button" id="effacer" hidden>EFFACER</button></div>
 <ol id="resultats-presse" class="resultats-presse"></ol>
 <button id="charger-plus" type="button" hidden class="plus">AFFICHER 40 RÉFÉRENCES SUPPLÉMENTAIRES ↓</button>
 <noscript>Cette recherche nécessite JavaScript. Les titres restent consultables <a href="/archives/presse/">dans les archives de presse par année</a>.</noscript>
-<aside class="lien-double"><div><span>DEUX FONDS. DEUX VOIX.</span><h2>LES ARTICLES DU JOURNAL<br />SONT AUSSI CONSULTABLES.</h2><p>La revue de presse renvoie à des médias extérieurs. Les articles d’Intime Conviction sont répertoriés séparément et possèdent leur propre moteur de recherche.</p></div><a href="/recherche/">RECHERCHER DANS LES ARTICLES DU JOURNAL <span aria-hidden="true">↗</span></a></aside>
+<aside class="lien-double"><div><span>DEUX FONDS. DEUX VOIX.</span><h2>LES ARTICLES DU JOURNAL<br />SONT AUSSI CONSULTABLES.</h2><p>La revue de presse renvoie à des médias extérieurs. Les articles d’Intime Conviction sont répertoriés séparément et possèdent leur propre moteur de recherche.</p></div><a href="/recherche/">RECHERCHER DANS LES ARTICLES DU JOURNAL <span aria-hidden="true">→</span></a></aside>
 </Base>
 <script>
  import {chargerIndexPresse, filtrerPresse} from '../../../lib/recherche.mjs';

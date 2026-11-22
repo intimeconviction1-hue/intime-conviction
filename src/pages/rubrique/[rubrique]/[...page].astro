@@ -81,7 +81,7 @@ const suite = page.data.filter(article => article.data !== chroniqueVedette && !
   {page.currentPage === 1 && liensRubrique.length > 0 && (
     <nav class="ressources-rubrique" aria-label={`Accès thématiques : ${r.libelle}`}>
       <h2>À découvrir dans cette rubrique</h2>
-      <ul>{liensRubrique.map(l => <li><a href={l.url}>{l.titre} <span aria-hidden="true">↗</span></a></li>)}</ul>
+      <ul>{liensRubrique.map(l => <li><a href={l.url}>{l.titre} <span aria-hidden="true">→</span></a></li>)}</ul>
     </nav>
   )}
   {page.currentPage === 1 && r.slug === 'le-banc-des-jures' && (
@@ -89,7 +89,7 @@ const suite = page.data.filter(article => article.data !== chroniqueVedette && !
       <p class="lecture-jures-surtitre">LES JURÉS / À LIRE</p>
       <h2 id="lecture-jures-titre"><a href="/jures-en-mai/05/2022/">Jurés d’assises : de la liste électorale à la salle des délibérations</a></h2>
       <p>De la liste électorale au verdict : comment un citoyen peut être appelé à juger un crime. Une enquête de synthèse nourrie des tirages municipaux et des règles officielles.</p>
-      <a class="lecture-jures-action" href="/jures-en-mai/05/2022/">Lire le récit <span aria-hidden="true">↗</span></a>
+      <a class="lecture-jures-action" href="/jures-en-mai/05/2022/">Lire le récit <span aria-hidden="true">→</span></a>
     </aside>
   )}
   {estActualite && (
@@ -98,7 +98,7 @@ const suite = page.data.filter(article => article.data !== chroniqueVedette && !
       <ListeArticles articles={aLaUne} rubriqueVisible={false} niveau={3} />
     </section>
   )}
-  {estActualite && <p id="actualites"><a href="/revue-de-presse/">Consulter la revue de presse ↗</a></p>}
+  {estActualite && <p id="actualites"><a href="/revue-de-presse/">Consulter la revue de presse →</a></p>}
   {page.currentPage === 1 && r.slug === 'le-greffe' && <Culture titre="À lire, à voir" />}
   {suite.length > 0 && <>
     <div class="titre-section"><h2>{estActualite ? 'Tous les autres articles du journal' : 'Les articles d’Intime Conviction'}</h2></div>

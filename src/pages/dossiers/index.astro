@@ -44,16 +44,16 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
   )}
   <aside class="lien-chronologie">
     <div><span>Repères judiciaires documentés</span><strong>Les étapes des procédures</strong><p>Ouvertures d’audience, verdicts et appels : retrouvez les dates et les décisions documentées pour chaque affaire.</p></div>
-    <a href="/chronologie/">Consulter la chronologie judiciaire <span aria-hidden="true">↗</span></a>
+    <a href="/chronologie/">Consulter la chronologie judiciaire <span aria-hidden="true">→</span></a>
   </aside>
-  <p class="lien-carte-index"><a href="/carte/">Voir les juridictions sur la carte <span aria-hidden="true">↗</span></a></p>
+  <p class="lien-carte-index"><a href="/carte/">Voir les juridictions sur la carte <span aria-hidden="true">→</span></a></p>
   <section class="repertoire" aria-labelledby="titre-repertoire">
     <div class="barre"><h2 id="titre-repertoire">Explorer les dossiers</h2><span>{dossiers.length} dossiers disponibles</span></div>
     <ol class="cartes">
       {dossiers.map((d,i)=>(
         <li>
           <a href={'/dossiers/' + d.slug + '/'} aria-label={'Explorer ' + d.titre}>
-            <div class="ligne-haute"><span>DOSSIER Nº {String(i+1).padStart(2,'0')}</span><span class="signe" aria-hidden="true">↗</span></div>
+            <div class="ligne-haute"><span>DOSSIER Nº {String(i+1).padStart(2,'0')}</span><span class="signe" aria-hidden="true">→</span></div>
             <p class="theme">{d.repere}</p>
             <h3>{d.titre}</h3>
             <p class="description">{d.presentation}</p>
@@ -66,7 +66,7 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
   </section>
   <aside class="pied-repertoire">
     <div><h2>Consulter l’ensemble des archives</h2><p>Retrouvez les autres articles de presse dans les archives, classés par année.</p></div>
-    <a href="/archives/presse/">Consulter les archives de presse <span aria-hidden="true">↗</span></a>
+    <a href="/archives/presse/">Consulter les archives de presse <span aria-hidden="true">→</span></a>
   </aside>
 </Base>
 <style>

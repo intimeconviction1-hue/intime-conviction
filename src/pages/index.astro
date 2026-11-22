@@ -128,7 +128,7 @@ const articlesUne = selectionUne.map(({data}) => ({
                     <h3><a href={data.chemin}>{data.titre}</a></h3>
                   </div>
                 <div class="une-editoriale-texte">
-                  <p>{data.extrait}</p><a class="lire-une" href={data.chemin}>Lire l’article <span aria-hidden="true">↗</span></a>
+                  <p>{data.extrait}</p><a class="lire-une" href={data.chemin}>Lire l’article <span aria-hidden="true">→</span></a>
                 </div>
                 </div>
               </article>
@@ -145,7 +145,7 @@ const articlesUne = selectionUne.map(({data}) => ({
       <section class="dernieres-publications" aria-labelledby="titre-dernieres-publications">
         <div class="selection-entete">
           <h2 id="titre-dernieres-publications">Les derniers articles de la rédaction</h2>
-          <a href="/rubrique/cours-du-jour/#articles-redaction">Toute l’actualité de la rédaction <span aria-hidden="true">↗</span></a>
+          <a href="/rubrique/cours-du-jour/#articles-redaction">Toute l’actualité de la rédaction <span aria-hidden="true">→</span></a>
         </div>
         <ListeArticles articles={dernieresPublications} rubriqueVisible={false} illustres />
       </section>
@@ -156,7 +156,7 @@ const articlesUne = selectionUne.map(({data}) => ({
     <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
       <div class="accueil-dossiers-entete">
         <h2 id="titre-dossiers-accueil">Dossiers judiciaires</h2>
-        <a href="/dossiers/">Tous les dossiers <span aria-hidden="true">↗</span></a>
+        <a href="/dossiers/">Tous les dossiers <span aria-hidden="true">→</span></a>
       </div>
       <p class="section-intro">Retrouver les grandes affaires, leurs développements judiciaires et les références de presse qui les documentent.</p>
       <div class="dossiers-visuel">
@@ -171,7 +171,7 @@ const articlesUne = selectionUne.map(({data}) => ({
               <a href={`/dossiers/${d.slug}/`} aria-labelledby={`accueil-dossier-${d.slug}`} aria-describedby={`accueil-dossier-repere-${d.slug}`}>
                 <div class="accueil-dossiers-titre">
                   <h3 id={`accueil-dossier-${d.slug}`}>{d.titre}</h3>
-                  <span aria-hidden="true">↗</span>
+                  <span aria-hidden="true">→</span>
                 </div>
                 <p id={`accueil-dossier-repere-${d.slug}`}>{d.derniere.titre}</p>
                 <span class="accueil-dossiers-total">
@@ -197,9 +197,9 @@ const articlesUne = selectionUne.map(({data}) => ({
         <h2 id="titre-guide-assises">Comprendre les assises</h2>
         <p>Qui siège à la cour ? Dans quel ordre parle-t-on ? Comment se prend la décision ?</p>
         <ul>
-          <li><a href="/comprendre/">Le déroulement du procès <span aria-hidden="true">↗</span></a></li>
-          <li><a href="/rubrique/le-banc-des-jures/">Les jurés et les acteurs du procès <span aria-hidden="true">↗</span></a></li>
-          <li><a href="/assister/">Préparer sa première audience <span aria-hidden="true">↗</span></a></li>
+          <li><a href="/comprendre/">Le déroulement du procès <span aria-hidden="true">→</span></a></li>
+          <li><a href="/rubrique/le-banc-des-jures/">Les jurés et les acteurs du procès <span aria-hidden="true">→</span></a></li>
+          <li><a href="/assister/">Préparer sa première audience <span aria-hidden="true">→</span></a></li>
         </ul>
       </div>
     </section>
@@ -208,7 +208,7 @@ const articlesUne = selectionUne.map(({data}) => ({
       <section class="selection" aria-labelledby="titre-selection">
         <div class="selection-entete">
           <h2 id="titre-selection">Les archives du journal</h2>
-          <a href="/archives/">Archives du journal <span aria-hidden="true">↗</span></a>
+          <a href="/archives/">Archives du journal <span aria-hidden="true">→</span></a>
         </div>
         <p class="section-intro">Des articles publiés précédemment, à retrouver par affaire et par année.</p>
         <div class:list={['selection-grille', { 'selection-grille-simple': derniers.length === 0 }]}>
@@ -235,7 +235,7 @@ const articlesUne = selectionUne.map(({data}) => ({
                         <h4>{data.titre}</h4>
                         <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
                       </div>
-                      <span aria-hidden="true">↗</span>
+                      <span aria-hidden="true">→</span>
                     </a>
                   </li>
                 ))}
@@ -251,7 +251,7 @@ const articlesUne = selectionUne.map(({data}) => ({
         <div>
           <h2 id="titre-culture">Livres, films et histoire</h2>
         </div>
-        <a href="/rubrique/le-greffe/">Voir les livres et les films <span aria-hidden="true">↗</span></a>
+        <a href="/rubrique/le-greffe/">Voir les livres et les films <span aria-hidden="true">→</span></a>
       </div>
       <ul class="greffe-accueil-cartes">
         {CULTURE.map(({slug, genre, auteur, titre, extrait}) => (
@@ -273,7 +273,7 @@ const articlesUne = selectionUne.map(({data}) => ({
         {rubriques.map(r => (
           <li class="rubrique-carte">
             <h3>
-              <a href={`/rubrique/${r.slug}/`}>{r.libelle}<span aria-hidden="true">↗</span></a>
+              <a href={`/rubrique/${r.slug}/`}>{r.libelle}<span aria-hidden="true">→</span></a>
             </h3>
             <p class="rubrique-description">{descriptionsRubriques[r.slug] ?? r.sousTitre}</p>
             {r.titres.length > 0 && (
@@ -289,10 +289,10 @@ const articlesUne = selectionUne.map(({data}) => ({
     <nav class="outils-accueil" aria-label="Explorer le fonds judiciaire">
       <h2>Explorer le fonds judiciaire</h2>
       <ul>
-        <li><a href="/chronologie/">Chronologie des affaires <span aria-hidden="true">↗</span></a></li>
-        <li><a href="/carte/">Carte des affaires <span aria-hidden="true">↗</span></a></li>
-        <li><a href="/annuaire/#repertoire">Annuaire des juridictions <span aria-hidden="true">↗</span></a></li>
-        <li><a href="/archives/presse/">Archives de presse <span aria-hidden="true">↗</span></a></li>
+        <li><a href="/chronologie/">Chronologie des affaires <span aria-hidden="true">→</span></a></li>
+        <li><a href="/carte/">Carte des affaires <span aria-hidden="true">→</span></a></li>
+        <li><a href="/annuaire/#repertoire">Annuaire des juridictions <span aria-hidden="true">→</span></a></li>
+        <li><a href="/archives/presse/">Archives de presse <span aria-hidden="true">→</span></a></li>
       </ul>
     </nav>
 

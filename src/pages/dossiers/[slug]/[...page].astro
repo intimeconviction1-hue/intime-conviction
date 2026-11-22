@@ -91,7 +91,7 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
       {decision && <a href={'#' + decision.id}>Lire le dernier verdict documenté</a>}
     </nav>
   )}
-  <aside class="lieux-en-tete" aria-label="Villes où sont situées les juridictions associées"><div><strong>OÙ SE SITUENT LES JURIDICTIONS ?</strong><p>{lieux.map(l=>l.ville).join(" / ")}. Ces villes sont celles des tribunaux, pas nécessairement celles des faits.</p></div><a href="/carte/">VOIR SUR LA CARTE <span aria-hidden="true">↗</span></a></aside>
+  <aside class="lieux-en-tete" aria-label="Villes où sont situées les juridictions associées"><div><strong>OÙ SE SITUENT LES JURIDICTIONS ?</strong><p>{lieux.map(l=>l.ville).join(" / ")}. Ces villes sont celles des tribunaux, pas nécessairement celles des faits.</p></div><a href="/carte/">VOIR SUR LA CARTE <span aria-hidden="true">→</span></a></aside>
   <div class="separation">
     <div class="methode">
       <h2>CE QUE CONTIENT CE DOSSIER</h2>
@@ -108,7 +108,7 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
         <div class="explication-reperes">
           <p>Les dates ci-dessous désignent les événements judiciaires rapportés dans des articles de presse identifiés. Elles sont <strong>distinctes des dates de repérage des articles</strong> utilisées dans le reste du dossier.</p>
           <p>Il s’agit d’une sélection non exhaustive, vérifiée au <time datetime={VERIFICATION_AU}>{date(VERIFICATION_AU)}</time>. Le caractère définitif d’une décision ou l’état d’un recours ne sont pas présumés.</p>
-          <a href="/chronologie/">VOIR LA CHRONOLOGIE DE TOUS LES DOSSIERS <span aria-hidden="true">↗</span></a>
+          <a href="/chronologie/">VOIR LA CHRONOLOGIE DE TOUS LES DOSSIERS <span aria-hidden="true">→</span></a>
         </div>
       </div>
       <ChronologieEvenements reperes={reperes} />

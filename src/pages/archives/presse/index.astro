@@ -9,7 +9,7 @@ const annees=new Map();for(const a of veille.articles){const an=a.dateAlerte.sli
   <div class="explication"><p>Cette collection rassemble des références à des articles publiés par d’autres médias. Les dates correspondent au repérage des références et non nécessairement à la publication des articles ou aux événements judiciaires. Certains liens anciens peuvent ne plus être disponibles.</p><a href="/archives/">Retrouver les articles d’Intime Conviction</a> · <a href="/dossiers/">Explorer les dossiers judiciaires par affaire</a> · <a href="/chronologie/">Consulter les repères judiciaires documentés</a></div>
   <form action="/archives/presse/rechercher/" method="get" class="recherche-globale-presse" role="search">
     <label for="recherche-globale">RECHERCHER DANS TOUTES LES ANNÉES</label>
-    <div><input id="recherche-globale" name="q" type="search" placeholder="Un nom, une ville, une juridiction..." minlength="2" required /><button type="submit">CHERCHER <span aria-hidden="true">↗</span></button></div>
+    <div><input id="recherche-globale" name="q" type="search" placeholder="Un nom, une ville, une juridiction..." minlength="2" required /><button type="submit">CHERCHER <span aria-hidden="true">→</span></button></div>
     <p>Recherche transversale dans les titres et les médias. Les dates indiquées sont celles des références enregistrées.</p>
   </form>
   <ul class="annees-presse">{[...annees].map(([an,n])=><li><a href={'/archives/presse/'+an+'/'}><strong>{an}</strong><span>{n.toLocaleString('fr-FR')} références</span></a></li>)}</ul>
