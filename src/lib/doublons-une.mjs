@@ -6,6 +6,12 @@ const normaliser = s => String(s ?? '')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
 const referencesParArticle = {
+  '/jean-paul-benjamin-bobigny-images-legitime-defense/11/2026/': [
+    'W4ZBVATMNNB5ROGARNH62RUAAU',
+    '65UFEFWRAJBM3FZOS23TFSTTPU',
+    'E2T22M2CDVFENHCL3WTSCAROVA',
+    'afa1165b1b31a30482433d932af75f3b',
+  ],
   '/evry-meurtre-sabine-appel-au-17/11/2026/': ['8745284e-e4e9-11f1-b9ed-164c427aef07'],
   '/nahel-merzouk-versailles-intention-du-tir/11/2026/': [
     'justice-se-prononcera-mardi-10766331',
