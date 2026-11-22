@@ -6,14 +6,19 @@ const normaliser = s => String(s ?? '')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
 const referencesParArticle = {
-  '/evry-meurtre-sabine-appel-au-17/11/2026/': '8745284e-e4e9-11f1-b9ed-164c427aef07',
+  '/evry-meurtre-sabine-appel-au-17/11/2026/': ['8745284e-e4e9-11f1-b9ed-164c427aef07'],
+  '/nahel-merzouk-versailles-intention-du-tir/11/2026/': [
+    'justice-se-prononcera-mardi-10766331',
+    '225080659812914/mort-de-nahel',
+    'renvoi-du-policier-pour-meurtre-13665529.php',
+  ],
 };
 
 export function presseSansRedite(references, articlesEnUne) {
   const sujets = [...new Set(articlesEnUne.flatMap(article =>
     Array.isArray(article?.data?.sujetsPresse) ? article.data.sujetsPresse : []
   ).map(normaliser).filter(s => s.length >= 5))];
-  const identifiants = articlesEnUne.map(article => referencesParArticle[article?.data?.chemin]).filter(Boolean);
+  const identifiants = articlesEnUne.flatMap(article => referencesParArticle[article?.data?.chemin] ?? []);
   if (!sujets.length && !identifiants.length) return references;
   return references.filter(reference => {
     if (identifiants.some(id => String(reference.lien ?? '').includes(id))) return false;
