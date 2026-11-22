@@ -267,6 +267,19 @@ const articlesUne = selectionUne.map(({data}) => ({
       </ul>
     </section>
 
+    <section class="videos-accueil" aria-labelledby="titre-videos-accueil">
+      <div class="selection-entete">
+        <h2 id="titre-videos-accueil">À voir et à écouter</h2>
+        <a href="/culture/videos/">Toutes les vidéos <span aria-hidden="true">→</span></a>
+      </div>
+      <p class="section-intro">Archives, documentaires et audiences filmées : la justice à travers les images et les voix.</p>
+      <a class="video-accueil-lien" href="/culture/videos/">
+        <span class="video-accueil-icone" aria-hidden="true">▶</span>
+        <span><strong>Justice en France : les meilleures audiences au tribunal</strong><small>Une sélection de vidéos judiciaires · Source extérieure : YouTube</small></span>
+        <span class="video-accueil-fleche" aria-hidden="true">→</span>
+      </a>
+    </section>
+
     <section class="univers" aria-labelledby="titre-rubriques">
       <h2 id="titre-rubriques">Dans le journal</h2>
       <ul class="rubriques">
@@ -347,6 +360,15 @@ const articlesUne = selectionUne.map(({data}) => ({
 </script>
 
 <style>
+.videos-accueil{margin:3.5rem 0;padding:2rem 0;border-top:2px solid var(--filet);border-bottom:1px solid var(--filet)}
+.video-accueil-lien{display:flex;gap:1.5rem;align-items:center;padding:1.4rem;background:#17191a;color:#fff;text-decoration:none;margin-top:1.5rem}
+.video-accueil-lien:hover,.video-accueil-lien:focus-visible{color:#ffe100}
+.video-accueil-icone{display:grid;place-items:center;flex-shrink:0;width:3.3rem;height:3.3rem;background:#ffe100;color:#17191a;border-radius:50%;font-size:1.2rem}
+.video-accueil-lien strong{display:block;font:800 clamp(1rem,2vw,1.4rem)/1.35 var(--sans)}
+.video-accueil-lien small{display:block;font:500 .78rem/1.5 var(--sans);color:#ccc;margin-top:.5rem}
+.video-accueil-fleche{margin-left:auto;font-size:1.4rem}
+@media(max-width:650px){.video-accueil-lien{gap:.9rem;padding:1rem}.video-accueil-icone{width:2.6rem;height:2.6rem}}
+
   .ouverture,.surface-lecture{color:#252525}
   .ouverture{background:linear-gradient(155deg,#f0e9e0,#fcfaf6 66%)}
   .surface-lecture{background:#fcfaf6}
