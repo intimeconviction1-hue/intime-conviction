@@ -39,7 +39,7 @@ export const CULTURE = [
     sources:[{nom:'Unifrance — fiche du film',lien:'https://www.unifrance.org/film/45288/la-fille-au-bracelet'}]
   },
   {
-    slug:'gide-jure',titre:'André Gide, du côté des jurés',genre:'Livres & histoire',auteur:'André Gide',repere:'Souvenirs de la cour d’assises',
+    slug:'gide-jure',titre:'André Gide, du côté des jurés',genre:'Livres',auteur:'André Gide',repere:'Souvenirs de la cour d’assises',
     angle:'Écrire l’expérience de juger',
     extrait:'Dans ses Souvenirs de la cour d’assises, Gide transforme l’expérience du jury en matière d’observation et de réflexion.',
     paragraphes:[
