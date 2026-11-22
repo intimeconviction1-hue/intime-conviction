@@ -1,5 +1,22 @@
 export const CULTURE = [
   {
+    slug:'je-le-jure', titre:'Je le jure', genre:'Cinéma', auteur:'Samuel Theis', repere:'France · 2025 · 1 h 50 · sortie le 26 mars 2025',
+    angle:'Être juré : quand la vie ordinaire rencontre le poids d’un verdict',
+    extrait:'À Forbach, un homme est tiré au sort pour siéger aux assises. Un film sur l’écoute, le doute et la responsabilité de juger.',
+    paragraphes:[
+      'Fabio, quarante ans, travaille dans une recyclerie à Forbach. Entre les fêtes et sa relation discrète avec Marie, il mène une existence sans grand horizon. Une convocation vient la bouleverser : il est désigné juré d’assises et doit participer au jugement d’un jeune homme poursuivi après un incendie mortel. La fiction suit alors un citoyen ordinaire appelé à exercer une responsabilité extraordinaire.',
+      'Je le jure déplace le regard habituel du film de procès. Plutôt que de faire de l’accusé ou de l’avocat le seul centre du récit, Samuel Theis s’attarde sur ceux à qui la justice demande de décider. Écouter un témoin, supporter les contradictions, distinguer l’émotion de la preuve : le procès oblige Fabio à sortir de lui-même.',
+      'Le titre renvoie au serment prononcé par les jurés devant la cour d’assises. Ce geste solennel, accompli par des personnes sans formation judiciaire préalable, est au cœur du cinéma de Theis : comment une intime conviction se construit-elle, et que signifie répondre d’une décision qui engage la vie d’autrui ?',
+      'Le film reste une fiction, non une reconstitution documentaire du fonctionnement d’une cour d’assises. Il invite néanmoins à regarder la justice depuis le banc des jurés, là où le doute n’est plus seulement une idée, mais une responsabilité collective.'
+    ],
+    question:'Comment devient-on capable de juger autrui lorsque l’on doute déjà de sa propre vie ?',
+    sources:[
+      {nom:'Ad Vitam — fiche officielle et bande-annonce',lien:'https://www.advitamdistribution.com/films/je-le-jure/'},
+      {nom:'France Télévisions — présentation du film',lien:'https://www.francetelevisions.fr/groupe/cinema/france-3/nos-productions/43064'},
+      {nom:'AlloCiné — fiche du film',lien:'https://www.allocine.fr/film/fichefilm_gen_cfilm=309688.html'}
+    ]
+  },
+  {
     slug: 'une-intime-conviction', titre: 'Une intime conviction', genre: 'Cinéma', auteur: 'Antoine Raimbault', repere: 'Sortie en France : 6 février 2019',
     angle: 'Le procès à travers le doute',
     extrait: 'Une fiction inspirée de l’affaire Viguier, qui place la défense et la force d’une conviction au centre du récit.',
