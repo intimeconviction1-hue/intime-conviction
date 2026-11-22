@@ -60,6 +60,7 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/nahel-merzouk-versailles-intention-du-tir/11/2026/': { ...photoAssisesParis, lieu: "Salle Voltaire de la cour d’assises de Paris · Photographie d’illustration, hors audience de Versailles" },
   '/rue-des-rosiers-extradition-appel-renvoi/11/2026/': {
     ...illustrationNeutre,
     image: croquisCodeRosiers,
