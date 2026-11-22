@@ -71,3 +71,15 @@ test('les références écartées d’un dossier ne disparaissent pas de la veil
     'https://www.20minutes.fr/justice/4224088-20260518-air-proces-pelicot-laetitia-r-violee-torturee-prostituee-refuse-huis-clos-grand-dam-defense');
   assert.equal(referencesPourDossier(dossier('viols-de-mazan'), [comparaison]).length, 0);
 });
+
+test('une comparaison entre procès ne rejoint pas les dossiers individuels', () => {
+  const lien = 'https://www.ouest-france.fr/societe/justice/de-face-je-voyais-un-innocent-de-profil-un-coupable-jubillar-pechier-le-doute-profite-t-il-aux-accuses-ec8c0864-dcdc-11f0-84e2-922db77b2982';
+  const article = item('Jubillar, Péchier : le doute profite-t-il aux accusés ?', '2025-12-01', lien);
+  assert.equal(referencesPourDossier(dossier('affaire-jubillar'), [article]).length, 0);
+  assert.equal(referencesPourDossier(dossier('affaire-pechier'), [article]).length, 0);
+});
+
+test('un article propre au procès Péchier reste dans son dossier', () => {
+  const article = item('Procès Péchier : les motivations de la cour d’assises', '2026-01-05', 'https://exemple.fr/pechier');
+  assert.equal(referencesPourDossier(dossier('affaire-pechier'), [article]).length, 1);
+});
