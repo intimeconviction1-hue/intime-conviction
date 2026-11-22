@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+const videos = [
+  {
+    titre: 'Justice en France : les meilleures audiences au tribunal',
+    type: 'Émission judiciaire · Rediffusions et direct',
+    presentation: 'Une sélection d’audiences françaises diffusées dans le cadre de l’émission Justice en France. Une ressource audiovisuelle pour observer les échanges à l’audience et les mécanismes du procès.',
+    url: 'https://www.youtube.com/watch?v=QPIOAn6chGc',
+    source: 'Justice en France, sur YouTube',
+  },
+];
+---
+<Base titre="À voir et à écouter" description="Une sélection de vidéos, documentaires, archives et entretiens consacrés aux audiences et à la justice.">
+  <div class="video-dossier">
+    <nav class="fil" aria-label="Fil d’Ariane"><a href="/">Accueil</a> <span aria-hidden="true">›</span> <a href="/rubrique/le-greffe/">Livres, films et histoire</a> <span aria-hidden="true">›</span> À voir et à écouter</nav>
+    <header class="video-intro">
+      <p class="sur-titre">Analyses &amp; culture</p>
+      <h1>À voir et à écouter</h1>
+      <p>Documentaires, archives, témoignages et émissions : des images et des voix pour éclairer la justice criminelle. Chaque référence est présentée avec sa provenance. Les vidéos extérieures ne sont pas des productions d’Intime Conviction.</p>
+    </header>
+    <section aria-labelledby="selection-video">
+      <h2 id="selection-video">Notre sélection</h2>
+      <ul class="videos">
+        {videos.map(v => <li>
+          <article>
+            <div class="video-cadre"><span class="lecture" aria-hidden="true">▶</span><span>Vidéo extérieure</span></div>
+            <div class="video-texte">
+              <p class="nature">{v.type}</p>
+              <h3>{v.titre}</h3>
+              <p>{v.presentation}</p>
+              <p class="source">Source : {v.source}</p>
+              <a class="voir" href={v.url} target="_blank" rel="noopener noreferrer">Voir sur YouTube <span aria-hidden="true">↗</span><span class="sr-only"> (nouvel onglet)</span></a>
+            </div>
+          </article>
+        </li>)}
+      </ul>
+      <p class="note">Le contenu des diffusions en direct peut évoluer. Les propos tenus dans les vidéos restent ceux de leurs auteurs ou intervenants.</p>
+    </section>
+  </div>
+</Base>
+<style>
+.video-dossier{max-width:1080px;margin:0 auto;padding:2.5rem 0 5rem}
+.fil{font:600 .76rem/1.5 var(--sans);display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:2rem;color:var(--encre-2)}
+.fil a{text-decoration:underline;text-underline-offset:3px}
+.video-intro{border-top:4px solid currentColor;border-bottom:1px solid var(--filet);padding:2rem 0 2.5rem;margin-bottom:3rem}
+.sur-titre,.nature{font:800 .72rem/1.5 var(--sans);letter-spacing:.08em;text-transform:uppercase}
+.video-intro h1{font-size:clamp(2.3rem,5vw,4.3rem);line-height:1.06;letter-spacing:-.04em;margin:.7rem 0 1rem}
+.video-intro>p:last-child{max-width:780px;font-size:1.15rem;line-height:1.65;color:var(--encre-2)}
+h2{font-size:1.55rem;margin:0 0 1.6rem}
+.videos{list-style:none;margin:0;padding:0}
+.videos article{display:grid;grid-template-columns:minmax(240px,1fr) minmax(0,1.25fr);gap:2.2rem;padding:1.4rem 0;border-top:1px solid var(--filet)}
+.video-cadre{background:#17191a;color:#fff;aspect-ratio:16/9;display:flex;flex-direction:column;gap:1rem;align-items:center;justify-content:center;font:800 .72rem var(--sans);text-transform:uppercase;letter-spacing:.08em}
+.lecture{display:grid;place-items:center;background:#ffe100;color:#17191a;width:3.8rem;height:3.8rem;border-radius:100%;font-size:1.2rem;padding-left:.15rem}
+.video-texte h3{font-size:clamp(1.45rem,2.5vw,2.1rem);line-height:1.2;margin:.5rem 0 1rem}
+.video-texte>p:not(.nature){line-height:1.65;color:var(--encre-2)}
+.source,.note{font:500 .83rem/1.6 var(--sans)}
+.voir{display:inline-flex;align-items:center;gap:.7rem;background:#17191a;color:#fff;padding:.85rem 1rem;font:800 .77rem var(--sans);text-decoration:none;margin-top:.5rem}
+.voir:hover,.voir:focus-visible{background:#34383a;color:#fff}
+.note{margin-top:2rem;color:var(--encre-2)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@media(max-width:700px){.video-dossier{padding:1.5rem 0 3rem}.videos article{grid-template-columns:1fr;gap:1rem}}
+</style>
