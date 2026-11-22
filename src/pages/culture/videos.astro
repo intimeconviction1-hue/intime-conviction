@@ -2,6 +2,14 @@
 import Base from '../../layouts/Base.astro';
 const videos = [
   {
+    titre: 'Meurtre à Caen : quand un fils tue son père — JEF',
+    type: 'Documentaire judiciaire',
+    presentation: 'Un documentaire de la chaîne Esprit de justice, publié sous le titre « Meurtre à Caen : quand un fils tue son père - JEF ».',
+    videoId: 'ZMCna4ZSrFQ',
+    start: 71,
+    source: 'Chaîne YouTube Esprit de justice',
+  },
+  {
     titre: 'Au cœur d’un procès d’assises — Envoyé spécial',
     type: 'Reportage · Envoyé spécial',
     presentation: 'Un reportage d’Envoyé spécial consacré à un procès d’assises.',
@@ -65,7 +73,7 @@ const videos = [
       <ul class="videos">
         {videos.map(v => <li>
           <article>
-            <div class="video-cadre"><iframe src={`https://www.youtube-nocookie.com/embed/${v.videoId}`} title={`Visionner ${v.titre}`} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+            <div class="video-cadre"><iframe src={`https://www.youtube-nocookie.com/embed/${v.videoId}${v.start ? `?start=${v.start}` : ''}`} title={`Visionner ${v.titre}`} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
             <div class="video-texte">
               <p class="nature">{v.type}</p>
               <h3>{v.titre}</h3>
