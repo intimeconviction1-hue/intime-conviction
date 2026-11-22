@@ -1,3 +1,4 @@
+import croquisCodeRosiers from '../assets/code-procedure-penale-croquis.webp';
 import photoCodePenal1810 from '../assets/code-penal-1810.webp';
 import croquisDigne from '../assets/assises-landru.webp';
 import croquisAudienceSarah from '../assets/croquis-audience-bandeau.webp';
@@ -61,10 +62,10 @@ const photoAssisesParis = {
 export const photosArticles = {
   '/rue-des-rosiers-extradition-appel-renvoi/11/2026/': {
     ...illustrationNeutre,
-    image: photoCode,
+    image: croquisCodeRosiers,
     lieu: 'Code de procédure pénale · Illustration générée',
-    source: photoCode.src,
-    lienLicence: photoCode.src,
+    source: croquisCodeRosiers.src,
+    lienLicence: croquisCodeRosiers.src,
   },
   '/sainte-rose-minorite-quinze-ans/11/2026/': {
     image: photoCodePenal1810,
