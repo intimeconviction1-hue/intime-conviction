@@ -100,7 +100,18 @@ export function dossiersPourArticle(article) {
 // Liens examinés : comparaisons avec une autre affaire, faits distincts à Mazan,
 // ou dossiers pénaux distincts concernant la même personne. Les liens restent
 // dans le fonds de veille d'origine ; ils ne sont exclus QUE du dossier Mazan.
+const REFERENCES_TRANSVERSALES = new Set([
+  "https://www.midilibre.fr/2025/12/28/retrospective-2025-cedric-jubillar-condamne-proces-en-appel-des-viols-de-mazan-les-trois-actualites-incontournables-du-mois-doctobre-13121378.php",
+  "https://www.ouest-france.fr/societe/justice/de-face-je-voyais-un-innocent-de-profil-un-coupable-jubillar-pechier-le-doute-profite-t-il-aux-accuses-ec8c0864-dcdc-11f0-84e2-922db77b2982",
+  "https://www.francebleu.fr/infos/faits-divers-justice/jubillar-pechier-rio-paris-les-grands-proces-attendus-pour-la-fin-de-l-annee-2025-1919700",
+  "https://www.bfmtv.com/police-justice/proces/cedric-jubillar-nicolas-sarkozy-viols-de-mazan-les-grands-proces-a-venir-en-2025_AN-202501010269.html"
+]);
+
 const REFERENCES_HORS_DOSSIER = Object.freeze({
+  'affaire-jubillar': new Set([
+    "https://www.dna.fr/faits-divers-justice/2025/12/27/de-sarkozy-a-jubillar-retour-sur-une-annee-de-proces-tres-mediatiques",
+    "https://www.slate.fr/monde/missiles-francais-bacteries-mortelles-proces-jubillar-best-of-articles-2025-guerre-ukraine-recherche-cancer-decouverte-mystere-sciences"
+]),
   'viols-de-mazan': new Set([
     "https://rmc.bfmtv.com/actualites/police-justice/faits-divers/vouloir-en-decoudre-ce-n-est-pas-vouloir-tuer-au-proces-du-meurtre-d-aramburu-le-priol-et-bouvier-refutent-la-premeditation_AV-202609250240.html",
     "https://www.lemonde.fr/societe/article/2026/06/13/a-lyon-au-proces-d-un-alter-ego-de-dominique-pelicot-la-mecanique-perverse-de-la-domination-masculine_6701426_3224.html",
@@ -124,7 +135,7 @@ export function referencesPourDossier(dossier, references = []) {
   for (const r of references) {
     if (!r || typeof r.titre !== 'string' || !regle.test(normaliserTitre(r.titre))) continue;
     if (typeof r.lien !== 'string' || !/^https?:\/\//i.test(r.lien)) continue;
-    if (REFERENCES_HORS_DOSSIER[dossier.slug]?.has(r.lien)) continue;
+    if (REFERENCES_TRANSVERSALES.has(r.lien) || REFERENCES_HORS_DOSSIER[dossier.slug]?.has(r.lien)) continue;
     if (typeof r.source !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(r.dateAlerte ?? '')) continue;
     // Ne jamais recopier les corps, identifiants ou métadonnées Gmail.
     const reference = { titre: r.titre, source: r.source, lien: r.lien, dateAlerte: r.dateAlerte };
