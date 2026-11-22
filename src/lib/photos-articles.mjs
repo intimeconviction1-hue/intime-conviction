@@ -1,3 +1,4 @@
+import photoCodePenal1810 from '../assets/code-penal-1810.webp';
 import croquisDigne from '../assets/assises-landru.webp';
 import croquisAudienceSarah from '../assets/croquis-audience-bandeau.webp';
 import croquisHeaulme from '../assets/croquis-manchette.webp';
@@ -58,6 +59,14 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/sainte-rose-minorite-quinze-ans/11/2026/': {
+    image: photoCodePenal1810,
+    lieu: "Première page du Code pénal de 1810 · Illustration d’archives. Les dispositions en vigueur sont citées dans l’article.",
+    auteur: "Imprimerie nationale · Fondation Napoléon via Wikimedia Commons",
+    source: "https://commons.wikimedia.org/wiki/File:Code_p%C3%A9nal_1810.jpg",
+    licence: 'Domaine public',
+    lienLicence: 'https://creativecommons.org/publicdomain/mark/1.0/',
+  },
   '/chahinez-daoud-boutaa-perigueux-discernement/11/2026/': illustrationNeutre,
   '/evry-meurtre-sabine-appel-au-17/11/2026/': { ...illustrationAssises, lieu: 'Photo d’illustration · Salle du palais Thiac à Bordeaux, hors procès d’Évry' },
   '/sarah-sadani-temoin-rescapee-fusillade-proces-aix/11/2026/': {
