@@ -286,3 +286,23 @@ button:hover{background:#dfc500;color:#131516}
 /* Titre d'article : en capitales à 82 px il occupait un écran entier et se
    lisait mal. Casse normale, taille de titre de presse. */
 .article h1{text-transform:none;letter-spacing:-.02em;font-size:clamp(2rem,4.6vw + 1rem,3.6rem);line-height:1.08;text-wrap:balance}
+
+/* Cibles tactiles : 24 px au minimum (WCAG 2.5.8). Les liens isolés de
+   l'accueil — « voir tout », crédits photo, lectures d'une rubrique —
+   mesuraient 13 à 23 px de haut. Un rembourrage vertical agrandit la zone
+   cliquable sans déplacer le texte ; les liens au fil d'une phrase restent
+   exemptés par la règle et ne sont pas touchés. */
+:is(.selection-entete,.accueil-dossiers-entete,.greffe-accueil-entete)>a{padding-block:3px}
+:is(.une-credit,.credits-photo,.credits-presse) summary,
+:is(.une-credit,.credits-photo,.credits-presse) span a,
+:is(.dossiers-visuel,.guide-assises) figcaption>a,
+.consentement-note a{padding-block:6px}
+.rubrique-lectures a{padding-block:4px}
+.rubrique-carte h3>a{min-height:24px}
+a.pied-nom{padding-block:1px}
+#actualites>a{padding-block:4px}
+.fil-ariane>a,.retour-archives>a{padding-block:3px}
+.etiquette a{padding-block:5px}
+.outils-lecture>:is(.partager-x,.partager-whatsapp){padding-block:3px}
+.explication>a,.resultats-fonds>a{padding-block:3px}
+.etapes-fiche li a{padding-block:4px}
