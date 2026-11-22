@@ -92,13 +92,14 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
     </nav>
   )}
   <aside class="lieux-en-tete" aria-label="Villes où sont situées les juridictions associées"><div><strong>OÙ SE SITUENT LES JURIDICTIONS ?</strong><p>{lieux.map(l=>l.ville).join(" / ")}. Ces villes sont celles des tribunaux, pas nécessairement celles des faits.</p></div><a href="/carte/">VOIR SUR LA CARTE <span aria-hidden="true">→</span></a></aside>
-  <div class="separation">
-    <div class="methode">
-      <h2>CE QUE CONTIENT CE DOSSIER</h2>
-      <p>Une liste de titres et de liens de presse ayant une <strong>mention explicite</strong> du sujet. Les contenus appartiennent aux médias cités. Certains titres peuvent seulement évoquer l’affaire, sans porter sur le même procès ou la même procédure. Aucun fait ni aucune décision de justice n’est déduit automatiquement de ces rapprochements.</p>
-      <p>Les dates de la liste sont celles du <strong>repérage des références</strong>. Elles ne correspondent pas nécessairement aux dates de publication des articles, des audiences ou des décisions. Certains liens anciens peuvent être indisponibles.</p>
-    </div>
-  </div>
+  {page.currentPage === 1 && (
+    <section class="separation" aria-labelledby="titre-archives-affaire">
+      <div class="methode">
+        <h2 id="titre-archives-affaire">Dans les archives de l’affaire</h2>
+        <p>Retrouvez les articles, enquêtes et comptes rendus de presse consacrés à cette affaire et à ses développements judiciaires. Ces références permettent de suivre les publications des différents médias et de retrouver leurs regards sur le dossier.</p>
+      </div>
+    </section>
+  )}
 
   {page.currentPage === 1 && reperes.length > 0 && (
     <section class="repere-detail" id="reperes-judiciaires" aria-labelledby="titre-reperes">
@@ -138,9 +139,11 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
     </nav>
   </section>
 
-  <aside class="fonds-distincts" aria-label="Consulter les autres archives">
-    <p>Les articles historiques et la revue de presse sont deux fonds distincts. Aucun rapprochement entre leurs affaires n’est établi automatiquement.</p>
-    <a href="/archives/">Parcourir les articles historiques</a>
+  <aside class="fonds-distincts" aria-label="Précisions sur les archives">
+    <div class="precision-archives">
+      <p>Les références renvoient aux publications de leurs médias respectifs. Leur classement repose sur les mentions relevées dans les titres : elles ne concernent pas nécessairement la même procédure. Les dates « Repéré le » indiquent la collecte, non la publication ou les événements judiciaires. Certains liens anciens peuvent ne plus être accessibles.</p>
+    </div>
+    <a href="/archives/">Parcourir les archives du journal</a>
   </aside>
   <div class="bas-dossier">
     <a href="/dossiers/">← REVENIR À TOUS LES DOSSIERS</a>
@@ -277,4 +280,13 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
   .recit-sources li{margin:.35rem 0;font:500 .85rem/1.55 var(--sans)}
   .recit-sources a{text-decoration:underline;text-underline-offset:3px}
   .recit-sources>p{margin:1rem 0 0;color:#5c5652;font:500 .78rem/1.55 var(--sans)}
+
+/* Présentation documentaire sobre, avec précision méthodologique en pied de dossier. */
+.separation{display:block;border-bottom:1px solid #d7d1cb;margin:1.1rem 0 2rem}
+.methode{padding:1.4rem 0 1.7rem}
+.separation .methode h2{font:650 clamp(1.5rem,2.8vw,2.2rem)/1.2 var(--serif);letter-spacing:-.025em;color:#202427;margin:0 0 .65rem;text-transform:none}
+.methode p{font:450 1rem/1.7 var(--sans);color:#44484b;max-width:77ch;margin:0}
+.fonds-distincts{border-top:1px solid #d7d1cb;align-items:flex-start}
+.precision-archives{max-width:73ch}
+.fonds-distincts .precision-archives p{font:450 .78rem/1.65 var(--sans);color:#65676b}
 </style>
