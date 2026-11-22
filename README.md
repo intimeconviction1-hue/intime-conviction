@@ -5,6 +5,10 @@ procès, l'histoire et la culture criminelles.
 
 Site : [intimeconviction.fr](https://www.intimeconviction.fr) · X : [@IntimeConv](https://x.com/IntimeConv)
 
+## Rédaction des comptes rendus
+
+Ouvrir sur un fait d’audience documenté et dérouler le récit avec les pièces, les déclarations et les décisions. Attribuer les versions à ceux qui les défendent. Rassembler les références de presse et les liens à la fin de l’article. Réserver les mentions de sources dans le corps aux passages où elles éclairent une divergence ou une limite de vérification.
+
 ## Les six rubriques
 
 | Rubrique | Ce qu'on y trouve |
