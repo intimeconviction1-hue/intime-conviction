@@ -55,3 +55,19 @@ test('aucune règle ne rapproche les titres sur la seule base du genre de crime'
   const generic = [item('Un procès pour meurtre devant la cour d’assises')];
   for (const d of DOSSIERS) assert.equal(referencesPourDossier(d, generic).length, 0);
 });
+
+test('le dossier Mazan exclut une affaire distincte située dans la même commune', () => {
+  const faux = item(
+    'Meurtre de Jesse Vivaldi à Mazan : son ami condamné',
+    '2026-11-01',
+    'https://www.laprovence.com/article/faits-divers-justice/4014453826746614/meurtre-de-jesse-vivaldi-a-mazan-son-ami-d-enfance-condamne-a-20-ans-de-reclusion-criminelle-par-la-cour-d-assises'
+  );
+  const vrai = item('Procès en appel des viols de Mazan : nouvelle audience', '2026-11-02', 'https://exemple.fr/mazan');
+  assert.deepEqual(referencesPourDossier(dossier('viols-de-mazan'), [faux, vrai]).map(a => a.titre), [vrai.titre]);
+});
+
+test('les références écartées d’un dossier ne disparaissent pas de la veille générale', () => {
+  const comparaison = item('Un air de procès Pelicot… Laëtitia R. refuse le huis clos', '2026-05-18',
+    'https://www.20minutes.fr/justice/4224088-20260518-air-proces-pelicot-laetitia-r-violee-torturee-prostituee-refuse-huis-clos-grand-dam-defense');
+  assert.equal(referencesPourDossier(dossier('viols-de-mazan'), [comparaison]).length, 0);
+});
