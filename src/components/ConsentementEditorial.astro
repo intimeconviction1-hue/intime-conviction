@@ -44,6 +44,7 @@
   const parametrer = document.querySelector<HTMLButtonElement>('#consentement-parametrer');
   const mesure = document.querySelector<HTMLInputElement>('#consentement-mesure');
   const ouvrirDepuisPied = document.querySelector<HTMLButtonElement>('#gestion-confidentialite');
+  let ouvertDepuisPied = false;
 
   type Decision = 'accepter' | 'refuser';
   function lireDecision(): Decision | null {
@@ -124,7 +125,8 @@
       effacerCookiesGA();
       location.reload();
     }
-    ouvrirDepuisPied?.focus();
+    if (ouvertDepuisPied) ouvrirDepuisPied?.focus({ preventScroll: true });
+    ouvertDepuisPied = false;
   }
 
   // Signaux éditoriaux uniquement après consentement. Il s'agit de clics,
@@ -167,6 +169,7 @@
   document.querySelector<HTMLButtonElement>('#consentement-enregistrer')?.addEventListener('click', () => terminer(mesure?.checked ? 'accepter' : 'refuser'));
   ouvrirDepuisPied?.addEventListener('click', () => {
     if (!boite) return;
+    ouvertDepuisPied = true;
     boite.hidden = false;
     if (mesure) mesure.checked = lireDecision() === 'accepter';
     document.querySelector<HTMLButtonElement>('[data-consent="refuser"]')?.focus();

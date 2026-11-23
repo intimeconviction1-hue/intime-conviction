@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { photosArticles } from '../lib/photos-articles.mjs';
+import { photosArticles, illustrationNeutre } from '../lib/photos-articles.mjs';
 import VisuelAssises from '../components/VisuelAssises.astro';
 import photoDossiers from '../assets/assises-bordeaux.webp';
 import photoSalle from '../assets/salle-voltaire.webp';
@@ -82,8 +82,9 @@ const repereUne = {
 };
 const articlesUne = selectionUne.map(({data}) => ({
   data,
-  photo: photosArticles[data.chemin],
+  photo: photosArticles[data.chemin] ?? illustrationNeutre,
   repere: repereUne[data.chemin],
+  titre: data.titre.replace(/ (?=[:;!?])/g, '\u00A0'),
 }));
 ---
 <Base accueil>
@@ -92,53 +93,70 @@ const articlesUne = selectionUne.map(({data}) => ({
       <h1 id="titre-accueil" class="sr-only">Intime Conviction, le journal des cours d’assises</h1>
       {articlesUne.length > 0 && (
         <section class="une-editoriale" aria-labelledby="une-editoriale-titre">
-          <h2 id="une-editoriale-titre">À la une</h2>
+          <div class="une-entete">
+            <h2 id="une-editoriale-titre">À la une</h2>
+            <a href="/agenda/">Agenda des assises</a>
+          </div>
           <div class="une-editoriale-grille">
-            {articlesUne.map(({data, photo, repere}, i) => (
-              <article class="article-redaction-une">
-                <div class="une-visuel-cadre">
-                <div class:list={["une-couverture", {"avec-photo": photo, "une-croquis": photo?.croquis}]}>
-                  {photo && (
+            <div class="une-reportages">
+              {articlesUne.map(({data, photo, repere, titre}, i) => (
+                <article class="article-redaction-une" id={`article-une-${i}`}>
+                  <div class="une-couverture">
                     <img src={photo.image.src} width={photo.image.width} height={photo.image.height}
-                      alt={photo.lieu} loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} />
-                  )}
-                </div>
-                {photo && (
+                      alt={photo.lieu} loading={i === 0 ? 'eager' : 'lazy'} decoding="async"
+                      fetchpriority={i === 0 ? 'high' : undefined} />
+                    <div class="une-edito">
+                      <span class="une-rubrique">{rubrique(data.rubrique).libelle}</span>
+                      {repere && <p class="repere-proces">{repere}</p>}
+                      <h3><a href={data.chemin}>{titre}</a></h3>
+                      {data.extrait && <p class="une-chapeau">{data.extrait}</p>}
+                    </div>
+                  </div>
                   <div class="une-credit">
-                    <span>Illustration d’archives</span>
+                    <span><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time> · Illustration</span>
                     <details><summary>Crédits photo</summary><span>{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a></span></details>
                   </div>
-                )}
+                </article>
+              ))}
+            </div>
+            {articlesUne.length > 1 && (
+              <aside class="une-sommaire" aria-label="Les articles à la une" hidden>
+                <div class="une-sommaire-entete">
+                  <h3>La sélection</h3>
+                  <button class="une-pause" type="button" aria-pressed="false" aria-label="Suspendre le défilement automatique" title="Suspendre le défilement automatique">
+                    <svg class="pause-icone" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 3.5v9m5-9v9" fill="none" stroke="currentColor" stroke-width="1.75"/></svg>
+                    <svg class="lecture-icone" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m5 3 8 5-8 5z" fill="currentColor"/></svg>
+                  </button>
                 </div>
-                <div class="une-edito">
-                  <div class="une-titre">
-                    <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
-                    {repere && <p class="repere-proces">{repere}</p>}
-                    <h3><a href={data.chemin}>{data.titre}</a></h3>
-                  </div>
-                <div class="une-editoriale-texte">
-                  <p>{data.extrait}</p><a class="lire-une" href={data.chemin}>Lire l’article <span aria-hidden="true">→</span></a>
-                </div>
-                </div>
-              </article>
-            ))}
+                <ul>
+                  {articlesUne.map(({data, titre}, i) => (
+                    <li><button type="button" class="une-choix" aria-controls={`article-une-${i}`} aria-pressed={i === 0}>
+                      <span>{rubrique(data.rubrique).libelle}</span>
+                      <strong>{titre}</strong>
+                    </button></li>
+                  ))}
+                </ul>
+              </aside>
+            )}
           </div>
         </section>
       )}
-
     </div>
   </section>
 
   <div class="surface-lecture"><div class="cadre journal-corps">
-    {dernieresPublications.length > 0 && (
-      <section class="dernieres-publications" aria-labelledby="titre-dernieres-publications">
-        <h2 id="titre-dernieres-publications" class="sr-only">Actualité</h2>
-        <ListeArticles articles={dernieresPublications} rubriqueVisible={false} illustres />
-        <a class="suite-actualite" href="/rubrique/cours-du-jour/#articles-redaction">Toute l’actualité <span aria-hidden="true">→</span></a>
-      </section>
-    )}
-
-    <Actualites accueil titre="Revue de presse" limite={5} lienRubrique={false} imagesExclues={[...articlesUne, ...dernieresPublications.map(({data}) => ({photo: photosArticles[data.chemin]}))].map(({photo}) => photo?.image?.src)} />
+    <div class:list={['fil-du-journal', {'fil-du-journal-colonnes': dernieresPublications.length > 0}]}>
+      {dernieresPublications.length > 0 && (
+        <section class="dernieres-publications" aria-labelledby="titre-dernieres-publications">
+          <div class="selection-entete">
+            <h2 id="titre-dernieres-publications">Actualité</h2>
+            <a href="/rubrique/cours-du-jour/#articles-redaction">Toute l’actualité</a>
+          </div>
+          <ListeArticles articles={dernieresPublications} rubriqueVisible={false} illustres />
+        </section>
+      )}
+      <Actualites accueil titre="Revue de presse" limite={5} lienRubrique={false} imagesExclues={[...articlesUne, ...dernieresPublications.map(({data}) => ({photo: photosArticles[data.chemin] ?? illustrationNeutre}))].map(({photo}) => photo.image.src)} />
+    </div>
 
     <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
       <div class="accueil-dossiers-entete">
@@ -297,111 +315,161 @@ const articlesUne = selectionUne.map(({data}) => ({
 </Base>
 <script>
   const carrousel = document.querySelector('.une-editoriale');
-  const cartes = [...(carrousel?.querySelectorAll<HTMLElement>('.article-redaction-une') ?? [])];
-  if (carrousel && cartes.length > 1) {
+  const articles = [...(carrousel?.querySelectorAll<HTMLElement>('.article-redaction-une') ?? [])];
+  const sommaire = carrousel?.querySelector<HTMLElement>('.une-sommaire');
+  const choix = [...(sommaire?.querySelectorAll<HTMLButtonElement>('.une-choix') ?? [])];
+  const pause = sommaire?.querySelector<HTMLButtonElement>('.une-pause');
+
+  if (carrousel && sommaire && pause && articles.length > 1) {
     const mouvement = window.matchMedia('(prefers-reduced-motion: reduce)');
     let index = 0;
     let survol = false;
     let focus = false;
+    let suspendu = false;
     let timer: number | undefined;
-    const afficher = (position: number) => {
-      index = (position + cartes.length) % cartes.length;
-      cartes.forEach((carte, i) => { carte.hidden = i !== index; });
-    };
-    const regler = () => {
+
+    function afficher(position: number) {
+      index = position;
+      articles.forEach((article, i) => { article.hidden = i !== index; });
+      choix.forEach((bouton, i) => bouton.setAttribute('aria-pressed', String(i === index)));
+    }
+
+    function reglerDefilement() {
       window.clearInterval(timer);
-      if (!mouvement.matches && !survol && !focus && !document.hidden)
-        timer = window.setInterval(() => afficher(index + 1), 8000);
-    };
-    carrousel.addEventListener('mouseenter', () => { survol = true; regler(); });
-    carrousel.addEventListener('mouseleave', () => { survol = false; regler(); });
-    carrousel.addEventListener('focusin', () => { focus = true; regler(); });
+      pause!.hidden = mouvement.matches;
+      if (!mouvement.matches && !survol && !focus && !suspendu && !document.hidden) {
+        timer = window.setInterval(() => afficher((index + 1) % articles.length), 9000);
+      }
+    }
+
+    choix.forEach((bouton, i) => bouton.addEventListener('click', () => {
+      afficher(i);
+      const article = articles[i];
+      if (article.getBoundingClientRect().bottom < 0) {
+        article.scrollIntoView({ block: 'start' });
+        article.querySelector('h3 a')?.focus({ preventScroll: true });
+      }
+    }));
+    pause.addEventListener('click', () => {
+      suspendu = !suspendu;
+      pause.setAttribute('aria-pressed', String(suspendu));
+      pause.title = suspendu ? 'Reprendre le défilement automatique' : 'Suspendre le défilement automatique';
+      reglerDefilement();
+    });
+    carrousel.addEventListener('mouseenter', () => { survol = true; reglerDefilement(); });
+    carrousel.addEventListener('mouseleave', () => { survol = false; reglerDefilement(); });
+    carrousel.addEventListener('focusin', () => { focus = true; reglerDefilement(); });
     carrousel.addEventListener('focusout', event => {
       if (!(event.relatedTarget instanceof Node) || !carrousel.contains(event.relatedTarget)) {
         focus = false;
-        regler();
+        reglerDefilement();
       }
     });
-    mouvement.addEventListener('change', regler);
-    document.addEventListener('visibilitychange', regler);
-    carrousel.classList.add('une-carrousel');
+    mouvement.addEventListener('change', reglerDefilement);
+    document.addEventListener('visibilitychange', reglerDefilement);
     afficher(0);
-    regler();
+    sommaire.hidden = false;
+    carrousel.classList.add('une-interactive');
+    reglerDefilement();
   }
 </script>
 
 <style>
 .videos-accueil{margin:2rem 0;padding:1rem 0;border-top:2px solid var(--filet);border-bottom:1px solid var(--filet)}
-.video-accueil-lien{display:flex;gap:1.5rem;align-items:center;padding:1.4rem;background:#17191a;color:#fff;text-decoration:none;margin-top:1.5rem}
-.video-accueil-lien:hover,.video-accueil-lien:focus-visible{color:#ffe100}
-.video-accueil-icone{display:grid;place-items:center;flex-shrink:0;width:3.3rem;height:3.3rem;background:#ffe100;color:#17191a;border-radius:50%;font-size:1.2rem}
+.video-accueil-lien{display:flex;gap:1.5rem;align-items:center;padding:1.4rem;background:#311a23;color:#fff;text-decoration:none;margin-top:1.5rem}
+.video-accueil-lien:hover,.video-accueil-lien:focus-visible{color:#ffdfd0}
+.video-accueil-icone{display:grid;place-items:center;flex-shrink:0;width:3.3rem;height:3.3rem;background:#ffdfd0;color:#311a23;border-radius:50%;font-size:1.2rem}
 .video-accueil-lien strong{display:block;font:800 clamp(1rem,2vw,1.4rem)/1.35 var(--sans)}
 .video-accueil-lien small{display:block;font:500 .78rem/1.5 var(--sans);color:#ccc;margin-top:.5rem}
 .video-accueil-fleche{margin-left:auto;font-size:1.4rem}
 @media(max-width:650px){.video-accueil-lien{gap:.9rem;padding:1rem}.video-accueil-icone{width:2.6rem;height:2.6rem}}
 
-  .ouverture,.surface-lecture{color:#252525}
-  .ouverture{background:linear-gradient(155deg,#f0e9e0,#fcfaf6 66%)}
-  .surface-lecture{background:#fcfaf6}
-  .dossiers-visuel{margin-bottom:1rem;background:#e8ded1}
-  .section-intro{max-width:78ch;margin:.25rem 0 1rem;color:#534943;font:500 .96rem/1.55 var(--sans)}
-  .dossiers-visuel :global(img){max-height:17rem;object-fit:cover;object-position:center 56%}
-  .ouverture-interieur{padding-top:clamp(1rem,2.5vw,2rem)}
-  .journal-corps{padding-bottom:3rem}
-  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
-  .une-editoriale{margin:0 0 1rem}
-  .une-editoriale>h2{padding:.75rem 0;margin:0;color:#84323d;font:750 clamp(1.9rem,4.2vw,3.4rem)/1.05 var(--serif);letter-spacing:-.025em;text-transform:uppercase}
-  .une-compteur{font:750 .8rem/1.4 var(--sans);color:#641e30;white-space:nowrap;min-width:3.5rem;text-align:center;font-variant-numeric:tabular-nums}
-  .commandes-une button:focus-visible{outline:3px solid #84323d;outline-offset:3px}
-  .une-editoriale-grille{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:1rem 1.8rem}
-  .article-redaction-une{min-width:0;border-bottom:1px solid #c7bdb2;padding-bottom:1rem}
-  .article-redaction-une:first-child{grid-row:span 2}
-  .une-couverture{position:relative;display:grid;align-items:end;isolation:isolate}
-  .une-couverture.avec-photo{min-height:clamp(16rem,34vw,30rem);background:#554b47;color:#fff}
-  .une-couverture img,.une-couverture.avec-photo::after{position:absolute;inset:0;width:100%;height:100%;z-index:-1}
-  .une-couverture img{object-fit:cover}
-  .une-couverture.une-croquis img{object-fit:contain;background:#fbfaf7}
-  .une-couverture.avec-photo::after{content:"";background:linear-gradient(to top,rgba(16,12,12,.94),rgba(16,12,12,.68) 46%,transparent 82%)}
-  .une-couverture.avec-photo .une-titre{padding:clamp(.85rem,3vw,2rem);text-shadow:0 1px 4px #161010}
-  .une-titre time{color:#84323d;font:750 .76rem/1.4 var(--sans)}
-  .avec-photo time{color:inherit}
-  .une-titre h3{margin:.35rem 0 0;font:650 clamp(1.35rem,2.2vw,2rem)/1.1 var(--serif);overflow-wrap:anywhere}
-  .article-redaction-une:first-child h3,.une-carrousel h3{font-size:clamp(1.65rem,4.2vw,3.85rem);letter-spacing:-.025em}
-  .une-credit{color:#554b47;font:500 .68rem/1.4 var(--sans);margin:.4rem 0 0}
-  .une-credit a{text-decoration:underline}
-  .une-credit details{display:inline;margin-left:.45rem}
-  .une-credit summary{display:inline;cursor:pointer;text-decoration:underline;text-underline-offset:.14em}
-  .une-credit summary::marker{content:''}
-  .une-credit details[open] span{display:block;margin-top:.3rem}
-  .une-editoriale-texte p{max-width:65ch;margin:.7rem 0 0;font:500 1rem/1.55 var(--sans)}
-  .une-editoriale a:hover{text-decoration:underline;text-underline-offset:.14em}
-  @media(max-width:48rem){
-    .une-editoriale-grille{grid-template-columns:minmax(0,1fr)}
-    .article-redaction-une:first-child{grid-row:auto}
+  .ouverture, .surface-lecture { background: var(--papier-journal); color: var(--encre-journal); }
+  .ouverture-interieur { padding-top: clamp(1.2rem, 3vw, 2.75rem); }
+  .journal-corps { padding-bottom: 3rem; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+  .une-entete { display: flex; justify-content: space-between; align-items: center; gap: .75rem; margin-bottom: .9rem; border-bottom: 1px solid var(--filet-journal); }
+  .une-entete h2 { margin: 0; padding: 0 0 .2rem; font: 630 clamp(2.55rem, 5.6vw, 5rem)/1 var(--serif); letter-spacing: -.065em; }
+  .une-entete > a { display: flex; align-items: center; min-height: 44px; color: var(--bordeaux-journal); font: 700 .8rem/1.25 var(--sans); text-align: end; }
+  .une-editoriale a:hover { text-decoration: underline; text-underline-offset: .16em; }
+  .une-interactive .une-editoriale-grille { display: grid; grid-template-columns: minmax(0, 2.6fr) minmax(0, 1fr); gap: 1.15rem; align-items: start; }
+  .une-reportages { min-width: 0; }
+  .article-redaction-une:not([hidden]) + .article-redaction-une:not([hidden]) { margin-top: 1.25rem; }
+  .une-interactive .article-redaction-une { margin: 0; }
+  .une-couverture { position: relative; isolation: isolate; display: flex; align-items: end; min-height: clamp(26rem, 43vw, 35rem); overflow: hidden; background: #23161b; color: #fff; }
+  .une-couverture img, .une-couverture::after { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .une-couverture img { z-index: -2; object-fit: cover; object-position: center 46%; }
+  .une-couverture::after { z-index: -1; content: ""; background: linear-gradient(0deg, #161015 0%, #161015e8 20%, #161015a6 56%, #16101512 90%); }
+  .une-edito { width: 100%; padding: clamp(1.3rem, 4vw, 3.3rem); }
+  .une-rubrique { display: inline-block; padding: .42rem .62rem; background: var(--bordeaux-journal); font: 700 .72rem/1.25 var(--sans); letter-spacing: .035em; text-transform: uppercase; }
+  .une-edito h3 { margin: .65rem 0 .4rem; max-width: 24ch; font: 630 clamp(2.1rem, 4.7vw, 4.45rem)/.99 var(--serif); letter-spacing: -.046em; text-wrap: balance; }
+  .une-edito a:hover { color: #fff; }
+  .une-edito a:focus-visible { outline-color: #fff; }
+  .une-chapeau { max-width: 58ch; margin: .85rem 0 0; font: 470 clamp(.95rem, 1.35vw, 1.07rem)/1.55 var(--sans); color: #fff7f4; }
+  .repere-proces { margin: .55rem 0 0; font: 650 .8rem/1.4 var(--sans); }
+  .une-credit { display: flex; justify-content: space-between; align-items: baseline; gap: .4rem 1rem; padding: .55rem 0; color: #5a4c4e; font: 500 .73rem/1.45 var(--sans); }
+  .une-credit time { flex: 0 0 auto; }
+  .une-credit details { text-align: end; }
+  .une-credit summary { cursor: pointer; text-underline-offset: .2em; text-decoration: underline; }
+  .une-credit details span { display: block; margin-top: .35rem; }
+  .une-credit details a { text-decoration: underline; }
+  .une-sommaire { min-width: 0; background: #efe7e3; border-top: 3px solid var(--bordeaux-journal); }
+  .une-sommaire-entete { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .35rem .7rem .35rem 1.05rem; }
+  .une-sommaire-entete h3 { margin: 0; color: var(--bordeaux-journal); font: 720 .78rem/1.25 var(--sans); letter-spacing: .09em; text-transform: uppercase; }
+  .une-pause { display: grid; place-items: center; min-width: 44px; min-height: 44px; padding: 0; color: var(--bordeaux-journal); border: 0; background: transparent; }
+  .une-pause:hover { color: #fff; background: var(--bordeaux-journal); }
+  .une-pause[hidden], .une-pause .lecture-icone, .une-pause[aria-pressed="true"] .pause-icone { display: none; }
+  .une-pause[aria-pressed="true"] .lecture-icone { display: block; }
+  .une-sommaire ul { margin: 0; padding: 0; list-style: none; }
+  .une-sommaire li { border-top: 1px solid #d8c8c5; }
+  .une-choix { width: 100%; padding: .9rem .9rem .9rem 1rem; border: 0; border-inline-start: 3px solid transparent; background: transparent; color: var(--encre-journal); text-align: start; text-transform: none; }
+  .une-choix[aria-pressed="true"], .une-choix:hover { border-inline-start-color: var(--bordeaux-journal); background: #fffaf7; }
+  .une-sommaire button:focus-visible { outline: 2px solid var(--bordeaux-journal); outline-offset: -3px; }
+  .une-choix span { display: block; margin-bottom: .38rem; color: var(--bordeaux-journal); font: 690 .72rem/1.3 var(--sans); }
+  .une-choix strong { display: block; font: 630 clamp(1.22rem, 1.75vw, 1.62rem)/1.12 var(--serif); letter-spacing: -.016em; }
+  @media (max-width: 59.99rem) {
+    .une-interactive .une-editoriale-grille { grid-template-columns: minmax(0, 1fr); gap: .65rem; }
+    .une-sommaire ul { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+    .une-sommaire li + li { border-inline-start: 1px solid #d8c8c5; }
+    .une-choix { height: 100%; }
+  }
+  @media (max-width: 37rem) {
+    .une-entete > a { display: none; }
+    .une-couverture { display: block; min-height: 0; padding-top: 60%; }
+    .une-couverture img { bottom: auto; height: auto; aspect-ratio: 5/3; }
+    .une-couverture::after { bottom: auto; height: auto; aspect-ratio: 5/3; background: linear-gradient(0deg, #23161b, #23161b00 44%); }
+    .une-edito { position: relative; margin-top: -1.2rem; padding: 0 1.05rem 1.25rem; }
+    .une-edito h3 { max-width: none; text-wrap: pretty; }
+    .une-sommaire ul { display: block; }
+    .une-sommaire li + li { border-inline-start: 0; }
+    .une-choix { padding-block: .6rem; }
   }
 
-  .journal-corps>section,.journal-corps>.outils-accueil{margin:clamp(1.25rem,2.8vw,2.25rem) 0}
-  .accueil-dossiers,.selection,.greffe-accueil,.univers{border-top:2px solid #84323d;padding-top:1rem}
-  .suite-actualite{display:flex;align-items:center;justify-content:flex-end;gap:.5rem;min-height:44px;color:#84323d;font:750 .82rem/1.4 var(--sans)}
-  .dernieres-publications :global(.articles-illustres > li:last-child:nth-child(3n + 2)){grid-column:span 2}
-  @media(max-width:58rem){
-    .dernieres-publications :global(.articles-illustres > li:last-child:nth-child(3n + 2)){grid-column:auto}
-    .dernieres-publications :global(.articles-illustres > li:last-child:nth-child(2n + 1)){grid-column:1/-1}
-  }
-  @media(max-width:37rem){
-    .dernieres-publications :global(.articles-illustres > li:last-child){grid-column:auto}
-  }
+  .journal-corps > section, .journal-corps > .outils-accueil, .fil-du-journal { margin-block: clamp(1.75rem, 5vw, 4.25rem); }
+  .fil-du-journal { display: grid; gap: 2rem; }
+  .fil-du-journal-colonnes { grid-template-columns: minmax(0, 2.25fr) minmax(0, 1fr); gap: 2rem; align-items: start; }
+  .dernieres-publications, .accueil-dossiers, .selection, .greffe-accueil, .univers { border-top: 2px solid var(--bordeaux-journal); padding-top: .85rem; }
+  .dernieres-publications :global(.articles-illustres) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.4rem 1.25rem; }
+  .dernieres-publications :global(.articles-illustres > li) { padding: 0 0 1.15rem; }
+  .dernieres-publications :global(.articles-illustres img) { object-fit: cover; }
+  .dernieres-publications :global(.articles-illustres h3) { font: 650 clamp(1.35rem, 2.3vw, 1.87rem)/1.08 var(--serif); letter-spacing: -.025em; }
+  .dernieres-publications :global(.articles-illustres .extrait) { font: 450 .95rem/1.55 var(--sans); }
+  .dossiers-visuel { margin-bottom: 1rem; }
+  .dossiers-visuel :global(img) { max-height: 24rem; object-fit: cover; object-position: center 56%; }
+  @media (max-width: 59.99rem) { .fil-du-journal-colonnes { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 37rem) { .dernieres-publications :global(.articles-illustres) { grid-template-columns: minmax(0, 1fr); } }
+
   .journal-corps h2{margin:0;font:650 clamp(1.8rem,3.4vw,2.75rem)/1.08 var(--serif)}
   .accueil-dossiers-entete,.selection-entete,.greffe-accueil-entete{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.45rem 1rem;margin-bottom:1rem}
-  .accueil-dossiers-entete>a,.selection-entete>a,.greffe-accueil-entete>a,.accueil-dossiers-liens>a{color:#84323d;font:750 .82rem/1.4 var(--sans)}
+  .accueil-dossiers-entete>a,.selection-entete>a,.greffe-accueil-entete>a,.accueil-dossiers-liens>a{color:var(--bordeaux-journal);font:750 .82rem/1.4 var(--sans)}
   .accueil-dossiers-grille,.greffe-accueil-cartes,.rubriques{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;list-style:none;padding:0;margin:0}
-  .accueil-dossiers-grille a,.greffe-accueil-cartes a{display:block;height:100%;padding:1.1rem;background:#f1ede6;border-top:1px solid #c9bcb1}
+  .accueil-dossiers-grille a,.greffe-accueil-cartes a{display:block;height:100%;padding:1.1rem;background:#f1eae6;border-top:1px solid #c9bcb1}
   .accueil-dossiers-titre{display:flex;justify-content:space-between;gap:.65rem}
   .journal-corps h3{margin:0;font:650 clamp(1.25rem,2vw,1.65rem)/1.15 var(--serif)}
   .journal-corps p{font:500 .9rem/1.55 var(--sans)}
-  .accueil-dossiers-total,.greffe-accueil-genre,.archive-vedette-meta,time{color:#84323d;font:700 .75rem/1.4 var(--sans)}
+  .accueil-dossiers-total,.greffe-accueil-genre,.archive-vedette-meta,time{color:var(--bordeaux-journal);font:700 .75rem/1.4 var(--sans)}
   .accueil-dossiers-liens{margin-top:.85rem}
-  .guide-assises{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);background:#262526;color:#fff}
+  .guide-assises{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);background:#311a23;color:#fff}
   .guide-assises figure{margin:0;display:flex;flex-direction:column}
   .guide-assises img{display:block;width:100%;height:0;min-height:12rem;flex:1;object-fit:cover}
   .guide-assises figcaption{padding:.5rem .8rem;color:#e7ded4;font:500 .7rem/1.4 var(--sans)}
@@ -411,7 +479,7 @@ const articlesUne = selectionUne.map(({data}) => ({
   .guide-assises li a{display:flex;justify-content:space-between;gap:.5rem;padding:.75rem 0;border-top:1px solid #71686a;font:700 .85rem/1.4 var(--sans)}
   .selection-grille{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:1.5rem}
   .selection-grille-simple{grid-template-columns:minmax(0,1fr)}
-  .archive-vedette{background:#f1ede6;padding:1.3rem}
+  .archive-vedette{background:#f1eae6;padding:1.3rem}
   .archive-vedette>a{display:block}
   .archive-vedette-meta{display:flex;gap:.5rem 1rem;flex-wrap:wrap}
   .selection-suite ul{margin-top:.65rem}
@@ -423,11 +491,11 @@ const articlesUne = selectionUne.map(({data}) => ({
   .rubrique-carte{padding:.85rem 0;border-top:1px solid #c9bcb1}
   .rubrique-carte h3 a{display:flex;justify-content:space-between;gap:.65rem}
   .rubrique-lectures li{margin:.5rem 0;font:650 .85rem/1.4 var(--sans)}
-  .outils-accueil{padding:clamp(1.1rem,2.5vw,1.7rem);background:#f1ede6;border-top:2px solid #84323d}
+  .outils-accueil{padding:clamp(1.1rem,2.5vw,1.7rem);background:#f1eae6;border-top:2px solid var(--bordeaux-journal)}
   .outils-accueil h2{margin:0 0 1rem}
   .outils-accueil ul{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.65rem;list-style:none;margin:0;padding:0}
   .outils-accueil a{display:flex;justify-content:space-between;gap:.7rem;align-items:center;min-height:56px;padding:.8rem;background:#fffdf8;border:1px solid #d2c8bf;color:#641e30;font:700 .86rem/1.35 var(--sans)}
-  .outils-accueil a:focus-visible{outline:3px solid #84323d;outline-offset:2px}
+  .outils-accueil a:focus-visible{outline:3px solid var(--bordeaux-journal);outline-offset:2px}
   @media(max-width:62rem){.outils-accueil ul{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media(max-width:36rem){.outils-accueil ul{grid-template-columns:minmax(0,1fr)}}
   .journal-corps a:hover{text-decoration:underline;text-underline-offset:.15em}
@@ -435,48 +503,4 @@ const articlesUne = selectionUne.map(({data}) => ({
     .accueil-dossiers-grille,.greffe-accueil-cartes,.rubriques,.guide-assises,.selection-grille,.outils-accueil{grid-template-columns:minmax(0,1fr)}
     .guide-assises img{height:auto;min-height:0;aspect-ratio:16/9}
   }
-  .une-titre .repere-proces{margin:.45rem 0;font:750 .72rem/1.45 var(--sans);letter-spacing:.06em;text-transform:uppercase}
-  .lire-une{display:inline-flex;align-items:center;gap:.7rem;min-height:44px;margin-top:1rem;padding:.45rem .85rem;background:#84323d;color:#fff;font:750 .85rem/1.3 var(--sans)}
-  .lire-une:focus-visible{outline:2px solid #84323d;outline-offset:3px}
-  /* Une : une photographie pleine largeur dans sa colonne, un éditorial sur papier clair. */
-  .une-carrousel{border-bottom:1px solid #d7cdc3;padding-bottom:1rem}
-  .une-carrousel .une-editoriale-grille{display:block}
-  /* La grille porte les dimensions, jamais les proportions natives des fichiers. */
-  .une-carrousel .article-redaction-une{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:0;align-items:stretch;background:#f6f1e9;border:1px solid #d7cdc3;padding:0}
-  .une-carrousel .une-visuel-cadre{min-width:0;min-height:0;display:flex;flex-direction:column;background:#fbf9f5}
-  /* L'image occupe exactement toute la hauteur restante : aucun vide marron sous la photo. */
-  .une-carrousel .une-couverture,
-  .une-carrousel .une-couverture.avec-photo{position:relative;display:block;flex:1 1 auto;width:100%;height:auto;min-height:clamp(17rem,28vw,27rem);aspect-ratio:auto;overflow:hidden;background:#fbf9f5}
-  .une-carrousel .une-couverture.avec-photo{color:#252525}
-  .une-carrousel .une-couverture img{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center}
-  .une-carrousel .une-couverture.une-croquis img{object-fit:cover}
-  .une-carrousel .une-couverture.avec-photo::after{content:none}
-  .une-carrousel .une-edito{min-width:0;display:flex;flex-direction:column;justify-content:center;padding:clamp(1.1rem,2.5vw,2rem);background:#fbf9f5}
-  .une-carrousel .une-titre time{font:700 .74rem/1.4 var(--sans);color:#853142}
-  .une-carrousel .une-titre h3{margin:.75rem 0 1rem;font:600 clamp(1.75rem,3.15vw,3.2rem)/1.11 var(--serif);letter-spacing:-.028em;color:#282527}
-  .une-carrousel .une-editoriale-texte p{font:400 clamp(.94rem,1.25vw,1.06rem)/1.65 var(--sans);color:#504942;margin:0}
-  .une-carrousel .une-credit{padding:.35rem .7rem;font-size:.65rem;border-top:1px solid #d7cdc3}
-  .une-carrousel .lire-une{margin-top:1.5rem;background:transparent;color:#7c293a;border:0;border-bottom:1px solid #7c293a;padding:.4rem 0;font-weight:750;align-self:flex-start}
-  .une-carrousel .lire-une:hover{color:#3b1620}
-  .commandes-une:not([hidden]){display:flex;justify-content:space-between;align-items:center;gap:1rem;margin:0 0 .8rem}
-  .une-commandes-droite,.une-pagination{display:flex;align-items:center;gap:.6rem}
-  .une-pagination button{width:28px;height:32px;min-height:32px;min-width:28px;border:0;background:transparent;padding:8px 2px;cursor:pointer}
-  .une-pagination button::after{content:"";display:block;width:100%;height:2px;background:#cdbdb7;transition:background .18s}
-  .une-pagination button[aria-pressed="true"]::after{background:#7c293a;height:3px}
-  .commandes-une .une-fleche{display:grid;place-items:center;border:1px solid #cdbdb7;border-radius:50%;background:#fbf9f5;color:#50222d;font:500 1.3rem/1 var(--sans);width:38px;height:38px;min-width:38px;min-height:38px;padding:0;cursor:pointer}
-  .commandes-une .une-fleche:hover{border-color:#7c293a;background:#f0e8e2}
-  .commandes-une .une-pause{border:0;background:transparent;color:#5d5350;font:650 .72rem/1.2 var(--sans);padding:.4rem;min-height:38px}
-  .une-compteur{color:#716663;font-size:.72rem;min-width:2.5rem}
-  @media(max-width:49rem){
-    .une-carrousel .article-redaction-une{grid-template-columns:minmax(0,1fr)}
-    .une-carrousel .une-couverture,
-    .une-carrousel .une-couverture.avec-photo{flex:none;aspect-ratio:16/9;height:auto;min-height:0}
-    .une-carrousel .une-edito{padding:1.25rem 1.2rem 1.6rem}
-    .une-carrousel .une-titre h3{font-size:clamp(1.7rem,6vw,2.6rem)}
-  }
-  @media(max-width:26rem){.une-commandes-droite{gap:.3rem}.commandes-une .une-pause{font-size:.68rem}.une-pagination button{width:22px;min-width:22px}}
-
-  .une-carrousel .article-redaction-une[hidden]{display:none}
-  .commandes-une:not([hidden]){display:flex;justify-content:flex-end;gap:.4rem;margin:0 0 .65rem}
-  .commandes-une button{min-width:44px;min-height:44px;padding:.4rem .75rem}
 </style>

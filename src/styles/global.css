@@ -310,3 +310,26 @@ a.pied-nom{padding-block:1px}
    20 px de haut. Même rembourrage que les autres liens isolés. */
 .corps li>a:only-child{padding-block:3px}
 .passerelle-archives a,.sous-titre>a{padding-block:3px}
+
+:root {
+  --papier-journal: #fbf8f4;
+  --encre-journal: #251b20;
+  --bordeaux-journal: #76263e;
+  --filet-journal: #d9cdca;
+  --papier: var(--papier-journal);
+  --encre: var(--encre-journal);
+  --rouge: var(--bordeaux-journal);
+  --action: var(--bordeaux-journal);
+  --action-survol: #5e1d30;
+  --filet: var(--filet-journal);
+}
+
+.article h1 {
+  font: 630 clamp(2.45rem, 5.6vw, 5rem)/.99 var(--serif);
+  letter-spacing: -.051em;
+}
+
+.article > .meta {
+  border-top: 2px solid var(--bordeaux-journal);
+  font-size: .8rem;
+}
