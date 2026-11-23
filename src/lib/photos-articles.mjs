@@ -60,11 +60,13 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/colmar-mulhouse-viol-reunion-proces-renvoye/11/2026/': { ...illustrationNeutre, image: photoCode, lieu: 'Code de procédure pénale · Illustration générée pour Intime Conviction', source: photoCode.src, lienLicence: photoCode.src },
+  '/charente-assises-romain-runel-ouverture-proces/11/2026/': illustrationNeutre,
   '/guadeloupe-proces-assises-mineurs-mandat-arret/11/2026/': { ...illustrationNeutre, image: croquisCodeRosiers, lieu: 'Code de procédure pénale · Illustration générée pour Intime Conviction', source: croquisCodeRosiers.src, lienLicence: croquisCodeRosiers.src },
   '/puy-en-velay-hotel-tentative-meurtre-verdict/11/2026/': illustrationAssises,
   '/papeete-derniere-session-assises-dossiers-viol-2026/11/2026/': photoAssisesParis,
   '/orlan-melon-liege-balistique-peine-brandon-mathy/11/2026/': { ...illustrationNeutre, image: croquisHeaulme, lieu: 'Croquis judiciaire d’illustration · Ne représente pas le procès de Liège', source: croquisHeaulme.src, lienLicence: croquisHeaulme.src },
-  '/enver-hadri-nivelles-parties-civiles-dossier-draskovic/11/2026/': { ...illustrationNeutre, image: croquisDigne, lieu: 'Croquis d’audience d’archives · Sans lien avec le procès de Nivelles', source: croquisDigne.src, lienLicence: croquisDigne.src },
+  '/enver-hadri-nivelles-parties-civiles-dossier-draskovic/11/2026/': { ...illustrationNeutre, image: croquisDigne, lieu: 'Croquis judiciaire généré · Ne représente pas le procès de Nivelles', source: croquisDigne.src, lienLicence: croquisDigne.src },
   '/carine-charpentier-aisne-leroux-verdict-perles/11/2026/': { ...photoPalaisBlois, lieu: 'Palais de justice de Blois · Photographie d’illustration, hors procès dans l’Aisne' },
   '/eleonore-douai-verdict-neuville-saint-remy/11/2026/': { ...illustrationNeutre, image: croquisAudienceSarah, lieu: 'Croquis judiciaire d’illustration · Ne représente pas l’audience de Douai', source: croquisAudienceSarah.src, lienLicence: croquisAudienceSarah.src },
   '/grenoble-henry-duffourd-tentative-meurtre-quatre-condamnations/11/2026/': { ...photoPalaisAix, lieu: 'Palais Verdun, à Aix-en-Provence · Photographie d’illustration, hors procès de Grenoble' },

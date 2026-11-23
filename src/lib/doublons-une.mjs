@@ -9,6 +9,7 @@ const referencesParArticle = {
   '/samia-mimoun-maurepas-legitime-defense-verdict/11/2026/': [
     'GJ2QSSLEQNDLPIRVKCWLY2HJXI', 'PMUFYGSGGBFGLFYCVFWZ2SPTUA',
     'WCPB5OXDJNGZNBYIG2T5TEX4SE', 'UQYASSHSZVACJLVFBXKEEJ56RE',
+    'CBMiiwFBVV95cUxQelVZenJZWFZEa1Z2TzRmOEluZE5xZ2x1QjVmaVdfcDJPbWpGbEkxN3VXeGhkSDFfRFdRRUxtc3ZJRW1yWFB4WkpnT2NNM2g1cFFvYlo5MFVPY0xJZnRaOEVvRTRvNHRabEtOYnlEU2R4cG1SeTFub1hPeXZhc2taMG5TOEN4ZXZpTkxZ',
   ],
   '/piaget-le-braqueur-au-borsalino-revient-devant-les-assises/11/2026/': [
     '2846782', 'TYNURC4T25HVXLJ2B5BGT6Y7AQ',
@@ -19,7 +20,7 @@ const referencesParArticle = {
     '/Assises-en-appel-Yordan-Arron-rejuge-pour-la-mort-de-son-nourrisson',
   ],
   '/karen-baldi-proces-chambery-protection-premeditation/11/2026/': [
-    '3452391.html', '2846785',
+    '3452391.html', '2846785', '10762754',
   ],
   '/camille-paul-basse-terre-enregistrement-verdict/11/2026/': [
     '/meurtre-d-une-strasbourgeoise-en-2024-30-ans-de-reclusion',
