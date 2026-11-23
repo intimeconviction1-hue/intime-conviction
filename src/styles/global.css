@@ -312,10 +312,12 @@ a.pied-nom{padding-block:1px}
 .passerelle-archives a,.sous-titre>a{padding-block:3px}
 
 :root {
-  --papier-journal: #fbf8f4;
-  --encre-journal: #251b20;
+  --papier-journal: #fcfaf6;
+  --surface-journal: #f1efeb;
+  --anthracite-journal: #252628;
+  --encre-journal: #242426;
   --bordeaux-journal: #76263e;
-  --filet-journal: #d9cdca;
+  --filet-journal: #d9d5ce;
   --papier: var(--papier-journal);
   --encre: var(--encre-journal);
   --rouge: var(--bordeaux-journal);

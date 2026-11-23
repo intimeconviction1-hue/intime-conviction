@@ -138,7 +138,7 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
       isPartOf:{'@type':'WebSite','@id':'https://www.intimeconviction.fr/#site',name:'Intime Conviction',url:'https://www.intimeconviction.fr/'},
       ...(article ? {mainEntity:{'@id':canonique.href+'#article'}} : {})
     })} />
-    <meta name="theme-color" content="#341520" />
+    <meta name="theme-color" content="#fcfaf6" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap.xml" />
     <link rel="alternate" type="application/rss+xml" title="Intime Conviction" href={new URL('/feed.xml', Astro.site)} />
@@ -296,8 +296,9 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
       position: relative;
       z-index: 10;
       border: 0;
-      background: #341520;
-      color: #fff7ed;
+      border-top: 3px solid var(--bordeaux-journal);
+      background: var(--papier-journal);
+      color: var(--encre-journal);
     }
     .entete .barre {
       display: grid;
@@ -314,53 +315,53 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
       max-width: 100%;
       min-height: 0;
       padding: .12em 0 0;
-      color: #fff7ed;
+      color: var(--encre-journal);
       font: 660 min(5.15rem, 8.22cqi)/.89 var(--serif);
       letter-spacing: -.077em;
     }
-    .identite-journal .marque a:hover, .avec-fond .identite-journal .marque a:hover { color: #ffe1d4; }
+    .identite-journal .marque a:hover, .avec-fond .identite-journal .marque a:hover { color: var(--bordeaux-journal); }
     .identite-journal .marque-conviction { background: none; color: inherit; }
     .identite-meta { display: flex; align-items: center; flex-wrap: wrap; gap: .1rem 1rem; margin-top: .4rem; }
     .identite-journal .signature, .avec-fond .identite-journal .signature {
       display: block;
       max-width: none;
       margin: 0;
-      color: #fff7ed;
+      color: var(--encre-journal);
       font: 650 .75rem/1.4 var(--sans);
       letter-spacing: .115em;
       text-transform: uppercase;
     }
-    .edition-date { margin: 0; color: #f2d3d1; font: 530 .74rem/1.45 var(--sans); }
+    .edition-date { margin: 0; color: var(--encre-2); font: 530 .74rem/1.45 var(--sans); }
     .edition-date time { white-space: nowrap; }
     .reseaux-entete { display: flex; align-items: center; gap: .12rem; }
-    .reseaux-entete a { display: grid; place-items: center; width: 34px; min-height: 34px; color: #fff7ed; }
-    .entete .reseaux-entete a:hover { color: #341520; background: #fff7ed; }
+    .reseaux-entete a { display: grid; place-items: center; width: 34px; min-height: 34px; color: var(--encre-journal); }
+    .entete .reseaux-entete a:hover { color: var(--bordeaux-journal); background: var(--surface-journal); }
     .liens-entete, .espace-entete { display: flex; align-items: center; gap: .55rem; min-width: 0; }
-    .recherche-entete { display: flex; width: clamp(8.75rem, 12vw, 12rem); min-width: 0; border-bottom: 1px solid #bd9299; }
-    .recherche-entete input { width: 100%; min-width: 0; min-height: 44px; padding: .25rem .35rem; border: 0; background: transparent; color: #fff7ed; font: 550 .89rem/1.25 var(--sans); }
-    .recherche-entete input::placeholder { color: #f2d3d1; opacity: 1; }
-    .recherche-entete button { display: grid; place-items: center; flex: 0 0 40px; min-height: 44px; padding: 0; background: transparent; border: 0; color: #fff7ed; }
-    .recherche-entete button:hover { background: #522534; }
-    .entete .espace-entete a { display: inline-flex; align-items: center; min-height: 44px; padding-inline: .5rem; color: #fff7ed; font: 650 .78rem/1.2 var(--sans); white-space: nowrap; }
-    .entete .espace-entete a:hover { color: #fff7ed; text-decoration: underline; }
-    .entete .espace-entete .edition-abonnement { background: #fff5e9; color: #341520; padding-inline: .85rem; }
-    .entete .espace-entete .edition-abonnement:hover { background: #f8dcd0; color: #341520; }
-    .barre :is(a, input, button):focus-visible { outline: 2px solid #ffcfb6; outline-offset: 2px; }
+    .recherche-entete { display: flex; width: clamp(8.75rem, 12vw, 12rem); min-width: 0; border-bottom: 1px solid #8b8883; }
+    .recherche-entete input { width: 100%; min-width: 0; min-height: 44px; padding: .25rem .35rem; border: 0; background: transparent; color: var(--encre-journal); font: 550 .89rem/1.25 var(--sans); }
+    .recherche-entete input::placeholder { color: var(--encre-2); opacity: 1; }
+    .recherche-entete button { display: grid; place-items: center; flex: 0 0 40px; min-height: 44px; padding: 0; background: transparent; border: 0; color: var(--encre-journal); }
+    .recherche-entete button:hover { background: var(--surface-journal); }
+    .entete .espace-entete a { display: inline-flex; align-items: center; min-height: 44px; padding-inline: .5rem; color: var(--encre-journal); font: 650 .78rem/1.2 var(--sans); white-space: nowrap; }
+    .entete .espace-entete a:hover { color: var(--encre-journal); text-decoration: underline; }
+    .entete .espace-entete .edition-abonnement { background: var(--anthracite-journal); color: #fff; padding-inline: .85rem; }
+    .entete .espace-entete .edition-abonnement:hover { background: #444548; color: #fff; }
+    .barre :is(a, input, button):focus-visible { outline: 2px solid var(--bordeaux-journal); outline-offset: 2px; }
 
-    .bande-navigation { position: relative; z-index: 20; background: var(--papier-journal); border-bottom: 1px solid var(--filet-journal); }
+    .bande-navigation { position: relative; z-index: 20; background: var(--papier-journal); border-block: 1px solid var(--filet-journal); }
     .bande-navigation-interieur { position: relative; display: flex; align-items: stretch; }
     .bande-navigation ul { list-style: none; margin: 0; padding: 0; }
     .navigation-principale { flex: 1; min-width: 0; }
     .navigation-principale > ul { display: flex; align-items: stretch; justify-content: space-between; gap: .3rem; }
     .navigation-principale > ul > li { position: relative; min-width: 0; }
     .navigation-entree { display: flex; align-items: stretch; }
-    .bande-navigation :is(a, summary, button) { display: flex; align-items: center; justify-content: center; gap: .5rem; min-height: 48px; padding: .35rem .52rem; color: #341520; font: 690 .83rem/1.25 var(--sans); }
+    .bande-navigation :is(a, summary, button) { display: flex; align-items: center; justify-content: center; gap: .5rem; min-height: 48px; padding: .35rem .52rem; color: var(--encre-journal); font: 690 .83rem/1.25 var(--sans); }
     .bande-navigation :is(summary, button) { cursor: pointer; list-style: none; }
     .bande-navigation summary::-webkit-details-marker { display: none; }
     .navigation-sous-menu summary { min-width: 34px; padding-inline: .35rem; }
     .navigation-rubriques[open] > summary svg { transform: rotate(180deg); }
     .bande-navigation :is(a, summary, button):hover, .avec-fond .bande-navigation a:hover,
-    .bande-navigation a[aria-current="page"], .bande-navigation [aria-expanded="true"], .bande-navigation details[open] > summary { background: #efe4e1; color: #60192e; }
+    .bande-navigation a[aria-current="page"], .bande-navigation [aria-expanded="true"], .bande-navigation details[open] > summary { background: var(--surface-journal); color: #60192e; }
     .bande-navigation a[aria-current="page"] { box-shadow: inset 0 -2px var(--bordeaux-journal); }
     .bande-navigation :is(a, summary, button):focus-visible { outline: 2px solid var(--bordeaux-journal); outline-offset: -2px; }
     .bande-navigation .navigation-bouton-rubriques, .bande-navigation .navigation-acces-mobile { display: none; border: 0; background: transparent; }
@@ -368,18 +369,18 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
     .navigation-principale > ul > li:nth-last-child(-n+2) .navigation-rubriques > ul { right: 0; left: auto; }
     .bande-navigation .navigation-rubriques > ul a { justify-content: flex-start; text-align: start; padding-inline: .85rem; }
 
-    .pied { padding-top: 2.3rem; margin-top: 4rem; background: #341520; border-top: 3px solid #8a304a; }
+    .pied { padding-top: 2.3rem; margin-top: 4rem; background: var(--anthracite-journal); border-top: 3px solid #8a304a; }
     .pied > .cadre { grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr); gap: 1.6rem 2rem; }
     .pied .pied-nom { font: 660 clamp(1.3rem, 2.25vw, 2rem)/1.04 var(--serif); letter-spacing: -.048em; }
     .pied-intro p { margin-top: .65rem; }
     .reseaux-pied { display: flex; gap: .4rem; }
     .gestion-confidentialite { background: transparent; border: 0; border-bottom: 1px solid currentColor; padding: .35rem .1rem; color: var(--pied-texte); font: 650 .78rem/1.5 var(--sans); }
-    .gestion-confidentialite:is(:hover, :focus-visible) { color: #f0d5d4; }
-    .gestion-confidentialite:focus-visible, .pied-bas .pied-reseau:focus-visible { outline: 2px solid #f0d5d4; outline-offset: 3px; }
-    .pied-bas .pied-reseau { display: grid; place-items: center; width: 44px; min-height: 44px; border: 1px solid #a27580; border-radius: 50%; color: var(--pied-texte); }
-    .pied-bas .pied-reseau:is(:hover, :focus-visible) { background: #f0d5d4; color: #341520; }
+    .gestion-confidentialite:is(:hover, :focus-visible) { color: #eeebe6; }
+    .gestion-confidentialite:focus-visible, .pied-bas .pied-reseau:focus-visible { outline: 2px solid #eeebe6; outline-offset: 3px; }
+    .pied-bas .pied-reseau { display: grid; place-items: center; width: 44px; min-height: 44px; border: 1px solid #858486; border-radius: 50%; color: var(--pied-texte); }
+    .pied-bas .pied-reseau:is(:hover, :focus-visible) { background: #eeebe6; color: var(--encre-journal); }
     .pied-navigation { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.1rem; }
-    .pied-navigation h2 { margin: 0 0 .45rem; color: #f0d5d4; font: 750 .8rem/1.35 var(--sans); text-transform: uppercase; }
+    .pied-navigation h2 { margin: 0 0 .45rem; color: #eeebe6; font: 750 .8rem/1.35 var(--sans); text-transform: uppercase; }
     .pied-navigation ul { columns: auto; }
     .pied-navigation li a { font-weight: 550; text-transform: none; font-size: .83rem; min-height: 36px; }
 
@@ -398,7 +399,7 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
       .navigation-entree:has(details) > a { margin-inline-end: 48px; }
       .navigation-principale > ul > li :is(a, summary) { justify-content: flex-start; text-align: start; padding-inline: .85rem; }
       .navigation-principale .navigation-sous-menu summary { position: absolute; inset: 0 0 auto auto; justify-content: center; min-width: 48px; border-inline-start: 1px solid var(--filet-journal); }
-      .navigation-principale .navigation-rubriques > ul { position: static; width: auto; border: 0; border-top: 1px solid var(--filet-journal); box-shadow: none; background: #efe7e3; }
+      .navigation-principale .navigation-rubriques > ul { position: static; width: auto; border: 0; border-top: 1px solid var(--filet-journal); box-shadow: none; background: var(--surface-journal); }
       .navigation-principale .navigation-rubriques > ul a { padding-inline: 1.25rem; }
     }
     @media (max-width: 60rem) { .pied > .cadre { grid-template-columns: minmax(0, 1fr); } }
