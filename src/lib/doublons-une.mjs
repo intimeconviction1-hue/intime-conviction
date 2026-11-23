@@ -6,6 +6,10 @@ const normaliser = s => String(s ?? '')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
 const referencesParArticle = {
+  '/camille-paul-basse-terre-enregistrement-verdict/11/2026/': [
+    '/meurtre-d-une-strasbourgeoise-en-2024-30-ans-de-reclusion',
+    '/Pascal-Velayoudom-reconnu-coupable-du-viol-et-du-meurtre-de-Camille-Paul',
+  ],
   '/duchere-lyon-proces-absence-ben-addi/11/2026/': [
     '65053768.html', '/article/154937/',
     'CBMixgFBVV95cUxPZHhBVFhTblNNWFlDYWw3QlFpdTAxeFVjMTg4Mm55',
