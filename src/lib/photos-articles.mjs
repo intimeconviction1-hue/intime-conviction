@@ -60,6 +60,14 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/samia-mimoun-maurepas-legitime-defense-verdict/11/2026/': {
+    image: photoCodePenal1810,
+    lieu: 'Page de titre du Code pénal de 1810, édition de Bruxelles · Illustration d’archives',
+    auteur: 'Gambier, Bruxelles, 1810 · numérisation Google via Wikimedia Commons',
+    source: 'https://commons.wikimedia.org/wiki/File:Code_p%C3%A9nal_(Gambier,_1810).pdf',
+    licence: 'Domaine public',
+    lienLicence: 'https://creativecommons.org/publicdomain/mark/1.0/',
+  },
   '/yordan-arron-basse-terre-desistement-appel/11/2026/': {
     ...illustrationNeutre,
     image: croquisCodeRosiers,
