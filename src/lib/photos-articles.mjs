@@ -60,6 +60,13 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/duchere-lyon-enregistrement-audience-paroles-sous-scelles/11/2026/': {
+    ...illustrationNeutre,
+    image: photoCode,
+    lieu: 'Code de procédure pénale · Illustration générée pour Intime Conviction',
+    source: photoCode.src,
+    lienLicence: photoCode.src,
+  },
   '/camille-paul-basse-terre-enregistrement-verdict/11/2026/': { ...photoPalaisBlois, lieu: "Palais de justice de Blois · Photographie d’illustration, hors audience de Basse-Terre" },
   '/duchere-lyon-proces-absence-ben-addi/11/2026/': { ...photoPalaisAix, lieu: "Palais Verdun, Aix-en-Provence · Photographie d’illustration, hors audience de Lyon" },
   '/jean-paul-benjamin-bobigny-images-legitime-defense/11/2026/': { ...illustrationAssises, lieu: "Salle du palais Thiac à Bordeaux · Photographie d’illustration, hors audience de Bobigny" },
