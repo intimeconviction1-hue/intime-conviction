@@ -6,6 +6,13 @@ const normaliser = s => String(s ?? '')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
 const referencesParArticle = {
+  '/yordan-arron-basse-terre-desistement-appel/11/2026/': [
+    '/Assises-de-Basse-Terre-Yordan-Arron-se-desiste-de-son-appel',
+    '/Assises-en-appel-Yordan-Arron-rejuge-pour-la-mort-de-son-nourrisson',
+  ],
+  '/karen-baldi-proces-chambery-protection-premeditation/11/2026/': [
+    '3452391.html', '2846785',
+  ],
   '/camille-paul-basse-terre-enregistrement-verdict/11/2026/': [
     '/meurtre-d-une-strasbourgeoise-en-2024-30-ans-de-reclusion',
     '/Pascal-Velayoudom-reconnu-coupable-du-viol-et-du-meurtre-de-Camille-Paul',
