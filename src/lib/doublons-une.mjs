@@ -12,6 +12,7 @@ const referencesParArticle = {
   ],
   '/duchere-lyon-proces-absence-ben-addi/11/2026/': [
     '65053768.html', '/article/154937/',
+    '2846748', '2846764', 'VN-202611230268.html',
     'CBMixgFBVV95cUxPZHhBVFhTblNNWFlDYWw3QlFpdTAxeFVjMTg4Mm55',
     'CBMiygJBVV95cUxOQTJhckc0NjhaYldWWF8ycm5fMzdidWdPU0g3TFFM',
     'CBMiyAFBVV95cUxNbVJ0bWJLU0U2RFZUcFZYWXNqSFhwWTlBVkZGZm9q',
