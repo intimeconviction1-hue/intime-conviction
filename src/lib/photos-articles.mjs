@@ -60,6 +60,13 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/yordan-arron-basse-terre-desistement-appel/11/2026/': {
+    ...illustrationNeutre,
+    image: croquisCodeRosiers,
+    lieu: 'Code de procédure pénale · Illustration générée pour Intime Conviction',
+    source: croquisCodeRosiers.src,
+    lienLicence: croquisCodeRosiers.src,
+  },
   '/duchere-lyon-enregistrement-audience-paroles-sous-scelles/11/2026/': {
     ...illustrationNeutre,
     image: photoCode,
