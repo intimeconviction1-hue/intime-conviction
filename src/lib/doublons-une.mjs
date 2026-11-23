@@ -6,6 +6,7 @@ const normaliser = s => String(s ?? '')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
 const referencesParArticle = {
+  '/duchere-lyon-proces-absence-ben-addi/11/2026/': ['65053768.html', '/article/154937/'],
   '/jean-paul-benjamin-bobigny-images-legitime-defense/11/2026/': [
     'W4ZBVATMNNB5ROGARNH62RUAAU',
     '65UFEFWRAJBM3FZOS23TFSTTPU',
