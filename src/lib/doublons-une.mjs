@@ -6,6 +6,14 @@ const normaliser = s => String(s ?? '')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
 const referencesParArticle = {
+  '/samia-mimoun-maurepas-legitime-defense-verdict/11/2026/': [
+    'GJ2QSSLEQNDLPIRVKCWLY2HJXI', 'PMUFYGSGGBFGLFYCVFWZ2SPTUA',
+    'WCPB5OXDJNGZNBYIG2T5TEX4SE', 'UQYASSHSZVACJLVFBXKEEJ56RE',
+  ],
+  '/piaget-le-braqueur-au-borsalino-revient-devant-les-assises/11/2026/': [
+    '2846782', 'TYNURC4T25HVXLJ2B5BGT6Y7AQ',
+    '/braquage-de-la-joaillerie-piaget-en-2023-l-homme-au-borsalino-condamne-a-15-ans-de-reclusion',
+  ],
   '/yordan-arron-basse-terre-desistement-appel/11/2026/': [
     '/Assises-de-Basse-Terre-Yordan-Arron-se-desiste-de-son-appel',
     '/Assises-en-appel-Yordan-Arron-rejuge-pour-la-mort-de-son-nourrisson',
