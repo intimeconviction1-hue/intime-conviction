@@ -99,7 +99,7 @@ button,input,select { font:inherit; }button { cursor:pointer; min-height:44px; b
 @media(max-width:47.99rem){.barre{min-height:88px;gap:.6rem}.marque a{font-size:clamp(1.75rem,7.5vw,3rem);min-height:64px;letter-spacing:-.06em}.recherche-lien{border:0;padding:.4rem;min-width:40px;margin-left:auto;justify-content:center}.recherche-lien svg{width:19px}.rubriques-nav ul{gap:1.4rem}.rubriques-nav a{font-size:.65rem}}
 
 
-/* Système visuel du journal : encre, ivoire et accent bordeaux */
+/* Système visuel du journal : encre, ivoire et accent rouge */
 :root{--papier:#f8f5ef;--papier-2:#efe8dd;--encre:#191b1a;--encre-2:#615e59;--filet:#d3cbc0;--filet-fort:#272727;--rouge:#92253a;--action:#92253a;--action-survol:#762034;--pied:#202525;--pied-survol:#e9b9ac;--large:90rem}
 @media(prefers-color-scheme:dark){:root:not([data-theme='light']){--papier:#151717;--papier-2:#242726;--encre:#f5f0e7;--encre-2:#b9b3ab;--filet:#4b4c47;--filet-fort:#e7e0d7;--rouge:#e4a3a7}}
 .entete{border-bottom:1px solid var(--filet-fort)}
@@ -240,9 +240,8 @@ button:hover{background:#dfc500;color:#131516}
   --encre-2:#575b5e;
   --filet:#d9d5cf;
   --filet-fort:#383b3d;
-  --rouge:#a12c39;
-  --action:#a12c39;
-  --action-survol:#842631;
+  --rouge:var(--rouge-journal);
+  --action:var(--rouge-journal);
   --sur-action:#fff;
   --pied:#202529;
   --pied-texte:#f9f8f5;
@@ -253,21 +252,21 @@ button:hover{background:#dfc500;color:#131516}
 }
 .entete,.avec-fond .entete{background:#f7f5f0;color:#202529;border-bottom:1px solid #d9d5cf}
 .marque-intime{color:#202529}
-.marque-conviction{background:#a12c39;color:#fff}
+.marque-conviction{background:var(--rouge-journal);color:#fff}
 .marque-point{color:#fff}
 .signature,.avec-fond .signature{color:#575b5e}
-.recherche-lien{color:#a12c39;border-color:#a12c39}
-.recherche-lien:hover,.avec-fond .entete .recherche-lien:hover{background:#a12c39;color:#fff!important}
+.recherche-lien{color:var(--rouge-journal);border-color:var(--rouge-journal)}
+.recherche-lien:hover,.avec-fond .entete .recherche-lien:hover{background:var(--rouge-journal);color:#fff!important}
 .rubriques-nav,.avec-fond .rubriques-nav{background:#f7f5f0;border-top:1px solid #d9d5cf;border-bottom:1px solid #d9d5cf}
 .rubriques-nav a,.avec-fond .rubriques-nav a{color:#303539;font-weight:750;letter-spacing:.035em}
-.rubriques-nav a:hover,.avec-fond .rubriques-nav a:hover{color:#a12c39}
-.rubriques-nav a[aria-current='page'],.avec-fond .rubriques-nav a[aria-current='page']{background:#ede4e1;color:#842631;box-shadow:inset 0 -2px #a12c39}
-.rubriques-nav a::after{background:#a12c39!important}
-.pied{background:#202529;border-top:3px solid #a12c39}
+.rubriques-nav a:hover,.avec-fond .rubriques-nav a:hover{color:var(--rouge-journal)}
+.rubriques-nav a[aria-current='page'],.avec-fond .rubriques-nav a[aria-current='page']{background:#ede4e1;color:var(--action-survol);box-shadow:inset 0 -2px var(--rouge-journal)}
+.rubriques-nav a::after{background:var(--rouge-journal)!important}
+.pied{background:#202529;border-top:3px solid var(--rouge-journal)}
 .pied-nom span{color:#f0d5d4}
 .pied a:hover{color:#f0d5d4}
-:focus-visible{outline:3px solid #a12c39;outline-offset:3px}
-.evitement:focus-visible{position:fixed;left:1rem;top:.75rem;background:#fff;color:#202529;z-index:1000;outline:3px solid #a12c39}
+:focus-visible{outline:3px solid var(--rouge-journal);outline-offset:3px}
+.evitement:focus-visible{position:fixed;left:1rem;top:.75rem;background:#fff;color:#202529;z-index:1000;outline:3px solid var(--rouge-journal)}
 .rubriques-nav ul{scrollbar-width:thin;scrollbar-color:#b2aaa4 #eeeae4;overscroll-behavior-x:contain}
 .rubriques-nav a:focus-visible{outline-offset:-4px}
 @media(max-width:47.99rem){
@@ -279,8 +278,7 @@ button:hover{background:#dfc500;color:#131516}
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
 
-/* Étiquette de rubrique : son encre noire était calée sur l'ancien jaune ;
-   sur le bordeaux actuel elle tombait à 2,55:1. Blanc : 7,6:1. */
+/* Texte blanc sur les étiquettes de rubrique pour conserver le contraste. */
 .etiquette,.etiquette a{color:var(--sur-action,#fff)}
 
 /* Titre d'article : en capitales à 82 px il occupait un écran entier et se
@@ -316,13 +314,13 @@ a.pied-nom{padding-block:1px}
   --surface-journal: #f1efeb;
   --anthracite-journal: #252628;
   --encre-journal: #242426;
-  --bordeaux-journal: #76263e;
+  --rouge-journal: #c31824;
   --filet-journal: #d9d5ce;
   --papier: var(--papier-journal);
   --encre: var(--encre-journal);
-  --rouge: var(--bordeaux-journal);
-  --action: var(--bordeaux-journal);
-  --action-survol: #5e1d30;
+  --rouge: var(--rouge-journal);
+  --action: var(--rouge-journal);
+  --action-survol: #a30d18;
   --filet: var(--filet-journal);
 }
 
@@ -332,6 +330,6 @@ a.pied-nom{padding-block:1px}
 }
 
 .article > .meta {
-  border-top: 2px solid var(--bordeaux-journal);
+  border-top: 2px solid var(--rouge-journal);
   font-size: .8rem;
 }

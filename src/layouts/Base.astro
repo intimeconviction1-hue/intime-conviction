@@ -296,7 +296,7 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
       position: relative;
       z-index: 10;
       border: 0;
-      border-top: 3px solid var(--bordeaux-journal);
+      border-top: 3px solid var(--rouge-journal);
       background: var(--papier-journal);
       color: var(--encre-journal);
     }
@@ -319,7 +319,7 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
       font: 660 min(5.15rem, 8.22cqi)/.89 var(--serif);
       letter-spacing: -.077em;
     }
-    .identite-journal .marque a:hover, .avec-fond .identite-journal .marque a:hover { color: var(--bordeaux-journal); }
+    .identite-journal .marque a:hover, .avec-fond .identite-journal .marque a:hover { color: var(--rouge-journal); }
     .identite-journal .marque-conviction { background: none; color: inherit; }
     .identite-meta { display: flex; align-items: center; flex-wrap: wrap; gap: .1rem 1rem; margin-top: .4rem; }
     .identite-journal .signature, .avec-fond .identite-journal .signature {
@@ -335,7 +335,7 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
     .edition-date time { white-space: nowrap; }
     .reseaux-entete { display: flex; align-items: center; gap: .12rem; }
     .reseaux-entete a { display: grid; place-items: center; width: 34px; min-height: 34px; color: var(--encre-journal); }
-    .entete .reseaux-entete a:hover { color: var(--bordeaux-journal); background: var(--surface-journal); }
+    .entete .reseaux-entete a:hover { color: var(--rouge-journal); background: var(--surface-journal); }
     .liens-entete, .espace-entete { display: flex; align-items: center; gap: .55rem; min-width: 0; }
     .recherche-entete { display: flex; width: clamp(8.75rem, 12vw, 12rem); min-width: 0; border-bottom: 1px solid #8b8883; }
     .recherche-entete input { width: 100%; min-width: 0; min-height: 44px; padding: .25rem .35rem; border: 0; background: transparent; color: var(--encre-journal); font: 550 .89rem/1.25 var(--sans); }
@@ -344,9 +344,9 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
     .recherche-entete button:hover { background: var(--surface-journal); }
     .entete .espace-entete a { display: inline-flex; align-items: center; min-height: 44px; padding-inline: .5rem; color: var(--encre-journal); font: 650 .78rem/1.2 var(--sans); white-space: nowrap; }
     .entete .espace-entete a:hover { color: var(--encre-journal); text-decoration: underline; }
-    .entete .espace-entete .edition-abonnement { background: var(--anthracite-journal); color: #fff; padding-inline: .85rem; }
-    .entete .espace-entete .edition-abonnement:hover { background: #444548; color: #fff; }
-    .barre :is(a, input, button):focus-visible { outline: 2px solid var(--bordeaux-journal); outline-offset: 2px; }
+    .entete .espace-entete .edition-abonnement { background: var(--rouge-journal); color: #fff; padding-inline: .85rem; }
+    .entete .espace-entete .edition-abonnement:hover { background: var(--action-survol); color: #fff; }
+    .barre :is(a, input, button):focus-visible { outline: 2px solid var(--rouge-journal); outline-offset: 2px; }
 
     .bande-navigation { position: relative; z-index: 20; background: var(--papier-journal); border-block: 1px solid var(--filet-journal); }
     .bande-navigation-interieur { position: relative; display: flex; align-items: stretch; }
@@ -361,15 +361,15 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
     .navigation-sous-menu summary { min-width: 34px; padding-inline: .35rem; }
     .navigation-rubriques[open] > summary svg { transform: rotate(180deg); }
     .bande-navigation :is(a, summary, button):hover, .avec-fond .bande-navigation a:hover,
-    .bande-navigation a[aria-current="page"], .bande-navigation [aria-expanded="true"], .bande-navigation details[open] > summary { background: var(--surface-journal); color: #60192e; }
-    .bande-navigation a[aria-current="page"] { box-shadow: inset 0 -2px var(--bordeaux-journal); }
-    .bande-navigation :is(a, summary, button):focus-visible { outline: 2px solid var(--bordeaux-journal); outline-offset: -2px; }
+    .bande-navigation a[aria-current="page"], .bande-navigation [aria-expanded="true"], .bande-navigation details[open] > summary { background: var(--surface-journal); color: var(--action-survol); }
+    .bande-navigation a[aria-current="page"] { box-shadow: inset 0 -2px var(--rouge-journal); }
+    .bande-navigation :is(a, summary, button):focus-visible { outline: 2px solid var(--rouge-journal); outline-offset: -2px; }
     .bande-navigation .navigation-bouton-rubriques, .bande-navigation .navigation-acces-mobile { display: none; border: 0; background: transparent; }
     .navigation-rubriques > ul { position: absolute; top: 100%; left: 0; width: 17rem; background: var(--papier-journal); border: 1px solid var(--filet-journal); box-shadow: 0 8px 18px #33152126; }
     .navigation-principale > ul > li:nth-last-child(-n+2) .navigation-rubriques > ul { right: 0; left: auto; }
     .bande-navigation .navigation-rubriques > ul a { justify-content: flex-start; text-align: start; padding-inline: .85rem; }
 
-    .pied { padding-top: 2.3rem; margin-top: 4rem; background: var(--anthracite-journal); border-top: 3px solid #8a304a; }
+    .pied { padding-top: 2.3rem; margin-top: 4rem; background: var(--anthracite-journal); border-top: 3px solid var(--rouge-journal); }
     .pied > .cadre { grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr); gap: 1.6rem 2rem; }
     .pied .pied-nom { font: 660 clamp(1.3rem, 2.25vw, 2rem)/1.04 var(--serif); letter-spacing: -.048em; }
     .pied-intro p { margin-top: .65rem; }
