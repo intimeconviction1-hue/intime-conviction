@@ -6,7 +6,12 @@ const normaliser = s => String(s ?? '')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
 const referencesParArticle = {
-  '/duchere-lyon-proces-absence-ben-addi/11/2026/': ['65053768.html', '/article/154937/'],
+  '/duchere-lyon-proces-absence-ben-addi/11/2026/': [
+    '65053768.html', '/article/154937/',
+    'CBMixgFBVV95cUxPZHhBVFhTblNNWFlDYWw3QlFpdTAxeFVjMTg4Mm55',
+    'CBMiygJBVV95cUxOQTJhckc0NjhaYldWWF8ycm5fMzdidWdPU0g3TFFM',
+    'CBMiyAFBVV95cUxNbVJ0bWJLU0U2RFZUcFZYWXNqSFhwWTlBVkZGZm9q',
+  ],
   '/jean-paul-benjamin-bobigny-images-legitime-defense/11/2026/': [
     'W4ZBVATMNNB5ROGARNH62RUAAU',
     '65UFEFWRAJBM3FZOS23TFSTTPU',
