@@ -60,6 +60,7 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/duchere-lyon-proces-absence-ben-addi/11/2026/': { ...photoPalaisAix, lieu: "Palais Verdun, Aix-en-Provence · Photographie d’illustration, hors audience de Lyon" },
   '/jean-paul-benjamin-bobigny-images-legitime-defense/11/2026/': { ...illustrationAssises, lieu: "Salle du palais Thiac à Bordeaux · Photographie d’illustration, hors audience de Bobigny" },
   '/nahel-merzouk-versailles-intention-du-tir/11/2026/': { ...photoAssisesParis, lieu: "Salle Voltaire de la cour d’assises de Paris · Photographie d’illustration, hors audience de Versailles" },
   '/rue-des-rosiers-extradition-appel-renvoi/11/2026/': {
