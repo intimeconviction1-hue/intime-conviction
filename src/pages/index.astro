@@ -144,7 +144,7 @@ const articlesUne = selectionUne.map(({data}) => ({
             <h2 id="titre-dernieres-publications">Actualité</h2>
             <a href="/rubrique/cours-du-jour/#articles-redaction">Toute l’actualité</a>
           </div>
-          <ListeArticles articles={dernieresPublications} rubriqueVisible={false} illustres />
+          <ListeArticles articles={dernieresPublications} rubriqueVisible={false} illustres imagesExclues={[...imagesUne]} />
         </section>
       )}
       <Actualites accueil titre="Revue de presse" limite={5} lienRubrique={false} imagesExclues={[...articlesUne, ...dernieresPublications.map(({data}) => ({photo: photosArticles[data.chemin] ?? illustrationNeutre}))].map(({photo}) => photo.image.src)} />
