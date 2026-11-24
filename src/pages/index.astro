@@ -1,21 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
 import { photosArticles, illustrationNeutre } from '../lib/photos-articles.mjs';
-import VisuelAssises from '../components/VisuelAssises.astro';
-import photoDossiers from '../assets/assises-bordeaux.webp';
 import photoSalle from '../assets/salle-voltaire.webp';
 import Actualites from '../components/Actualites.astro';
 import ListeArticles from '../components/ListeArticles.astro';
-import AgendaEnBref from '../components/AgendaEnBref.astro';
 import { CULTURE } from '../lib/culture.mjs';
-import { lireVeille } from '../lib/veille.mjs';
 import { RUBRIQUES, rubrique } from '../lib/rubriques.mjs';
-import { DOSSIERS, referencesPourDossier } from '../lib/dossiers.mjs';
 import { tousLesArticles, dateLongue } from '../lib/articles.mjs';
 import { articleVisible } from '../lib/article-visible.mjs';
 
 const articles = await tousLesArticles();
-const veille = await lireVeille();
 const maintenant = Date.now();
 const articlesVerifies = articles.filter(({data}) => articleVisible(data, maintenant));
 // Une même affaire ne doit pas occuper deux emplacements du carrousel.
@@ -33,9 +27,13 @@ const etiquettesUne = article => {
 };
 const selectionUne = [];
 const dejaUne = new Set();
+const imagesUne = new Set([photoSalle.src]);
 for (const article of articlesVerifies) {
   const etiquettes = etiquettesUne(article);
   if (etiquettes.some(mot => dejaUne.has(mot))) continue;
+  const image = (photosArticles[article.data.chemin] ?? illustrationNeutre).image.src;
+  if (imagesUne.has(image)) continue;
+  imagesUne.add(image);
   selectionUne.push(article);
   etiquettes.forEach(mot => dejaUne.add(mot));
   if (selectionUne.length === 3) break;
@@ -71,12 +69,6 @@ const rubriques = RUBRIQUES.map(r=>{
     .slice(0, 2);
   return {...r,titres};
 });
-const dossiersMisEnAvant = DOSSIERS.map(dossier => {
-  const [derniere] = referencesPourDossier(dossier, veille.articles);
-  return {...dossier, derniere};
-}).filter(dossier => dossier.derniere)
-  .sort((a,b) => b.derniere.dateAlerte.localeCompare(a.derniere.dateAlerte))
-  .slice(0,3);
 const repereUne = {
   '/proces-sollacaro-et-tout-recommence-aux-assises/11/2026/': 'Aix-en-Provence · Cour d’assises · Nouveau procès',
 };
@@ -122,7 +114,7 @@ const articlesUne = selectionUne.map(({data}) => ({
             {articlesUne.length > 1 && (
               <aside class="une-sommaire" aria-label="Les articles à la une" hidden>
                 <div class="une-sommaire-entete">
-                  <h3>La sélection</h3>
+                  <h3>Les autres titres à la une</h3>
                   <button class="une-pause" type="button" aria-pressed="false" aria-label="Suspendre le défilement automatique" title="Suspendre le défilement automatique">
                     <svg class="pause-icone" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 3.5v9m5-9v9" fill="none" stroke="currentColor" stroke-width="1.75"/></svg>
                     <svg class="lecture-icone" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m5 3 8 5-8 5z" fill="currentColor"/></svg>
@@ -158,39 +150,10 @@ const articlesUne = selectionUne.map(({data}) => ({
       <Actualites accueil titre="Revue de presse" limite={5} lienRubrique={false} imagesExclues={[...articlesUne, ...dernieresPublications.map(({data}) => ({photo: photosArticles[data.chemin] ?? illustrationNeutre}))].map(({photo}) => photo.image.src)} />
     </div>
 
-    <section class="accueil-dossiers" aria-labelledby="titre-dossiers-accueil">
-      <div class="accueil-dossiers-entete">
-        <h2 id="titre-dossiers-accueil">Dossiers judiciaires</h2>
-        <a href="/dossiers/">Tous les dossiers <span aria-hidden="true">→</span></a>
-      </div>
-      <div class="dossiers-visuel">
-        <VisuelAssises image={photoDossiers} alt="Salle de la cour d’assises du palais Thiac, Bordeaux"
-          source="https://commons.wikimedia.org/wiki/File:Palais_Thiac,_Salle_d%27audience_de_la_cour_d%27assises.jpg"
-          credit="Tiraden" licence="CC BY-SA 4.0" licenceUrl="https://creativecommons.org/licenses/by-sa/4.0/" />
-      </div>
-      {dossiersMisEnAvant.length > 0 && (
-        <ul class="accueil-dossiers-grille">
-          {dossiersMisEnAvant.map(d => (
-            <li>
-              <a href={`/dossiers/${d.slug}/`} aria-labelledby={`accueil-dossier-${d.slug}`} aria-describedby={`accueil-dossier-repere-${d.slug}`}>
-                <div class="accueil-dossiers-titre">
-                  <h3 id={`accueil-dossier-${d.slug}`}>{d.titre}</h3>
-                  <span aria-hidden="true">→</span>
-                </div>
-                <p id={`accueil-dossier-repere-${d.slug}`}>{d.derniere.titre}</p>
-                <span class="accueil-dossiers-total">
-                  {d.derniere.source} · <time datetime={d.derniere.dateAlerte}>{dateLongue(new Date(d.derniere.dateAlerte + "T12:00:00Z"))}</time>
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-
-    </section>
-
-
-    <AgendaEnBref />
+    <nav class="selection-entete" aria-label="Repères du journal">
+      <a href="/dossiers/">Grandes affaires</a>
+      <a href="/agenda/">Calendrier des audiences</a>
+    </nav>
     <section class="guide-assises" aria-labelledby="titre-guide-assises">
       <figure>
         <img src={photoSalle.src} width={photoSalle.width} height={photoSalle.height}
@@ -347,8 +310,8 @@ const articlesUne = selectionUne.map(({data}) => ({
       const article = articles[i];
       if (article.getBoundingClientRect().bottom < 0) {
         article.scrollIntoView({ block: 'start' });
-        article.querySelector('h3 a')?.focus({ preventScroll: true });
       }
+      article.querySelector('h3 a')?.focus({ preventScroll: true });
     }));
     pause.addEventListener('click', () => {
       suspendu = !suspendu;
@@ -423,7 +386,8 @@ const articlesUne = selectionUne.map(({data}) => ({
   .une-sommaire ul { margin: 0; padding: 0; list-style: none; }
   .une-sommaire li { border-top: 1px solid var(--filet-journal); }
   .une-choix { width: 100%; padding: .9rem .9rem .9rem 1rem; border: 0; border-inline-start: 3px solid transparent; background: transparent; color: var(--encre-journal); text-align: start; text-transform: none; }
-  .une-choix[aria-pressed="true"], .une-choix:hover { border-inline-start-color: var(--rouge-journal); background: var(--papier-journal); }
+  .une-choix[aria-pressed="true"] { display: none; }
+  .une-choix:hover { border-inline-start-color: var(--rouge-journal); background: var(--papier-journal); }
   .une-sommaire button:focus-visible { outline: 2px solid var(--rouge-journal); outline-offset: -3px; }
   .une-choix span { display: block; margin-bottom: .38rem; color: var(--rouge-journal); font: 690 .72rem/1.3 var(--sans); }
   .une-choix strong { display: block; font: 630 clamp(1.22rem, 1.75vw, 1.62rem)/1.12 var(--serif); letter-spacing: -.016em; }
@@ -460,15 +424,6 @@ const articlesUne = selectionUne.map(({data}) => ({
   @media (max-width: 37rem) { .dernieres-publications :global(.articles-illustres) { grid-template-columns: minmax(0, 1fr); } }
 
   .journal-corps h2{margin:0;font:650 clamp(1.8rem,3.4vw,2.75rem)/1.08 var(--serif)}
-  .accueil-dossiers-entete,.selection-entete,.greffe-accueil-entete{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.45rem 1rem;margin-bottom:1rem}
-  .accueil-dossiers-entete>a,.selection-entete>a,.greffe-accueil-entete>a,.accueil-dossiers-liens>a{color:var(--rouge-journal);font:750 .82rem/1.4 var(--sans)}
-  .accueil-dossiers-grille,.greffe-accueil-cartes,.rubriques{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;list-style:none;padding:0;margin:0}
-  .accueil-dossiers-grille a,.greffe-accueil-cartes a{display:block;height:100%;padding:1.1rem;background:var(--surface-journal);border-top:1px solid var(--filet-journal)}
-  .accueil-dossiers-titre{display:flex;justify-content:space-between;gap:.65rem}
-  .journal-corps h3{margin:0;font:650 clamp(1.25rem,2vw,1.65rem)/1.15 var(--serif)}
-  .journal-corps p{font:500 .9rem/1.55 var(--sans)}
-  .accueil-dossiers-total,.greffe-accueil-genre,.archive-vedette-meta,time{color:var(--rouge-journal);font:700 .75rem/1.4 var(--sans)}
-  .accueil-dossiers-liens{margin-top:.85rem}
   .guide-assises{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);background:var(--anthracite-journal);color:#fff}
   .guide-assises figure{margin:0;display:flex;flex-direction:column}
   .guide-assises img{display:block;width:100%;height:0;min-height:12rem;flex:1;object-fit:cover}
