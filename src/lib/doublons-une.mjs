@@ -55,6 +55,7 @@ const referencesParArticle = {
   ],
   '/evry-meurtre-sabine-appel-au-17/11/2026/': ['8745284e-e4e9-11f1-b9ed-164c427aef07'],
   '/nahel-merzouk-versailles-intention-du-tir/11/2026/': [
+    'CBMivAFBVV95cUxQcXVPVnNCdGVNdGRJSWJLVk90azNQd3oycWJFcWE5QjdDemVpQjhtX2FNYXN0YmpsUTVj',
     'CBMiywFBVV95cUxOUHIyWERWMmNmT0k5NGFPNjJscF8zTEIwalNoTEtrTDFYWGJMdjcwVGNwZnNkSkxQTTFE',
     'CBMiyAFBVV95cUxPN2ZtRFdMUkZ4aHhMZ2tGM3IwQ2JGdk9udFBlb1NaSkxpVldRcUJwVUR3eTROOW5qRkx5',
     'CBMilAJBVV95cUxNeDJMSU5yd1lhak1FNVlhdjBnSkRJWlY2UkJEVVVQT3J5cEJKSU1hRFdDLWpLM2MyQk51',
