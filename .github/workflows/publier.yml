@@ -115,6 +115,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v5
         with:
+          name: github-pages-${{ github.run_attempt }}
           path: dist
           retention-days: 1
 
@@ -127,3 +128,5 @@ jobs:
     steps:
       - id: deploiement
         uses: actions/deploy-pages@v5
+        with:
+          artifact_name: github-pages-${{ github.run_attempt }}
