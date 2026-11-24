@@ -60,6 +60,13 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/bouches-du-rhone-acquittement-assassinat-association-malfaiteurs-indemnisation/11/2026/': {
+    ...illustrationNeutre,
+    image: photoCode,
+    lieu: 'Code de procédure pénale · Illustration générée pour Intime Conviction',
+    source: photoCode.src,
+    lienLicence: photoCode.src,
+  },
   '/colmar-mulhouse-viol-reunion-proces-renvoye/11/2026/': { ...illustrationNeutre, image: photoCode, lieu: 'Code de procédure pénale · Illustration générée pour Intime Conviction', source: photoCode.src, lienLicence: photoCode.src },
   '/charente-assises-romain-runel-ouverture-proces/11/2026/': illustrationNeutre,
   '/guadeloupe-proces-assises-mineurs-mandat-arret/11/2026/': { ...illustrationNeutre, image: croquisCodeRosiers, lieu: 'Code de procédure pénale · Illustration générée pour Intime Conviction', source: croquisCodeRosiers.src, lienLicence: croquisCodeRosiers.src },
