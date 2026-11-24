@@ -6,6 +6,10 @@ const normaliser = s => String(s ?? '')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
 const referencesParArticle = {
+  '/grasse-nora-mike-furlad-trente-ans-intention-contestee/11/2026/': [
+    '10765242',
+    'CBMi1AJBVV95cUxQdlZlVTBveU9TM0szanZPWHRpMERmLTk3VWREUFdlUnFXSTliNjBCY3c0ekdwdnZSaHZ4dzd0',
+  ],
   '/puy-en-velay-hotel-tentative-meurtre-verdict/11/2026/': [
     '/cour-d-assises-elle-n-a-pas-voulu-l-envoyer-au-paradis-mais-lui-oter-la-vie',
     'CBMizAFBVV95cUxNT052NjB1YjJRWi16MTY0akc0ZkVMc1E1dWhLWFpSNzBOM1VTZ01rNzlzUFEtZldqVXdVZ2NKMmtDemc2',
@@ -52,6 +56,11 @@ const referencesParArticle = {
   '/evry-meurtre-sabine-appel-au-17/11/2026/': ['8745284e-e4e9-11f1-b9ed-164c427aef07'],
   '/nahel-merzouk-versailles-intention-du-tir/11/2026/': [
     'justice-se-prononcera-mardi-10766331',
+    '2846832','8295785.html','6814726_3224.html','AD-202611240212.html','HLTCW73RNRDUPJOWTA4ET4ZAEY','7900699786','4265284','ee79b4ac-e7d8-11f1-9b33-2f81462d3339',
+    'CBMi4wFBVV95cUxPX1NFTXVTLXV5NVV3SW1wWEtFSFpOdDR5b05IU0prbnVCWGhoZjRnVi16d1NF',
+    'CBMiqAFBVV95cUxNTTN6NUpWa2FIYWRLWGI2LTVjRW4tWXpWMm9qNGdCYk5uczRvSGx0TXZt',
+    'CBMi9wFBVV95cUxOd1E3V2hVcl9LRTBUdHJVcVVFRmZ6MktIUE1rNjctaUVyRU13',
+    'CBMiggFBVV95cUxOdEtFMXVSakhYdWNndVU0cnVPSV9fUC0zbGNBeTlhUGRtNlRX',
     '225080659812914/mort-de-nahel',
     'renvoi-du-policier-pour-meurtre-13665529.php',
   ],
