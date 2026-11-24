@@ -6,6 +6,11 @@ const normaliser = s => String(s ?? '')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
 const referencesParArticle = {
+  '/chahinez-daoud-boutaa-perigueux-discernement/11/2026/': [
+    'CBMisgFBVV95cUxPR0dRRTBMUGtjalZBS3V1Q0NpQXk4dV93U3d6S2pleFNYWkVOVm1iQTl1U2pFUWctckpuNm5Tc1BwMmNM', 
+    'CBMi2AFBVV95cUxQWUhqcGw1UG91NnZHX3lxNU80cVRpaUVTdk9ORl9XaThPQng0bnBNcjZsR3kzSXJwUFRIMWRMZzdERDNYQ3J4',
+    '31621270.php',
+  ],
   '/samia-mimoun-maurepas-legitime-defense-verdict/11/2026/': [
     'GJ2QSSLEQNDLPIRVKCWLY2HJXI', 'PMUFYGSGGBFGLFYCVFWZ2SPTUA',
     'WCPB5OXDJNGZNBYIG2T5TEX4SE', 'UQYASSHSZVACJLVFBXKEEJ56RE',
@@ -21,6 +26,7 @@ const referencesParArticle = {
   ],
   '/karen-baldi-proces-chambery-protection-premeditation/11/2026/': [
     '3452391.html', '2846785', '10762754',
+    'CBMisAJBVV95cUxQLTRsb1hpamxiay02RjJqeXp3MkhEUlcxdExOWEtqRnlYTVI1bk5JdkdEMFNQNERwWWFxbEpjaUplUUE1d3NM',
   ],
   '/camille-paul-basse-terre-enregistrement-verdict/11/2026/': [
     '/meurtre-d-une-strasbourgeoise-en-2024-30-ans-de-reclusion',
