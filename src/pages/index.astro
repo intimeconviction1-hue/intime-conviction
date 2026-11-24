@@ -2,7 +2,6 @@
 import Base from '../layouts/Base.astro';
 import { photosArticles, illustrationNeutre } from '../lib/photos-articles.mjs';
 import photoSalle from '../assets/salle-voltaire.webp';
-import Actualites from '../components/Actualites.astro';
 import ListeArticles from '../components/ListeArticles.astro';
 import { CULTURE } from '../lib/culture.mjs';
 import { RUBRIQUES, rubrique } from '../lib/rubriques.mjs';
@@ -137,17 +136,16 @@ const articlesUne = selectionUne.map(({data}) => ({
   </section>
 
   <div class="surface-lecture"><div class="cadre journal-corps">
-    <div class:list={['fil-du-journal', {'fil-du-journal-colonnes': dernieresPublications.length > 0}]}>
+    <div class="fil-du-journal">
       {dernieresPublications.length > 0 && (
         <section class="dernieres-publications" aria-labelledby="titre-dernieres-publications">
           <div class="selection-entete">
-            <h2 id="titre-dernieres-publications">Les derniers articles</h2>
+            <h2 id="titre-dernieres-publications">À lire dans le journal</h2>
             <a href="/rubrique/cours-du-jour/#articles-redaction">Voir tous les articles de la rédaction</a>
           </div>
           <ListeArticles articles={dernieresPublications} rubriqueVisible={false} illustres imagesExclues={[...imagesUne]} />
         </section>
       )}
-      <Actualites accueil titre="Revue de presse" limite={5} lienRubrique={false} imagesExclues={[...articlesUne, ...dernieresPublications.map(({data}) => ({photo: photosArticles[data.chemin] ?? illustrationNeutre}))].map(({photo}) => photo.image.src)} />
     </div>
 
     <nav class="selection-entete" aria-label="Repères du journal">
@@ -254,11 +252,6 @@ const articlesUne = selectionUne.map(({data}) => ({
               <a href={`/rubrique/${r.slug}/`}>{r.libelle}<span aria-hidden="true">→</span></a>
             </h3>
             <p class="rubrique-description">{descriptionsRubriques[r.slug] ?? r.sousTitre}</p>
-            {r.titres.length > 0 && (
-              <ul class="rubrique-lectures" aria-label={`À lire dans ${r.libelle}`}>
-                {r.titres.map(({data}) => <li><a href={data.chemin}>{data.titre}</a></li>)}
-              </ul>
-            )}
           </li>
         ))}
       </ul>
