@@ -8,6 +8,7 @@ const normaliser = s => String(s ?? '')
 const referencesParArticle = {
   '/puy-en-velay-hotel-tentative-meurtre-verdict/11/2026/': [
     '/cour-d-assises-elle-n-a-pas-voulu-l-envoyer-au-paradis-mais-lui-oter-la-vie',
+    'CBMizAFBVV95cUxNT052NjB1YjJRWi16MTY0akc0ZkVMc1E1dWhLWFpSNzBOM1VTZ01rNzlzUFEtZldqVXdVZ2NKMmtDemc2',
   ],
   '/chahinez-daoud-boutaa-perigueux-discernement/11/2026/': [
     'CBMisgFBVV95cUxPR0dRRTBMUGtjalZBS3V1Q0NpQXk4dV93U3d6S2pleFNYWkVOVm1iQTl1U2pFUWctckpuNm5Tc1BwMmNM', 
