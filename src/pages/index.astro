@@ -85,11 +85,12 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
 }));
 ---
 <Base accueil>
+  <noscript><style>.une-sommaire .une-choix,.une-sommaire .une-pause{display:none!important}</style></noscript>
   <section class="ouverture" aria-labelledby="titre-accueil">
     <div class="cadre ouverture-interieur">
       <h1 id="titre-accueil" class="sr-only">Intime Conviction, le journal des cours d’assises</h1>
       {articlesUne.length > 0 && (
-        <section class="une-editoriale" aria-labelledby="une-editoriale-titre">
+        <section class:list={["une-editoriale", {"une-interactive": articlesUne.length > 1}]} aria-labelledby="une-editoriale-titre">
           <div class="une-entete">
             <h2 id="une-editoriale-titre">À la une</h2>
             <a href="/agenda/">Agenda des assises</a>
@@ -97,7 +98,7 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
           <div class="une-editoriale-grille">
             <div class="une-reportages">
               {articlesUne.map(({data, photo, repere, titre}, i) => (
-                <article class="article-redaction-une" id={`article-une-${i}`}>
+                <article class="article-redaction-une" id={`article-une-${i}`} hidden={i !== 0}>
                   <div class="une-couverture">
                     <img src={photo.image.src} srcset={imagesResponsivesUne[i]} sizes="(max-width: 959px) 100vw, 70vw" width={photo.image.width} height={photo.image.height}
                       alt={photo.lieu} loading={i === 0 ? 'eager' : 'lazy'} decoding="async"
@@ -117,7 +118,7 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
               ))}
             </div>
             {articlesUne.length > 1 && (
-              <aside class="une-sommaire" aria-label="Les articles à la une" hidden>
+              <aside class="une-sommaire" aria-label="Les articles à la une">
                 <div class="une-sommaire-entete">
                   <h3>Dans cette édition</h3>
                   <button class="une-pause" type="button" aria-pressed="false" aria-label="Suspendre le défilement automatique" title="Suspendre le défilement automatique">
@@ -130,7 +131,7 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
                     <li><button type="button" class="une-choix" aria-controls={`article-une-${i}`} aria-pressed={i === 0}>
                       <span>{rubrique(data.rubrique).libelle}</span>
                       <strong>{titre}</strong>
-                    </button></li>
+                    </button><noscript><a href={data.chemin}>{titre}</a></noscript></li>
                   ))}
                 </ul>
               </aside>
@@ -358,6 +359,7 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
   .une-reportages { min-width: 0; }
   .article-redaction-une:not([hidden]) + .article-redaction-une:not([hidden]) { margin-top: 1.25rem; }
   .une-interactive .article-redaction-une { margin: 0; }
+  .article-redaction-une[hidden] { display: none !important; }
   .une-couverture { position: relative; isolation: isolate; display: flex; align-items: end; min-height: clamp(26rem, 43vw, 35rem); overflow: hidden; background: #252628; color: #fff; }
   .une-couverture img, .une-couverture::after { position: absolute; inset: 0; width: 100%; height: 100%; }
   .une-couverture img { z-index: -2; object-fit: cover; object-position: center 46%; }
@@ -386,6 +388,8 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
   .une-sommaire li { border-top: 1px solid var(--filet-journal); }
   .une-choix { width: 100%; padding: .9rem .9rem .9rem 1rem; border: 0; border-inline-start: 3px solid transparent; background: transparent; color: var(--encre-journal); text-align: start; text-transform: none; }
   .une-choix[aria-pressed="true"] { display: none; }
+  .une-sommaire noscript a { display: block; padding: .75rem 1rem; }
+  .une-sommaire li:has(.une-choix[aria-pressed="true"]) { border: 0; }
   .une-choix:hover { border-inline-start-color: var(--rouge-journal); background: var(--papier-journal); }
   .une-sommaire button:focus-visible { outline: 2px solid var(--rouge-journal); outline-offset: -3px; }
   .une-choix span { display: block; margin-bottom: .38rem; color: var(--rouge-journal); font: 690 .72rem/1.3 var(--sans); }
