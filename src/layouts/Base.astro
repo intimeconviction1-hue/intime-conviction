@@ -13,6 +13,57 @@ const { titre, description = "Intime Conviction, journal consacré aux procès c
 // ailleurs c'est un paragraphe, le h1 revenant au titre de la page.
 const Marque = 'p';
 const titreComplet = titre ? `${titre} · Intime Conviction` : "Intime Conviction | Le journal des cours d'assises";
+// Titres de recherche distincts des titres éditoriaux, relus par affaire.
+const titresRecherche = {
+  "bouches-du-rhone-acquittement-assassinat-association-malfaiteurs-indemnisation": "Assassinat : pourquoi un acquitté doit indemniser les proches",
+  "camille-paul-basse-terre-enregistrement-verdict": "Affaire Camille Paul : un enregistrement aux assises",
+  "carine-charpentier-aisne-leroux-verdict-perles": "Meurtre de Carine Charpentier : Laurent Leroux condamné",
+  "caro-coups-au-telephone-version-defense": "Caro : douze ans de réclusion, l’intention de tuer en débat",
+  "chahinez-daoud-boutaa-perigueux-discernement": "Chahinez Daoud : Mounir Boutaa conteste la perpétuité",
+  "charente-assises-romain-runel-ouverture-proces": "Charente : Romain Runel jugé pour viols et torture présumés",
+  "colmar-mulhouse-viol-reunion-proces-renvoye": "Colmar : procès pour viol en réunion reporté",
+  "duchere-lyon-enregistrement-audience-paroles-sous-scelles": "Procès de la Duchère : les débats enregistrés à Lyon",
+  "duchere-lyon-proces-absence-ben-addi": "Procès de la Duchère : le dossier Ben Addi disjoint",
+  "eleonore-douai-verdict-neuville-saint-remy": "Douai : les dernières photos d’Éléonore devant les jurés",
+  "enver-hadri-nivelles-parties-civiles-dossier-draskovic": "Enver Hadri : le rôle de Draskovic examiné à Nivelles",
+  "evry-meurtre-sabine-appel-au-17": "Meurtre de Sabine à Évry : l’appel au 17 et le témoignage",
+  "grasse-nora-mike-furlad-trente-ans-intention-contestee": "Mort de Nora à Grasse : Mike Furlad condamné pour meurtre",
+  "grenoble-henry-duffourd-tentative-meurtre-quatre-condamnations": "Grenoble : quatre condamnations après un tir",
+  "guadeloupe-proces-assises-mineurs-mandat-arret": "Guadeloupe : procès aux assises renvoyé",
+  "jean-joseph-clement-heaulme-aveux-renvoi-conteste": "Francis Heaulme : aveux rétractés et renvoi contesté",
+  "jean-paul-benjamin-bobigny-images-legitime-defense": "Jean-Paul Benjamin : la légitime défense écartée à Bobigny",
+  "karen-baldi-proces-chambery-protection-premeditation": "Karen Baldi : procès pour assassinat et protection",
+  "la-duchere-proces-guerre-sans-fiston": "La Duchère : le procès sans son principal accusé",
+  "luca-toulouse-soiree-amis-premeditation-verdict": "Meurtre de Luca à Toulouse : préméditation retenue",
+  "manosque-deux-chocs-intention-contestee-digne": "Manosque : deux chocs et une intention de tuer contestée",
+  "martinique-morne-acajou-frere-ronny-william": "Morne Acajou : un homme jugé pour la mort de son frère",
+  "nahel-merzouk-versailles-intention-du-tir": "Mort de Nahel : renvoi du policier pour meurtre",
+  "orlan-melon-liege-balistique-peine-brandon-mathy": "Affaire Orlan Melon : la balistique au procès à Liège",
+  "papeete-derniere-session-assises-dossiers-viol-2026": "Assises de Papeete : cinq dossiers de viol sur mineur",
+  "puy-en-velay-hotel-tentative-meurtre-verdict": "Le Puy-en-Velay : l’intention de tuer retenue",
+  "roubaix-square-bousquet-tir-mehdi-proces-douai": "Tir à Roubaix : la victime témoigne aux assises de Douai",
+  "rue-des-rosiers-extradition-appel-renvoi": "Rue des Rosiers : extradition et appel du renvoi",
+  "sainte-rose-minorite-quinze-ans": "Meurtre à Sainte-Rose : quinze ans et excuse de minorité",
+  "samia-mimoun-maurepas-legitime-defense-verdict": "Samia Mimoun : la cour retient le meurtre à Versailles",
+  "sarah-sadani-temoin-rescapee-fusillade-proces-aix": "Sarah Sadani : le témoignage d’une rescapée de la fusillade",
+  "yordan-arron-basse-terre-desistement-appel": "Basse-Terre : Yordan Arron retire son appel"
+};
+const cleArticle = cheminCanonique.split('/').filter(Boolean)[0];
+const titreRecherche = accueil ? "Cour d’assises : actualité, procès et verdicts | Intime Conviction" : (article && titresRecherche[cleArticle]) || (titre && titreComplet.length > 60 ? titre : titreComplet);
+// Ne jamais couper une phrase judiciaire au milieu : garder un extrait complet
+// si aucune phrase autonome suffisamment informative ne tient dans la cible.
+const descriptionRecherche = (() => {
+  if (description.length <= 160) return description;
+  const phrases = Array.from(new Intl.Segmenter('fr', {granularity:'sentence'}).segment(description), p => p.segment).filter(Boolean);
+  let extrait = '';
+  for (const phrase of phrases) {
+    if ((extrait + phrase).trim().length > 160) break;
+    extrait += phrase;
+  }
+  // Une seconde phrase peut porter une réserve ou une contestation essentielle.
+  // Ne raccourcir automatiquement que les pages non judiciaires.
+  return !article && extrait.trim().length >= 70 ? extrait.trim() : description;
+})();
 const canonique = new URL(cheminCanonique, Astro.site);
 // À l'accueil, une image éditoriale propre au journal ; chaque article pourra
 // fournir sa propre photographie sans illustration trompeuse.
@@ -81,8 +132,8 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{titreComplet}</title>
-    <meta name="description" content={description} />
+    <title>{titreRecherche}</title>
+    <meta name="description" content={descriptionRecherche} />
     <meta name="robots" content={noindex ? "noindex,follow" : "max-image-preview:large"} />
     <link rel="canonical" href={canonique} />
     <meta property="og:title" content={titreComplet} />
