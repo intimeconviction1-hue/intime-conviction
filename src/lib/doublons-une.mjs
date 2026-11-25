@@ -6,6 +6,7 @@ const normaliser = s => String(s ?? '')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
 const referencesParArticle = {
+  '/montpellier-morcillo-acquittement-montasinos/11/2026/': ['13670805.php', 'JEM5BWNCO5FCLMRGZSVYLGP6PM.php'],
   '/reims-raphael-narcisse-verdict-celestin/11/2026/': ["CBMixgFBVV95cUxQYkFhZVVFTnNudXlLZ0hCZTJZYkRvWlBpRU1WSkRJUWs2NjlPLS1vMzJFVWg3bFEyTG1DWDc3","CBMitwFBVV95cUxOR3FiMjJjUDJGZFJjR0ZYTW5jTnI1YXlqUy13bk1mSEtyckVDejdEbGw1RVkyTWUxejREZE5R","842435","3455813.html"],
   '/papeete-makemo-jacques-t-audience-coup-mortel/11/2026/': ['CBMizwFBVV95cUxOSWFEdS1zOGJTQjcyRjc2WmlNR0hhSG1QOTUzSXZKN3BWVnFOQ2VJX284VDlUS2JHLWFVeTRfd0'],
   '/bruyeres-gilbert-jacob-proces-jimmy-hariot/11/2026/': ['CBMi-wFBVV95cUxQNXJZdjVaMkVIbGxFdHpBdEFaSkhDOTl4d2RkMTVLVUpoeWpNb1R3RDRpeEJQWHgyay12Ujlqcm',"CBMi3AFBVV95cUxPYzUxRVVLTFByQ0JRYkxGcGZPZlZTMUJSS3BTUnlJVkxjcG9JWDlkVGx1NW9mMHl5","CBMiekFVX3lxTE5aR3RkOU5fa1hpaEdtWGhqMVg1SWV1NkNiaGxzaFFxUTZqU0E3OEtrM3pvekdqVnRj","CBMihgFBVV95cUxQZDI2b29pTWk3MVduaXBCOHd0blhpckJFcDRPMUJMaU9XS1c4MXJSTjM5emZ4MVVX","CBMisgFBVV95cUxNQjFkOFladnlGMkFzV2JkRURpQVA2LWVPeFBrSnZ2bFdQZzFIRjRpTGphdjFqbDc0"],
