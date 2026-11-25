@@ -150,7 +150,7 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
             <h2 id="titre-dernieres-publications">À lire dans le journal</h2>
             <a href="/rubrique/cours-du-jour/#articles-redaction">Voir tous les articles de la rédaction</a>
           </div>
-          <ListeArticles articles={dernieresPublications} rubriqueVisible={false} illustres imagesExclues={[...imagesUne]} />
+          <ListeArticles articles={dernieresPublications} rubriqueVisible={false} illustres responsiveImages imagesExclues={[...imagesUne]} />
         </section>
       )}
     </div>
