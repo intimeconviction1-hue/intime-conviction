@@ -105,6 +105,8 @@ const canonique = new URL(cheminCanonique, Astro.site);
 // À l'accueil, une image éditoriale propre au journal ; chaque article pourra
 // fournir sa propre photographie sans illustration trompeuse.
 const imagePartage = image ? new URL(image, Astro.site).href : (accueil ? new URL(frontonAssises.src, Astro.site).href : null);
+const dimensionsImage = image ? article?.imageDimensions : (accueil ? frontonAssises : null);
+const imageStructuree = imagePartage ? { '@type':'ImageObject', url:imagePartage, ...(dimensionsImage?.width && dimensionsImage?.height ? {width:dimensionsImage.width,height:dimensionsImage.height} : {}), caption:image ? imageAlt : "Fronton d'une cour d'assises" } : null;
 const annee = new Date().getFullYear();
 const articlesEdition = await tousLesArticles();
 const edition = articlesEdition.find(({data}) => data.verificationEnCours !== true)?.data.date;
@@ -182,6 +184,8 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
     <meta property="og:url" content={canonique} />
     <meta property="og:locale" content="fr_FR" />
     {imagePartage && <meta property="og:image" content={imagePartage} />}
+    {imagePartage && dimensionsImage?.width && <meta property="og:image:width" content={String(dimensionsImage.width)} />}
+    {imagePartage && dimensionsImage?.height && <meta property="og:image:height" content={String(dimensionsImage.height)} />}
     {imagePartage && <meta property="og:image:alt" content={image ? imageAlt : "Fronton d'une cour d'assises"} />}
     {article && <script type="application/ld+json" set:html={JSON.stringify({
       '@context':'https://schema.org',
@@ -193,7 +197,8 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
       ...(article.dateModified ? { dateModified:article.dateModified } : {}),
       ...(article.author ? { author:{'@type':article.authorType,name:article.author,...(article.authorType === 'Organization' ? {url:new URL('/ligne-editoriale/',Astro.site).href} : {})} } : {}),
       publisher:{'@id':'https://www.intimeconviction.fr/#organisation'},
-      ...(imagePartage ? {image:[imagePartage]} : {}),
+      ...(imageStructuree ? {image:[imageStructuree]} : {}),
+      ...(article.section ? {articleSection:article.section} : {}),
       mainEntityOfPage:canonique.href,
       isAccessibleForFree:true,
       inLanguage:'fr-FR'
