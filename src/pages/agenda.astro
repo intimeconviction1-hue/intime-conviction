@@ -22,7 +22,7 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
   label:new Intl.DateTimeFormat('fr-FR',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(value+'-01T12:00:00Z'))
 }));
 ---
-<Base titre="L’Agenda des assises" description="Sessions annoncées et audiences mentionnées dans les calendriers judiciaires. Dates, juridictions, état de vérification et coordonnées des cours d’appel." rubriqueActive="cours-du-jour">
+<Base titre="Calendrier des cours d’assises : dates des procès" description="Consultez le calendrier des cours d’assises et cours criminelles : prochaines sessions, procès inscrits au rôle, dates et sources officielles." rubriqueActive="cours-du-jour">
   <header class="tete-agenda">
     <p class="sur-titre">Le journal des cours d’assises / Calendrier des procès</p>
     <h1>L’Agenda <span>des assises</span></h1>
@@ -31,6 +31,11 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
     <p id="alerte-actualite" class="alerte-actualite" data-date-generation={dateDuJour} data-date-verification={DATE_CONTROLE_AGENDA} hidden role="status"></p>
     <p class="date-controle">Sources vérifiées le <time datetime={DATE_CONTROLE_AGENDA}>{formatDate(DATE_CONTROLE_AGENDA)}</time>. Sessions non terminées au <time datetime={dateDuJour}>{formatDate(dateDuJour)}</time>, date de génération de cette page.</p>
   </header>
+  <section aria-labelledby="guide-calendrier" class="guide-calendrier">
+    <h2 id="guide-calendrier">Comment trouver les dates des procès d’assises ?</h2>
+    <p>Le calendrier ci-dessous distingue les périodes de session des audiences inscrites au rôle. Sélectionnez un département et un mois pour consulter les informations disponibles. Une période de session ne suffit pas à confirmer la date d’un procès particulier.</p>
+    <p>Pour préparer votre déplacement, consultez aussi <a href="/annuaire/">l’annuaire des cours d’assises</a>, <a href="/veille-roles/">les calendriers des juridictions</a> et notre guide pour <a href="/assister/">assister à une audience publique</a>. Vérifiez les dates auprès du greffe avant de vous déplacer.</p>
+  </section>
   <nav class="parcours-agenda" aria-label="Dans l’Agenda des assises">
     <a href="#sessions-annoncees"><strong>Les sessions</strong><span>Calendrier des cours d’assises et cours criminelles</span></a>
     <a href="#audiences-a-verifier"><strong>Les procès au rôle</strong><span>Affaires figurant aux calendriers des juridictions</span></a>
@@ -168,6 +173,11 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
   filtres?.addEventListener('reset',()=>requestAnimationFrame(afficherSelection));
 </script>
 <style>
+  .guide-calendrier{margin:1.5rem 0;padding:1rem 0;border-bottom:1px solid var(--filet)}
+  .guide-calendrier h2{font-size:1.3rem;margin:0 0 .6rem}
+  .guide-calendrier p{max-width:85ch;line-height:1.65}
+  .guide-calendrier a{text-decoration:underline;text-underline-offset:.15em}
+
 .liens-agenda a{text-decoration:underline;text-underline-offset:.2em}
 .tete-agenda{margin:2rem 0 2.5rem;padding:clamp(1.5rem,4vw,3rem);background:#f3f0eb;border-top:3px solid #a12c39;color:#202529}
 .sur-titre{margin:0 0 1rem;font:650 .8rem/1.5 var(--sans);color:#96313b}
