@@ -196,4 +196,24 @@ function progression(){const r=article.getBoundingClientRect();barre.style.width
 .retour-archives{display:flex;flex-wrap:wrap;gap:.65rem 1.5rem;border-top:1px solid var(--filet);margin-top:2rem;padding-top:1.15rem;font:650 .83rem/1.5 var(--sans)}
 .retour-archives a{text-decoration:underline;text-underline-offset:.2em}
 .retour-archives a:hover{color:#a12c39}
+
+/* Repères éditoriaux, sommaire et chronologie : contenus statiques, sans script. */
+.corps :global(.dossier-reperes){margin:1.5rem 0 1rem;padding:clamp(1rem,3vw,1.7rem);border:1px solid var(--filet);border-top:4px solid var(--rouge-journal);background:var(--surface-journal);color:var(--encre-journal)}
+.corps :global(.dossier-label){font:750 .68rem/1.5 var(--sans);letter-spacing:.09em;color:var(--rouge-journal);margin:0 0 .6rem}
+.corps :global(.dossier-reperes h2){font:650 clamp(1.6rem,4vw,2.15rem)/1.12 var(--serif);margin:0 0 1.1rem}
+.corps :global(.dossier-reperes dl){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.85rem 1.1rem;margin:0}
+.corps :global(.dossier-reperes dl>div){border-top:1px solid var(--filet);padding-top:.65rem;min-width:0}
+.corps :global(.dossier-reperes dt){font:650 .75rem/1.5 var(--sans);color:var(--encre-2);margin-bottom:.25rem}
+.corps :global(.dossier-reperes dd){font:650 .94rem/1.5 var(--sans);margin:0;overflow-wrap:anywhere}
+.corps :global(.dossier-reserve){border-top:1px solid var(--filet);font:500 .8rem/1.55 var(--sans);margin:1rem 0 0;padding-top:.75rem}
+.corps :global(.dossier-sommaire){display:flex;flex-wrap:wrap;gap:.35rem .9rem;border-block:1px solid var(--filet);margin:1rem 0 1.75rem;padding:.45rem 0}
+.corps :global(.dossier-sommaire a){display:inline-flex;min-height:44px;align-items:center;font:650 .85rem/1.4 var(--sans);color:var(--encre-journal);text-decoration:underline;text-decoration-color:var(--rouge-journal);text-underline-offset:.25em}
+.corps :global(.dossier-chronologie){list-style:none;margin:1.2rem 0 2rem;padding:0;border-left:2px solid var(--filet)}
+.corps :global(.dossier-chronologie li){position:relative;padding:0 0 1.25rem 1.3rem;margin:0;display:grid;grid-template-columns:minmax(7rem,10rem) minmax(0,1fr);gap:.5rem 1rem}
+.corps :global(.dossier-chronologie li::before){content:"";position:absolute;left:-6px;top:.45rem;width:10px;height:10px;border-radius:50%;background:var(--rouge-journal)}
+.corps :global(.dossier-chronologie time){font:700 .83rem/1.5 var(--sans);color:var(--rouge-journal)}
+.corps :global(.dossier-chronologie strong){font:650 1.15rem/1.3 var(--serif)}
+.corps :global(.dossier-chronologie p){font:450 .93rem/1.6 var(--sans);margin:.35rem 0 0}
+.corps :global(h2[id]){scroll-margin-top:1.5rem}
+@media(max-width:35rem){.corps :global(.dossier-reperes dl){grid-template-columns:1fr}.corps :global(.dossier-chronologie li){grid-template-columns:1fr;gap:.25rem}.corps :global(.dossier-sommaire){display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
