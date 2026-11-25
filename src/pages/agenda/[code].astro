@@ -1,0 +1,52 @@
+---
+import Base from '../../layouts/Base.astro';
+import { DEPARTEMENTS_ASSISES, ANNUAIRE_OFFICIEL } from '../../lib/guide-assises.mjs';
+import { DATE_CONTROLE_AGENDA, SESSIONS_AGENDA, AUDIENCES_A_RECONFIRMER, sessionsAvenir, dateLocaleAgenda, contactCourAppel } from '../../lib/agenda-sessions.mjs';
+
+export function getStaticPaths() {
+  const departementsDocumentes = new Set([...SESSIONS_AGENDA, ...AUDIENCES_A_RECONFIRMER].map(x => x.departement));
+  return DEPARTEMENTS_ASSISES.filter(d => departementsDocumentes.has(d.departement)).map(d => ({params:{code:d.code}, props:{d}}));
+}
+const { d } = Astro.props;
+const jour = dateLocaleAgenda();
+const sessions = sessionsAvenir(SESSIONS_AGENDA.filter(x => x.departement === d.departement), jour);
+const audiences = sessionsAvenir(AUDIENCES_A_RECONFIRMER.filter(x => x.departement === d.departement), jour);
+const sources = [...new Set([...SESSIONS_AGENDA,...AUDIENCES_A_RECONFIRMER].filter(x=>x.departement===d.departement).map(x=>contactCourAppel(x.source)))];
+const formatDate = s => new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(s+'T12:00:00Z'));
+---
+<Base titre={`Cour d’assises de ${d.departement} : calendrier à ${d.ville}`} description={`Calendrier judiciaire à ${d.ville} (${d.code}) : sessions d’assises et audiences répertoriées, sources institutionnelles et informations à vérifier au greffe.`}>
+  <nav aria-label="Fil d’Ariane" class="fil"><a href="/">Accueil</a> / <a href="/agenda/">Agenda des assises</a> / {d.departement}</nav>
+  <header class="local-entete">
+    <p class="local-kicker">AGENDA JUDICIAIRE / {d.code} · {d.departement}</p>
+    <h1>Cour d’assises : {d.ville}</h1>
+    <p>Calendrier des sessions et des audiences répertoriées pour le département {d.departement}. {d.ville} est le siège habituel indiqué dans notre annuaire d’orientation.</p>
+    <p class="local-note">Sources examinées le <time datetime={DATE_CONTROLE_AGENDA}>{formatDate(DATE_CONTROLE_AGENDA)}</time>. Les dates ne constituent pas une confirmation de tenue d’audience. Vérifiez auprès du greffe avant de vous déplacer.</p>
+  </header>
+  <section class="local-section">
+    <h2>Sessions annoncées</h2>
+    {sessions.length ? <ul>{sessions.map(s => <li><strong>{s.juridiction}</strong><p>Du <time datetime={s.debut}>{formatDate(s.debut)}</time> au <time datetime={s.fin}>{formatDate(s.fin)}</time> · {s.ville}</p><p>{s.libelle}</p><a href={contactCourAppel(s.source)}>Coordonnées de la cour d’appel</a></li>)}</ul> : <p>Aucune période de session future ou en cours dans notre sélection au {formatDate(jour)}. Consultez la juridiction pour connaître les nouvelles dates.</p>}
+  </section>
+  <section class="local-section">
+    <h2>Audiences inscrites au rôle, à reconfirmer</h2>
+    <p>Les dates ci-dessous proviennent des calendriers examinés. Leur maintien n’a pas été reconfirmé.</p>
+    {audiences.length ? <ul>{audiences.map(a => <li><strong>{a.juridiction}</strong><p>Du <time datetime={a.debut}>{formatDate(a.debut)}</time> au <time datetime={a.fin}>{formatDate(a.fin)}</time> · {a.ville}</p><p>{a.objet}</p><a href={contactCourAppel(a.source)}>Coordonnées de la cour d’appel</a></li>)}</ul> : <p>Aucune audience non échue à afficher dans notre sélection.</p>}
+  </section>
+  <section class="local-section">
+    <h2>Où vérifier le calendrier officiel ?</h2>
+    <ul>{sources.map(url => <li><a href={url}>Consulter les coordonnées institutionnelles de la cour</a></li>)}</ul>
+    <p><a href={ANNUAIRE_OFFICIEL}>Annuaire officiel du ministère de la Justice</a></p>
+    <p><a href="/assister/">Comment assister à un procès d’assises</a> · <a href="/annuaire/">Annuaire des cours d’assises</a> · <a href="/agenda/">Calendrier national</a></p>
+  </section>
+</Base>
+<style>
+.fil{margin:1.5rem 0;font:.85rem/1.6 var(--sans)}
+.local-entete{border-top:4px solid var(--rouge-journal);padding:1.5rem 0;border-bottom:1px solid var(--filet)}
+.local-kicker{font:700 .8rem/1.4 var(--sans);color:var(--rouge-journal)}
+h1{font:650 clamp(2.1rem,5vw,4rem)/1.1 var(--serif);margin:.6rem 0}
+.local-entete p,.local-section p{max-width:80ch;line-height:1.65}
+.local-note{font-size:.9rem;color:var(--encre-2)}
+.local-section{margin:2rem 0;border-bottom:1px solid var(--filet);padding-bottom:1.25rem}
+.local-section li{padding:.8rem 0}
+.local-section li p{margin:.4rem 0}
+a{text-decoration:underline;text-underline-offset:.15em}
+</style>
