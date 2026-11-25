@@ -8,7 +8,7 @@ import { tousLesArticles } from '../lib/articles.mjs';
 import { RUBRIQUES } from '../lib/rubriques.mjs';
 import ConsentementEditorial from '../components/ConsentementEditorial.astro';
 
-const { titre, titreSeo, description, descriptionSeo = "Intime Conviction, journal consacré aux procès criminels : actualité des audiences, verdicts, analyses et archives judiciaires.", accueil = false, noindex = false, cheminCanonique = Astro.url.pathname, image, article, imageAlt = "Image d'Intime Conviction" } = Astro.props;
+const { titre, titreSeo, description = "Intime Conviction, journal consacré aux procès criminels : actualité des audiences, verdicts, analyses et archives judiciaires.", descriptionSeo, accueil = false, noindex = false, cheminCanonique = Astro.url.pathname, image, article, imageAlt = "Image d'Intime Conviction" } = Astro.props;
 // Le nom du journal est le titre principal (h1) de la seule page d'accueil ;
 // ailleurs c'est un paragraphe, le h1 revenant au titre de la page.
 const Marque = 'p';
