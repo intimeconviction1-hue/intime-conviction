@@ -52,7 +52,44 @@ const cleArticle = cheminCanonique.split('/').filter(Boolean)[0];
 const titreRecherche = accueil ? "Cour d’assises : actualité, procès et verdicts | Intime Conviction" : (article && titresRecherche[cleArticle]) || (titre && titreComplet.length > 60 ? titre : titreComplet);
 // Ne jamais couper une phrase judiciaire au milieu : garder un extrait complet
 // si aucune phrase autonome suffisamment informative ne tient dans la cible.
+const descriptionsRecherche = {
+  "bouches-du-rhone-acquittement-assassinat-association-malfaiteurs-indemnisation": "Acquitté de l’assassinat, un homme reste condamné pour association de malfaiteurs. Pourquoi doit-il indemniser les proches de la victime ?",
+  "camille-paul-basse-terre-enregistrement-verdict": "Au procès de Pascal Velayoudom à Basse-Terre, un enregistrement est examiné par la cour. Retour sur les débats dans l’affaire Camille Paul.",
+  "carine-charpentier-aisne-leroux-verdict-perles": "La cour d’assises de l’Aisne a condamné Laurent Leroux à vingt-deux ans de réclusion pour le meurtre de sa compagne, Carine Charpentier.",
+  "caro-coups-au-telephone-version-defense": "Arsène Marchand a été condamné à douze ans de réclusion aux assises du Morbihan. Retour sur les débats autour de l’intention de tuer.",
+  "carte": "Explorez la carte des affaires judiciaires suivies par Intime Conviction et situez les cours d’assises et autres juridictions concernées.",
+  "chahinez-daoud-boutaa-perigueux-discernement": "Au procès en appel de l’affaire Chahinez Daoud, Mounir Boutaa conteste la peine de perpétuité. Retour sur l’ouverture des débats à Périgueux.",
+  "charente-assises-romain-runel-ouverture-proces": "Le 23 novembre, les assises de Charente ont ouvert un procès portant sur des accusations de viols et de torture dans un entourage familial.",
+  "chronologie": "Retrouvez les étapes judiciaires documentées des affaires suivies par Intime Conviction : audiences, décisions et chronologies des dossiers.",
+  "colmar-mulhouse-viol-reunion-proces-renvoye": "À Colmar, le procès de deux hommes accusés de viol en réunion a été reporté le 23 novembre après l’absence de l’un des accusés.",
+  "duchere-lyon-enregistrement-audience-paroles-sous-scelles": "À Lyon, le président de la cour ordonne l’enregistrement des débats du procès de la Duchère. Un éclairage sur cette pratique judiciaire.",
+  "enver-hadri-nivelles-parties-civiles-dossier-draskovic": "Aux assises du Brabant wallon, la famille d’Enver Hadri demande que la culpabilité d’Andrija Draskovic soit retenue. Retour sur les débats.",
+  "evry-meurtre-sabine-appel-au-17": "Au procès du meurtre de Sabine, la cour d’assises de l’Essonne entend un appel au 17 enregistré en 2022 et le témoignage de sa fille.",
+  "grasse-nora-mike-furlad-trente-ans-intention-contestee": "Mike Furlad a été condamné pour le meurtre de Nora à Grasse. Il soutenait avoir blessé sa compagne par accident. Retour sur le verdict.",
+  "grenoble-henry-duffourd-tentative-meurtre-quatre-condamnations": "Quatre condamnations après un tir dans un appartement de Grenoble, dont une pour tentative de meurtre. Retour sur la décision de justice.",
+  "guadeloupe-proces-assises-mineurs-mandat-arret": "Le 23 novembre, la cour d’assises des mineurs de Guadeloupe a renvoyé un procès après l’absence de l’accusé à l’ouverture de l’audience.",
+  "jean-joseph-clement-heaulme-aveux-renvoi-conteste": "Francis Heaulme conteste son renvoi devant les assises dans l’affaire Jean-Joseph Clément. Retour sur les aveux rétractés et les enjeux judiciaires.",
+  "jean-paul-benjamin-bobigny-images-legitime-defense": "Mort de Jean-Paul Benjamin : la cour criminelle de Seine-Saint-Denis a condamné le policier à cinq ans de prison et écarté la légitime défense.",
+  "jurisprudence": "Comprendre la jurisprudence pénale, les décisions de la Cour de cassation et les différences entre appel et pourvoi en cassation.",
+  "karen-baldi-proces-chambery-protection-premeditation": "Au procès Karen Baldi à Chambéry, Georges Damiano reconnaît les faits matériels mais conteste l’intention de tuer. Retour sur les débats.",
+  "la-duchere-proces-guerre-sans-fiston": "À Lyon, le procès de la Duchère s’ouvre en l’absence de son principal accusé. Intime Conviction revient sur les enjeux de cette affaire criminelle.",
+  "ligne-editoriale": "Découvrez la ligne éditoriale d’Intime Conviction : raconter les audiences, expliquer les procès criminels et rendre la justice accessible.",
+  "luca-toulouse-soiree-amis-premeditation-verdict": "Au procès du meurtre de Luca à Toulouse, la cour retient la préméditation, contestée par la défense. Retour sur les débats et le verdict.",
+  "manosque-deux-chocs-intention-contestee-digne": "À Digne, un conducteur reconnaît avoir volontairement percuté un homme à Manosque, mais conteste l’intention de tuer. Retour sur le procès.",
+  "martinique-morne-acajou-frere-ronny-william": "En Martinique, la mort de William au Morne Acajou conduit son frère devant la justice. Retour sur les faits et les enjeux du procès.",
+  "nahel-merzouk-versailles-intention-du-tir": "Mort de Nahel : la chambre de l’instruction de Versailles retient des charges suffisantes pour renvoyer le policier devant les assises pour meurtre.",
+  "orlan-melon-liege-balistique-peine-brandon-mathy": "À Liège, Brandon Mathy a été reconnu coupable d’assassinat et condamné à trente ans. Retour sur la balistique et les débats du procès.",
+  "papeete-derniere-session-assises-dossiers-viol-2026": "Sept affaires figurent au rôle des assises de Papeete du 24 novembre au 11 décembre 2026, dont cinq dossiers de viol sur mineur.",
+  "puy-en-velay-hotel-tentative-meurtre-verdict": "Au Puy-en-Velay, la victime témoigne le 23 novembre. La cour retient l’intention de tuer. Retour sur les débats et le verdict.",
+  "roubaix-square-bousquet-tir-mehdi-proces-douai": "Blessé par balle à Roubaix en avril 2020, Mehdi témoigne au deuxième jour du procès devant la cour d’assises de Douai.",
+  "rue-des-rosiers-extradition-appel-renvoi": "Affaire de la rue des Rosiers : la Cour de cassation rejette le recours d’un accusé extradé. Explication des enjeux de l’appel du renvoi.",
+  "sainte-rose-minorite-quinze-ans": "À Sainte-Rose, la cour d’assises des mineurs prononce quinze ans de réclusion. Explication du plafond de peine lié à l’excuse de minorité.",
+  "samia-mimoun-maurepas-legitime-defense-verdict": "Samia Mimoun reconnaît le coup mortel porté à Alexandre Millet à Maurepas et invoque la légitime défense. La cour retient le meurtre.",
+  "sarah-sadani-temoin-rescapee-fusillade-proces-aix": "Aux assises à Aix, une survivante de la fusillade qui a tué Sarah Sadani témoigne de ce qu’elle a entendu, sans avoir vu les tireurs.",
+  "yordan-arron-basse-terre-desistement-appel": "À Basse-Terre, Yordan Arron retire son appel à l’ouverture de l’audience prévue pour rejuger deux séries de violences sur des nourrissons."
+};
 const descriptionRecherche = (() => {
+  if (Object.hasOwn(descriptionsRecherche, cleArticle) && (article || cheminCanonique === '/' + cleArticle + '/')) return descriptionsRecherche[cleArticle];
   if (description.length <= 160) return description;
   const phrases = Array.from(new Intl.Segmenter('fr', {granularity:'sentence'}).segment(description), p => p.segment).filter(Boolean);
   let extrait = '';
