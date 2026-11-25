@@ -13,16 +13,17 @@ export async function getStaticPaths({ paginate }) {
     const references = referencesPourDossier(dossier, veille.articles);
     if (!references.length) return [];
     const statistiques = statistiquesDossier(references);
-    const dernierArticle = articles.find(article => dossiersPourArticle(article).includes(dossier));
+    const articlesRedaction = articles.filter(article => dossiersPourArticle(article).includes(dossier)).slice(0, 8);
+    const dernierArticle = articlesRedaction[0];
     return paginate(references, {
       params: { slug: dossier.slug },
-      props: { dossier, statistiques, dernierArticle },
+      props: { dossier, statistiques, dernierArticle, articlesRedaction },
       pageSize: 42
     });
   });
 }
 
-const { page, dossier, statistiques, dernierArticle } = Astro.props;
+const { page, dossier, statistiques, dernierArticle, articlesRedaction = [] } = Astro.props;
 const recit = RECITS_DOSSIERS[dossier.slug];
 const reperes = reperesPourDossier(dossier.slug);
 const decision = reperes.findLast(repere => repere.type === 'decision');
@@ -91,6 +92,13 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
       {decision && <a href={'#' + decision.id}>Lire le dernier verdict documenté</a>}
     </nav>
   )}
+  {page.currentPage === 1 && articlesRedaction.length > 0 && (
+    <section class="lectures-dossier" aria-labelledby="titre-lectures-dossier">
+      <h2 id="titre-lectures-dossier">Dans les articles de la rédaction</h2>
+      <p>Publications d’Intime Conviction mentionnant ce dossier dans leur titre. Certaines peuvent évoquer une procédure distincte.</p>
+      <ul>{articlesRedaction.map(article => <li><a href={article.chemin}>{article.titre}</a></li>)}</ul>
+    </section>
+  )}
   <aside class="lieux-en-tete" aria-label="Villes où sont situées les juridictions associées"><div><strong>OÙ SE SITUENT LES JURIDICTIONS ?</strong><p>{lieux.map(l=>l.ville).join(" / ")}. Ces villes sont celles des tribunaux, pas nécessairement celles des faits.</p></div><a href="/carte/">VOIR SUR LA CARTE <span aria-hidden="true">→</span></a></aside>
   {page.currentPage === 1 && (
     <section class="separation" aria-labelledby="titre-archives-affaire">
@@ -151,6 +159,12 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
   </div>
 </Base>
 <style>
+.lectures-dossier{margin:1.5rem 0;padding:1.2rem 0;border-block:1px solid var(--filet)}
+.lectures-dossier h2{margin:0 0 .65rem;font-size:1.4rem}
+.lectures-dossier p{font:500 .9rem/1.6 var(--sans)}
+.lectures-dossier li{padding:.35rem 0}
+.lectures-dossier a{text-decoration:underline;text-underline-offset:.15em}
+
 .liens-dossier{display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;padding:1rem 0;font:650 .9rem/1.5 var(--sans)}
 .liens-dossier a{text-decoration:underline;text-underline-offset:.2em}
 
