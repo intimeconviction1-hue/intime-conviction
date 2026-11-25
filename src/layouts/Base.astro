@@ -150,7 +150,7 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
     <header class="entete">
       <div class="barre cadre">
         <div class="identite-journal">
-          <Marque class="marque"><a href="/" aria-label="Intime Conviction, accueil"><span class="marque-mot">INTIME <span class="marque-conviction">CONVICTION</span></span></a></Marque>
+          <Marque class="marque"><a href="/" aria-label="Intime Conviction, accueil"><span class="sceau-journal" aria-hidden="true"><span>IC</span></span><span class="marque-mot">INTIME <span class="marque-conviction">CONVICTION</span></span></a></Marque>
           <div class="identite-meta">
             <p class="signature">Le journal des cours d’assises</p>
             {edition && <p class="edition-date">Édition du <time datetime={edition.toISOString()}>{formatEdition.format(edition)} · {heureEdition.format(edition)}</time></p>}
@@ -415,6 +415,64 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
       .entete .espace-entete .edition-abonnement { padding-inline: .6rem; }
       .pied-navigation { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
+    /* Manchette : monogramme gravé, caractères de presse et filet de registre. */
+    .entete, .avec-fond .entete {
+      --encre-journal: #f7ede4;
+      --encre-2: #dfc6c6;
+      --rouge-journal: #e7b3b3;
+      --surface-journal: #542d35;
+      border-top: 2px solid #b8877c;
+      background: repeating-linear-gradient(116deg, transparent 0 79px, #f8dfd005 79px 80px),
+        linear-gradient(108deg, #29171d 0%, #3c1d28 62%, #23151b 100%);
+    }
+    .entete .identite-journal .marque a {
+      display: flex;
+      align-items: center;
+      gap: clamp(.55rem, 2cqi, 1.15rem);
+      padding: .08em 0;
+      font-size: min(5.6rem, 7.6cqi);
+      font-weight: 600;
+      letter-spacing: -.059em;
+    }
+    .entete .marque-mot { display: inline; }
+    .entete .marque-conviction { padding: 0; }
+    .sceau-journal {
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      width: 1.06em;
+      aspect-ratio: 1;
+      border: 1px solid #d4a396;
+      outline: 1px solid #d4a39680;
+      outline-offset: -5px;
+      color: #f0c9ba;
+      letter-spacing: -.09em;
+    }
+    .sceau-journal span { padding-right: .08em; font: 570 .49em/1 var(--serif); }
+    .entete .identite-meta { margin-top: .7rem; }
+    .entete .signature {
+      padding-inline-start: .65rem;
+      border-inline-start: 2px solid #d4a396;
+    }
+    .entete .recherche-entete { border-color: #b4878e; }
+    .entete .espace-entete .edition-abonnement {
+      color: #2c1720;
+      background: #f0c9ba;
+    }
+    .entete .espace-entete .edition-abonnement:hover { color: #2c1720; background: #fff1e4; }
+    .entete .bande-navigation {
+      --encre-journal: #2e2025;
+      --rouge-journal: #793648;
+      --surface-journal: #efe2dd;
+      background: #faf4ee;
+      border-block: 1px solid #d7bfb5;
+    }
+    @media (max-width: 48rem) {
+      .entete .barre { padding-block: .8rem .45rem; }
+      .entete .identite-journal .marque a { font-size: min(4.2rem, 7.6cqi); }
+      .entete .identite-meta { margin-top: .4rem; }
+    }
+
   </style>
   </body>
 </html>
