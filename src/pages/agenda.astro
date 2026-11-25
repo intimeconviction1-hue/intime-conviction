@@ -1,8 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
+import { DEPARTEMENTS_ASSISES } from '../lib/guide-assises.mjs';
 import {DATE_CONTROLE_AGENDA,SESSIONS_AGENDA,AUDIENCES_A_RECONFIRMER,PROVENANCE_AGENDA,provenancePeriode,sessionsAvenir,dateLocaleAgenda,contactCourAppel} from '../lib/agenda-sessions.mjs';
 
 const dateDuJour=dateLocaleAgenda();
+const codesDocumentes = new Set([...SESSIONS_AGENDA,...AUDIENCES_A_RECONFIRMER].map(x=>x.departement));
+const calendriersLocaux = DEPARTEMENTS_ASSISES.filter(d=>codesDocumentes.has(d.departement));
 const dates=sessionsAvenir(SESSIONS_AGENDA,dateDuJour);
 const audiences=sessionsAvenir(AUDIENCES_A_RECONFIRMER,dateDuJour);
 const formatDate=s=>new Intl.DateTimeFormat('fr-FR',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(s+'T12:00:00Z'));
@@ -35,6 +38,11 @@ const moisDisponibles=[...tousLesMois].sort().map(value=>({
     <h2 id="guide-calendrier">Comment trouver les dates des procès d’assises ?</h2>
     <p>Le calendrier ci-dessous distingue les périodes de session des audiences inscrites au rôle. Sélectionnez un département et un mois pour consulter les informations disponibles. Une période de session ne suffit pas à confirmer la date d’un procès particulier.</p>
     <p>Pour préparer votre déplacement, consultez aussi <a href="/annuaire/">l’annuaire des cours d’assises</a>, <a href="/veille-roles/">les calendriers des juridictions</a> et notre guide pour <a href="/assister/">assister à une audience publique</a>. Vérifiez les dates auprès du greffe avant de vous déplacer.</p>
+  </section>
+  <section class="guide-calendrier" aria-labelledby="titre-calendriers-locaux">
+    <h2 id="titre-calendriers-locaux">Calendriers par département</h2>
+    <p>Retrouvez les périodes répertoriées et les coordonnées institutionnelles pour chaque département documenté.</p>
+    <ul>{calendriersLocaux.map(d=><li><a href={'/agenda/'+d.code+'/'}>{d.ville} · {d.departement}</a></li>)}</ul>
   </section>
   <nav class="parcours-agenda" aria-label="Dans l’Agenda des assises">
     <a href="#sessions-annoncees"><strong>Les sessions</strong><span>Calendrier des cours d’assises et cours criminelles</span></a>
