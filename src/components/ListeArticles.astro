@@ -6,7 +6,7 @@ import { dateLongue } from '../lib/articles.mjs';
 
 // `niveau` : 3 sous une section titrée en h2 (accueil), 2 directement sous le
 // h1 d'une page (rubrique) — un saut de niveau égare les lecteurs d'écran.
-const { articles, rubriqueVisible = true, extraits = true, niveau = 3, dateMiseAJourVisible = false, illustres = false, imagesExclues = [] } = Astro.props;
+const { articles, rubriqueVisible = true, extraits = true, niveau = 3, dateMiseAJourVisible = false, illustres = false, responsiveImages = false, imagesExclues = [] } = Astro.props;
 const imagesAffichees = new Set(imagesExclues);
 const Titre = `h${niveau}`;
 ---
@@ -17,7 +17,7 @@ const Titre = `h${niveau}`;
         const photo = photosArticles[data.chemin] ?? illustrationNeutre;
         if (imagesAffichees.has(photo.image.src)) return null;
         imagesAffichees.add(photo.image.src);
-        return <VisuelAssises image={photo.image} fallbackImage={photo.fallbackImage} alt={photo.lieu} source={photo.source} credit={photo.auteur} licence={photo.licence} licenceUrl={photo.lienLicence} legendeCompacte />;
+        return <VisuelAssises image={photo.image} fallbackImage={photo.fallbackImage} alt={photo.lieu} source={photo.source} credit={photo.auteur} licence={photo.licence} licenceUrl={photo.lienLicence} responsiveImages={responsiveImages} legendeCompacte />;
       })()}
       <p class="meta">
         {rubriqueVisible && <><span class="etiquette">{rubrique(data.rubrique).libelle}</span>&ensp;</>}
