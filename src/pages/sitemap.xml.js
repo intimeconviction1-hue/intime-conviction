@@ -6,6 +6,8 @@ import { CULTURE } from '../lib/culture.mjs';
 import { DOSSIERS, referencesPourDossier } from '../lib/dossiers.mjs';
 import { RUBRIQUES } from '../lib/rubriques.mjs';
 import { tousLesArticles } from '../lib/articles.mjs';
+import { DEPARTEMENTS_ASSISES } from '../lib/guide-assises.mjs';
+import { SESSIONS_AGENDA, AUDIENCES_A_RECONFIRMER } from '../lib/agenda-sessions.mjs';
 
 const PAR_PAGE_RUBRIQUE = 30;
 const PAR_PAGE_PRESSE = 60;
@@ -22,6 +24,8 @@ export async function GET({ site }) {
   const [articles, veille] = await Promise.all([tousLesArticles(), lireVeille()]);
   const adresses = new Set(PAGES_STATIQUES);
   const modifications = new Map();
+  const departementsDocumentes = new Set([...SESSIONS_AGENDA, ...AUDIENCES_A_RECONFIRMER].map(x => x.departement));
+  for (const d of DEPARTEMENTS_ASSISES) if (departementsDocumentes.has(d.departement)) adresses.add('/agenda/' + d.code + '/');
 
   for (const c of CULTURE) adresses.add('/culture/' + c.slug + '/');
 
