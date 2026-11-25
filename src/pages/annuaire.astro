@@ -6,7 +6,7 @@ import { SESSIONS_AGENDA, AUDIENCES_A_RECONFIRMER, sessionsAvenir, dateLocaleAge
 validerAnnuaire();
 validerRoles(DEPARTEMENTS_ASSISES);
 const auCalendrier=sessionsAvenir([...SESSIONS_AGENDA,...AUDIENCES_A_RECONFIRMER],dateLocaleAgenda());
-const depAvecDates=new Set(auCalendrier.map(x=>x.departement));
+const depAvecDates=new Set([...SESSIONS_AGENDA,...AUDIENCES_A_RECONFIRMER].map(x=>x.departement));
 const nombreDepartements = DEPARTEMENTS_ASSISES.length;
 const nombreOutreMer = DEPARTEMENTS_ASSISES.filter(d=>d.outreMer).length;
 const troisEntrees = [
@@ -63,7 +63,7 @@ const troisEntrees = [
           ) : (
             <p class="role-absent">Aucun rôle officiel en ligne identifié dans notre sélection pour ce département. Vérifier auprès du greffe.</p>
           )}
-          {depAvecDates.has(d.departement) && <a class="agenda-departement" href={'/agenda/?departement='+encodeURIComponent(d.departement)} aria-label={'Voir les périodes répertoriées dans l’agenda pour '+d.departement}>AGENDA DU DÉPARTEMENT <span aria-hidden="true">→</span></a>}
+          {depAvecDates.has(d.departement) && <a class="agenda-departement" href={'/agenda/'+d.code+'/'} aria-label={'Voir les périodes répertoriées dans l’agenda pour '+d.departement}>AGENDA DU DÉPARTEMENT <span aria-hidden="true">→</span></a>}
           <div class="liens-archives">
             <a href={'/recherche/?q='+encodeURIComponent(d.ville)} title={'Chercher '+d.ville+' dans les articles originaux du journal'}>ARTICLES DU JOURNAL <span aria-hidden="true">→</span></a>
             <a href={'/archives/presse/rechercher/?q='+encodeURIComponent(d.ville)} title={'Chercher '+d.ville+' parmi les titres de presse'}>TITRES DE PRESSE <span aria-hidden="true">→</span></a>
