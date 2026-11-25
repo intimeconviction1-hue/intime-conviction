@@ -8,48 +8,48 @@ import { tousLesArticles } from '../lib/articles.mjs';
 import { RUBRIQUES } from '../lib/rubriques.mjs';
 import ConsentementEditorial from '../components/ConsentementEditorial.astro';
 
-const { titre, description = "Intime Conviction, journal consacré aux procès criminels : actualité des audiences, verdicts, analyses et archives judiciaires.", accueil = false, noindex = false, cheminCanonique = Astro.url.pathname, image, article, imageAlt = "Image d'Intime Conviction" } = Astro.props;
+const { titre, titreSeo, description, descriptionSeo = "Intime Conviction, journal consacré aux procès criminels : actualité des audiences, verdicts, analyses et archives judiciaires.", accueil = false, noindex = false, cheminCanonique = Astro.url.pathname, image, article, imageAlt = "Image d'Intime Conviction" } = Astro.props;
 // Le nom du journal est le titre principal (h1) de la seule page d'accueil ;
 // ailleurs c'est un paragraphe, le h1 revenant au titre de la page.
 const Marque = 'p';
 const titreComplet = titre ? `${titre} · Intime Conviction` : "Intime Conviction | Le journal des cours d'assises";
 // Titres de recherche distincts des titres éditoriaux, relus par affaire.
 const titresRecherche = {
-  "bouches-du-rhone-acquittement-assassinat-association-malfaiteurs-indemnisation": "Assassinat : pourquoi un acquitté doit indemniser les proches",
+  "bouches-du-rhone-acquittement-assassinat-association-malfaiteurs-indemnisation": "Assassinat : pourquoi cet acquitté indemnise les proches",
   "camille-paul-basse-terre-enregistrement-verdict": "Affaire Camille Paul : un enregistrement aux assises",
   "carine-charpentier-aisne-leroux-verdict-perles": "Meurtre de Carine Charpentier : Laurent Leroux condamné",
   "caro-coups-au-telephone-version-defense": "Caro : douze ans de réclusion, l’intention de tuer en débat",
   "chahinez-daoud-boutaa-perigueux-discernement": "Chahinez Daoud : Mounir Boutaa conteste la perpétuité",
   "charente-assises-romain-runel-ouverture-proces": "Charente : Romain Runel jugé pour viols et torture présumés",
-  "colmar-mulhouse-viol-reunion-proces-renvoye": "Colmar : procès pour viol en réunion reporté",
+  "colmar-mulhouse-viol-reunion-proces-renvoye": "Colmar : le procès pour viol en réunion est reporté",
   "duchere-lyon-enregistrement-audience-paroles-sous-scelles": "Procès de la Duchère : les débats enregistrés à Lyon",
   "duchere-lyon-proces-absence-ben-addi": "Procès de la Duchère : le dossier Ben Addi disjoint",
   "eleonore-douai-verdict-neuville-saint-remy": "Douai : les dernières photos d’Éléonore devant les jurés",
   "enver-hadri-nivelles-parties-civiles-dossier-draskovic": "Enver Hadri : le rôle de Draskovic examiné à Nivelles",
   "evry-meurtre-sabine-appel-au-17": "Meurtre de Sabine à Évry : l’appel au 17 et le témoignage",
   "grasse-nora-mike-furlad-trente-ans-intention-contestee": "Mort de Nora à Grasse : Mike Furlad condamné pour meurtre",
-  "grenoble-henry-duffourd-tentative-meurtre-quatre-condamnations": "Grenoble : quatre condamnations après un tir",
-  "guadeloupe-proces-assises-mineurs-mandat-arret": "Guadeloupe : procès aux assises renvoyé",
+  "grenoble-henry-duffourd-tentative-meurtre-quatre-condamnations": "Grenoble : quatre condamnations après un tir en appartement",
+  "guadeloupe-proces-assises-mineurs-mandat-arret": "Guadeloupe : procès aux assises des mineurs renvoyé",
   "jean-joseph-clement-heaulme-aveux-renvoi-conteste": "Francis Heaulme : aveux rétractés et renvoi contesté",
   "jean-paul-benjamin-bobigny-images-legitime-defense": "Jean-Paul Benjamin : la légitime défense écartée à Bobigny",
   "karen-baldi-proces-chambery-protection-premeditation": "Karen Baldi : procès pour assassinat et protection",
-  "la-duchere-proces-guerre-sans-fiston": "La Duchère : le procès sans son principal accusé",
+  "la-duchere-proces-guerre-sans-fiston": "La Duchère : procès aux assises sans son principal accusé",
   "luca-toulouse-soiree-amis-premeditation-verdict": "Meurtre de Luca à Toulouse : préméditation retenue",
   "manosque-deux-chocs-intention-contestee-digne": "Manosque : deux chocs et une intention de tuer contestée",
   "martinique-morne-acajou-frere-ronny-william": "Morne Acajou : un homme jugé pour la mort de son frère",
-  "nahel-merzouk-versailles-intention-du-tir": "Mort de Nahel : renvoi du policier pour meurtre",
+  "nahel-merzouk-versailles-intention-du-tir": "Mort de Nahel : policier renvoyé aux assises pour meurtre",
   "orlan-melon-liege-balistique-peine-brandon-mathy": "Affaire Orlan Melon : la balistique au procès à Liège",
   "papeete-derniere-session-assises-dossiers-viol-2026": "Assises de Papeete : cinq dossiers de viol sur mineur",
-  "puy-en-velay-hotel-tentative-meurtre-verdict": "Le Puy-en-Velay : l’intention de tuer retenue",
+  "puy-en-velay-hotel-tentative-meurtre-verdict": "Le Puy-en-Velay : l’intention de tuer retenue au procès",
   "roubaix-square-bousquet-tir-mehdi-proces-douai": "Tir à Roubaix : la victime témoigne aux assises de Douai",
-  "rue-des-rosiers-extradition-appel-renvoi": "Rue des Rosiers : extradition et appel du renvoi",
+  "rue-des-rosiers-extradition-appel-renvoi": "Rue des Rosiers : extradition et appel du renvoi en procès",
   "sainte-rose-minorite-quinze-ans": "Meurtre à Sainte-Rose : quinze ans et excuse de minorité",
   "samia-mimoun-maurepas-legitime-defense-verdict": "Samia Mimoun : la cour retient le meurtre à Versailles",
   "sarah-sadani-temoin-rescapee-fusillade-proces-aix": "Sarah Sadani : le témoignage d’une rescapée de la fusillade",
-  "yordan-arron-basse-terre-desistement-appel": "Basse-Terre : Yordan Arron retire son appel"
+  "yordan-arron-basse-terre-desistement-appel": "Basse-Terre : Yordan Arron retire son appel à l’audience"
 };
 const cleArticle = cheminCanonique.split('/').filter(Boolean)[0];
-const titreRecherche = accueil ? "Cour d’assises : actualité, procès et verdicts | Intime Conviction" : (article && titresRecherche[cleArticle]) || (titre && titreComplet.length > 60 ? titre : titreComplet);
+const titreRecherche = titreSeo || (accueil ? "Cour d’assises : actualité, procès et verdicts | Intime Conviction" : (article && titresRecherche[cleArticle]) || (titre && titreComplet.length > 60 ? titre : titreComplet));
 // Ne jamais couper une phrase judiciaire au milieu : garder un extrait complet
 // si aucune phrase autonome suffisamment informative ne tient dans la cible.
 const descriptionsRecherche = {
@@ -81,7 +81,7 @@ const descriptionsRecherche = {
   "orlan-melon-liege-balistique-peine-brandon-mathy": "À Liège, Brandon Mathy a été reconnu coupable d’assassinat et condamné à trente ans. Retour sur la balistique et les débats du procès.",
   "papeete-derniere-session-assises-dossiers-viol-2026": "Sept affaires figurent au rôle des assises de Papeete du 24 novembre au 11 décembre 2026, dont cinq dossiers de viol sur mineur.",
   "puy-en-velay-hotel-tentative-meurtre-verdict": "Au Puy-en-Velay, la victime témoigne le 23 novembre. La cour retient l’intention de tuer. Retour sur les débats et le verdict.",
-  "roubaix-square-bousquet-tir-mehdi-proces-douai": "Blessé par balle à Roubaix en avril 2020, Mehdi témoigne au deuxième jour du procès devant la cour d’assises de Douai.",
+  "roubaix-square-bousquet-tir-mehdi-proces-douai": "Blessé par balle à Roubaix en avril 2020, Mehdi témoigne au procès devant la cour d’assises de Douai. Retour sur les débats autour du tir.",
   "rue-des-rosiers-extradition-appel-renvoi": "Affaire de la rue des Rosiers : la Cour de cassation rejette le recours d’un accusé extradé. Explication des enjeux de l’appel du renvoi.",
   "sainte-rose-minorite-quinze-ans": "À Sainte-Rose, la cour d’assises des mineurs prononce quinze ans de réclusion. Explication du plafond de peine lié à l’excuse de minorité.",
   "samia-mimoun-maurepas-legitime-defense-verdict": "Samia Mimoun reconnaît le coup mortel porté à Alexandre Millet à Maurepas et invoque la légitime défense. La cour retient le meurtre.",
@@ -89,6 +89,7 @@ const descriptionsRecherche = {
   "yordan-arron-basse-terre-desistement-appel": "À Basse-Terre, Yordan Arron retire son appel à l’ouverture de l’audience prévue pour rejuger deux séries de violences sur des nourrissons."
 };
 const descriptionRecherche = (() => {
+  if (descriptionSeo) return descriptionSeo;
   if (Object.hasOwn(descriptionsRecherche, cleArticle) && (article || cheminCanonique === '/' + cleArticle + '/')) return descriptionsRecherche[cleArticle];
   if (description.length <= 160) return description;
   const phrases = Array.from(new Intl.Segmenter('fr', {granularity:'sentence'}).segment(description), p => p.segment).filter(Boolean);
