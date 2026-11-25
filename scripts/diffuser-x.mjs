@@ -73,7 +73,7 @@ async function schedule(a, n) {
   if (result.errors?.length) throw new Error('Buffer GraphQL : ' + result.errors.map(e => e.message).join('; '));
   const outcome = result.data?.createPost;
   if (!outcome?.post?.id) throw new Error('Buffer : ' + (outcome?.message || 'création non confirmée'));
-  return outcome.post.id;
+  return outcome.post;
 }
 
 async function main() {
@@ -99,16 +99,18 @@ async function main() {
     }
     if (dryRun) { console.log('Simulation : ' + a.url); continue; }
     try {
-      const id = await schedule(a, count);
-      markQueued(state, a, id);
+      const post = await schedule(a, count);
+      markQueued(state, a, post.id);
       fs.writeFileSync(statePath, JSON.stringify(state, null, 2) + '\n');
-      console.log((a.isUpdate ? 'Mise à jour programmée : ' : 'Programmé : ') + a.url + ' ; Buffer post ' + id);
+      console.log((a.isUpdate ? 'Mise à jour programmée : ' : 'Programmé : ') + a.url + ' ; Buffer post ' + post.id + (post.dueAt ? ' ; prévu ' + post.dueAt : ''));
       count++;
       await sleep(300);
     } catch (error) {
       console.error('Échec de publication de ' + a.url + ' : ' + error.message);
       process.exitCode = 1;
-      // Ne pas marquer comme publié : la prochaine exécution réessaiera.
+      // Un refus de doublon ne confirme pas l’envoi de cette version.
+      // Il ne doit pas bloquer les autres articles, dont les URL sont distinctes.
+      if (error.message.includes("already got this one scheduled or posted around the same time")) continue;
       break;
     }
   }
