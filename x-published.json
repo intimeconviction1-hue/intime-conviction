@@ -65,10 +65,10 @@
       "updatedAt": "2026-11-23T20:03:07.887Z"
     },
     "7d1b2c9689bcd067e0d32a6c5db67a944d182fb433fb5f0c88323d75fa3bc765": {
-      "bufferPostId": "6b02cd480247969092433626",
-      "queuedAt": "2026-11-22T11:08:56.463Z",
-      "fingerprint": "a09ce24943bc8476f52b6b88cb7360e3e8b75090fab9460a9e23335955745586",
-      "updatedAt": "2026-11-22T11:06:47.516Z"
+      "bufferPostId": "6b06bfdf4f2f059ad9a47685",
+      "queuedAt": "2026-11-25T11:00:47.383Z",
+      "fingerprint": "19945b54d61ded7c3685fb7c942b9d4c9bd89f60ef72840e13447c10f8abec20",
+      "updatedAt": "2026-11-25T10:58:45.767Z"
     },
     "463515f59bbb70c0a1aea8dd6e8af1769df4b75ba87ed9059e898daaa17b76b0": {
       "baseline": true,
@@ -322,6 +322,11 @@
       "bufferPostId": "6b06959340e1d58d120d8914",
       "queuedAt": "2026-11-25T08:00:19.387Z",
       "fingerprint": "c4f197d827b58856457ac06562672d82f1cdb6c9b7d8165b6844aada5d430852"
+    },
+    "e0e3f8a46670f833984844c95d8110190b7ed30ec55adabaf5ed807aafbe3dd3": {
+      "bufferPostId": "6b06bfde81683ea0803fb93f",
+      "queuedAt": "2026-11-25T11:00:46.756Z",
+      "fingerprint": "451c8ff0de62394957987b9dc2644317454fa1d6d6b2e2eb6700f6e593633486"
     }
   },
   "updatesSince": "2026-11-20T00:00:00+01:00"
