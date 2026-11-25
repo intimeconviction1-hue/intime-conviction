@@ -6,6 +6,7 @@ const normaliser = s => String(s ?? '')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
 const referencesParArticle = {
+  '/papeete-makemo-jacques-t-audience-coup-mortel/11/2026/': ['CBMizwFBVV95cUxOSWFEdS1zOGJTQjcyRjc2WmlNR0hhSG1QOTUzSXZKN3BWVnFOQ2VJX284VDlUS2JHLWFVeTRfd0'],
   '/bruyeres-gilbert-jacob-proces-jimmy-hariot/11/2026/': ["CBMi3AFBVV95cUxPYzUxRVVLTFByQ0JRYkxGcGZPZlZTMUJSS3BTUnlJVkxjcG9JWDlkVGx1NW9mMHl5","CBMiekFVX3lxTE5aR3RkOU5fa1hpaEdtWGhqMVg1SWV1NkNiaGxzaFFxUTZqU0E3OEtrM3pvekdqVnRj","CBMihgFBVV95cUxQZDI2b29pTWk3MVduaXBCOHd0blhpckJFcDRPMUJMaU9XS1c4MXJSTjM5emZ4MVVX","CBMisgFBVV95cUxNQjFkOFladnlGMkFzV2JkRURpQVA2LWVPeFBrSnZ2bFdQZzFIRjRpTGphdjFqbDc0"],
   '/grasse-nora-mike-furlad-trente-ans-intention-contestee/11/2026/': [
     '10765242',
@@ -88,6 +89,7 @@ const referencesParArticle = {
     '225080659812914/mort-de-nahel',
     'renvoi-du-policier-pour-meurtre-13665529.php',
   ],
+  '/proces-sollacaro-et-tout-recommence-aux-assises/11/2026/': ['8368231'],
 };
 
 export function presseSansRedite(references, articlesEnUne) {
