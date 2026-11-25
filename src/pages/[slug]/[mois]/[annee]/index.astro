@@ -19,8 +19,21 @@ export async function getStaticPaths() {
   const dossiersPublies = new Set(DOSSIERS.filter(dossier => referencesPourDossier(dossier, veille.articles).length));
   // Precalcul des voisins par rubrique en O(n), plutot qu'un filtrage
   // integral de 3 436 articles pour chacune des pages generees.
+  // Liens éditoriaux explicites : une même procédure identifiée, jamais un simple mot-clé.
+  const affairesReliees = [[
+    '/la-duchere-proces-guerre-sans-fiston/11/2026/',
+    '/duchere-lyon-proces-absence-ben-addi/11/2026/',
+    '/duchere-lyon-enregistrement-audience-paroles-sous-scelles/11/2026/',
+  ]];
+  const indexPublic = new Map(articles.filter(a => a.data.verificationEnCours !== true).map(a => [a.data.chemin, a]));
+  const liensAffaires = new Map();
+  for (const chemins of affairesReliees) {
+    const membres = chemins.map(chemin => indexPublic.get(chemin)).filter(Boolean);
+    for (const membre of membres) liensAffaires.set(membre.data.chemin, membres.filter(a => a !== membre));
+  }
   const groupes = new Map();
   for (const article of articles) {
+    if (article.data.verificationEnCours === true) continue;
     if (!groupes.has(article.data.rubrique)) groupes.set(article.data.rubrique, []);
     groupes.get(article.data.rubrique).push(article);
   }
@@ -32,11 +45,11 @@ export async function getStaticPaths() {
   }
   return routesArticles(articles).map(({ params, article, redirection }) => {
     if (redirection) return { params, props: { redirection } };
-    return { params, props: { article, voisins: voisinage.get(article) ?? [], dossiers: dossiersPourArticle(article.data).filter(dossier => dossiersPublies.has(dossier)) } };
+    return { params, props: { article, lies: liensAffaires.get(article.data.chemin) ?? [], voisins: (voisinage.get(article) ?? []).filter(a => !(liensAffaires.get(article.data.chemin) ?? []).includes(a)), dossiers: dossiersPourArticle(article.data).filter(dossier => dossiersPublies.has(dossier)) } };
   });
 }
 
-const { article, voisins, dossiers, redirection } = Astro.props;
+const { article, voisins, dossiers, lies = [], redirection } = Astro.props;
 if (redirection) return Astro.redirect(redirection, 301);
 const { data } = article;
 const r = rubrique(data.rubrique);
@@ -116,6 +129,10 @@ const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCas
         <a href="/rubrique/cours-du-jour/#articles-redaction">Découvrir les dernières actualités judiciaires du journal</a>
       </aside>
     )}
+    {lies.length > 0 && <aside class="passerelle-archives" aria-labelledby="titre-meme-proces">
+      <h2 id="titre-meme-proces">À lire sur ce procès</h2>
+      <ul>{lies.map(({data: lie}) => <li><a href={lie.chemin}>{lie.titre}</a></li>)}</ul>
+    </aside>}
     <nav class="retour-archives" aria-label="Parcourir les dossiers et les archives">
       {redaction && data.rubrique === 'l-expose' && <a href="/dossiers/">Les dossiers de la rédaction</a>}
       {dossiers.map(dossier => <a href={`/dossiers/${dossier.slug}/`}>Suivre le dossier · {dossier.titre}</a>)}
