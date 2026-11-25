@@ -178,7 +178,7 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
       // Les pages statiques ne peuvent pas varier leurs balises selon la query string.
       // Ces anciennes URL de pagination ne sont que des variantes de l’accueil.
       const params = new URLSearchParams(window.location.search);
-      if ([...params.keys()].some(key => /^query-\\d+-page$/.test(key))) {
+      if ([...params.keys()].some(key => /^query-\d+-page$/.test(key))) {
         document.querySelector('meta[name="robots"]')?.setAttribute('content', 'noindex,follow');
       }
     </script>}
