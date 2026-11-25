@@ -80,7 +80,7 @@ const archiveHistorique = data.date.getTime() < Date.now() - 365 * 86400000;
 
 const auteurIdentifie = provenance?.auteur ?? (signatureArchive.toLocaleLowerCase('fr') === 'intime conviction' ? null : (signatureArchive || null));
 ---
-<Base cheminCanonique={data.chemin} image={photo?.image.src} imageAlt={photo?.lieu} titre={data.titre} description={data.extrait} rubriqueActive={data.rubrique} noindex={data.verificationEnCours === true} article={{ headline:data.titre,section:r.libelle,imageDimensions:photo ? {width:photo.image.width,height:photo.image.height} : undefined,datePublished:data.date.toISOString(),dateModified:data.dateMiseAJour?.toISOString(),author:auteurIdentifie, authorType:redaction ? 'Organization' : 'Person', type:redaction && data.rubrique === 'cours-du-jour' ? 'NewsArticle' : 'Article' }}>
+<Base cheminCanonique={data.chemin} image={photo?.image.src} imageAlt={photo?.lieu} titre={data.titre} titreSeo={data.titreSeo} description={data.extrait} descriptionSeo={data.descriptionSeo} rubriqueActive={data.rubrique} noindex={data.verificationEnCours === true} article={{ headline:data.titre,section:r.libelle,imageDimensions:photo ? {width:photo.image.width,height:photo.image.height} : undefined,datePublished:data.date.toISOString(),dateModified:data.dateMiseAJour?.toISOString(),author:auteurIdentifie, authorType:redaction ? 'Organization' : 'Person', type:redaction && data.rubrique === 'cours-du-jour' ? 'NewsArticle' : 'Article' }}>
   <script type="application/ld+json" set:html={JSON.stringify({
     '@context':'https://schema.org',
     '@type':'BreadcrumbList',
