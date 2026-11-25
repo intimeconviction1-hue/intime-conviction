@@ -60,6 +60,7 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/bruyeres-gilbert-jacob-proces-jimmy-hariot/11/2026/': { ...illustrationAssises, lieu: 'Salle de la cour d’assises du palais Thiac, Bordeaux. Photographie d’illustration, hors audience d’Épinal.' },
   '/grasse-nora-mike-furlad-trente-ans-intention-contestee/11/2026/': { ...photoPalaisAix, lieu: 'Palais Verdun, Aix-en-Provence · Photographie d’illustration, hors audience de Grasse' },
   '/bouches-du-rhone-acquittement-assassinat-association-malfaiteurs-indemnisation/11/2026/': {
     ...illustrationNeutre,
