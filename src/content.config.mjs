@@ -11,6 +11,8 @@ const articles = defineCollection({
   loader: glob({ pattern: '**/*.json', base, generateId: ({ data }) => String(data.slug) }),
   schema: z.object({
     titre: z.string(),
+    titreSeo: z.string().min(1).max(70).optional(),
+    descriptionSeo: z.string().min(1).max(200).optional(),
     slug: z.string(),
     date: z.coerce.date(),
     dateMiseAJour: z.coerce.date().optional(),
