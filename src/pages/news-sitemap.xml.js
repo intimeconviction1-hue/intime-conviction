@@ -5,7 +5,7 @@ const DEUX_JOURS = 48 * 60 * 60 * 1000;
 export async function GET({ site }) {
   const limite = Date.now() - DEUX_JOURS;
   const articles = (await articlesADiffuser())
-    .filter(article => article.date.getTime() >= limite)
+    .filter(article => article.rubrique === 'cours-du-jour' && article.date.getTime() >= limite)
     .slice(0, 1000);
   const urls = articles.map(article => `<url>
     <loc>${xml(new URL(article.chemin, site).href)}</loc>
