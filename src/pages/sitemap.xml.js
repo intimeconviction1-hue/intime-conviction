@@ -15,7 +15,7 @@ const PAGES_STATIQUES = [
   '/', '/archives/', '/archives/presse/',
   '/ligne-editoriale/', '/comprendre/', '/annuaire/',
   '/agenda/', '/assister/', '/jurisprudence/', '/veille-roles/', '/carte/',
-  '/chronologie/', '/dossiers/'
+  '/chronologie/', '/dossiers/', '/revue-de-presse/', '/culture/videos/'
 ];
 
 export async function GET({ site }) {
