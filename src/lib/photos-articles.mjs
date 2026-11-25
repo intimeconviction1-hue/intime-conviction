@@ -60,6 +60,7 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/reims-raphael-narcisse-verdict-celestin/11/2026/': { ...illustrationNeutre, lieu: 'Illustration judiciaire générée pour Intime Conviction. Elle ne représente pas l’audience de Reims.' },
   '/epinal-papeete-grasse-ce-que-l-aveu-ne-tranche-pas/11/2026/': {
     image: photoCodePenal1810,
     lieu: 'Page de titre du Code pénal de 1810, édition de Bruxelles · Illustration d’archives',
