@@ -60,6 +60,14 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/epinal-papeete-grasse-ce-que-l-aveu-ne-tranche-pas/11/2026/': {
+    image: photoCodePenal1810,
+    lieu: 'Page de titre du Code pénal de 1810, édition de Bruxelles · Illustration d’archives',
+    auteur: 'Gambier, Bruxelles, 1810 · numérisation Google via Wikimedia Commons',
+    source: 'https://commons.wikimedia.org/wiki/File:Code_p%C3%A9nal_(Gambier,_1810).pdf',
+    licence: 'Domaine public',
+    lienLicence: 'https://creativecommons.org/publicdomain/mark/1.0/',
+  },
   '/papeete-makemo-jacques-t-audience-coup-mortel/11/2026/': { ...illustrationNeutre, image: croquisAudienceSarah, source: croquisAudienceSarah.src, lienLicence: croquisAudienceSarah.src, lieu: 'Illustration générée pour Intime Conviction. Elle ne représente ni la salle de Papeete ni les personnes citées.' },
   '/bruyeres-gilbert-jacob-proces-jimmy-hariot/11/2026/': { ...illustrationAssises, lieu: 'Salle de la cour d’assises du palais Thiac, Bordeaux. Photographie d’illustration, hors audience d’Épinal.' },
   '/grasse-nora-mike-furlad-trente-ans-intention-contestee/11/2026/': { ...photoPalaisAix, lieu: 'Palais Verdun, Aix-en-Provence · Photographie d’illustration, hors audience de Grasse' },
