@@ -18,15 +18,14 @@ async function ouvrirAccueil(page) {
     const url = new URL(base);
     url.searchParams.set('controle-visuel', String(Date.now()));
     const response = await page.goto(url.href, { waitUntil: 'domcontentloaded', timeout: 30_000 });
-    if (response?.ok() && await page.locator('.une-sommaire').count() > 0) return;
+    if (response?.ok() && await page.locator('.une-reportages > article:not([hidden])').count() === 3) return;
     await attendre(5_000);
   } while (Date.now() < fin);
   throw new Error('La nouvelle une n’est pas disponible sur le site public.');
 }
 
-async function mesurer(page, nom, largeurAttendue) {
-  const diagnostic = await page.evaluate(() => {
-    const article = document.querySelector('.une-editoriale .article-redaction-une:not([hidden])');
+async function mesurer(article, nom, largeurAttendue) {
+  const diagnostic = await article.evaluate(article => {
     const image = article?.querySelector('.une-couverture img');
     const rect = el => el?.getBoundingClientRect().toJSON() ?? null;
     return {
@@ -53,12 +52,8 @@ async function mesurer(page, nom, largeurAttendue) {
   if (Math.abs(image.width - couverture.width) > 2 || lien.x < -2 || lien.right > largeurAttendue + 2) {
     erreurs.push(`${nom}: image ou titre mal aligné`);
   }
-  if (largeurAttendue === 375) {
-    if (Math.abs(image.width / image.height - 5 / 3) > .04 || lien.y < image.bottom - 2) {
-      erreurs.push(`${nom}: dimensions de la photo ou position du titre inattendues`);
-    }
-  } else if (Math.abs(image.height - couverture.height) > 2 || lien.bottom > couverture.bottom) {
-    erreurs.push(`${nom}: l’image ou le titre sort de la couverture`);
+  if (Math.abs(image.width / image.height - 16 / 10) > .04 || lien.y < image.bottom - 2) {
+    erreurs.push(`${nom}: dimensions de la photo ou position du titre inattendues`);
   }
 }
 
@@ -73,25 +68,18 @@ try {
     const refus = page.getByRole('button', { name: 'Tout refuser' });
     if (await refus.isVisible()) await refus.click();
     await page.evaluate(() => document.fonts.ready);
-    await page.locator('.une-sommaire').waitFor();
-
-    const choix = page.locator('.une-sommaire .une-choix');
-    const nombre = await choix.count();
+    const articles = page.locator('.une-reportages > article');
+    const nombre = await articles.count();
     if (nombre !== 3) erreurs.push(`Viewport ${largeur}: ${nombre} articles au lieu de trois`);
-
+    const photos = await articles.locator('img').evaluateAll(images => images.map(image => image.getAttribute('src')));
+    if (new Set(photos).size !== nombre) erreurs.push(`Viewport ${largeur}: visuels répétés à la une`);
     for (let i = 0; i < nombre; i++) {
-      const bouton = choix.nth(i);
-      await bouton.click();
-      const article = page.locator('#' + await bouton.getAttribute('aria-controls'));
+      const article = articles.nth(i);
       await article.waitFor();
-      await article.evaluate(el => el.querySelector('img').decode());
-      if (await bouton.getAttribute('aria-pressed') !== 'true') {
-        erreurs.push(`Viewport ${largeur}: le titre choisi n’est pas signalé comme actif`);
-      }
-      await mesurer(page, `une-${largeur}-${i + 1}`, largeur);
-      await page.evaluate(() => window.scrollTo(0, 0));
-      await page.screenshot({ path: `${folder}/une-${largeur}-${i + 1}.png` });
+      await article.locator('img').evaluate(image => image.decode());
+      await mesurer(article, `une-${largeur}-${i + 1}`, largeur);
     }
+    await page.screenshot({ path: `${folder}/une-${largeur}.png` });
 
     const presse = page.locator('.presse-accueil');
     await presse.scrollIntoViewIfNeeded();
