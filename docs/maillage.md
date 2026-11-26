@@ -14,3 +14,11 @@ Dans le JSON d’un article, la rédaction peut ajouter un objet `maillage` avec
 | recommander, exclure | Listes de chemins canoniques, avec barre finale |
 
 Les étapes et la proximité des dates départagent des rapprochements déjà justifiés. Jusqu’à six recommandations sont affichées, une seule fois par destination. Les archives sont identifiées séparément. La rédaction peut écarter un résultat ou imposer une passerelle documentaire.
+
+
+## Contrôle du graphe publié
+
+Le workflow parcourt les pages HTML indexables après le build et conserve pendant
+trente jours les liens cassés, les pages inaccessibles depuis l’accueil, la
+profondeur, les canoniques, les redirections statiques et les recommandations.
+Les illustrations sont dédoublonnées sur l’ensemble des modules d’un article.

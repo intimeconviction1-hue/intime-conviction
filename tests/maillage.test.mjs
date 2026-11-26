@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { indexerMaillage, relierAuGuide } from '../src/lib/maillage.mjs';
+import { allouerVisuels, indexerMaillage, relierAuGuide } from '../src/lib/maillage.mjs';
 const date = new Date('2026-11-20');
 const article = (chemin, maillage, extra = {}) => ({data:{chemin, maillage, date, titre:'Une audience', extrait:'', ...extra}});
 
@@ -25,4 +25,16 @@ test('le guide est lié une seule fois dans la prose, sans toucher aux sources n
   const resultat = relierAuGuide(html);
   assert.equal(resultat.match(/href=/g).length, 1);
   assert.match(resultat, /href="\/jurisprudence\/">pourvoi en cassation/);
+});
+
+test('les visuels sont uniques entre les modules de recommandations', () => {
+  const a = article('/a/', {});
+  const b = article('/b/', {});
+  const c = article('/c/', {});
+  const modules = [{ titre: 'Premier', articles: [a, b] }, { titre: 'Second', articles: [c] }];
+  const visibles = allouerVisuels(modules, data => ({
+    image: { src: data.chemin === '/c/' ? 'photo-c' : 'photo-a' },
+  }));
+  assert.deepEqual(visibles.map(m => m.articles.map(x => x.data.chemin)), [['/a/'], ['/c/']]);
+  assert.deepEqual(visibles[1].imagesExclues, ['photo-a']);
 });

@@ -82,7 +82,7 @@ export function indexerMaillage(articles, maintenant = Date.now()) {
         exclus.add(candidat.data.chemin);
         reste--;
       }
-      if (articles.length) modules.push({ titre, articles });
+      if (articles.length) modules.push({ titre, articles, description: titre === 'Les affaires à rapprocher' ? 'Le rapprochement porte sur un enjeu documenté ; il ne signifie pas que les faits ou les personnes sont liés.' : undefined });
     }
     const selection = predicat => tries.filter(([a, s]) => predicat(a.data, s.types)).map(([a]) => a);
     ajouter('Les précédentes audiences', selection((a, t) => t.has('affaire') && a.date < d.date && a.maillage?.etape === 'audience'), 2);
@@ -115,4 +115,23 @@ export function relierAuGuide(html) {
     }
     return bloc;
   });
+}
+
+
+/** Dédoublonne les illustrations sur toute la page et garde les mêmes choix au rendu. */
+export function allouerVisuels(modules, photoPourArticle) {
+  if (typeof photoPourArticle !== 'function') throw new TypeError('photoPourArticle est requis');
+  const imagesUtilisees = new Set();
+  return (modules ?? []).map(module => {
+    const imagesExclues = [...imagesUtilisees];
+    const articles = [];
+    for (const article of module.articles ?? []) {
+      const visuel = photoPourArticle(article.data, imagesUtilisees);
+      const src = visuel?.image?.src;
+      if (!src || imagesUtilisees.has(src)) continue;
+      imagesUtilisees.add(src);
+      articles.push(article);
+    }
+    return { ...module, articles, imagesExclues };
+  }).filter(module => module.articles.length);
 }

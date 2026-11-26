@@ -105,6 +105,21 @@ jobs:
           IC_VEILLE: articles-prives/veille-alertes.json
           IC_VEILLE_AJOUTS: articles-prives/veille-alertes-ajouts.json
 
+      - name: Auditer le maillage interne généré
+        continue-on-error: true
+        run: node scripts/auditer-maillage.mjs dist
+        env:
+          IC_AUDIT_MAILLAGE_OUTPUT: audit-maillage/rapport.json
+
+      - name: Conserver le rapport du maillage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-maillage-interne
+          path: audit-maillage/
+          if-no-files-found: warn
+          retention-days: 30
+
       - name: Contrôler le texte destiné au public
         run: node scripts/controle-publication.mjs dist
 
