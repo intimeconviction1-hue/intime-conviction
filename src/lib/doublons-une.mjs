@@ -6,6 +6,7 @@ const normaliser = s => String(s ?? '')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
 const referencesParArticle = {
+  '/basse-terre-nathalie-caux-autopsie-percheron/11/2026/': ["CBMivwFBVV95cUxNSzNWN1dod1Y4QVhNT0ozMWpTd3N1XzdyQ3Z5Q3U2WWJ2dEJCd201R0dZSXV3Q0ZkSF96eTNj","1761587.html"],
   '/bruxelles-starzomski-sugar-provocation-verdict/11/2026/': ['ZVPIOS4WKFGQTIX65UMPKUCZ5Y'],
   '/montpellier-morcillo-acquittement-montasinos/11/2026/': ['13670805.php', 'JEM5BWNCO5FCLMRGZSVYLGP6PM.php', 'CBMimwJBVV95cUxPY2VBTHEzTzI5NlJZUnpLUFZueVZPd1RqalFLVEJXd3IyOXFSdVdKRDJHM2F5RzBxNTFuQzlj'],
   '/reims-raphael-narcisse-verdict-celestin/11/2026/': ["CBMixgFBVV95cUxQYkFhZVVFTnNudXlLZ0hCZTJZYkRvWlBpRU1WSkRJUWs2NjlPLS1vMzJFVWg3bFEyTG1DWDc3","CBMitwFBVV95cUxOR3FiMjJjUDJGZFJjR0ZYTW5jTnI1YXlqUy13bk1mSEtyckVDejdEbGw1RVkyTWUxejREZE5R","842435","3455813.html"],
