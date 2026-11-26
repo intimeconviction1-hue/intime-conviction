@@ -62,6 +62,7 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/basse-terre-nathalie-caux-autopsie-percheron/11/2026/': { ...illustrationNeutre, image: croquisCodeRosiers, source: croquisCodeRosiers.src, lienLicence: croquisCodeRosiers.src, lieu: 'Code de procédure pénale. Illustration générée pour Intime Conviction.' },
   '/bruxelles-starzomski-sugar-provocation-verdict/11/2026/': { ...illustrationNeutre, image: croquisHeaulme, source: croquisHeaulme.src, lienLicence: croquisHeaulme.src, lieu: "Illustration judiciaire générée pour Intime Conviction. Elle ne représente pas la salle du procès." },
   '/montpellier-morcillo-acquittement-montasinos/11/2026/': { image: photoMontpellier, lieu: "Fronton du palais de justice historique de Montpellier, rue Foch, siège de la cour d’assises de l’Hérault. Photographie d’archives, redimensionnée.", auteur: "Tony Bowden", source: "https://commons.wikimedia.org/wiki/File:Montpellier,_Palace_of_Justice_(6414118631).jpg", licence: "CC BY-SA 2.0", lienLicence: 'https://creativecommons.org/licenses/by-sa/2.0/' },
   '/reims-raphael-narcisse-verdict-celestin/11/2026/': { ...illustrationNeutre, lieu: 'Illustration judiciaire générée pour Intime Conviction. Elle ne représente pas l’audience de Reims.' },
