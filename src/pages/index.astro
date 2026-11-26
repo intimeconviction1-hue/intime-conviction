@@ -82,6 +82,7 @@ const articlesUne = selectionUne.map(({data}) => ({
   titre: data.titre.replace(/ (?=[:;!?])/g, '\u00A0'),
 }));
 const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) => {
+  if (!photo.image.format) return undefined;
   const widths = [...new Set([480, 768, 1200].map(w => Math.min(w, photo.image.width)))];
   const versions = await Promise.all(widths.map(width => getImage({src:photo.image,width,format:'webp',quality:80})));
   return versions.map((v,i) => `${v.src} ${widths[i]}w`).join(', ');
