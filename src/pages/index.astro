@@ -165,38 +165,7 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
           <h2 id="titre-selection">Les archives du journal</h2>
           <a href="/archives/">Archives du journal <span aria-hidden="true">→</span></a>
         </div>
-        <div class:list={['selection-grille', { 'selection-grille-simple': derniers.length === 0 }]}>
-          <article class="archive-vedette">
-            <a href={archiveUne.data.chemin} aria-labelledby="titre-archive-vedette">
-              <div class="archive-vedette-entete">
-                <h3 id="titre-archive-vedette">{archiveUne.data.titre}</h3>
-              </div>
-              <p class="archive-vedette-meta">
-                <span>{rubrique(archiveUne.data.rubrique).libelle}</span>
-                <time datetime={archiveUne.data.date.toISOString()}>{dateLongue(archiveUne.data.date)}</time>
-              </p>
-              <p class="archive-vedette-extrait">{archiveUne.data.extrait}</p>
-            </a>
-          </article>
-          {derniers.length > 0 && (
-            <div class="selection-suite">
-              <h3>Autres articles à relire</h3>
-              <ul>
-                {derniers.map(({data}) => (
-                  <li>
-                    <a href={data.chemin}>
-                      <div>
-                        <h4>{data.titre}</h4>
-                        <time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time>
-                      </div>
-                      <span aria-hidden="true">→</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
+        <ListeArticles articles={[archiveUne, ...derniers]} extraits={false} responsiveImages />
       </section>
     )}
 
