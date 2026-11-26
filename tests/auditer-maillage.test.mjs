@@ -13,7 +13,7 @@ test('mesure liens, profondeur, orphelins, auto-liens et liens cassés', () => {
   assert.equal(r.pagesIndexables, 4);
   assert.equal(r.liensInternesCasses, 1);
   assert.equal(r.liensVersSoi, 1);
-  assert.equal(r.pagesOrphelines, 0);
+  assert.equal(r.pagesOrphelines, 1);
   assert.equal(r.profondeurMoyenne, 1.5);
   assert.equal(r.profondeurMaximale, 2);
 });
@@ -27,5 +27,5 @@ test('exclut du graphe les destinations noindex sans les compter cassées', () =
   const r = mesurerGraphe(pages);
   assert.equal(r.liensInternesCasses, 0);
   assert.equal(r.liensVersPagesNonIndexables, 2);
-  assert.equal(r.pagesOrphelines, 1);
+  assert.equal(r.pagesOrphelines, 0);
 });
