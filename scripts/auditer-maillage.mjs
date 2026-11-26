@@ -93,6 +93,9 @@ export function mesurerGraphe(pages, ressources = new Set()) {
   const valeurs = [...profondeurs.values()].filter(n => n > 0).sort((a, b) => a - b);
   const percentile = p => valeurs.length ? valeurs[Math.floor((valeurs.length - 1) * p)] : null;
   const orphelines = [...routes].filter(route => route !== '/' && !profondeurs.has(route));
+  const pagesAuDelaDeTroisClics = [...profondeurs]
+    .filter(([route, profondeur]) => route !== '/' && profondeur > 3)
+    .sort((a, b) => b[1] - a[1]);
   return {
     pagesIndexables: routes.size,
     liensInternes,
@@ -102,6 +105,7 @@ export function mesurerGraphe(pages, ressources = new Set()) {
     liensInternesCasses: liensCasses.length,
     echantillonLiensCasses: liensCasses.slice(0, 100),
     liensVersPagesNonIndexables: liensNonIndexables.length,
+    echantillonLiensVersPagesNonIndexables: liensNonIndexables.slice(0, 100),
     liensVersSoi: liensVersSoi.length,
     echantillonLiensVersSoi: liensVersSoi.slice(0, 100),
     pagesOrphelines: orphelines.length,
@@ -111,6 +115,8 @@ export function mesurerGraphe(pages, ressources = new Set()) {
     profondeurMediane: percentile(.5),
     profondeurP90: percentile(.9),
     profondeurMaximale: valeurs.at(-1) ?? null,
+    pagesAuDelaDeTroisClics: pagesAuDelaDeTroisClics.length,
+    echantillonPagesProfondes: pagesAuDelaDeTroisClics.slice(0, 100).map(([route, profondeur]) => ({ route, profondeur })),
     pagesAvecRecommandations: pagesAvecRecommandations.size,
     liensDeRecommandation: recommandations,
     redirectionsStatiques: redirections,
