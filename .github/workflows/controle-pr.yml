@@ -51,3 +51,43 @@ jobs:
               node --test "$fichier"
             fi
           done
+
+  graphe-complet:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lire le fonds éditorial privé de la branche de chantier
+        uses: actions/checkout@v4
+        with:
+          repository: intimeconviction1-hue/intime-conviction-articles
+          ref: amelioration/chantier-11-bis-diagnostics
+          ssh-key: ${{ secrets.ARTICLES_DEPLOY_KEY }}
+          path: articles-prives
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Tester le dépôt
+        run: npm test
+      - name: Préparer les illustrations du fonds
+        run: node scripts/preparer-illustrations.mjs
+        env:
+          IC_ARTICLES: articles-prives/articles
+      - name: Construire le site complet sans publier
+        run: npm run build
+        env:
+          IC_ARTICLES: articles-prives/articles
+          IC_VEILLE: articles-prives/veille-alertes.json
+          IC_VEILLE_AJOUTS: articles-prives/veille-alertes-ajouts.json
+      - name: Auditer le graphe complet
+        run: node scripts/auditer-maillage.mjs dist
+        env:
+          IC_AUDIT_MAILLAGE_OUTPUT: audit-maillage/rapport.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: audit-maillage-complet
+          path: audit-maillage/rapport.json
+          if-no-files-found: error
+          retention-days: 30
