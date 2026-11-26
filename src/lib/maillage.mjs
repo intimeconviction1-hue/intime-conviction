@@ -82,7 +82,7 @@ export function indexerMaillage(articles, maintenant = Date.now()) {
         exclus.add(candidat.data.chemin);
         reste--;
       }
-      if (articles.length) modules.push({ titre, articles, description: titre === 'Les affaires à rapprocher' ? 'Le rapprochement porte sur un enjeu documenté ; il ne signifie pas que les faits ou les personnes sont liés.' : undefined });
+      if (articles.length) modules.push({ titre, articles, ...(titre === 'Les affaires à rapprocher' ? { description: 'Le rapprochement porte sur un enjeu documenté ; il ne signifie pas que les faits ou les personnes sont liés.' } : {}) });
     }
     const selection = predicat => tries.filter(([a, s]) => predicat(a.data, s.types)).map(([a]) => a);
     ajouter('Les précédentes audiences', selection((a, t) => t.has('affaire') && a.date < d.date && a.maillage?.etape === 'audience'), 2);
