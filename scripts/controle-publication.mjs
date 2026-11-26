@@ -59,6 +59,16 @@ if (process.argv[1]?.endsWith('controle-publication.mjs')) {
   for (const fichier of await parcours(ROOT)) {
     const html = await readFile(fichier, 'utf8');
     const problemes = anomalies(html);
+    if (relative(ROOT, fichier) === 'rubrique/cours-du-jour/index.html') {
+      const grille = html.match(/<div id="articles-redaction"[^>]*>\s*<ul\b[^>]*>([\s\S]*?)<\/ul>/u)?.[1] ?? '';
+      const visuels = new Map();
+      for (const [, image] of grille.matchAll(/<img\b[^>]*\ssrc="([^"]+)"/gu)) {
+        visuels.set(image, (visuels.get(image) ?? 0) + 1);
+      }
+      for (const [image, total] of visuels) {
+        if (total > 1) console.warn(`Illustration répétée ${total} fois dans les derniers articles : ${image}`);
+      }
+    }
     if (/\/\d{2}\/\d{4}\/index\.html$/.test(fichier) && /<article class="article"(?: |>)/.test(html)) {
       articles++;
       const image = html.match(/<figure class="photo-article"[^>]*>\s*<img\b[^>]*\bsrc="(\/[^"]+)"/)?.[1];
