@@ -154,6 +154,16 @@ function affiche() {
     extrait.textContent = a.extrait;
     meta.className = 'meta';
     meta.textContent = a.rubriqueNom + ' · ' + a.annee;
+    if (a.image) {
+      const image = document.createElement('img');
+      image.src = a.image;
+      image.alt = '';
+      image.width = 144;
+      image.height = 96;
+      image.loading = 'lazy';
+      image.decoding = 'async';
+      li.append(image);
+    }
     li.append(meta, titre, extrait);
     liste.append(li);
   }

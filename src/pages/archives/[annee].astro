@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { photoPourArticle } from '../../lib/photos-articles.mjs';
 import { rubrique } from '../../lib/rubriques.mjs';
 import { tousLesArticles, nomDuMois } from '../../lib/articles.mjs';
 
@@ -33,9 +34,15 @@ for (const a of articles) {
     <section>
       <h2 class="mois etiquette">{mois} · {liste.length}</h2>
       <ul class="titres">
-        {liste.map(({ data }) => (
-          <li><a href={data.chemin}>{data.titre}</a> <span class="meta">{rubrique(data.rubrique).libelle}</span></li>
-        ))}
+        {liste.map(({ data }) => {
+          const photo = photoPourArticle(data);
+          return <li>
+            <a href={data.chemin}>
+              <img src={photo.image.src} alt="" title={`${photo.lieu} · ${photo.auteur}`} width="96" height="64" loading="lazy" decoding="async" />
+              <span>{data.titre}<small class="meta">{rubrique(data.rubrique).libelle}</small></span>
+            </a>
+          </li>;
+        })}
       </ul>
     </section>
   ))}
@@ -45,7 +52,9 @@ for (const a of articles) {
   .mois { margin: 2.5rem 0 0.5rem; padding-top: 0.6rem; border-top: 3px solid var(--filet-fort); }
   .titres { list-style: none; padding: 0; margin: 0; columns: 22rem; column-gap: 2.5rem; }
   .titres li { break-inside: avoid; padding: 0.35rem 0; border-bottom: 1px solid var(--filet); line-height: 1.35; }
-  .titres a { text-decoration: none; }
+  .titres a { display:grid; grid-template-columns: 4rem 1fr; gap:.65rem; align-items:center; text-decoration:none; }
+  .titres img { width:4rem; height:2.67rem; object-fit:cover; }
+  .titres small { display:block; margin-top:.2rem; }
 
 
 .titre-page{border-bottom:2px solid #a12c39}

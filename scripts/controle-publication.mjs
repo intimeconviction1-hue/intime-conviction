@@ -7,7 +7,7 @@
  * Les attributions de source, dates, titres, mentions légales, informations
  * d'accessibilité et les textes journalistiques ne sont pas bannis.
  */
-import { readdir, readFile } from 'node:fs/promises';
+import { access, readdir, readFile } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 
 const ROOT = process.argv[2] ?? 'dist';
@@ -54,15 +54,29 @@ async function parcours(dossier) {
 
 if (process.argv[1]?.endsWith('controle-publication.mjs')) {
   let erreurs = 0;
+  let articles = 0;
+  const images = new Set();
   for (const fichier of await parcours(ROOT)) {
-    const problemes = anomalies(await readFile(fichier, 'utf8'));
+    const html = await readFile(fichier, 'utf8');
+    const problemes = anomalies(html);
+    if (/<article class="article"(?: |>)/.test(html)) {
+      articles++;
+      const image = html.match(/<figure class="photo-article"[^>]*>\s*<img\b[^>]*\bsrc="(\/[^"]+)"/)?.[1];
+      if (image) images.add(image);
+      else problemes.push('illustration-article-absente');
+    }
     if (problemes.length) {
       console.error('PAGE REFUSÉE :', relative(ROOT, fichier), '(', problemes.join(', '), ')');
       erreurs++;
     }
   }
+  for (const image of images) {
+    try { await access(join(ROOT, image)); }
+    catch { erreurs++; console.error('IMAGE INTROUVABLE :', image); }
+  }
+  console.log(`Couverture des articles : ${articles} pages contrôlées, ${images.size} visuels référencés.`);
   if (erreurs) {
-    console.error(`Publication bloquée : ${erreurs} page(s) contiennent des notes interdites.`);
+    console.error(`Publication bloquée : ${erreurs} anomalie(s) éditoriale(s) ou d’illustration.`);
     process.exitCode = 1;
   } else console.log('Contrôle éditorial : aucune note interne interdite détectée.');
 }

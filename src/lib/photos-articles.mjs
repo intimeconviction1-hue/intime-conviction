@@ -376,7 +376,16 @@ try {
 }
 
 // Illustrations non documentaires, avec les crédits propres à chaque fichier.
+const photosAmbiance = [
+  photosArticles['/mons-falzone-indemnisation-solidarite-passager/11/2026/'],
+  photosArticles['/paris-emilie-konig-proces-assises/11/2026/'],
+].filter(photo => photo?.image.src.startsWith('/illustrations-articles/')).map(photo => ({
+  ...photo,
+  lieu: photo.lieu.split('Photographie d’illustration')[0] + 'Photographie d’illustration.',
+}));
+
 const illustrationsArticle = [
+  ...photosAmbiance,
   {
     image: photoCodePenal1810,
     lieu: 'Page de titre du Code pénal de 1810, édition de Bruxelles · Illustration d’archives',
