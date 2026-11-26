@@ -59,7 +59,7 @@ if (process.argv[1]?.endsWith('controle-publication.mjs')) {
   for (const fichier of await parcours(ROOT)) {
     const html = await readFile(fichier, 'utf8');
     const problemes = anomalies(html);
-    if (/<article class="article"(?: |>)/.test(html)) {
+    if (/\/\d{2}\/\d{4}\/index\.html$/.test(fichier) && /<article class="article"(?: |>)/.test(html)) {
       articles++;
       const image = html.match(/<figure class="photo-article"[^>]*>\s*<img\b[^>]*\bsrc="(\/[^"]+)"/)?.[1];
       if (image) images.add(image);
