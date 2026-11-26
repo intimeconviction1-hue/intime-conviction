@@ -1,7 +1,7 @@
 ---
 import { getImage } from 'astro:assets';
 const { image, fallbackImage, alt, source, credit, licence, licenceUrl, prioritaire = false, responsiveImages = false, legendeCompacte = false } = Astro.props;
-const responsiveWidths = responsiveImages ? [...new Set([360, 640, 960].map(width => Math.min(width, image.width)))].filter(width => width > 0) : [];
+const responsiveWidths = responsiveImages && image.format ? [...new Set([360, 640, 960].map(width => Math.min(width, image.width)))].filter(width => width > 0) : [];
 const responsiveSources = responsiveImages ? await Promise.all(responsiveWidths.map(width => getImage({ src: image, width, format: 'webp', quality: 84 }))) : [];
 const responsiveSrcset = responsiveSources.map((variant, index) => `${variant.src} ${responsiveWidths[index]}w`).join(', ');
 ---
@@ -9,7 +9,7 @@ const responsiveSrcset = responsiveSources.map((variant, index) => `${variant.sr
   <img src={image.src} srcset={responsiveSrcset || undefined} sizes={responsiveImages ? "(max-width: 37rem) 100vw, (max-width: 58rem) 50vw, 33vw" : undefined} width={image.width} height={image.height} alt={alt} loading={prioritaire ? 'eager' : 'lazy'} decoding="async" data-fallback-src={fallbackImage?.src} onerror="if (this.dataset.fallbackSrc && this.src !== this.dataset.fallbackSrc) { this.removeAttribute('srcset'); this.removeAttribute('sizes'); this.src = this.dataset.fallbackSrc; this.onerror = null; }" />
   <figcaption>
     {legendeCompacte ? <>
-      <span>Illustration d’archives</span>
+      <span>{/génér/i.test(credit ?? '') ? 'Illustration générée' : 'Visuel'}</span>
       <details class="credits-photo"><summary>Crédits photo</summary><span>{alt}{credit && <> · <a href={source}>{credit}</a></>}{licence && <> · <a href={licenceUrl}>{licence}</a></>}</span></details>
     </> : <>{alt} · <a href={source}>{credit}</a>{licence && <> · <a href={licenceUrl}>{licence}</a></>}</>}
   </figcaption>
