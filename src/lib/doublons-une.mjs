@@ -6,10 +6,11 @@ const normaliser = s => String(s ?? '')
   .replace(/[^a-z0-9]+/g, ' ').trim();
 
 const referencesParArticle = {
+  '/charente-assises-romain-runel-ouverture-proces/11/2026/': ["CBMiigJBVV95cUxQQmR0dFM0cFNudXdrQ0JfalVFcldWcXhpZ084bHZkYVZST05UczdVMTdiWEY0Yk1URW","CBMioAJBVV95cUxQVEdESmd3V0V2OUt3S1VhQUpYamhib3FMeTJ6WkhnY0FsMWYwc2hkeVpWVENyM3FaQk","CBMi9gFBVV95cUxPaDd2LUFBM1UtYml1MzREZ2w3eXpwSXBwWV9ETmxRVU5MbHNHQkpFcHNzeFlYTE1BNl","CBMi2wFBVV95cUxQZk1BODc3QmFHaVp0d0pJUktTU1dLcTY5cENVc2NiQm45WXZVVDBqMWd6bnlaYVhZcF"],
   '/paris-emilie-konig-proces-assises/11/2026/': ["CBMiswFBVV95cUxPV28ySndBMERYU2Y1MGtZVGRXSjZRaFRwQUZldzBhZFQ5NmMtY1p6dzFSR1Q5","CBMixwFBVV95cUxNXy1oTExZeE02LVoxdk8yeVRFV1dSYkxnb3lLTUtXZC16b3ZWTzN2b1pUTVRD","CBMiugFBVV95cUxOQjdmTnhid2hBc1lBbFlualk2T0ZUVEtwMlZfSWVBR2tqSFBsTnpmQmgxWmct","CBMiggJBVV95cUxNcVgwNjdYb3VOSlFoMzJXRDh2OFc2eU4yQ21TWl92WEFjVnp6Y2dFTTUzNHpk","CBMi9AFBVV95cUxPN2dNMmJ4MWlXdkRlSHpfa2x0enoxeFlUbEFKZXc2WmFDUjRvN0pEUUxrcUtt","CBMiowFBVV95cUxPYmY3WEtld3ZRWVVUaUZMVkg5VUFQbUdFY3hyc1JYZkVQX2JTSEEyTTNsTTJZ","CBMi3gFBVV95cUxOTnViSldoX2pIcW9hLUFQMkhOXzJSZ0oyazRpOEhMMGpLVzctdlhxek1vdHpS","CBMipgFBVV95cUxOZmRZRjEyZUhmQUlfNWFEUUp0R1lTYk5kbG9QekFqM05SYThTaDlGUmRIZFBk","CBMi0wFBVV95cUxPaFVaV1JwdldwVXJoRVNKSk1VUFd6anBlMHd4eDVTTElqM2tPTUY1TmJzUHJi","CBMi3wFBVV95cUxOMHNWcmdqZ3FXVEFFQXRycWRTRS1mNUJmTklta0tsbEtqVFhQVkt4MnRYN3F1","CBMi5wFBVV95cUxPRXVsb3FTNVAteHdJM3ZLcnM0cm5MZDRLdDVJeFJPMXpPZWdQRU4zT20xazBm","CBMivAFBVV95cUxQbzhrejZMaVNZVU9XSk1vQ2l6TU9FdWZVNlRvUVdTS1llQ3BET1MxZWdCQU1I","CBMivAFBVV95cUxPMnozMjBaTzJoQTA1V3VPTUliWlhWUzhIZE9SRXU3NW5ZbWl0MkIyMFdqZ0Ny","CBMirAJBVV95cUxNa2J3azlyNGdXNGdvWEgxandLYTJENmRnd3ZsQ3dsMjZJcGowLWpSVjZaRmdQ","F3PMCUSMEJGJDCHH5DOQOBVK4M","6815463_3224","2847106"],
   '/basse-terre-nathalie-caux-autopsie-percheron/11/2026/': ["CBMivwFBVV95cUxNSzNWN1dod1Y4QVhNT0ozMWpTd3N1XzdyQ3Z5Q3U2WWJ2dEJCd201R0dZSXV3Q0ZkSF96eTNj","1761587.html"],
   '/bruxelles-starzomski-sugar-provocation-verdict/11/2026/': ['ZVPIOS4WKFGQTIX65UMPKUCZ5Y'],
-  '/montpellier-morcillo-acquittement-montasinos/11/2026/': ['13670805.php', 'JEM5BWNCO5FCLMRGZSVYLGP6PM.php', 'CBMimwJBVV95cUxPY2VBTHEzTzI5NlJZUnpLUFZueVZPd1RqalFLVEJXd3IyOXFSdVdKRDJHM2F5RzBxNTFuQzlj'],
+  '/montpellier-morcillo-acquittement-montasinos/11/2026/': ["CBMi6AFBVV95cUxQdUhHeE1lVXdYX2FWRjI3eEh1QVYtWXB4YzEyRktUUnNnSlBncFA2TGxERU1hN1JvTz", '13670805.php', 'JEM5BWNCO5FCLMRGZSVYLGP6PM.php', 'CBMimwJBVV95cUxPY2VBTHEzTzI5NlJZUnpLUFZueVZPd1RqalFLVEJXd3IyOXFSdVdKRDJHM2F5RzBxNTFuQzlj'],
   '/reims-raphael-narcisse-verdict-celestin/11/2026/': ["CBMixgFBVV95cUxQYkFhZVVFTnNudXlLZ0hCZTJZYkRvWlBpRU1WSkRJUWs2NjlPLS1vMzJFVWg3bFEyTG1DWDc3","CBMitwFBVV95cUxOR3FiMjJjUDJGZFJjR0ZYTW5jTnI1YXlqUy13bk1mSEtyckVDejdEbGw1RVkyTWUxejREZE5R","842435","3455813.html"],
   '/papeete-makemo-jacques-t-audience-coup-mortel/11/2026/': ['CBMizwFBVV95cUxOSWFEdS1zOGJTQjcyRjc2WmlNR0hhSG1QOTUzSXZKN3BWVnFOQ2VJX284VDlUS2JHLWFVeTRfd0'],
   '/bruyeres-gilbert-jacob-proces-jimmy-hariot/11/2026/': ['CBMi-wFBVV95cUxQNXJZdjVaMkVIbGxFdHpBdEFaSkhDOTl4d2RkMTVLVUpoeWpNb1R3RDRpeEJQWHgyay12Ujlqcm',"CBMi3AFBVV95cUxPYzUxRVVLTFByQ0JRYkxGcGZPZlZTMUJSS3BTUnlJVkxjcG9JWDlkVGx1NW9mMHl5","CBMiekFVX3lxTE5aR3RkOU5fa1hpaEdtWGhqMVg1SWV1NkNiaGxzaFFxUTZqU0E3OEtrM3pvekdqVnRj","CBMihgFBVV95cUxQZDI2b29pTWk3MVduaXBCOHd0blhpckJFcDRPMUJMaU9XS1c4MXJSTjM5emZ4MVVX","CBMisgFBVV95cUxNQjFkOFladnlGMkFzV2JkRURpQVA2LWVPeFBrSnZ2bFdQZzFIRjRpTGphdjFqbDc0"],
@@ -39,7 +40,7 @@ const referencesParArticle = {
     '/Assises-de-Basse-Terre-Yordan-Arron-se-desiste-de-son-appel',
     '/Assises-en-appel-Yordan-Arron-rejuge-pour-la-mort-de-son-nourrisson',
   ],
-  '/karen-baldi-proces-chambery-protection-premeditation/11/2026/': [
+  '/karen-baldi-proces-chambery-protection-premeditation/11/2026/': ["CBMiyAFBVV95cUxNX3VEaklzWWR3eF9oTkNNZXZpVjJPNF8xazc5TmpLbm9WR1ZyQ2VuV3hOZTIteFpiX3", 
     '3452391.html', '2846785', '10762754',
     'CBMisAJBVV95cUxQLTRsb1hpamxiay02RjJqeXp3MkhEUlcxdExOWEtqRnlYTVI1bk5JdkdEMFNQNERwWWFxbEpjaUplUUE1d3NM',
   ],
