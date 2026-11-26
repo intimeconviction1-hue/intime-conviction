@@ -62,7 +62,7 @@ export function mesurerGraphe(pages, ressources = new Set()) {
         continue;
       }
       if (!routes.has(cible)) {
-        liensNonIndexables.push({ route, href: raw, cible });
+        if (toutesRoutes.has(cible)) liensNonIndexables.push({ route, href: raw, cible });
         continue;
       }
       graphe.get(route).add(cible);

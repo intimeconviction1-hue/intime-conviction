@@ -34,6 +34,7 @@ test('les fichiers statiques et flux valides ne sont pas signalés comme pages c
   const pages = new Map([['/', '<a href="/feed.xml">Flux</a><img src="/images/cour.webp">']]);
   const r = mesurerGraphe(pages, new Set(['/feed.xml', '/images/cour.webp']));
   assert.equal(r.liensInternesCasses, 0);
+  assert.equal(r.liensVersPagesNonIndexables, 0);
   assert.equal(r.imagesLocales, 1);
   assert.equal(r.imagesLocalesCassees, 0);
 });
