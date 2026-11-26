@@ -1,3 +1,5 @@
+import photoLyon from '../assets/cour-assises-lyon.webp';
+import photoMontpellier from '../assets/cour-assises-montpellier.webp';
 import croquisCodeRosiers from '../assets/code-procedure-penale-croquis.webp';
 import photoCodePenal1810 from '../assets/code-penal-1810.webp';
 import croquisDigne from '../assets/assises-landru.webp';
@@ -60,8 +62,8 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
-  '/bruxelles-starzomski-sugar-provocation-verdict/11/2026/': { ...illustrationAssises, lieu: 'Salle de la cour d’assises du palais Thiac, Bordeaux. Photographie d’illustration, hors procès de Bruxelles.' },
-  '/montpellier-morcillo-acquittement-montasinos/11/2026/': { image: photoVannes, lieu: 'Palais de justice de Vannes. Photographie d’illustration, hors procès de Montpellier.', auteur: 'Quoique', source: 'https://commons.wikimedia.org/wiki/File:Palais-Justice-Vannes.jpg', licence: 'CC BY-SA 3.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/3.0/' },
+  '/bruxelles-starzomski-sugar-provocation-verdict/11/2026/': { ...illustrationNeutre, image: croquisHeaulme, source: croquisHeaulme.src, lienLicence: croquisHeaulme.src, lieu: "Illustration judiciaire générée pour Intime Conviction. Elle ne représente pas la salle du procès." },
+  '/montpellier-morcillo-acquittement-montasinos/11/2026/': { image: photoMontpellier, lieu: "Fronton du palais de justice historique de Montpellier, rue Foch, siège de la cour d’assises de l’Hérault. Photographie d’archives, redimensionnée.", auteur: "Tony Bowden", source: "https://commons.wikimedia.org/wiki/File:Montpellier,_Palace_of_Justice_(6414118631).jpg", licence: "CC BY-SA 2.0", lienLicence: 'https://creativecommons.org/licenses/by-sa/2.0/' },
   '/reims-raphael-narcisse-verdict-celestin/11/2026/': { ...illustrationNeutre, lieu: 'Illustration judiciaire générée pour Intime Conviction. Elle ne représente pas l’audience de Reims.' },
   '/epinal-papeete-grasse-ce-que-l-aveu-ne-tranche-pas/11/2026/': {
     image: photoCodePenal1810,
@@ -72,8 +74,8 @@ export const photosArticles = {
     lienLicence: 'https://creativecommons.org/publicdomain/mark/1.0/',
   },
   '/papeete-makemo-jacques-t-audience-coup-mortel/11/2026/': { ...illustrationNeutre, image: croquisAudienceSarah, source: croquisAudienceSarah.src, lienLicence: croquisAudienceSarah.src, lieu: 'Illustration générée pour Intime Conviction. Elle ne représente ni la salle de Papeete ni les personnes citées.' },
-  '/bruyeres-gilbert-jacob-proces-jimmy-hariot/11/2026/': { ...illustrationAssises, lieu: 'Salle de la cour d’assises du palais Thiac, Bordeaux. Photographie d’illustration, hors audience d’Épinal.' },
-  '/grasse-nora-mike-furlad-trente-ans-intention-contestee/11/2026/': { ...photoPalaisAix, lieu: 'Palais Verdun, Aix-en-Provence · Photographie d’illustration, hors audience de Grasse' },
+  '/bruyeres-gilbert-jacob-proces-jimmy-hariot/11/2026/': { ...illustrationNeutre, image: croquisCodeRosiers, source: croquisCodeRosiers.src, lienLicence: croquisCodeRosiers.src, lieu: "Code de procédure pénale. Illustration générée pour Intime Conviction." },
+  '/grasse-nora-mike-furlad-trente-ans-intention-contestee/11/2026/': { ...illustrationNeutre, image: croquisAudienceSarah, source: croquisAudienceSarah.src, lienLicence: croquisAudienceSarah.src, lieu: "Illustration judiciaire générée pour Intime Conviction. Elle ne représente pas la salle du procès." },
   '/bouches-du-rhone-acquittement-assassinat-association-malfaiteurs-indemnisation/11/2026/': {
     ...illustrationNeutre,
     image: photoCode,
@@ -115,7 +117,7 @@ export const photosArticles = {
     lienLicence: photoCode.src,
   },
   '/camille-paul-basse-terre-enregistrement-verdict/11/2026/': { ...photoPalaisBlois, lieu: "Palais de justice de Blois · Photographie d’illustration, hors audience de Basse-Terre" },
-  '/duchere-lyon-proces-absence-ben-addi/11/2026/': { ...photoPalaisAix, lieu: "Palais Verdun, Aix-en-Provence · Photographie d’illustration, hors audience de Lyon" },
+  '/duchere-lyon-proces-absence-ben-addi/11/2026/': { image: photoLyon, lieu: "Colonnes du palais de justice historique de Lyon, siège de la cour d’assises du Rhône. Photographie d’archives, redimensionnée.", auteur: "Gonedelyon", source: "https://commons.wikimedia.org/wiki/File:Colonnes_du_Palais_de_justice_de_Lyon.JPG", licence: "CC BY-SA 3.0", lienLicence: 'https://creativecommons.org/licenses/by-sa/3.0/' },
   '/jean-paul-benjamin-bobigny-images-legitime-defense/11/2026/': { ...illustrationAssises, lieu: "Salle du palais Thiac à Bordeaux · Photographie d’illustration, hors audience de Bobigny" },
   '/nahel-merzouk-versailles-intention-du-tir/11/2026/': { ...photoAssisesParis, lieu: "Salle Voltaire de la cour d’assises de Paris · Photographie d’illustration, hors audience de Versailles" },
   '/rue-des-rosiers-extradition-appel-renvoi/11/2026/': {
