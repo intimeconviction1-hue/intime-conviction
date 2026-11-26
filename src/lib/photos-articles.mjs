@@ -62,6 +62,7 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/mons-falzone-indemnisation-solidarite-passager/11/2026/': { ...illustrationNeutre, image: croquisAudienceSarah, source: croquisAudienceSarah.src, lienLicence: croquisAudienceSarah.src, lieu: 'Illustration générée pour Intime Conviction. Le dessin ne représente pas l’audience de Mons.' },
   '/roanne-victor-marques-legitime-defense/11/2026/': {
     image: photoCodePenal1810,
     lieu: 'Page de titre du Code pénal de 1810, édition de Bruxelles · Illustration d’archives',
