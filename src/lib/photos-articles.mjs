@@ -60,6 +60,7 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/bruxelles-starzomski-sugar-provocation-verdict/11/2026/': { ...illustrationAssises, lieu: 'Salle de la cour d’assises du palais Thiac, Bordeaux. Photographie d’illustration, hors procès de Bruxelles.' },
   '/montpellier-morcillo-acquittement-montasinos/11/2026/': { image: photoVannes, lieu: 'Palais de justice de Vannes. Photographie d’illustration, hors procès de Montpellier.', auteur: 'Quoique', source: 'https://commons.wikimedia.org/wiki/File:Palais-Justice-Vannes.jpg', licence: 'CC BY-SA 3.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/3.0/' },
   '/reims-raphael-narcisse-verdict-celestin/11/2026/': { ...illustrationNeutre, lieu: 'Illustration judiciaire générée pour Intime Conviction. Elle ne représente pas l’audience de Reims.' },
   '/epinal-papeete-grasse-ce-que-l-aveu-ne-tranche-pas/11/2026/': {
