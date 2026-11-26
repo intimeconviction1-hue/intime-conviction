@@ -9,11 +9,12 @@ function normaliserRoute(pathname) {
   let path = decodeURIComponent(pathname || '/').replace(/\\/g, '/').replace(/\/index\.html$/i, '/').replace(/\.html$/i, '/');
   if (!path.startsWith('/')) path = '/' + path;
   path = path.replace(/\/{2,}/g, '/');
-  return path.endsWith('/') ? path : path + '/';
+  return /\.[a-z0-9]{1,12}$/i.test(path) ? path : (path.endsWith('/') ? path : path + '/');
 }
 
-export function mesurerGraphe(pages) {
+export function mesurerGraphe(pages, ressources = new Set()) {
   const toutesRoutes = new Set(pages.keys());
+  const toutesRessources = new Set([...ressources].map(normaliserRoute));
   const indexables = new Map([...pages].filter(([, html]) => !/<meta\b[^>]*\bname=["']robots["'][^>]*\bcontent=["'][^"']*noindex/i.test(html)));
   const routes = new Set(indexables.keys());
   const graphe = new Map([...routes].map(route => [route, new Set()]));
@@ -22,6 +23,8 @@ export function mesurerGraphe(pages) {
   const liensVersSoi = [];
   let liensInternes = 0;
   let recommandations = 0;
+  let imagesLocales = 0;
+  const imagesLocalesCassees = [];
   const pagesAvecRecommandations = new Set();
   const redirections = [];
   const canoniquesNonConformes = [];
@@ -54,7 +57,7 @@ export function mesurerGraphe(pages) {
         if (!url.hash) liensVersSoi.push({ route, href: raw });
         continue;
       }
-      if (!toutesRoutes.has(cible)) {
+      if (!toutesRoutes.has(cible) && !toutesRessources.has(cible)) {
         liensCasses.push({ route, href: raw, cible });
         continue;
       }
@@ -63,6 +66,16 @@ export function mesurerGraphe(pages) {
         continue;
       }
       graphe.get(route).add(cible);
+    }
+    for (const match of html.matchAll(/<img\b[^>]*\bsrc=(["'])(.*?)\1/gi)) {
+      const raw = match[2].replaceAll('&amp;', '&');
+      if (!raw || /^(?:data:|blob:)/i.test(raw)) continue;
+      let url;
+      try { url = new URL(raw, ORIGIN + route); } catch { continue; }
+      if (!['www.intimeconviction.fr', 'intimeconviction.fr'].includes(url.hostname)) continue;
+      imagesLocales++;
+      const cible = normaliserRoute(url.pathname);
+      if (!toutesRoutes.has(cible) && !toutesRessources.has(cible)) imagesLocalesCassees.push({ route, src: raw, cible });
     }
   }
 
@@ -83,6 +96,9 @@ export function mesurerGraphe(pages) {
   return {
     pagesIndexables: routes.size,
     liensInternes,
+    imagesLocales,
+    imagesLocalesCassees: imagesLocalesCassees.length,
+    echantillonImagesLocalesCassees: imagesLocalesCassees.slice(0, 100),
     liensInternesCasses: liensCasses.length,
     echantillonLiensCasses: liensCasses.slice(0, 100),
     liensVersPagesNonIndexables: liensNonIndexables.length,
@@ -105,22 +121,26 @@ export function mesurerGraphe(pages) {
 
 async function auditerDossier(root) {
   const pages = new Map();
+  const ressources = new Set();
   async function parcourir(dir) {
     for (const entry of await readdir(dir, { withFileTypes: true })) {
       const file = resolve(dir, entry.name);
       if (entry.isDirectory()) await parcourir(file);
-      else if (entry.isFile() && extname(entry.name).toLowerCase() === '.html') {
+      else if (entry.isFile()) {
         const rel = relative(root, file).split(sep).join('/');
         let route = '/' + rel;
-        route = route.replace(/\/index\.html$/i, '/').replace(/\.html$/i, '/');
-        route = normaliserRoute(route);
-        if (route === '/404/') continue;
-        pages.set(route, await readFile(file, 'utf8'));
+        if (extname(entry.name).toLowerCase() === '.html') {
+          route = route.replace(/\/index\.html$/i, '/').replace(/\.html$/i, '/');
+          route = normaliserRoute(route);
+          if (route !== '/404/') pages.set(route, await readFile(file, 'utf8'));
+        } else {
+          ressources.add(normaliserRoute(route));
+        }
       }
     }
   }
   await parcourir(root);
-  return mesurerGraphe(pages);
+  return mesurerGraphe(pages, ressources);
 }
 
 async function main() {
