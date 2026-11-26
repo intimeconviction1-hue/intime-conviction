@@ -21,4 +21,7 @@ Les étapes et la proximité des dates départagent des rapprochements déjà ju
 Le workflow parcourt les pages HTML indexables après le build et conserve pendant
 trente jours les liens cassés, les pages inaccessibles depuis l’accueil, la
 profondeur, les canoniques, les redirections statiques et les recommandations.
-Les illustrations sont dédoublonnées sur l’ensemble des modules d’un article.
+Le rapport expose aussi jusqu’à 100 exemples de liens vers des pages non
+indexables et les pages atteignables à plus de trois clics. Les nombres de liens
+comptent des occurrences, pas des destinations uniques. Les illustrations sont
+dédoublonnées sur l’ensemble des modules d’un article.
