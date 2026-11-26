@@ -1,12 +1,12 @@
 ---
-import { photosArticles, illustrationNeutre } from '../lib/photos-articles.mjs';
+import { photoPourArticle } from '../lib/photos-articles.mjs';
 import VisuelAssises from './VisuelAssises.astro';
 import { rubrique } from '../lib/rubriques.mjs';
 import { dateLongue } from '../lib/articles.mjs';
 
 // `niveau` : 3 sous une section titrée en h2 (accueil), 2 directement sous le
 // h1 d'une page (rubrique) — un saut de niveau égare les lecteurs d'écran.
-const { articles, rubriqueVisible = true, extraits = true, niveau = 3, dateMiseAJourVisible = false, illustres = false, responsiveImages = false, imagesExclues = [] } = Astro.props;
+const { articles, rubriqueVisible = true, extraits = true, niveau = 3, dateMiseAJourVisible = false, illustres = true, responsiveImages = false, imagesExclues = [] } = Astro.props;
 const imagesAffichees = new Set(imagesExclues);
 const Titre = `h${niveau}`;
 ---
@@ -14,8 +14,7 @@ const Titre = `h${niveau}`;
   {articles.map(({ data }) => (
     <li>
       {illustres && (() => {
-        const photo = photosArticles[data.chemin] ?? illustrationNeutre;
-        if (imagesAffichees.has(photo.image.src)) return null;
+        const photo = photoPourArticle(data, imagesAffichees);
         imagesAffichees.add(photo.image.src);
         return <VisuelAssises image={photo.image} fallbackImage={photo.fallbackImage} alt={photo.lieu} source={photo.source} credit={photo.auteur} licence={photo.licence} licenceUrl={photo.lienLicence} responsiveImages={responsiveImages} legendeCompacte />;
       })()}
@@ -32,7 +31,7 @@ const Titre = `h${niveau}`;
 <style>
   .articles-illustres{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5rem;list-style:none;padding:0}
   .articles-illustres li{min-width:0}
-  .articles-illustres :global(img){width:100%;height:auto;aspect-ratio:16/9;object-fit:contain}
+  .articles-illustres :global(img){width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
   @media(max-width:58rem){.articles-illustres{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media(max-width:37rem){.articles-illustres{grid-template-columns:minmax(0,1fr)}}
 </style>

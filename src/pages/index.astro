@@ -1,7 +1,7 @@
 ---
 import { getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import { photosArticles, illustrationNeutre } from '../lib/photos-articles.mjs';
+import { photoPourArticle } from '../lib/photos-articles.mjs';
 import photoSalle from '../assets/salle-voltaire.webp';
 import ListeArticles from '../components/ListeArticles.astro';
 import { CULTURE } from '../lib/culture.mjs';
@@ -26,15 +26,18 @@ const etiquettesUne = article => {
   return affairesUne.filter(mot => texte.includes(mot));
 };
 const selectionUne = [];
+const photosUne = new Map();
 const dejaUne = new Set();
 const imagesUne = new Set([photoSalle.src]);
 for (const article of articlesVerifies) {
   const etiquettes = etiquettesUne(article);
   if (etiquettes.some(mot => dejaUne.has(mot))) continue;
-  const image = (photosArticles[article.data.chemin] ?? illustrationNeutre).image.src;
+  const photo = photoPourArticle(article.data, imagesUne);
+  const image = photo.image.src;
   if (imagesUne.has(image)) continue;
   imagesUne.add(image);
   selectionUne.push(article);
+  photosUne.set(article.data.chemin, photo);
   etiquettes.forEach(mot => dejaUne.add(mot));
   if (selectionUne.length === 3) break;
 }
@@ -74,7 +77,7 @@ const repereUne = {
 };
 const articlesUne = selectionUne.map(({data}) => ({
   data,
-  photo: photosArticles[data.chemin] ?? illustrationNeutre,
+  photo: photosUne.get(data.chemin),
   repere: repereUne[data.chemin],
   titre: data.titre.replace(/ (?=[:;!?])/g, '\u00A0'),
 }));
@@ -85,20 +88,18 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
 }));
 ---
 <Base accueil>
-  <noscript><style>.une-sommaire .une-choix,.une-sommaire .une-pause{display:none!important}</style></noscript>
   <section class="ouverture" aria-labelledby="titre-accueil">
     <div class="cadre ouverture-interieur">
       <h1 id="titre-accueil" class="sr-only">Intime Conviction, le journal des cours d’assises</h1>
       {articlesUne.length > 0 && (
-        <section class:list={["une-editoriale", {"une-interactive": articlesUne.length > 1}]} aria-labelledby="une-editoriale-titre">
+        <section class="une-editoriale" aria-labelledby="une-editoriale-titre">
           <div class="une-entete">
             <h2 id="une-editoriale-titre">À la une</h2>
-            <a href="/agenda/">Agenda des assises</a>
           </div>
           <div class="une-editoriale-grille">
             <div class="une-reportages">
               {articlesUne.map(({data, photo, repere, titre}, i) => (
-                <article class="article-redaction-une" id={`article-une-${i}`} hidden={i !== 0}>
+                <article class="article-redaction-une" id={`article-une-${i}`}>
                   <div class="une-couverture">
                     <img src={photo.image.src} srcset={imagesResponsivesUne[i]} sizes="(max-width: 959px) 100vw, 70vw" width={photo.image.width} height={photo.image.height}
                       alt={photo.lieu} loading={i === 0 ? 'eager' : 'lazy'} decoding="async"
@@ -111,31 +112,13 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
                     </div>
                   </div>
                   <div class="une-credit">
-                    <span><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time> · Illustration</span>
+                    <span><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time></span>
                     <details><summary>Crédits photo</summary><span>{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a></span></details>
                   </div>
                 </article>
               ))}
             </div>
-            {articlesUne.length > 1 && (
-              <aside class="une-sommaire" aria-label="Les articles à la une">
-                <div class="une-sommaire-entete">
-                  <h3>Dans cette édition</h3>
-                  <button class="une-pause" type="button" aria-pressed="false" aria-label="Suspendre le défilement automatique" title="Suspendre le défilement automatique">
-                    <svg class="pause-icone" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 3.5v9m5-9v9" fill="none" stroke="currentColor" stroke-width="1.75"/></svg>
-                    <svg class="lecture-icone" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="m5 3 8 5-8 5z" fill="currentColor"/></svg>
-                  </button>
-                </div>
-                <ul>
-                  {articlesUne.map(({data, titre}, i) => (
-                    <li><button type="button" class="une-choix" aria-controls={`article-une-${i}`} aria-pressed={i === 0}>
-                      <span>{rubrique(data.rubrique).libelle}</span>
-                      <strong>{titre}</strong>
-                    </button><noscript><a href={data.chemin}>{titre}</a></noscript></li>
-                  ))}
-                </ul>
-              </aside>
-            )}
+
           </div>
         </section>
       )}
@@ -147,8 +130,8 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
       {dernieresPublications.length > 0 && (
         <section class="dernieres-publications" aria-labelledby="titre-dernieres-publications">
           <div class="selection-entete">
-            <h2 id="titre-dernieres-publications">À lire dans le journal</h2>
-            <a href="/rubrique/cours-du-jour/#articles-redaction">Voir tous les articles de la rédaction</a>
+            <h2 id="titre-dernieres-publications">Dernières publications</h2>
+            <a href="/rubrique/cours-du-jour/#articles-redaction">Tous les procès</a>
           </div>
           <ListeArticles articles={dernieresPublications} rubriqueVisible={false} illustres responsiveImages imagesExclues={[...imagesUne]} />
         </section>
@@ -276,66 +259,7 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
 
   </div></div>
 </Base>
-<script>
-  const carrousel = document.querySelector('.une-editoriale');
-  const articles = [...(carrousel?.querySelectorAll<HTMLElement>('.article-redaction-une') ?? [])];
-  const sommaire = carrousel?.querySelector<HTMLElement>('.une-sommaire');
-  const choix = [...(sommaire?.querySelectorAll<HTMLButtonElement>('.une-choix') ?? [])];
-  const pause = sommaire?.querySelector<HTMLButtonElement>('.une-pause');
 
-  if (carrousel && sommaire && pause && articles.length > 1) {
-    const mouvement = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let index = 0;
-    let survol = false;
-    let focus = false;
-    let suspendu = false;
-    let timer: number | undefined;
-
-    function afficher(position: number) {
-      index = position;
-      articles.forEach((article, i) => { article.hidden = i !== index; });
-      choix.forEach((bouton, i) => bouton.setAttribute('aria-pressed', String(i === index)));
-    }
-
-    function reglerDefilement() {
-      window.clearInterval(timer);
-      pause!.hidden = mouvement.matches;
-      if (!mouvement.matches && !survol && !focus && !suspendu && !document.hidden) {
-        timer = window.setInterval(() => afficher((index + 1) % articles.length), 9000);
-      }
-    }
-
-    choix.forEach((bouton, i) => bouton.addEventListener('click', () => {
-      afficher(i);
-      const article = articles[i];
-      if (article.getBoundingClientRect().bottom < 0) {
-        article.scrollIntoView({ block: 'start' });
-      }
-      article.querySelector('h3 a')?.focus({ preventScroll: true });
-    }));
-    pause.addEventListener('click', () => {
-      suspendu = !suspendu;
-      pause.setAttribute('aria-pressed', String(suspendu));
-      pause.title = suspendu ? 'Reprendre le défilement automatique' : 'Suspendre le défilement automatique';
-      reglerDefilement();
-    });
-    carrousel.addEventListener('mouseenter', () => { survol = true; reglerDefilement(); });
-    carrousel.addEventListener('mouseleave', () => { survol = false; reglerDefilement(); });
-    carrousel.addEventListener('focusin', () => { focus = true; reglerDefilement(); });
-    carrousel.addEventListener('focusout', event => {
-      if (!(event.relatedTarget instanceof Node) || !carrousel.contains(event.relatedTarget)) {
-        focus = false;
-        reglerDefilement();
-      }
-    });
-    mouvement.addEventListener('change', reglerDefilement);
-    document.addEventListener('visibilitychange', reglerDefilement);
-    afficher(0);
-    sommaire.hidden = false;
-    carrousel.classList.add('une-interactive');
-    reglerDefilement();
-  }
-</script>
 
 <style>
 .videos-accueil{margin:2rem 0;padding:1rem 0;border-top:2px solid var(--filet);border-bottom:1px solid var(--filet)}
@@ -377,40 +301,20 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
   .une-credit summary { cursor: pointer; text-underline-offset: .2em; text-decoration: underline; }
   .une-credit details span { display: block; margin-top: .35rem; }
   .une-credit details a { text-decoration: underline; }
-  .une-sommaire { min-width: 0; background: var(--surface-journal); border-top: 3px solid var(--rouge-journal); }
-  .une-sommaire-entete { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .35rem .7rem .35rem 1.05rem; }
-  .une-sommaire-entete h3 { margin: 0; color: var(--rouge-journal); font: 720 .78rem/1.25 var(--sans); letter-spacing: .09em; text-transform: uppercase; }
-  .une-pause { display: grid; place-items: center; min-width: 44px; min-height: 44px; padding: 0; color: var(--rouge-journal); border: 0; background: transparent; }
-  .une-pause:hover { color: #fff; background: var(--rouge-journal); }
-  .une-pause[hidden], .une-pause .lecture-icone, .une-pause[aria-pressed="true"] .pause-icone { display: none; }
-  .une-pause[aria-pressed="true"] .lecture-icone { display: block; }
-  .une-sommaire ul { margin: 0; padding: 0; list-style: none; }
-  .une-sommaire li { border-top: 1px solid var(--filet-journal); }
-  .une-choix { width: 100%; padding: .9rem .9rem .9rem 1rem; border: 0; border-inline-start: 3px solid transparent; background: transparent; color: var(--encre-journal); text-align: start; text-transform: none; }
-  .une-choix[aria-pressed="true"] { display: none; }
-  .une-sommaire noscript a { display: block; padding: .75rem 1rem; }
-  .une-sommaire li:has(.une-choix[aria-pressed="true"]) { border: 0; }
-  .une-choix:hover { border-inline-start-color: var(--rouge-journal); background: var(--papier-journal); }
-  .une-sommaire button:focus-visible { outline: 2px solid var(--rouge-journal); outline-offset: -3px; }
-  .une-choix span { display: block; margin-bottom: .38rem; color: var(--rouge-journal); font: 690 .72rem/1.3 var(--sans); }
-  .une-choix strong { display: block; font: 630 clamp(1.22rem, 1.75vw, 1.62rem)/1.12 var(--serif); letter-spacing: -.016em; }
-  @media (max-width: 59.99rem) {
-    .une-interactive .une-editoriale-grille { grid-template-columns: minmax(0, 1fr); gap: .65rem; }
-    .une-sommaire ul { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
-    .une-sommaire li + li { border-inline-start: 1px solid var(--filet-journal); }
-    .une-choix { height: 100%; }
-  }
-  @media (max-width: 37rem) {
-    .une-entete > a { display: none; }
-    .une-couverture { display: block; min-height: 0; padding-top: 60%; }
-    .une-couverture img { bottom: auto; height: auto; aspect-ratio: 5/3; }
-    .une-couverture::after { bottom: auto; height: auto; aspect-ratio: 5/3; background: linear-gradient(0deg, #252628, #25262800 44%); }
-    .une-edito { position: relative; margin-top: -1.2rem; padding: 0 1.05rem 1.25rem; }
-    .une-edito h3 { max-width: none; text-wrap: pretty; }
-    .une-sommaire ul { display: block; }
-    .une-sommaire li + li { border-inline-start: 0; }
-    .une-choix { padding-block: .6rem; }
-  }
+  .une-reportages{display:grid;grid-template-columns:minmax(0,1.75fr) repeat(2,minmax(0,1fr));gap:clamp(1rem,2.5vw,2rem)}
+  .une-reportages .une-couverture{display:block;min-height:0;background:none;color:var(--encre-journal)}
+  .une-reportages .une-couverture::after{display:none}
+  .une-reportages .une-couverture img{position:static;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover}
+  .une-reportages .une-edito{position:static;padding:.8rem 0 0}
+  .une-reportages .une-edito h3{font-size:clamp(1.35rem,2vw,2rem);color:var(--encre-journal)}
+  .une-reportages article:first-child h3{font-size:clamp(1.8rem,3vw,3.35rem)}
+  .une-reportages .une-edito a{color:inherit}
+  .une-reportages .une-rubrique{color:var(--rouge-journal)}
+  .une-reportages .une-chapeau{color:var(--encre-2)}
+  .une-reportages article:not(:first-child) .une-chapeau{display:none}
+  @media(max-width:48rem){.une-reportages{grid-template-columns:repeat(2,minmax(0,1fr))}.une-reportages article:first-child{grid-column:1/-1}}
+  @media(max-width:30rem){.une-reportages{grid-template-columns:1fr}}
+
 
   .journal-corps > section, .journal-corps > .outils-accueil, .fil-du-journal { margin-block: clamp(1.75rem, 5vw, 4.25rem); }
   .fil-du-journal { display: grid; gap: 2rem; }

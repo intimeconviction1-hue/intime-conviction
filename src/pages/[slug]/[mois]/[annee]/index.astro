@@ -4,7 +4,7 @@ import { DOSSIERS, dossiersPourArticle, referencesPourDossier } from '../../../.
 import { lireVeille } from '../../../../lib/veille.mjs';
 import { routesArticles } from '../../../../lib/adresses-articles.mjs';
 import Base from '../../../../layouts/Base.astro';
-import { photosArticles } from '../../../../lib/photos-articles.mjs';
+import { photoPourArticle } from '../../../../lib/photos-articles.mjs';
 import ListeArticles from '../../../../components/ListeArticles.astro';
 import { rubrique } from '../../../../lib/rubriques.mjs';
 import { corpsAffiche } from '../../../../lib/corps-article.mjs';
@@ -53,7 +53,7 @@ const { article, voisins, dossiers, lies = [], redirection } = Astro.props;
 if (redirection) return Astro.redirect(redirection, 301);
 const { data } = article;
 const r = rubrique(data.rubrique);
-const photo = photosArticles[data.chemin];
+const photo = photoPourArticle(data);
 const provenance = provenanceVerifiee(data.chemin);
 const formatArchive = formatArchiveVerifie(data.chemin);
 const signatureArchive = String(data.auteur ?? '').trim();

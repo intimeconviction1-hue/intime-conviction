@@ -1,6 +1,6 @@
 ---
 import VisuelAssises from '../../../components/VisuelAssises.astro';
-import photoAssises from '../../../assets/salle-voltaire.webp';
+import { photoPourArticle } from '../../../lib/photos-articles.mjs';
 import Base from '../../../layouts/Base.astro';
 import ListeArticles from '../../../components/ListeArticles.astro';
 import Culture from '../../../components/Culture.astro';
@@ -40,11 +40,10 @@ const ressources = {
 };
 const liensRubrique = ressources[r.slug] ?? [];
 const estActualite = page.currentPage === 1 && r.slug === 'cours-du-jour';
-const aLaUne = estActualite ? page.data.filter(({data})=>data.verificationEnCours !== true).slice(0,3) : [];
 const chroniqueVedette = page.currentPage === 1 && r.slug === 'la-cour-se-leve'
   ? page.data.find(({data}) => data.verificationEnCours !== true)?.data
   : undefined;
-const suite = page.data.filter(article => article.data !== chroniqueVedette && !aLaUne.includes(article));
+const suite = page.data.filter(article => article.data !== chroniqueVedette);
 ---
 <Base titre={titre} description={`${r.libelle}. ${page.total} articles d'Intime Conviction.`} rubriqueActive={r.slug}>
   <script type="application/ld+json" set:html={JSON.stringify({
@@ -63,9 +62,8 @@ const suite = page.data.filter(article => article.data !== chroniqueVedette && !
   })} />
   <header class="titre-page">
     <div>
-    <p class="etiquette">Rubrique</p>
     <h1>{r.libelle}</h1>
-    <p class="meta">{page.total.toLocaleString('fr-FR')} articles d’archives · page {page.currentPage} sur {page.lastPage}</p>
+    <p class="meta">{page.total.toLocaleString('fr-FR')} articles · page {page.currentPage} sur {page.lastPage}</p>
     </div>
   </header>
   {chroniqueVedette && (
@@ -75,7 +73,10 @@ const suite = page.data.filter(article => article.data !== chroniqueVedette && !
         <h2 id="titre-chronique-vedette"><a href={chroniqueVedette.chemin}>{chroniqueVedette.titre}</a></h2>
         {chroniqueVedette.extrait && <p>{chroniqueVedette.extrait}</p>}
       </div>
-      <VisuelAssises image={photoAssises} alt="Photo d’illustration · Salle Voltaire de la cour d’assises, Paris" source="https://commons.wikimedia.org/wiki/File:Palais_de_justice_de_Paris_-_salle_Voltaire_(cour_d%27assises).jpg" credit="Tiraden" licence="CC BY-SA 4.0" licenceUrl="https://creativecommons.org/licenses/by-sa/4.0/" prioritaire />
+      {(() => {
+        const photo = photoPourArticle(chroniqueVedette);
+        return <VisuelAssises image={photo.image} alt={photo.lieu} source={photo.source} credit={photo.auteur} licence={photo.licence} licenceUrl={photo.lienLicence} prioritaire />;
+      })()}
     </section>
   )}
   {page.currentPage === 1 && liensRubrique.length > 0 && (
@@ -92,17 +93,11 @@ const suite = page.data.filter(article => article.data !== chroniqueVedette && !
       <a class="lecture-jures-action" href="/jures-en-mai/05/2022/">Lire le récit <span aria-hidden="true">→</span></a>
     </aside>
   )}
-  {estActualite && (
-    <section id="articles-redaction" aria-labelledby="titre-articles-redaction">
-      <div class="titre-section"><h2 id="titre-articles-redaction">Les articles de la rédaction</h2></div>
-      <ListeArticles articles={aLaUne} rubriqueVisible={false} niveau={3} />
-    </section>
-  )}
-  {estActualite && <p id="actualites"><a href="/revue-de-presse/">Consulter la revue de presse →</a></p>}
   {page.currentPage === 1 && r.slug === 'le-greffe' && <Culture titre="À lire, à voir" />}
   {suite.length > 0 && <>
-    <div class="titre-section"><h2>{estActualite ? 'Tous les autres articles du journal' : 'Les articles d’Intime Conviction'}</h2></div>
-    <ListeArticles articles={suite} rubriqueVisible={false} niveau={3} />
+    <div id={estActualite ? "articles-redaction" : undefined}>
+      <ListeArticles articles={suite} rubriqueVisible={false} niveau={2} responsiveImages />
+    </div>
   </>}
   <nav class="pagination" aria-label="Pages">
     {page.url.prev ? <a href={page.url.prev}>← Plus récents</a> : <span />}

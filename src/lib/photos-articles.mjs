@@ -374,3 +374,30 @@ try {
 } catch (erreur) {
   throw new Error('Attributions photographiques invalides : ' + erreur.message);
 }
+
+// Illustrations non documentaires, avec les crédits propres à chaque fichier.
+const illustrationsArticle = [
+  {
+    image: photoCodePenal1810,
+    lieu: 'Page de titre du Code pénal de 1810, édition de Bruxelles · Illustration d’archives',
+    auteur: 'Gambier · Numérisation Google via Wikimedia Commons',
+    source: 'https://commons.wikimedia.org/wiki/File:Code_p%C3%A9nal_(Gambier,_1810).pdf',
+    licence: 'Domaine public',
+    lienLicence: 'https://creativecommons.org/publicdomain/mark/1.0/',
+  },
+  ...[photoCode, croquisCodeRosiers, croquisDelibere, croquisAudienceSarah, croquisHeaulme].map(image => ({
+    ...illustrationNeutre, image, source: image.src, lienLicence: image.src,
+    lieu: image === photoCode || image === croquisCodeRosiers
+      ? 'Code de procédure pénale · Illustration générée pour Intime Conviction'
+      : illustrationNeutre.lieu,
+  })),
+];
+
+export function photoPourArticle(data, imagesDejaVues = new Set()) {
+  const photo = photosArticles[data.chemin];
+  if (photo && (!photo.croquis || !imagesDejaVues.has(photo.image.src))) return photo;
+  const index = Array.from(data.chemin).reduce((total, caractere) => total + caractere.codePointAt(0), 0)
+    % illustrationsArticle.length;
+  const choix = [...illustrationsArticle.slice(index), ...illustrationsArticle.slice(0, index)];
+  return choix.find(illustration => !imagesDejaVues.has(illustration.image.src)) ?? photo ?? choix[0];
+}
