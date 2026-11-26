@@ -249,6 +249,28 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
   <body class:list={{'avec-fond':accueil}}>
     <slot name="fond" />
     <a class="evitement" href="#contenu">Aller au contenu</a>
+    {accueil && <>
+      <div id="ouverture-journal" aria-hidden="true" hidden></div>
+      <script is:inline>
+        (() => {
+          if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          const intro = document.getElementById('ouverture-journal');
+          if (!intro) return;
+          try {
+            if (sessionStorage.getItem('ic-ouverture-v1')) return;
+          } catch { return; }
+          const photo = new Image();
+          photo.src = '/illustrations/entree-assises.webp';
+          const debut = performance.now();
+          photo.decode().then(() => {
+            if (performance.now() - debut > 450) return;
+            try { sessionStorage.setItem('ic-ouverture-v1', '1'); } catch { return; }
+            intro.hidden = false;
+            setTimeout(() => { intro.hidden = true; }, 1050);
+          }).catch(() => {});
+        })();
+      </script>
+    </>}
     <header class="entete">
       <div class="barre cadre">
         <div class="identite-journal">
@@ -518,26 +540,58 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
       .pied-navigation { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     .entete, .avec-fond .entete {
-      --encre-journal: #202529;
-      --encre-2: #545956;
-      --rouge-journal: #783638;
-      --surface-journal: #eeeae2;
-      border-top: 4px solid #202529;
-      background: #fffdf8;
+      --encre-journal: #fcf7ee;
+      --encre-2: #e1d7cd;
+      --rouge-journal: #f2c3ba;
+      --surface-journal: #3e292a;
+      border-top: 4px solid #963c44;
+      background-color: #1c191b;
+      background-image: linear-gradient(90deg, #1c191b 22%, #1c191be8 57%, #22181bb0 100%),
+        url('/illustrations/manchette-fronton.webp');
+      background-position: center, right 44%;
+      background-repeat: no-repeat;
+      background-size: cover, min(66%, 52rem) auto;
     }
-    .entete .barre { padding-block: clamp(1rem, 2.4vw, 2rem) .8rem; }
+    .entete .barre { padding-block: clamp(1.35rem, 3vw, 2.8rem) 1rem; }
     .entete .identite-journal .marque a {
-      color: #202529;
+      color: #fcf7ee;
       font-size: min(6rem, 10cqi);
       font-weight: 600;
       letter-spacing: -.062em;
       text-transform: none;
     }
     .entete .marque-conviction { font-style: italic; }
-    .entete .signature { color: #783638; }
-    .entete .bande-navigation { background: #fffdf8; border-top: 1px solid #d9d3c9; }
-    .entete .espace-entete .edition-abonnement { background: #783638; color: #fffdf8; }
-    .entete .espace-entete .edition-abonnement:hover { background: #572427; color: #fffdf8; }
+    .entete .bande-navigation {
+      --encre-journal: #282125;
+      --rouge-journal: #783638;
+      --surface-journal: #eeeae2;
+      background: #fcf7ee;
+      border-top: 1px solid #8e454a;
+    }
+    .entete .espace-entete .edition-abonnement { background: #864048; color: #fffaf1; }
+    .entete .espace-entete .edition-abonnement:hover { background: #a14a53; color: #fffaf1; }
+
+    #ouverture-journal {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      overflow: hidden;
+      pointer-events: none;
+      background: #181518;
+      animation: sortie-journal 1s ease-out both;
+    }
+    #ouverture-journal::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg,#18151850,transparent 45%,#18151860),
+        url('/illustrations/entree-assises.webp') 55% center / cover no-repeat;
+      transform-origin: 28% 53%;
+      animation: franchir-porte 1s cubic-bezier(.22,.68,.38,1) both;
+    }
+    @keyframes franchir-porte { from { transform: scale(1.02); } to { transform: scale(1.25); } }
+    @keyframes sortie-journal { 0%, 36% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+    @media (prefers-reduced-motion: reduce) { #ouverture-journal { display: none; } }
 
   </style>
   </body>
