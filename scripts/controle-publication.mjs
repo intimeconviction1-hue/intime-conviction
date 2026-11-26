@@ -7,7 +7,7 @@
  * Les attributions de source, dates, titres, mentions légales, informations
  * d'accessibilité et les textes journalistiques ne sont pas bannis.
  */
-import { access, readdir, readFile } from 'node:fs/promises';
+import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, relative } from 'node:path';
 
 const ROOT = process.argv[2] ?? 'dist';
@@ -81,8 +81,11 @@ if (process.argv[1]?.endsWith('controle-publication.mjs')) {
     }
   }
   for (const image of images) {
-    try { await access(join(ROOT, image)); }
-    catch { erreurs++; console.error('IMAGE INTROUVABLE :', image); }
+    try {
+      const fichier = await stat(join(ROOT, image));
+      if (!fichier.isFile() || fichier.size === 0) throw new Error('Illustration vide');
+    }
+    catch { erreurs++; console.error('IMAGE INTROUVABLE OU VIDE :', image); }
   }
   console.log(`Couverture des articles : ${articles} pages contrôlées, ${images.size} visuels référencés.`);
   if (erreurs) {
