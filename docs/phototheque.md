@@ -2,7 +2,7 @@
 
 Les 516 WebP sont conservés exclusivement dans le dépôt privé `intimeconviction1-hue/intime-conviction-articles/phototheque/images/`.
 
-Les attributions individuelles sont fixées dans `phototheque/attributions.json` du dépôt privé. Une première sélection de **29 images distinctes** est attribuée aux articles de novembre 2026. La sélection privilégie des salles d'audience, les bancs, les dossiers, la barre des témoins ou les frontons, sans représenter abusivement une autre affaire comme celle traitée.
+Les attributions individuelles sont fixées dans `phototheque/attributions.json` du dépôt privé. La sélection éditoriale est actualisée dans ce fichier d’attributions, notamment pour les articles mis à la une. La sélection privilégie des salles d'audience, les bancs, les dossiers, la barre des témoins ou les frontons, sans représenter abusivement une autre affaire comme celle traitée.
 
 Le workflow `.github/workflows/publier.yml` exécute `scripts/preparer-illustrations.mjs` avant le build. Ce script vérifie les articles, refuse toute attribution dupliquée, copie **seulement** les WebP des articles publiables dans l'artefact du site, et fournit un petit manifeste temporaire utilisé par `src/lib/photos-articles.mjs`.
 
