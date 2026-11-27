@@ -137,10 +137,10 @@
       "updatedAt": "2026-11-21T10:10:49.330Z"
     },
     "2e8f5f43de2b2aa1ce78e73f7f25513295c0a017eb3c95540d95fa61e72d2b7a": {
-      "bufferPostId": "6b08675bc81617797dc8a472",
-      "queuedAt": "2026-11-26T17:07:39.668Z",
-      "fingerprint": "fc95bfea1ecbc3dceb0e9850c3455bfbf0c1406f7a3710984c70e7b1d857ed21",
-      "updatedAt": "2026-11-26T17:05:05.138Z"
+      "bufferPostId": "6b0938b0776ce21276f9e411",
+      "queuedAt": "2026-11-27T08:00:48.498Z",
+      "fingerprint": "a2bb9214124e455902e7042d328db23f36b4b01a088739815b935627b3f4f1cc",
+      "updatedAt": "2026-11-27T07:57:59.525Z"
     },
     "062c4d421f3e7d0dec7914f56516f3b11f8a1eb4f345fa17bc718e6e29523717": {
       "bufferPostId": "6b03fc179c1a68014f5e354a",
@@ -351,10 +351,10 @@
       "fingerprint": "34d0e8f547a12b3df06660fb39c0899e9d6fcd5947cce8c54dd2095164c8022e"
     },
     "cdc5242250aa1784c23308670772fa356184a84617d9717a100b6b8659b44ccb": {
-      "bufferPostId": "6b08675c3accdac92ce4407e",
-      "queuedAt": "2026-11-26T17:07:40.221Z",
-      "fingerprint": "76a38af1a26b646142d31b29a48f32cb30bc9b28109fea092cd7794d94907194",
-      "updatedAt": "2026-11-26T17:05:07.111Z"
+      "bufferPostId": "6b0938b1e94385a8fd86353e",
+      "queuedAt": "2026-11-27T08:00:49.514Z",
+      "fingerprint": "cf35b6d1cd24c8cc32cab63e6bbaa3bd3a6e71ed8d0c924570bd9b5335ef12b3",
+      "updatedAt": "2026-11-27T07:58:01.080Z"
     },
     "7f0dbcb6ffc423f787959527152f3e6007568da3cb105ddd2b1e81df7afa1926": {
       "bufferPostId": "6b083d82e1a214b89bdde1b4",
@@ -370,6 +370,11 @@
       "bufferPostId": "6b089191f0a96d0f21890131",
       "queuedAt": "2026-11-26T20:07:45.278Z",
       "fingerprint": "e18a8cafa0bf5c05d6028d546572d59e1bd63ac509b61af4403655b74bf60ccb"
+    },
+    "84f97e6f79bda67838fad98889e8b8a9f656dda04b239df5687d8cb1e3608f98": {
+      "bufferPostId": "6b0938b2658222306cf39610",
+      "queuedAt": "2026-11-27T08:00:50.370Z",
+      "fingerprint": "94592cdb7a9564b8c689ce9c7df7e519b57f70ad987f8c6a7364fff82aa44122"
     }
   },
   "updatesSince": "2026-11-20T00:00:00+01:00"
