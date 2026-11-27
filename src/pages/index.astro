@@ -271,7 +271,8 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
   .une-credit summary { cursor: pointer; text-underline-offset: .2em; text-decoration: underline; }
   .une-credit details span { display: block; margin-top: .35rem; }
   .une-credit details a { text-decoration: underline; }
-  .une-reportages{display:grid;grid-template-columns:minmax(0,1.75fr) repeat(2,minmax(0,1fr));gap:clamp(1rem,2.5vw,2rem)}
+  .une-reportages{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:clamp(1rem,2.5vw,2rem)}
+  .une-reportages article:first-child{grid-row:span 2}
   .une-reportages .une-couverture{display:block;min-height:0;background:none;color:var(--encre-journal)}
   .une-reportages .une-couverture::after{display:none}
   .une-reportages .une-couverture img{position:static;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover}
