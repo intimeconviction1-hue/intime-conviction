@@ -62,6 +62,7 @@ const photoAssisesParis = {
 
 // Lier les photos au lieu évoqué dans l’article, indépendamment de sa position.
 export const photosArticles = {
+  '/paris-arnould-depardieu-renvoi-partiel-deux-dates/11/2026/': { ...illustrationNeutre, image: photoCode, source: photoCode.src, lienLicence: photoCode.src, lieu: 'Code de procédure pénale. Illustration générée pour Intime Conviction.' },
   '/mons-falzone-indemnisation-solidarite-passager/11/2026/': { ...illustrationNeutre, image: croquisAudienceSarah, source: croquisAudienceSarah.src, lienLicence: croquisAudienceSarah.src, lieu: 'Illustration générée pour Intime Conviction. Le dessin ne représente pas l’audience de Mons.' },
   '/roanne-victor-marques-legitime-defense/11/2026/': {
     image: photoCodePenal1810,
