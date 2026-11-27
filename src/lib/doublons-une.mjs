@@ -46,6 +46,7 @@ const referencesParArticle = {
   '/karen-baldi-proces-chambery-protection-premeditation/11/2026/': ["CBMi_AFBVV95cUxPVnVxZmQ2ZUZsT3VPeUtkOGZ3X09Wbkg2bXRhOVlTLVJZLXliS05DbmxicTV1bjVidGQt","CBMikwJBVV95cUxPbXEzTVRORlhLOW5hZFEzVUdaWmFLbXZYaG8xbV83VTE4bk9ZWjFSQmFXS0szZzhTRXhB", "CBMiyAFBVV95cUxNX3VEaklzWWR3eF9oTkNNZXZpVjJPNF8xazc5TmpLbm9WR1ZyQ2VuV3hOZTIteFpiX3", 
     '3452391.html', '2846785', '10762754',
     'CBMisAJBVV95cUxQLTRsb1hpamxiay02RjJqeXp3MkhEUlcxdExOWEtqRnlYTVI1bk5JdkdEMFNQNERwWWFxbEpjaUplUUE1d3NM',
+    '7900700477',
   ],
   '/camille-paul-basse-terre-enregistrement-verdict/11/2026/': [
     '/meurtre-d-une-strasbourgeoise-en-2024-30-ans-de-reclusion',
