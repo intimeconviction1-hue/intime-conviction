@@ -266,7 +266,7 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
             if (performance.now() - debut > 450) return;
             try { sessionStorage.setItem('ic-ouverture-v1', '1'); } catch { return; }
             intro.hidden = false;
-            setTimeout(() => { intro.hidden = true; }, 1050);
+            setTimeout(() => { intro.hidden = true; }, 2700);
           }).catch(() => {});
         })();
       </script>
@@ -578,7 +578,7 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
       overflow: hidden;
       pointer-events: none;
       background: #181518;
-      animation: sortie-journal 1s ease-out both;
+      animation: sortie-journal 2.7s ease-out both;
     }
     #ouverture-journal::before {
       content: '';
@@ -587,10 +587,10 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
       background: linear-gradient(90deg,#18151850,transparent 45%,#18151860),
         url('/illustrations/entree-assises.webp') 55% center / cover no-repeat;
       transform-origin: 28% 53%;
-      animation: franchir-porte 1s cubic-bezier(.22,.68,.38,1) both;
+      animation: franchir-porte 2.7s cubic-bezier(.22,.68,.38,1) both;
     }
     @keyframes franchir-porte { from { transform: scale(1.02); } to { transform: scale(1.25); } }
-    @keyframes sortie-journal { 0%, 36% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+    @keyframes sortie-journal { 0%, 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
     @media (prefers-reduced-motion: reduce) { #ouverture-journal { display: none; } }
 
   </style>
