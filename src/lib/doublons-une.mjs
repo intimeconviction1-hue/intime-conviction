@@ -20,6 +20,8 @@ const referencesParArticle = {
   '/grasse-nora-mike-furlad-trente-ans-intention-contestee/11/2026/': [
     '10765242',
     'CBMi1AJBVV95cUxQdlZlVTBveU9TM0szanZPWHRpMERmLTk3VWREUFdlUnFXSTliNjBCY3c0ekdwdnZSaHZ4dzd0',
+    'CBMiuwFBVV95cUxPLTAtdTQ2aUZjNlJQOThxY0ttekhUT09DYmJwRTEzdDM2WXphRVh1ckxmQ3dVdnM4TmtHeS1UVWczaGNCSzVtbGV4REgzdnVWYko2eEdFSVhDUUh3c1pQckE3OGtXQU5fSTdIQU9TN1pBVXVuOUpLZTNoeXNmTE9JVGFpeXBFZHF6M0Ftbm11cFVwTWdTQmdQOXBSOTBYTGNFbkRaMW1kaTNDazMyQ1hUenhFbDBn',
+    'CBMi_AFBVV95cUxOU29fcnkzcWhVRFpDLS1iZV9FYjA0RjhUZlU3NEdER0RCVE4yeC00cnJkQm1oZF9MSU1DVElkUlR1ZUpNWVlFZXdxTVFmc2JnWHhsdlhsN1FCYVpLTzlJQlZ4TkpmcUZHeHdqMDExcDZqdzgtcE5nWVk3bVI2X2ZqUEw5UVlxMFdiM2VOSUloXzlvOXM0RWtaQmdjQVRySnBZRUt5YzkyYkJ4WUlfd0FOYUI3ZTd6REhJWUFlS0V4dnNJcTFDTDIyeWxvNzRsSUZiS1JNYXVpeUZXSzdTa294QU56eWlLNWZxbkRobEs5UlBLdzhrWDRxZUZmUlg',
   ],
   '/puy-en-velay-hotel-tentative-meurtre-verdict/11/2026/': [
     '/cour-d-assises-elle-n-a-pas-voulu-l-envoyer-au-paradis-mais-lui-oter-la-vie',
@@ -100,6 +102,8 @@ const referencesParArticle = {
     'renvoi-du-policier-pour-meurtre-13665529.php',
   ],
   '/proces-sollacaro-et-tout-recommence-aux-assises/11/2026/': ['8368231'],
+  '/sarah-sadani-temoin-rescapee-fusillade-proces-aix/11/2026/': ['CBMi-AFBVV95cUxPQUlLTUZZOHBSeElnZU9fYXV0ZEpvSS1TOHlrQjQ2TWphNmdnblVCd3ExZE0tUDNGTDctcEJPYlowVmZsaWtCZEhjTkU3bXoyV29MTVVuZTdrMjlocm1PdlluQWdQT3ZRa1NsTlpPWE1iT0tvZXRpc2JfWVdrbzZSSjN1WktEanJBZTd0ckZ5aXFGbDR5UExnd2dmbDR6OWtoUzNKYVFadnFsdm0yNG5zaGtQZGRxaXMzeFBxQWw5c0FLV0VlVWVCeVB6UG1Ha096bmR2MVN0amhQNmRSSWxybEZZOTdUNHAwS0pwUVA0RjUybkxmQ3pwNg', 'CBMijwJBVV95cUxNRjB5eXkwUGxqQmhsT3lkb1V4NmRfV0V3SE1ISkg3WEpVZzVhU0VWRGdyOTNEaDFLbnliTkFNTG9GR1d6QzdZM1ZFM0ZsWGV4bERrZUxxei1kOWpPWVo5WmhHV1lsM2JEV0Vhekc4MjhTdDd0UEM2M0VXY0lQUXphelRzMTRpTnQzTGxvR0ZkXy1QMDA3b1NYM2FlSGF2UkV6S0t6TmtINERSVGdsYzNELVRxUEtKdzlsTTFjNnYyOWROdnFBTExUMk02RGNra1ZKYzU3YnZ2azBlQzFGdkJ0c1NQcjNJaWh6UE1CbjhlLTlDTVFjXzFib0hpWHRGdmJXSDUyMlEtd3BFLTZQSFUw'],
+  '/chahinez-daoud-boutaa-perigueux-discernement/11/2026/': ['CBMi_gFBVV95cUxPVU8xejJadUFqSldMNlY1djJWSi0wT1VJdUdlQkY2NnQzeWRkMXNCTnhBa1hmMVJISEVkOGVlUGplRFQtSENaeTlkMUJ6MUowNktTT1VaeHRNaDhHNjdNUXk1cHJIclF0RVBoU0JOMzcwY0ZtYlVUeXA5Wk96QlBYdFY3TC1MVjZHRmlZa3ppcURxOEZOaVl5NVlGbDlScFR0ZldaZUhUbGdCVkhJZ2F2b0M2YncxM2VHUWVxWFpDZEVYSGVZenU2LTYzeVpTNDZDdFhfUFpuTkl0NDBScWJhdjdSM1lNV0d3cEJOWW5XbHNFZkdDeXpJbTVJUFVaZw'],
 };
 
 export function presseSansRedite(references, articlesEnUne) {
