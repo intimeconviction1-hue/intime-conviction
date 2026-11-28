@@ -36,6 +36,8 @@ jobs:
           pathlib.Path('.cache/justice/schema.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
           print(json.dumps(report,ensure_ascii=False))
           PY
+      - name: Extraire les structures criminelles
+        run: python3 scripts/importer-structures-justice.py
       - name: Conserver le CSV et le schéma
         uses: actions/upload-artifact@v4
         with:
