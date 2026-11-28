@@ -44,6 +44,8 @@ const chroniqueVedette = page.currentPage === 1 && r.slug === 'la-cour-se-leve'
   ? page.data.find(({data}) => data.verificationEnCours !== true)?.data
   : undefined;
 const suite = page.data.filter(article => article.data !== chroniqueVedette);
+const pagesDirectes = Array.from({ length: page.lastPage }, (_, i) => i + 1);
+const urlPage = n => n === 1 ? '/rubrique/' + r.slug + '/' : '/rubrique/' + r.slug + '/' + n + '/';
 ---
 <Base titre={titre} description={`${r.libelle}. ${page.total} articles d'Intime Conviction.`} rubriqueActive={r.slug}>
   <script type="application/ld+json" set:html={JSON.stringify({
@@ -99,13 +101,18 @@ const suite = page.data.filter(article => article.data !== chroniqueVedette);
       <ListeArticles articles={suite} rubriqueVisible={false} niveau={2} responsiveImages />
     </div>
   </>}
-  <nav class="pagination" aria-label="Pages">
+  <nav class="pagination" aria-label="Accès direct aux pages de la rubrique">
     {page.url.prev ? <a href={page.url.prev}>← Plus récents</a> : <span />}
+    <ol>{pagesDirectes.map(n => <li>{n === page.currentPage ? <span aria-current="page">{n}</span> : <a href={urlPage(n)}>{n}</a>}</li>)}</ol>
     {page.url.next ? <a href={page.url.next}>Plus anciens →</a> : <span />}
   </nav>
 </Base>
 
 <style>
+  .pagination{display:flex;align-items:center;justify-content:center;gap:.75rem;flex-wrap:wrap;margin:2rem 0;font-family:var(--sans)}
+  .pagination ol{display:flex;flex-wrap:wrap;justify-content:center;gap:.25rem;list-style:none;padding:0;margin:0}
+  .pagination a,.pagination [aria-current="page"]{display:inline-flex;align-items:center;justify-content:center;min-width:2.5rem;min-height:2.75rem;padding:.4rem;border:1px solid var(--filet);text-decoration:none}
+  .pagination [aria-current="page"]{font-weight:800;border-color:var(--rouge);color:var(--rouge)}
   .ressources-rubrique{border-top:1px solid var(--filet-fort);border-bottom:1px solid var(--filet);padding:1.25rem 0 1.5rem;margin:1rem 0 2rem}
   .ressources-rubrique h2{font-family:var(--sans);font-size:.85rem;letter-spacing:.04em;font-weight:750;margin:0 0 1rem}
   .ressources-rubrique ul{display:flex;flex-wrap:wrap;list-style:none;padding:0;margin:0;gap:.65rem}
