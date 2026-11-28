@@ -57,6 +57,19 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci
+      - name: Inventorier les rapprochements judiciaires
+        run: node scripts/auditer-articles-geographiques.mjs
+        env:
+          IC_ARTICLES: articles-prives/articles
+      - name: Conserver les statistiques géographiques
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: inventaire-geographique
+          path: .cache/geographie/rapport.json
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7
       - name: Tester le dépôt
         run: npm test
       - name: Préparer les illustrations du fonds
