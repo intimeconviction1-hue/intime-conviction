@@ -3,11 +3,15 @@ import Base from '../../layouts/Base.astro';
 import {IMPLANTATIONS,TERRITOIRES} from '../../lib/geographie-judiciaire.mjs';
 import {ANNUAIRE_OFFICIEL} from '../../lib/guide-assises.mjs';
 import institutionnel from '../../data/structures-justice.json';
+import {tousLesArticles,dateLongue} from '../../lib/articles.mjs';
+import {articlesParImplantation} from '../../lib/articles-geographiques.mjs';
+import associations from '../../data/associations-judiciaires.json';
 import {DOSSIERS} from '../../lib/dossiers.mjs';
-export function getStaticPaths(){
- return IMPLANTATIONS.map(v=>({params:{ville:v.id},props:{v}}));
+export async function getStaticPaths(){
+ const index=articlesParImplantation(await tousLesArticles(),associations);
+ return IMPLANTATIONS.map(v=>({params:{ville:v.id},props:{v,articles:index.get(v.id)??[]}}));
 }
-const {v}=Astro.props;
+const {v,articles}=Astro.props;
 const ts=TERRITOIRES.filter(t=>v.departements.includes(t.code));
 const structures=institutionnel.structures.filter(s=>s.implantation===v.id);
 const titre='Les assises à '+v.ville;
@@ -18,6 +22,7 @@ const titre='Les assises à '+v.ville;
  <section><h2>Territoire</h2><ul>{ts.map(t=><li>{t.code} · {t.departement}</li>)}</ul><p>Ne pas confondre le lieu des faits et celui de l’audience.</p><a href={ANNUAIRE_OFFICIEL}>Consulter l’annuaire officiel du ministère de la Justice</a></section>
  {structures.length>0&&<section><h2>Juridictions et adresses officielles</h2><p>Source : référentiel du ministère de la Justice, édition du {institutionnel.dateSource}. Les coordonnées désignent les structures enregistrées, pas nécessairement la salle où se tient une audience.</p>{structures.map(s=><article><h3>{s.nom}</h3><p>{s.typeSRJ==='CCD'?'Cour criminelle départementale':s.nom}</p><address>{s.adresse}</address><p>Coordonnées : {s.lat.toFixed(5)}, {s.lon.toFixed(5)}</p><a href={s.source}>Données institutionnelles</a></article>)}</section>}
  {v.jalons.length>0&&<section><h2>Affaires documentées par la rédaction</h2>{v.jalons.map(j=><article><h3>{j.juridiction}</h3><p>{j.type}</p><p>{j.adresse} (adresse issue du répertoire éditorial, à reconfirmer)</p><a href={j.urlInstitutionnelle}>Source institutionnelle</a><p><a href={'/dossiers/'+j.dossier+'/'}>{DOSSIERS.find(d=>d.slug===j.dossier)?.titre}</a></p></article>)}</section>}
+ {articles.length>0&&<section><h2>Procès et verdicts dans cette juridiction</h2><ul>{articles.map(a=><li><a href={a.data.chemin}>{a.data.titre}</a> <time datetime={a.data.date.toISOString()}>{dateLongue(a.data.date)}</time></li>)}</ul></section>}
  <section><h2>Assister à une audience</h2><p>Consultez les informations pratiques et le calendrier documenté. La tenue d’une audience et son accès au public peuvent évoluer.</p><ul><li><a href="/agenda/">Agenda judiciaire</a></li><li><a href="/assister/">Préparer sa venue aux assises</a></li><li><a href="/carte/">Revenir à la carte nationale</a></li></ul></section>
  <p class="geo-note">Intime Conviction est un média indépendant et ne représente pas les juridictions.</p>
 </Base>
