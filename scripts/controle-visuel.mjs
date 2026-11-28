@@ -12,6 +12,8 @@ const controles = [
   { nom:'agenda-ordinateur', url:'/agenda/', viewport:{width:1440,height:900} },
   { nom:'agenda-mobile', url:'/agenda/', viewport:{width:390,height:844}, isMobile:true },
   { nom:'archives-mobile', url:'/archives/', viewport:{width:390,height:844}, isMobile:true },
+  { nom:'recherche-ordinateur', url:'/recherche/?q=Jubillar', viewport:{width:1440,height:900} },
+  { nom:'recherche-mobile', url:'/recherche/?q=Jubillar', viewport:{width:390,height:844}, isMobile:true },
   { nom:'lecture-mobile', url:'/12-hommes-en-colere-theatre-hebertot-jusquau-7-janvier-2018/11/2017/', viewport:{width:390,height:844}, isMobile:true },
 ];
 const resultats=[];
@@ -101,6 +103,36 @@ try {
       const mauvaisLiens=await page.locator('[data-agenda-ligne]:not([hidden])').evaluateAll((rows,dep)=>rows.some(r=>r.dataset.departement!==dep),choix);
       if(mauvaisLiens)throw Error('Le lien direct depuis l’annuaire ne filtre pas correctement.');
       console.log('Filtres agenda validés : '+c.nom+', '+total+' périodes, département '+choix+', mois '+moisActif);
+    }
+    if(c.nom.startsWith('recherche-')){
+      const requete=page.locator('#requete');
+      await requete.waitFor();
+      await page.waitForFunction(()=>document.querySelector('#compteur')?.textContent?.includes('article'),{timeout:25000});
+      if(await requete.inputValue()!=='Jubillar')throw Error('Requête préremplie perdue.');
+      const resultat=page.locator('#resultats > li');
+      if(await resultat.count()===0)throw Error('Aucun article pour la requête Jubillar.');
+      const chemins=await resultat.locator('h3 a').evaluateAll(liens=>liens.map(a=>a.getAttribute('href')));
+      if(new Set(chemins).size!==chemins.length)throw Error('Résultats du journal dupliqués.');
+      const photos=resultat.locator('img.photo-resultat');
+      if(await photos.count()===0)throw Error('Aucune illustration visible dans les résultats.');
+      await photos.first().scrollIntoViewIfNeeded();
+      await page.waitForFunction(()=>[...document.querySelectorAll('#resultats img.photo-resultat')].some(i=>i.complete&&i.naturalWidth>0),{timeout:20000});
+      if(await resultat.first().locator('.meta').count()!==1)throw Error('Date et rubrique absentes du premier résultat.');
+      if(await page.locator('#dossiers-recherche:not([hidden]) a[href="/dossiers/affaire-jubillar/"]').count()!==1)throw Error('Fiche dossier Jubillar absente.');
+      // Contrôle des filtres depuis la même recherche, sans redirection vers une autre page.
+      const rubrique=page.locator('#rubrique');
+      const annee=page.locator('#annee');
+      await rubrique.selectOption('cours-du-jour');
+      await page.waitForFunction(()=>new URL(location.href).searchParams.get('rubrique')==='cours-du-jour');
+      if(await page.locator('#dossiers-recherche:not([hidden])').count())throw Error('Dossier hors filtre encore affiché.');
+      const resultatsFiltres=await resultat.count();
+      await annee.selectOption('2025');
+      await page.waitForFunction(()=>new URL(location.href).searchParams.get('annee')==='2025');
+      const metas=await resultat.locator('.meta').allTextContents();
+      if(metas.some(t=>!t.includes('2025')))throw Error('Année sélectionnée non respectée.');
+      await page.locator('#effacer').click();
+      await page.waitForFunction(()=>document.querySelector('#requete')?.value===''&&document.querySelector('#annee')?.value===''&&document.querySelector('#rubrique')?.value==='');
+      console.log('Recherche validée : '+c.nom+', '+chemins.length+' résultats Jubillar, '+resultatsFiltres+' après filtre rubrique, photos et dates contrôlées');
     }
     await page.screenshot({path:`${dossier}/${c.nom}.png`,fullPage:true});
     const okHttp=response?.ok()??false;
