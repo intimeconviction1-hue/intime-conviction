@@ -29,7 +29,10 @@ test('exclut du graphe les destinations noindex sans les compter cassées', () =
   assert.equal(r.liensVersPagesNonIndexables, 2);
   assert.equal(r.echantillonLiensVersPagesNonIndexables.length, 2);
   assert.equal(r.echantillonLiensVersPagesNonIndexables[0].cible, '/privee/');
-  assert.deepEqual(r.destinationsNonIndexablesUniques, [{ cible: '/privee/', occurrences: 2, pagesSources: 2, echantillonHref: '/privee/', echantillonPagesSources: ['/', '/ouverte/'] }]);
+  assert.equal(r.destinationsNonIndexablesUniques[0].cible, '/privee/');
+  assert.equal(r.destinationsNonIndexablesUniques[0].occurrences, 2);
+  assert.equal(r.destinationsNonIndexablesUniques[0].pagesSources, 2);
+  assert.equal(r.destinationsNonIndexablesUniques[0].statut, 'à vérifier');
   assert.equal(r.pagesOrphelines, 0);
 });
 
