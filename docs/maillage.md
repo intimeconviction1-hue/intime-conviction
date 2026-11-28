@@ -16,6 +16,46 @@ Dans le JSON d’un article, la rédaction peut ajouter un objet `maillage` avec
 Les étapes et la proximité des dates départagent des rapprochements déjà justifiés. Jusqu’à six recommandations sont affichées, une seule fois par destination. Les archives sont identifiées séparément. La rédaction peut écarter un résultat ou imposer une passerelle documentaire.
 
 
+## Mesures avant / après
+
+Comparaison avec le rapport de départ du 26 novembre et le build complet de
+la branche, mesuré le 28 novembre 2026 à 15:00 UTC. Les pourcentages de
+recommandations sont calculés sur les 3 503 articles du fonds.
+
+| Mesure | Avant | Après |
+| --- | ---: | ---: |
+| Liens internes cassés | 77 occurrences sur 74 cibles / 47 pages | 0 |
+| Liens vers des pages noindex | 8 104 occurrences, non classées individuellement dans le rapport initial | 8 104 occurrences, 5 destinations uniques, 5 exclusions documentées, 0 à vérifier |
+| Profondeur moyenne | 5,25 clics | 2,90 clics |
+| Profondeur médiane | 3 clics | 3 clics |
+| Profondeur maximale | 76 clics | 3 clics |
+| Pages au-delà de 3 clics | 359 | 0 |
+| Pages orphelines | 1 (/feed/) | 0 |
+| Articles avec recommandations | 126 / 3 503 (3,6 %) | 1 723 / 3 503 (49,2 %) |
+| Liens de recommandation | 646 | 9 938 |
+| Images locales cassées | 0 | 0 |
+| Canoniques non conformes | 0 | 0 |
+
+Le rapport final recense 3 951 pages indexables, 279 053 liens internes,
+20 476 images locales et les cinq destinations noindex suivantes : les pages
+utilitaires abonnement et connexion, les deux moteurs de recherche internes,
+et une notice d’archive en attente de vérification juridique. Aucune n’a été
+rendue indexable.
+
+### Mesure mobile de prépublication
+
+Mesure Chromium automatisée sur l’aperçu local du build, viewport 375 px,
+28 novembre 2026. Les chiffres sont des mesures de laboratoire du runner CI,
+pas des données d’utilisateurs réels. Le délai d’interaction est une mesure
+locale d’événement et ne constitue pas l’INP terrain.
+
+| Page | CLS mesuré | LCP mesuré | Délai d’interaction local |
+| --- | ---: | ---: | ---: |
+| Accueil | 0,00 | 92 ms | 16 ms |
+| Carte des juridictions | 0,00 | 84 ms | 16 ms |
+| Annuaire | 0,00 | 128 ms | 16 ms |
+| Assister | 0,00 | 84 ms | 16 ms |
+
 ## Contrôle du graphe publié
 
 Le workflow parcourt les pages HTML indexables après le build et conserve pendant
