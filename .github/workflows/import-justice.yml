@@ -25,7 +25,7 @@ jobs:
         run: |
           python3 - <<'PY'
           import csv, json, pathlib
-          p=pathlib.Path('.cache/justice/structures-mai2026.csv')
+          p=pathlib.Path('.cache/justice/structures-avril2026.csv')
           with p.open(encoding='utf-8-sig',newline='') as f:
               dialect=csv.Sniffer().sniff(f.read(65536),delimiters=';,\t')
               f.seek(0)
@@ -39,7 +39,7 @@ jobs:
       - name: Conserver le CSV et le schéma
         uses: actions/upload-artifact@v4
         with:
-          name: justice-mai2026
+          name: justice-avril2026
           path: .cache/justice/
           include-hidden-files: true
           if-no-files-found: error
