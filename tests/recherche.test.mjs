@@ -83,3 +83,24 @@ test('la presse ne répète pas un même article repéré plusieurs fois',()=>{
   assert.equal(filtrerPresse(references,{q:'procès lyon'}).length,2);
   assert.equal(filtrerPresse(references,{q:'procès lyon',annee:'2025'}).length,0);
 });
+
+test('affaire nommée : les titres consacrés au procès passent avant une mention incidente',()=>{
+  const articles=preparerIndex([
+    {titre:'Panorama des assises',extrait:'Jubillar, procès en appel à Toulouse',annee:2026,date:'2026-11-28',chemin:'/panorama/'},
+    {titre:'Jubillar : l’appel devant les assises',extrait:'Le procès',annee:2026,date:'2026-11-24',chemin:'/jubillar-appel/'},
+    {titre:'Jubillar : les premières audiences',extrait:'Compte rendu',annee:2025,date:'2025-11-20',chemin:'/jubillar-archives/'},
+  ]);
+  assert.deepEqual(filtrerEtClasser(articles,{q:'Jubillar'}).map(a=>a.chemin),[
+    '/jubillar-appel/','/jubillar-archives/','/panorama/'
+  ]);
+});
+
+test('à pertinence égale les publications les plus récentes remontent à la date près',()=>{
+  const articles=preparerIndex([
+    {titre:'Procès à Lyon',extrait:'Assises',annee:2026,date:'2026-11-18',chemin:'/ancien-lyon/'},
+    {titre:'Procès à Lyon',extrait:'Assises',annee:2026,date:'2026-11-28',chemin:'/nouveau-lyon/'},
+  ]);
+  assert.deepEqual(filtrerEtClasser(articles,{q:'Lyon'}).map(a=>a.chemin),[
+    '/nouveau-lyon/','/ancien-lyon/'
+  ]);
+});
