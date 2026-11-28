@@ -4,35 +4,19 @@ name: Valider les correctifs éditoriaux
 on:
   pull_request:
     paths:
-      - 'scripts/auditer-maillage.mjs'
-      - 'scripts/auditer-production.mjs'
-      - 'src/lib/article-visible.mjs'
-      - 'src/lib/articles.mjs'
-      - 'src/lib/photos-articles.mjs'
-      - 'src/pages/index.astro'
-      - 'src/layouts/Base.astro'
-      - 'src/pages/rubrique/[rubrique]/[...page].astro'
-      - 'src/pages/archives/presse/[annee]/[...page].astro'
-      - 'src/pages/dossiers/[slug]/[...page].astro'
-      - 'tests/auditer-maillage.test.mjs'
-      - 'tests/auditer-production.test.mjs'
-      - 'tests/article-visible.test.mjs'
-      - '.github/workflows/controle-pr.yml'
+      - 'src/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - '.github/workflows/**'
   push:
     branches:
+      - main
       - 'amelioration/**'
     paths:
-      - 'scripts/auditer-maillage.mjs'
-      - 'scripts/auditer-production.mjs'
-      - 'src/lib/article-visible.mjs'
-      - 'src/lib/articles.mjs'
-      - 'src/lib/photos-articles.mjs'
-      - 'src/pages/index.astro'
-      - 'tests/auditer-maillage.test.mjs'
-      - 'tests/auditer-production.test.mjs'
-      - 'tests/article-visible.test.mjs'
-      - '.github/workflows/controle-pr.yml'
-
+      - 'src/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - '.github/workflows/**'
 permissions:
   contents: read
 
