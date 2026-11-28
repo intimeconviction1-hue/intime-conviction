@@ -1,0 +1,66 @@
+---
+import { IMPLANTATIONS, TERRITOIRES, validerGeographie } from '../lib/geographie-judiciaire.mjs';
+validerGeographie();
+const regions = [...new Set(TERRITOIRES.map(t=>t.region))].sort((a,b)=>a.localeCompare(b,'fr'));
+const territoires = TERRITOIRES.map(t=>({ ...t }));
+const villes = [...IMPLANTATIONS].sort((a,b)=>a.ville.localeCompare(b.ville,'fr'));
+const normaliser = s=>s.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'');
+---
+<section class="national" aria-labelledby="titre-national">
+  <header><p class="geo-kicker">LE JOURNAL DES COURS D’ASSISES / TERRITOIRES</p><h2 id="titre-national">Les assises près de chez vous</h2><p>{villes.length} villes-sièges habituelles, {territoires.length} départements, {regions.length} régions. Répertoire d’orientation : les lieux et dates des audiences doivent être confirmés auprès des institutions.</p></header>
+  <div class="geo-controls" role="group" aria-label="Filtres du répertoire national">
+    <label>Région<select id="geo-region"><option value="">Toutes les régions</option>{regions.map(r=><option value={r}>{r}</option>)}</select></label>
+    <label>Département<select id="geo-departement"><option value="">Tous les départements</option>{territoires.map(t=><option value={t.code} data-region={t.region}>{t.code} · {t.departement}</option>)}</select></label>
+    <label>Ville ou département<input id="geo-recherche" type="search" placeholder="Paris, Rhône, 971…" /></label>
+    <label>Procédure documentée<select id="geo-type"><option value="">Toutes les implantations</option><option value="assises">Cour d’assises</option><option value="criminelle">Cour criminelle départementale</option><option value="appel">Assises en appel</option><option value="dossier">Dossier associé</option></select></label>
+    <button id="geo-reset" type="button">Réinitialiser</button>
+  </div>
+  <p id="geo-count" role="status" aria-live="polite">{villes.length} implantations affichées</p>
+  <nav class="geo-regions" aria-label="Accès rapide par région">
+    {regions.map(r=><button type="button" data-geo-region={r} aria-pressed="false">{r}<small>{villes.filter(v=>v.region===r).length} villes</small></button>)}
+  </nav>
+  <p class="geo-note">Les filtres de procédure portent uniquement sur les affaires déjà documentées par le journal. Une absence de résultat ne signifie pas que la juridiction n’existe pas. Les positions précises ne sont pas inventées : la carte des affaires documentées figure ci-dessous.</p>
+  <ul id="geo-list" class="geo-list">
+    {villes.map(v=>{
+      const ts=territoires.filter(t=>v.departements.includes(t.code));
+      const types=[...new Set(v.jalons.flatMap(j=>[j.juridiction.includes('criminelle')?'criminelle':'assises',...(j.type==='Appel'?['appel']:[]),'dossier']))];
+      return <li data-geo-ville data-region={v.region} data-codes={v.departements.join(' ')} data-types={types.join(' ')} data-search={normaliser([v.ville,v.region,...ts.flatMap(t=>[t.code,t.departement])].join(' '))}>
+        <h3>{v.ville}</h3><p>{ts.map(t=>t.code+' · '+t.departement).join(' / ')} · {v.region}</p>
+        <span class="geo-status">{v.jalons.length?'Affaire documentée':'Ville-siège habituelle à confirmer'}</span>
+        <div class="geo-links"><a href="/annuaire/#repertoire">Annuaire judiciaire</a>{v.jalons.map(j=><a href={'#lieu-'+j.id}>Voir la fiche documentée</a>)}</div>
+      </li>;
+    })}
+  </ul>
+  <p id="geo-empty" hidden>Aucune implantation ne correspond à ces filtres.</p>
+</section>
+<script>
+  const region=document.querySelector<HTMLSelectElement>('#geo-region');
+  const dep=document.querySelector<HTMLSelectElement>('#geo-departement');
+  const query=document.querySelector<HTMLInputElement>('#geo-recherche');
+  const type=document.querySelector<HTMLSelectElement>('#geo-type');
+  const count=document.querySelector('#geo-count');
+  const empty=document.querySelector<HTMLElement>('#geo-empty');
+  const cards=[...document.querySelectorAll<HTMLElement>('[data-geo-ville]')];
+  const buttons=[...document.querySelectorAll<HTMLButtonElement>('[data-geo-region]')];
+  function apply(){
+    if(!region||!dep||!query||!type)return;
+    for(const o of Array.from(dep.options)) { o.hidden=!!(o.value&&region.value&&o.dataset.region!==region.value); o.disabled=o.hidden; }
+    if(dep.selectedOptions[0]?.disabled)dep.value='';
+    const q=query.value.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').trim();
+    let n=0;
+    for(const card of cards){
+      const show=(!region.value||card.dataset.region===region.value)&&(!dep.value||card.dataset.codes?.split(' ').includes(dep.value))&&(!type.value||card.dataset.types?.split(' ').includes(type.value))&&(!q||card.dataset.search?.includes(q));
+      card.hidden=!show;if(show)n++;
+    }
+    for(const b of buttons)b.setAttribute('aria-pressed',String(b.dataset.geoRegion===region.value));
+    if(count)count.textContent=n+' implantation'+(n===1?'':'s')+' affichée'+(n===1?'':'s');
+    if(empty)empty.hidden=n!==0;
+  }
+  for(const el of [region,dep,type])el?.addEventListener('change',apply);
+  query?.addEventListener('input',apply);
+  for(const b of buttons)b.addEventListener('click',()=>{if(region){region.value=region.value===b.dataset.geoRegion?'':b.dataset.geoRegion||'';apply();}});
+  document.querySelector('#geo-reset')?.addEventListener('click',()=>{if(region&&dep&&query&&type){region.value=dep.value=query.value=type.value='';apply();}});
+</script>
+<style>
+.national{margin:3rem 0;border-top:3px solid var(--action);padding-top:1.5rem}.geo-kicker{font:650 .75rem/1.5 var(--sans);color:var(--action)}.national h2{font:650 clamp(2rem,4vw,3.8rem)/1.1 var(--serif);margin:.5rem 0}.national header>p:last-child,.geo-note{font:450 .9rem/1.6 var(--sans);max-width:85ch}.geo-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:.8rem;padding:1rem;background:#f3f0eb;color:#202427}.geo-controls label{display:grid;gap:.35rem;font:650 .78rem/1.4 var(--sans)}.geo-controls select,.geo-controls input,.geo-controls button{font:inherit;min-height:44px;width:100%;border:1px solid #9a9690;background:white;color:#202427;border-radius:3px;padding:.5rem}.geo-controls button{align-self:end;cursor:pointer}.geo-regions{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,10rem),1fr));gap:.5rem}.geo-regions button{min-height:52px;padding:.6rem;background:#fff;color:#202427;border:1px solid #c8c3bd;text-align:left;font:650 .8rem/1.4 var(--sans);cursor:pointer}.geo-regions small{display:block;font-weight:400}.geo-regions button[aria-pressed=true]{border:2px solid var(--action);color:var(--action)}.geo-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr));gap:.75rem;padding:0;list-style:none}.geo-list li{border:1px solid #d7d1cb;padding:1rem;background:#f9f7f3;color:#202427}.geo-list li[hidden],#geo-empty[hidden]{display:none!important}.geo-list h3{font:650 1.65rem/1.15 var(--serif);margin:0}.geo-list p{font:450 .8rem/1.5 var(--sans)}.geo-status{font:600 .72rem/1.4 var(--sans)}.geo-links{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.7rem}.geo-links a{font:650 .8rem/1.5 var(--sans);text-decoration:underline;display:inline-flex;align-items:center;min-height:44px}.national :focus-visible{outline:3px solid var(--action);outline-offset:3px}
+</style>
