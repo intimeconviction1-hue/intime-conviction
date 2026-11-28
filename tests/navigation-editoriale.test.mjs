@@ -76,3 +76,14 @@ test('Archives regroupe les années, la presse ancienne et la recherche sans les
   assert.match(archivesIndex,/href={`\/archives\/\$\{an\}\/`}/);
   assert.match(archivesIndex,/href={`\/archives\/presse\/\$\{an\}\/`}/);
 });
+
+test('la recherche distingue les dossiers des articles datés et illustrés',()=>{
+  const recherche=readFileSync(fileURLToPath(new URL('../src/pages/recherche.astro',import.meta.url)),'utf8');
+  const index=readFileSync(fileURLToPath(new URL('../src/pages/index-recherche.json.js',import.meta.url)),'utf8');
+  assert.match(recherche,/id="dossiers-recherche" class="resultats-fonds dossier-recherche"/);
+  assert.match(recherche,/id="resultats-dossiers"/);
+  assert.match(recherche,/id="resultats" class="role"/);
+  assert.match(recherche,/new Intl.DateTimeFormat\('fr-FR'/);
+  assert.match(recherche,/image\.className = 'photo-resultat'/);
+  assert.match(index,/date: d\.date\.toISOString\(\)\.slice\(0,10\)/);
+});
