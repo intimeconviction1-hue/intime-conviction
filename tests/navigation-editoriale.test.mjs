@@ -35,7 +35,7 @@ test('Agenda regroupe sessions, procès au rôle, rôles, juridictions et visite
 
 test('les autres parcours restent accessibles sans changer les URL',()=>{
   assert.match(categorie('Dossiers'),/href:\s*'\/dossiers\/'/);
-  assert.match(categorie('Comprendre'),/href:'\/comprendre\/'/);
+  assert.match(categorie('Comprendre'),/href:\s*'\/comprendre\/'/);
   assert.match(header,/href="\/rubrique\/le-greffe\/"/);
   assert.match(header,/href="\/agenda\/"/);
   assert.match(layout,/href:'\/archives\/'/);
