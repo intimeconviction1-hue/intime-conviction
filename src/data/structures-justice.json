@@ -1838,6 +1838,32 @@
       "source": "https://www.data.gouv.fr/api/1/datasets/r/9204b2e2-9f20-4a36-86ce-83493303d987"
     },
     {
+      "idSRJ": "1:2063",
+      "implantation": "noumea",
+      "codeINSEE": "98818",
+      "nom": "Cour d'Assises de la Nouvelle Calédonie",
+      "nature": "Cour d’assises",
+      "typeSRJ": "CASS",
+      "adresse": "RUE DE METZ, 98800 NOUMEA",
+      "lat": -22.27631,
+      "lon": 166.4572,
+      "precision": "coordonnées du référentiel institutionnel",
+      "source": "https://www.data.gouv.fr/api/1/datasets/r/9204b2e2-9f20-4a36-86ce-83493303d987"
+    },
+    {
+      "idSRJ": "9:67444",
+      "implantation": "noumea",
+      "codeINSEE": "98818",
+      "nom": "Cour Criminelle Départementale de la Nouvelle Calédonie",
+      "nature": "Cour criminelle départementale",
+      "typeSRJ": "CCD",
+      "adresse": "RUE DE METZ, 98800 NOUMEA",
+      "lat": -22.27631,
+      "lon": 166.4572,
+      "precision": "coordonnées du référentiel institutionnel",
+      "source": "https://www.data.gouv.fr/api/1/datasets/r/9204b2e2-9f20-4a36-86ce-83493303d987"
+    },
+    {
       "idSRJ": "1:1953",
       "implantation": "orleans",
       "codeINSEE": "45234",
@@ -1860,6 +1886,32 @@
       "adresse": "44 RUE DE LA BRETONNERIE, 45000 ORLEANS",
       "lat": 47.904747,
       "lon": 1.905647,
+      "precision": "coordonnées du référentiel institutionnel",
+      "source": "https://www.data.gouv.fr/api/1/datasets/r/9204b2e2-9f20-4a36-86ce-83493303d987"
+    },
+    {
+      "idSRJ": "1:2060",
+      "implantation": "papeete",
+      "codeINSEE": "98735",
+      "nom": "Cour d'Assises de la Polynésie Française",
+      "nature": "Cour d’assises",
+      "typeSRJ": "CASS",
+      "adresse": "42 AVENUE POUVANA'A A OOPA, 98714 PAPEETE",
+      "lat": -17.832,
+      "lon": -149.568,
+      "precision": "coordonnées du référentiel institutionnel",
+      "source": "https://www.data.gouv.fr/api/1/datasets/r/9204b2e2-9f20-4a36-86ce-83493303d987"
+    },
+    {
+      "idSRJ": "9:67449",
+      "implantation": "papeete",
+      "codeINSEE": "98735",
+      "nom": "Cour Criminelle Départementale de la Polynésie Française",
+      "nature": "Cour criminelle départementale",
+      "typeSRJ": "CCD",
+      "adresse": "42 AVENUE BRUAT  TAHITI, 98714 PAPEETE",
+      "lat": -17.832,
+      "lon": -149.568,
       "precision": "coordonnées du référentiel institutionnel",
       "source": "https://www.data.gouv.fr/api/1/datasets/r/9204b2e2-9f20-4a36-86ce-83493303d987"
     },
@@ -2306,6 +2358,19 @@
       "source": "https://www.data.gouv.fr/api/1/datasets/r/9204b2e2-9f20-4a36-86ce-83493303d987"
     },
     {
+      "idSRJ": "9:17771",
+      "implantation": "saint-pierre",
+      "codeINSEE": "97502",
+      "nom": "Tribunal Criminel de Saint-Pierre-et-Miquelon",
+      "nature": "Tribunal criminel",
+      "typeSRJ": "CASS",
+      "adresse": "14 RUE EMILE SASCO, ST PIERRE, 97500 ST PIERRE ET MIQUELON",
+      "lat": 46.78123,
+      "lon": -56.1716,
+      "precision": "coordonnées du référentiel institutionnel",
+      "source": "https://www.data.gouv.fr/api/1/datasets/r/9204b2e2-9f20-4a36-86ce-83493303d987"
+    },
+    {
       "idSRJ": "9:2228",
       "implantation": "saintes",
       "codeINSEE": "17415",
@@ -2484,6 +2549,19 @@
       "adresse": "QUAI GABRIEL PERI, 19000 TULLE",
       "lat": 45.264544,
       "lon": 1.770049,
+      "precision": "coordonnées du référentiel institutionnel",
+      "source": "https://www.data.gouv.fr/api/1/datasets/r/9204b2e2-9f20-4a36-86ce-83493303d987"
+    },
+    {
+      "idSRJ": "9:67465",
+      "implantation": "uvea",
+      "codeINSEE": "98613",
+      "nom": "Cour Criminelle Départementale des Iles Wallis-et-Futuna",
+      "nature": "Cour criminelle départementale",
+      "typeSRJ": "CCD",
+      "adresse": "DE MATA-UTU  ILES WALLIS-ET-FUTUNA, 98600 UVEA",
+      "lat": -13.28207,
+      "lon": -176.1809,
       "precision": "coordonnées du référentiel institutionnel",
       "source": "https://www.data.gouv.fr/api/1/datasets/r/9204b2e2-9f20-4a36-86ce-83493303d987"
     },
