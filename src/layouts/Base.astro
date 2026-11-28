@@ -128,6 +128,7 @@ const reseaux = {
 const navigation = [
   { titre: 'Actualité', href: '/rubrique/cours-du-jour/#articles-redaction', liens: [
     {titre:'Chroniques d’audience',href:'/rubrique/la-cour-se-leve/'},
+    {titre:'Revue de presse',href:'/revue-de-presse/'},
   ] },
   { titre: 'Agenda', href: '/agenda/', liens: [
     {titre:'Les sessions',href:'/agenda/#sessions-annoncees'},
@@ -362,7 +363,6 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
                   </ul>
                 </details>
               </li>
-              <li class="navigation-entree"><a href="/revue-de-presse/" aria-current={courant("/revue-de-presse/")}>Revue de presse</a></li>
             </ul>
           </nav>
           <a class="navigation-acces-mobile" href="/agenda/">Agenda</a>
