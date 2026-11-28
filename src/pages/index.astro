@@ -11,14 +11,21 @@ import { articleVisible } from '../lib/article-visible.mjs';
 
 const articles = await tousLesArticles();
 const maintenant = Date.now();
-const articlesVerifies = articles.filter(({data}) => articleVisible(data, maintenant));
+// La fraîcheur rédactionnelle tient compte d’un apport substantiel vérifié,
+// sans changer la date de première publication ni les URL historiques.
+const dateEditoriale = data => {
+  const maj = data.dateMiseAJour;
+  return maj instanceof Date && Number.isFinite(maj.getTime()) && maj.getTime() <= maintenant && maj > data.date ? maj : data.date;
+};
+const articlesVerifies = articles.filter(({data}) => articleVisible(data, maintenant))
+  .sort((a,b) => dateEditoriale(b.data) - dateEditoriale(a.data));
 // La une éditoriale privilégie les articles des sept derniers jours.
 // Les archives historiques restent dans leur bloc dédié plus bas.
 const dateParis = new Intl.DateTimeFormat('fr-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' });
 const debutSemaine = new Date(dateParis.format(new Date()) + 'T00:00:00Z');
 debutSemaine.setUTCDate(debutSemaine.getUTCDate() - 6);
 const limiteRecente = debutSemaine.toISOString().slice(0, 10);
-const articlesPourUne = articlesVerifies.filter(article => dateParis.format(article.data.date) >= limiteRecente);
+const articlesPourUne = articlesVerifies.filter(article => dateParis.format(dateEditoriale(article.data)) >= limiteRecente);
 // Une même affaire ne doit pas occuper deux emplacements du carrousel.
 // Les chroniques transversales sont écartées si elles reprennent une affaire
 // déjà choisie. La sélection reste fondée sur des articles réellement publiés.
@@ -50,7 +57,7 @@ for (const article of articlesPourUne) {
 }
 const [articlesRecents, articlesArchives] = articlesVerifies.filter(article => !selectionUne.includes(article))
   .reduce(([recents, anciens], article) => {
-    const groupe = dateParis.format(article.data.date) >= limiteRecente ? recents : anciens;
+    const groupe = dateParis.format(dateEditoriale(article.data)) >= limiteRecente ? recents : anciens;
     groupe.push(article);
     return [recents, anciens];
   }, [[], []]);
@@ -115,7 +122,7 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
                     </div>
                   </div>
                   <div class="une-credit">
-                    <span><time datetime={data.date.toISOString()}>{dateLongue(data.date)}</time></span>
+                    <span>{dateEditoriale(data) > data.date && 'Mis à jour le '}<time datetime={dateEditoriale(data).toISOString()}>{dateLongue(dateEditoriale(data))}</time></span>
                     <details><summary>Crédits photo</summary><span>{photo.lieu} · <a href={photo.source}>{photo.auteur}</a> · <a href={photo.lienLicence}>{photo.licence}</a></span></details>
                   </div>
                 </article>
@@ -136,7 +143,7 @@ const imagesResponsivesUne = await Promise.all(articlesUne.map(async ({photo}) =
             <h2 id="titre-dernieres-publications">Dernières publications</h2>
             <a href="/rubrique/cours-du-jour/#articles-redaction">Tous les procès</a>
           </div>
-          <ListeArticles articles={dernieresPublications} rubriqueVisible={false} illustres responsiveImages imagesExclues={[...imagesUne]} />
+          <ListeArticles articles={dernieresPublications} rubriqueVisible={false} dateMiseAJourVisible illustres responsiveImages imagesExclues={[...imagesUne]} />
         </section>
       )}
     </div>
