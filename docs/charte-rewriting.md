@@ -24,3 +24,5 @@ Les chroniques d’Intime Conviction s’adressent au grand public. Elles privil
 - Harmoniser les chroniques portant sur une même affaire : vérifier la cohérence des étapes procédurales, tout en conservant un angle propre à chaque article.
 
 - Distinguer les décisions sur le renvoi aux assises des verdicts de culpabilité, et les demandes de réparation des condamnations pénales. Maintenir les attributions aux parties lorsqu’elles sont nécessaires à cette distinction.
+
+- Dans les titres, préciser la portée exacte des condamnations et ne pas présenter comme établi un détail encore contesté, même si le verdict est connu.
