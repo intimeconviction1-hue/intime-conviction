@@ -26,7 +26,11 @@ with src.open(encoding='utf-8-sig',newline='') as f:
         city=row['LIGNE_D_ACHEMINEMENT'].strip()
         city=re.sub(r'\bCEDEX\b.*$','',city,flags=re.I).strip()
         city=re.sub(r'\s+\d+$','',city).strip()
-        matches=[t for t in territoires if t['code']==dep(code) and norm(t['ville'])==norm(city)]
+        aliases={'62765':('stomer','saintomer'),'22278':('stbrieuc','saintbrieuc'),'42218':('stetienne','saintetienne'),'91228':('evry','evrycourcouronnes'),'97411':('stdenis','saintdenis')}
+        city_key=norm(city)
+        alias=aliases.get(code)
+        if alias and city_key==alias[0]: city_key=alias[1]
+        matches=[t for t in territoires if t['code']==dep(code) and norm(t['ville'])==city_key]
         # Plusieurs juridictions dans une même ville restent distinctes par leur identifiant SRJ.
         key=row['CODE_ORIG'].strip()+':'+row['NUM'].strip()
         try:
