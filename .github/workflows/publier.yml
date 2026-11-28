@@ -97,6 +97,13 @@ jobs:
           key: actualites-v1-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: actualites-v1-
 
+      - name: Installer ImageMagick pour les photographies documentaires
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends imagemagick
+          convert -version
+          identify -version
+
       - name: Copier exclusivement les images attribuées aux articles publiés
         run: node scripts/preparer-illustrations.mjs
         env:
