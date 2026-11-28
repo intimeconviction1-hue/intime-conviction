@@ -95,6 +95,7 @@ if (existsSync(join(dossier, 'images', fichierManchette))) {
  * En cas d'indisponibilité, conserver le repli neutre existant.
  */
 const documentaires = [
+  {"slug":"jean-paul-benjamin-bobigny-images-legitime-defense","fichier":"Bobigny - Entree du Tribunal de Grande Instance.jpg","nom":"palais-bobigny","lieu":"Entrée du tribunal de grande instance de Bobigny en avril 2007","auteur":"Clicsouris","licence":"CC BY-SA 2.5","lienLicence":"https://creativecommons.org/licenses/by-sa/2.5/"},
   {"slug":"versailles-sadhana-verdict-assises","fichier":"Cour d'assises de Versailles.jpg","nom":"assises-versailles","lieu":"Salle de la cour d’assises de Versailles, Journées du patrimoine 2019","auteur":"Tiraden","licence":"CC BY-SA 4.0","lienLicence":"https://creativecommons.org/licenses/by-sa/4.0/"},
   {"slug":"charente-assises-romain-runel-ouverture-proces","fichier":"Angoulême.Palais de Justice et Hôtel du Palais.jpg","nom":"palais-angouleme-historique","lieu":"Palais de justice d’Angoulême, carte postale vers 1910","auteur":"Anonyme, collection de cartes postales","licence":"Domaine public","lienLicence":"https://creativecommons.org/publicdomain/mark/1.0/"},
   { slug: 'roubaix-square-bousquet-tir-mehdi-proces-douai', fichier: 'Douai - Palais de justice - 1.jpg', nom: 'palais-douai', lieu: 'Palais de justice de Douai', auteur: 'Peter Potrowl', licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/' },
