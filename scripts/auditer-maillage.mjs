@@ -3,9 +3,12 @@ import { readdir, readFile, mkdir, writeFile } from 'node:fs/promises';
 import { dirname, extname, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { IMPLANTATIONS } from '../src/lib/geographie-judiciaire.mjs';
+
 const ORIGIN = 'https://www.intimeconviction.fr';
 
 const exclusionsNoindexDocumentees = new Map([
+  ...IMPLANTATIONS.map(v => ['/juridictions/' + v.id + '/', { nature: 'fiche territoriale provisoire', raison: 'Fiche institutionnelle accessible aux lecteurs, indexation différée jusqu’à validation de son enrichissement éditorial.' }]),
   ['/abonnement/', { nature: 'page utilitaire', raison: 'Espace abonnement non ouvert; la page explique la situation et indique le flux RSS.' }],
   ['/connexion/', { nature: 'page utilitaire', raison: 'Espace lecteur non ouvert; page de connexion sans contenu éditorial indexable.' }],
   ['/recherche/', { nature: 'moteur de recherche', raison: 'Résultats de recherche internes, exclus pour éviter l’indexation de pages à paramètres.' }],

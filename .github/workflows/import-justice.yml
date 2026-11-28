@@ -1,0 +1,48 @@
+name: Import institutionnel Justice
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-justice.yml'
+      - 'scripts/telecharger-structures-justice.mjs'
+      - 'scripts/importer-structures-justice.py'
+      - 'src/lib/geographie-judiciaire.mjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Télécharger le référentiel officiel
+        run: node scripts/telecharger-structures-justice.mjs
+      - name: Examiner le CSV et produire le rapport
+        run: |
+          python3 - <<'PY'
+          import csv, json, pathlib
+          p=pathlib.Path('.cache/justice/structures-avril2026.csv')
+          with p.open(encoding='utf-8-sig',newline='') as f:
+              dialect=csv.Sniffer().sniff(f.read(65536),delimiters=';,\t')
+              f.seek(0)
+              reader=csv.DictReader(f,dialect=dialect)
+              headers=reader.fieldnames
+              rows=sum(1 for _ in reader)
+          report={'colonnes':headers,'lignes':rows,'separateur':dialect.delimiter}
+          pathlib.Path('.cache/justice/schema.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          print(json.dumps(report,ensure_ascii=False))
+          PY
+      - name: Extraire les structures criminelles
+        run: python3 scripts/importer-structures-justice.py
+      - name: Conserver le CSV et le schéma
+        uses: actions/upload-artifact@v4
+        with:
+          name: justice-avril2026
+          path: .cache/justice/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7

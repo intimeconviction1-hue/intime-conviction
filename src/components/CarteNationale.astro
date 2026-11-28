@@ -1,0 +1,56 @@
+---
+import {IMPLANTATIONS} from '../lib/geographie-judiciaire.mjs';
+import institutionnel from '../data/structures-justice.json';
+const villes=IMPLANTATIONS.flatMap(v=>{
+ const records=institutionnel.structures.filter(s=>s.implantation===v.id && Number.isFinite(s.lat) && Number.isFinite(s.lon));
+ const j=v.jalons[0];
+ const points=records.length?Array.from(new Map(records.map(s=>[s.lat+':'+s.lon,s])).values()).map(s=>({...s,nature:[...new Set(records.filter(t=>t.lat===s.lat&&t.lon===s.lon).map(t=>t.nature))].join(' / ')})):[...(j?[{lat:j.lat,lon:j.lon,precision:'centre communal approximatif',adresse:null,nature:null}]:[])];
+ return points.map((p,i)=>({...p,id:v.id,pointId:v.id+'-'+i,ville:v.ville,region:v.region,outreMer:/^(97|98)/.test(v.departements[0])}));
+});
+---
+<section class="geo-map" aria-labelledby="geo-map-title">
+ <h3 id="geo-map-title">Carte nationale des villes d’audience</h3>
+ <p>Les points proviennent du référentiel local. Les coordonnées institutionnelles et les centres communaux approximatifs sont distingués. Carte schématique, non destinée à la navigation.</p>
+ <p id="geo-map-status" role="status" aria-live="polite">{new Set(villes.map(v=>v.id)).size} / {IMPLANTATIONS.length} implantations localisées. Les autres restent accessibles dans le répertoire textuel.</p>
+ <div class="geo-map-panels" id="geo-map-panels">
+  <div><h4>France métropolitaine</h4><svg id="geo-metropole" viewBox="0 0 640 610" role="group" aria-label="Villes d’implantation en métropole"><rect width="640" height="610" fill="#f3f0eb"/><path d="M66 166L100 142 154 151 200 101 235 95 280 34 352 49 407 76 471 95 530 125 574 169 547 235 559 303 582 371 547 419 486 444 423 468 366 509 310 502 248 480 185 462 198 391 187 329 164 280 113 247 70 205Z" fill="#fff" stroke="#aaa" stroke-width="2"/><g id="geo-metropole-points"/></svg></div>
+  <div><h4>Outre-mer</h4><div id="geo-overseas" class="geo-overseas"></div></div>
+ </div>
+ <script type="application/json" id="geo-map-data" set:html={JSON.stringify(villes)} />
+</section>
+<script>
+ type Ville={id:string;pointId:string;ville:string;region:string;outreMer:boolean;lat:number;lon:number;precision:string;adresse?:string;nature?:string};
+ const payload=document.querySelector('#geo-map-data');
+ const villes:Ville[]=JSON.parse(payload?.textContent||'[]');
+ const group=document.querySelector('#geo-metropole-points');
+ const overseas=document.querySelector('#geo-overseas');
+ const ns='http://www.w3.org/2000/svg';
+ const points=new Map<string,{id:string;el:Element}>();
+ function sync(){
+  for(const {id,el:point} of points.values()){
+   const card=document.querySelector<HTMLElement>('[data-geo-id="'+id+'"]');
+   point.toggleAttribute('data-masked',!!card?.hidden);
+  }
+ }
+ function draw(v:Ville,lat:number,lon:number){
+  const a=document.createElementNS(ns,'a');a.setAttribute('href','/juridictions/'+v.id+'/');a.setAttribute('aria-label',v.ville+' : fiche territoriale');a.setAttribute('tabindex','0');a.setAttribute('class','geo-pin');
+  const title=document.createElementNS(ns,'title');title.textContent=[v.ville,v.nature,v.adresse,v.precision].filter(Boolean).join(' · ');a.append(title);
+  const x=35+(lon+5.5)/15.4*570,y=25+(51.3-lat)/10.2*550;
+  const circle=document.createElementNS(ns,'circle');
+  circle.setAttribute('cx',String(v.outreMer?80:x));circle.setAttribute('cy',String(v.outreMer?45:y));circle.setAttribute('r','6');a.append(circle);
+  if(v.outreMer){
+   const box=document.createElement('div');box.className='geo-inset';
+   const label=document.createElement('p');label.textContent=v.region+' · '+v.ville;
+   const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 160 90');svg.setAttribute('role','group');svg.setAttribute('aria-label',v.ville);
+   svg.append(a);box.append(label,svg);
+   const coords=document.createElement('small');coords.textContent=lat.toFixed(3)+'°, '+lon.toFixed(3)+'° ('+v.precision+')';box.append(coords);overseas?.append(box);points.set(v.pointId,{id:v.id,el:box});
+  }else if(group){group.append(a);points.set(v.pointId,{id:v.id,el:a});}
+ }
+ for(const v of villes)draw(v,v.lat,v.lon);
+ sync();
+ const list=document.querySelector('#geo-list');
+ if(list)new MutationObserver(sync).observe(list,{subtree:true,attributes:true,attributeFilter:['hidden']});
+</script>
+<style>
+.geo-map{border:1px solid #d7d1cb;padding:1rem;margin:1.5rem 0}.geo-map h3{font:650 2rem/1.1 var(--serif)}.geo-map p{font:450 .85rem/1.5 var(--sans)}.geo-map button{min-height:44px;background:var(--action);color:var(--sur-action);border:0;padding:.6rem 1rem;cursor:pointer}.geo-map-panels{display:grid;grid-template-columns:2fr 1fr;gap:1rem}.geo-map-panels[hidden],:global([data-masked]){display:none!important}.geo-map svg{width:100%;height:auto}.geo-overseas{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.5rem}.geo-map :global(.geo-inset){padding:.5rem;background:#f3f0eb;color:#202427}.geo-map :global(.geo-pin circle){fill:#a12c39;stroke:#fff;stroke-width:1.5}.geo-map :global(.geo-pin:hover circle),.geo-map :global(.geo-pin:focus circle){fill:#202427;stroke:#a12c39;stroke-width:3}.geo-map :global(.geo-inset small){font-size:.7rem}@media(max-width:700px){.geo-map-panels{grid-template-columns:1fr}}
+</style>
