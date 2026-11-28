@@ -498,6 +498,7 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
     .pied .pied-nom { font: 660 clamp(1.3rem, 2.25vw, 2rem)/1.04 var(--serif); letter-spacing: -.048em; }
     .pied-intro p { margin-top: .65rem; }
     .reseaux-pied { display: flex; gap: .4rem; }
+    .lien-flux { display: inline-flex; align-items: center; min-height: 44px; padding-inline: .3rem; color: var(--pied-texte); font: 650 .76rem/1.4 var(--sans); text-decoration: underline; text-underline-offset: .2em; }
     .gestion-confidentialite { background: transparent; border: 0; border-bottom: 1px solid currentColor; padding: .35rem .1rem; color: var(--pied-texte); font: 650 .78rem/1.5 var(--sans); }
     .gestion-confidentialite:is(:hover, :focus-visible) { color: #eeebe6; }
     .gestion-confidentialite:focus-visible, .pied-bas .pied-reseau:focus-visible { outline: 2px solid #eeebe6; outline-offset: 3px; }
