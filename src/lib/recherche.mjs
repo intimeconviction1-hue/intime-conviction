@@ -58,13 +58,19 @@ export function chercherArticles(index, { q = '', rubrique = '', annee = '' } = 
       else { trouve = false; break; }
     }
     if (!trouve) continue;
+    // Pour une affaire nommée, privilégier les articles dont tous les mots
+    // significatifs figurent dans le titre. Une simple mention dans le corps
+    // ne doit pas passer avant un article précisément consacré au sujet.
+    if (mots.every(mot => contientMot(titre, mot))) score += 80;
     if (titre === phrase) score += 500;
     else if (contientMot(titre, phrase)) score += 150;
     exacts.push({ article, score });
   }
 
   const classer = resultats => resultats
-    .sort((a, b) => b.score - a.score || b.article.annee - a.article.annee || a.article.ordre - b.article.ordre)
+    .sort((a, b) => b.score - a.score ||
+      (b.article.date ?? String(b.article.annee ?? '' )).localeCompare(a.article.date ?? String(a.article.annee ?? '')) ||
+      a.article.ordre - b.article.ordre)
     .map(({ article }) => article);
   if (exacts.length) return { articles: classer(exacts), approximatif: false };
 
