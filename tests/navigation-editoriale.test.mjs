@@ -34,7 +34,7 @@ test('Agenda regroupe sessions, procès au rôle, rôles, juridictions et visite
 });
 
 test('les autres parcours restent accessibles sans changer les URL',()=>{
-  assert.match(categorie('Dossiers'),/href:'\/dossiers\/'/);
+  assert.match(categorie('Dossiers'),/href:\s*'\/dossiers\/'/);
   assert.match(categorie('Comprendre'),/href:'\/comprendre\/'/);
   assert.match(header,/href="\/rubrique\/le-greffe\/"/);
   assert.match(header,/href="\/agenda\/"/);
@@ -44,7 +44,7 @@ test('les autres parcours restent accessibles sans changer les URL',()=>{
 
 test('Dossiers ne répète pas son lien principal et sépare analyse, chronologie et carte',()=>{
   const dossiers=categorie('Dossiers');
-  assert.equal((dossiers.match(/href:'\/dossiers\/'/g)||[]).length,1);
+  assert.equal((dossiers.match(/href:\s*'\/dossiers\/'/g)||[]).length,1);
   assert.match(dossiers,/titre:'Analyses des affaires',href:'\/rubrique\/l-expose\/'/);
   assert.match(dossiers,/titre:'Chronologie des affaires',href:'\/chronologie\/'/);
   assert.match(dossiers,/titre:'Carte des affaires',href:'\/carte\/'/);
