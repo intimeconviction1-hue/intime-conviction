@@ -63,8 +63,8 @@ jobs:
         run: node scripts/preparer-illustrations.mjs
         env:
           IC_ARTICLES: articles-prives/articles
-      - name: Construire le site complet sans publier
-        run: npm run build
+      - name: Construire le site complet sans publication ni collecte externe
+        run: npx astro build
         env:
           IC_ARTICLES: articles-prives/articles
           IC_VEILLE: articles-prives/veille-alertes.json
