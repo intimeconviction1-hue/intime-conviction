@@ -95,6 +95,8 @@ if (existsSync(join(dossier, 'images', fichierManchette))) {
  * En cas d'indisponibilité, conserver le repli neutre existant.
  */
 const documentaires = [
+  {"slug":"versailles-sadhana-verdict-assises","fichier":"Cour d'assises de Versailles.jpg","nom":"assises-versailles","lieu":"Salle de la cour d’assises de Versailles, Journées du patrimoine 2019","auteur":"Tiraden","licence":"CC BY-SA 4.0","lienLicence":"https://creativecommons.org/licenses/by-sa/4.0/"},
+  {"slug":"charente-assises-romain-runel-ouverture-proces","fichier":"Angoulême.Palais de Justice et Hôtel du Palais.jpg","nom":"palais-angouleme-historique","lieu":"Palais de justice d’Angoulême, carte postale vers 1910","auteur":"Anonyme, collection de cartes postales","licence":"Domaine public","lienLicence":"https://creativecommons.org/publicdomain/mark/1.0/"},
   { slug: 'roubaix-square-bousquet-tir-mehdi-proces-douai', fichier: 'Douai - Palais de justice - 1.jpg', nom: 'palais-douai', lieu: 'Palais de justice de Douai', auteur: 'Peter Potrowl', licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/' },
   { slug: 'carine-charpentier-aisne-leroux-verdict-perles', fichier: 'Palais de Justice et remparts Laon.JPG', nom: 'palais-laon', lieu: 'Palais de justice de Laon et remparts', auteur: 'Rémih', licence: 'Domaine public', lienLicence: 'https://creativecommons.org/publicdomain/mark/1.0/' },
   { slug: 'grenoble-henry-duffourd-tentative-meurtre-quatre-condamnations', fichier: 'Palais de Justice Grenoble.JPG', nom: 'palais-grenoble', lieu: 'Palais de justice de Grenoble', auteur: 'Rémih', licence: 'CC BY-SA 3.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/3.0/' }
