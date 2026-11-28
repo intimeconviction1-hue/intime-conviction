@@ -106,10 +106,41 @@ jobs:
           IC_VEILLE_AJOUTS: articles-prives/veille-alertes-ajouts.json
 
       - name: Auditer le maillage interne généré
-        continue-on-error: true
         run: node scripts/auditer-maillage.mjs dist
         env:
           IC_AUDIT_MAILLAGE_OUTPUT: audit-maillage/rapport.json
+
+      - name: Refuser les anomalies non justifiées
+        run: node scripts/verifier-seuils-maillage.mjs audit-maillage/rapport.json
+
+      - name: Installer Chromium pour les contrôles mobiles
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.58.2
+          npx playwright install --with-deps chromium
+
+      - name: Démarrer l’aperçu local
+        run: |
+          nohup npx astro preview --host 127.0.0.1 > /tmp/astro-preview.log 2>&1 &
+          for essai in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4321/ > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/astro-preview.log
+          exit 1
+
+      - name: Vérifier CLS, LCP et navigation mobile
+        run: node scripts/controle-stabilite-mobile.mjs
+        env:
+          IC_VISUAL_BASE_URL: http://127.0.0.1:4321
+
+      - name: Conserver le rapport du contrôle mobile
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: controle-stabilite-mobile
+          path: controle-stabilite-mobile/rapport.json
+          if-no-files-found: warn
+          retention-days: 30
 
       - name: Conserver le rapport du maillage
         if: always()

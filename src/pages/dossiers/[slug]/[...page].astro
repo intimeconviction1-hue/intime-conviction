@@ -34,6 +34,8 @@ const date = (s) => new Intl.DateTimeFormat('fr-FR', {
   day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Paris'
 }).format(new Date(s + 'T12:00:00Z'));
 const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.currentPage : '');
+const pagesDirectes = Array.from({ length: page.lastPage }, (_, i) => i + 1);
+const urlPage = n => n === 1 ? '/dossiers/' + dossier.slug + '/' : '/dossiers/' + dossier.slug + '/' + n + '/';
 ---
 <Base
   titre={titrePage}
@@ -140,9 +142,9 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
         </li>
       ))}
     </ol>
-    <nav class="pagination-dossiers" aria-label="Pages du dossier">
+    <nav class="pagination-dossiers" aria-label="Accès direct aux pages du dossier">
       {page.url.prev ? <a href={page.url.prev} rel="prev">← PAGE PRÉCÉDENTE</a> : <span aria-hidden="true"></span>}
-      <span>{page.currentPage} / {page.lastPage}</span>
+      <ol>{pagesDirectes.map(n => <li>{n === page.currentPage ? <span aria-current="page">{n}</span> : <a href={urlPage(n)} aria-label={"Page " + n + " du dossier " + dossier.titre}>{n}</a>}</li>)}</ol>
       {page.url.next ? <a href={page.url.next} rel="next">PAGE SUIVANTE →</a> : <span aria-hidden="true"></span>}
     </nav>
   </section>
@@ -212,6 +214,7 @@ const titrePage = dossier.titre + (page.currentPage > 1 ? ' · page ' + page.cur
 .liste-references h3 a:hover{background:var(--action);color:var(--sur-action)}
 .sortie{display:inline-block;font-weight:900;font-size:1rem;margin-left:.3rem}
 .pagination-dossiers{display:grid;grid-template-columns:1fr auto 1fr;gap:.8rem;align-items:center;padding:2rem 0;border-bottom:3px solid #151718;font:900 .7rem/1.4 var(--sans)}
+.pagination-dossiers ol{display:flex;flex-wrap:wrap;justify-content:center;gap:.25rem;list-style:none;padding:0;margin:0;grid-column:1/-1}.pagination-dossiers ol a,.pagination-dossiers ol [aria-current="page"]{display:inline-flex;align-items:center;justify-content:center;min-width:2.5rem;min-height:2.75rem;padding:.4rem;border:1px solid var(--filet);text-decoration:none}.pagination-dossiers ol [aria-current="page"]{font-weight:800;border-color:var(--rouge);color:var(--rouge)}
 .pagination-dossiers a{padding:1rem 1.2rem;color:var(--sur-action);background:var(--action);border:2px solid #151718;text-align:center}
 .pagination-dossiers a:last-child{justify-self:end}
 .pagination-dossiers a:hover{background:#151718;color:#fff}

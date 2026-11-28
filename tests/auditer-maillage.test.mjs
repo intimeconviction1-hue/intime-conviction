@@ -27,6 +27,12 @@ test('exclut du graphe les destinations noindex sans les compter cassées', () =
   const r = mesurerGraphe(pages);
   assert.equal(r.liensInternesCasses, 0);
   assert.equal(r.liensVersPagesNonIndexables, 2);
+  assert.equal(r.echantillonLiensVersPagesNonIndexables.length, 2);
+  assert.equal(r.echantillonLiensVersPagesNonIndexables[0].cible, '/privee/');
+  assert.equal(r.destinationsNonIndexablesUniques[0].cible, '/privee/');
+  assert.equal(r.destinationsNonIndexablesUniques[0].occurrences, 2);
+  assert.equal(r.destinationsNonIndexablesUniques[0].pagesSources, 2);
+  assert.equal(r.destinationsNonIndexablesUniques[0].statut, 'à vérifier');
   assert.equal(r.pagesOrphelines, 0);
 });
 
@@ -37,4 +43,18 @@ test('les fichiers statiques et flux valides ne sont pas signalés comme pages c
   assert.equal(r.liensVersPagesNonIndexables, 0);
   assert.equal(r.imagesLocales, 1);
   assert.equal(r.imagesLocalesCassees, 0);
+});
+
+
+test('expose les pages qui dépassent trois clics', () => {
+  const pages = new Map([
+    ['/', '<a href="/a/">A</a>'],
+    ['/a/', '<a href="/b/">B</a>'],
+    ['/b/', '<a href="/c/">C</a>'],
+    ['/c/', '<a href="/d/">D</a>'],
+    ['/d/', '<p>Page profonde.</p>'],
+  ]);
+  const r = mesurerGraphe(pages);
+  assert.equal(r.pagesAuDelaDeTroisClics, 1);
+  assert.deepEqual(r.echantillonPagesProfondes, [{ route: '/d/', profondeur: 4 }]);
 });

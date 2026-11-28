@@ -5,6 +5,21 @@ import { fileURLToPath } from 'node:url';
 
 const ORIGIN = 'https://www.intimeconviction.fr';
 
+const exclusionsNoindexDocumentees = new Map([
+  ['/abonnement/', { nature: 'page utilitaire', raison: 'Espace abonnement non ouvert; la page explique la situation et indique le flux RSS.' }],
+  ['/connexion/', { nature: 'page utilitaire', raison: 'Espace lecteur non ouvert; page de connexion sans contenu éditorial indexable.' }],
+  ['/recherche/', { nature: 'moteur de recherche', raison: 'Résultats de recherche internes, exclus pour éviter l’indexation de pages à paramètres.' }],
+  ['/archives/presse/rechercher/', { nature: 'moteur de recherche', raison: 'Résultats de recherche de la revue de presse, exclus pour éviter l’indexation de pages à paramètres.' }],
+  ['/fratricide-a-grasse-un-proces-bouleversant-sur-fond-de-violences-familiales/01/2025/', { nature: 'archive en vérification', raison: 'Notice conservée après retrait du contenu non sourcé; la procédure n’a pas pu être identifiée avec certitude.' }],
+]);
+
+function classerDestinationNonIndexable(cible, redirections) {
+  const redirection = redirections.find(entree => entree.route === cible);
+  if (redirection) return { statut: 'redirection', nature: 'redirection statique', raison: 'La destination redirige vers ' + redirection.cible + '.' };
+  const justification = exclusionsNoindexDocumentees.get(cible);
+  if (justification) return { statut: 'exclusion légitime', ...justification };
+  return { statut: 'à vérifier', nature: 'destination noindex non documentée', raison: 'Aucune justification éditoriale ou fonctionnelle enregistrée.' };
+}
 function normaliserRoute(pathname) {
   let path = decodeURIComponent(pathname || '/').replace(/\\/g, '/').replace(/\/index\.html$/i, '/').replace(/\.html$/i, '/');
   if (!path.startsWith('/')) path = '/' + path;
@@ -20,6 +35,7 @@ export function mesurerGraphe(pages, ressources = new Set()) {
   const graphe = new Map([...routes].map(route => [route, new Set()]));
   const liensCasses = [];
   const liensNonIndexables = [];
+  const nonIndexablesParCible = new Map();
   const liensVersSoi = [];
   let liensInternes = 0;
   let recommandations = 0;
@@ -62,7 +78,14 @@ export function mesurerGraphe(pages, ressources = new Set()) {
         continue;
       }
       if (!routes.has(cible)) {
-        if (toutesRoutes.has(cible)) liensNonIndexables.push({ route, href: raw, cible });
+        if (toutesRoutes.has(cible)) {
+          liensNonIndexables.push({ route, href: raw, cible });
+          let entree = nonIndexablesParCible.get(cible);
+          if (!entree) entree = { cible, occurrences: 0, sources: new Set(), echantillonHref: raw };
+          entree.occurrences++;
+          entree.sources.add(route);
+          nonIndexablesParCible.set(cible, entree);
+        }
         continue;
       }
       graphe.get(route).add(cible);
@@ -93,6 +116,9 @@ export function mesurerGraphe(pages, ressources = new Set()) {
   const valeurs = [...profondeurs.values()].filter(n => n > 0).sort((a, b) => a - b);
   const percentile = p => valeurs.length ? valeurs[Math.floor((valeurs.length - 1) * p)] : null;
   const orphelines = [...routes].filter(route => route !== '/' && !profondeurs.has(route));
+  const pagesAuDelaDeTroisClics = [...profondeurs]
+    .filter(([route, profondeur]) => route !== '/' && profondeur > 3)
+    .sort((a, b) => b[1] - a[1]);
   return {
     pagesIndexables: routes.size,
     liensInternes,
@@ -100,8 +126,10 @@ export function mesurerGraphe(pages, ressources = new Set()) {
     imagesLocalesCassees: imagesLocalesCassees.length,
     echantillonImagesLocalesCassees: imagesLocalesCassees.slice(0, 100),
     liensInternesCasses: liensCasses.length,
-    echantillonLiensCasses: liensCasses.slice(0, 100),
+    echantillonLiensCasses: liensCasses.slice(0, 100).map(lien => ({ ...lien, classe: 'erreur technique', raison: 'La destination n’existe ni dans les pages ni dans les ressources générées.' })),
     liensVersPagesNonIndexables: liensNonIndexables.length,
+    echantillonLiensVersPagesNonIndexables: liensNonIndexables.slice(0, 100),
+    destinationsNonIndexablesUniques: [...nonIndexablesParCible.values()].map(entree => ({ cible: entree.cible, occurrences: entree.occurrences, pagesSources: entree.sources.size, echantillonHref: entree.echantillonHref, echantillonPagesSources: [...entree.sources].slice(0, 8), ...classerDestinationNonIndexable(entree.cible, redirections) })).sort((a, b) => b.occurrences - a.occurrences || a.cible.localeCompare(b.cible, 'fr')),
     liensVersSoi: liensVersSoi.length,
     echantillonLiensVersSoi: liensVersSoi.slice(0, 100),
     pagesOrphelines: orphelines.length,
@@ -111,6 +139,8 @@ export function mesurerGraphe(pages, ressources = new Set()) {
     profondeurMediane: percentile(.5),
     profondeurP90: percentile(.9),
     profondeurMaximale: valeurs.at(-1) ?? null,
+    pagesAuDelaDeTroisClics: pagesAuDelaDeTroisClics.length,
+    echantillonPagesProfondes: pagesAuDelaDeTroisClics.slice(0, 100).map(([route, profondeur]) => ({ route, profondeur })),
     pagesAvecRecommandations: pagesAvecRecommandations.size,
     liensDeRecommandation: recommandations,
     redirectionsStatiques: redirections,

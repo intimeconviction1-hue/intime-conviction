@@ -17,9 +17,16 @@ test('les liens explicites distinguent les affaires et omettent doublons, articl
 test('un enjeu commun ne devient jamais une affaire commune', () => {
   const a = article('/a/', {}, {titre:'La légitime défense au procès de X'});
   const b = article('/b/', {}, {titre:'La légitime défense au procès de Y'});
-  assert.equal(indexerMaillage([a,b], Date.parse('2026-11-27'))(a)[0].titre, 'Les affaires à rapprocher');
+  assert.equal(indexerMaillage([a,b], Date.parse('2026-11-27'))(a)[0].titre, 'Même enjeu juridique, autres affaires');
 });
 
+test('les thèmes littéraux du corps enrichissent le maillage sans créer un lien entre affaires', () => {
+  const a = article('/a/', {}, {titre:'Audience à Lyon', html:'<p>Le dossier évoque un huis clos.</p>'});
+  const b = article('/b/', {}, {titre:'Audience à Lille', html:'<p>Un autre procès se tient à huis clos.</p>'});
+  const modules = indexerMaillage([a,b], Date.parse('2026-11-27'))(a);
+  assert.equal(modules[0].titre, 'Même enjeu juridique, autres affaires');
+  assert.match(modules[0].description, /ne signifie pas que les affaires, les faits ou les personnes sont liés/);
+});
 test('le guide est lié une seule fois dans la prose, sans toucher aux sources ni aux ancres existantes', () => {
   const html = '<p>Un pourvoi en cassation.</p><p>Un autre pourvoi en cassation.</p><h2>Sources</h2><p>La cour d’assises.</p>';
   const resultat = relierAuGuide(html);
