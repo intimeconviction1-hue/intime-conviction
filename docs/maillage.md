@@ -36,7 +36,7 @@ recommandations sont calculés sur les 3 503 articles du fonds.
 | Images locales cassées | 0 | 0 |
 | Canoniques non conformes | 0 | 0 |
 
-Le rapport final recense 3 956 pages indexables, 279 516 liens internes,
+Le rapport final recense 3 956 pages indexables, 279 600 liens internes,
 20 576 images locales et les cinq destinations noindex suivantes : les pages
 utilitaires abonnement et connexion, les deux moteurs de recherche internes,
 et une notice d’archive en attente de vérification juridique. Aucune n’a été
@@ -51,9 +51,9 @@ locale d’événement et ne constitue pas l’INP terrain.
 
 | Page | CLS mesuré | LCP mesuré | Délai d’interaction local |
 | --- | ---: | ---: | ---: |
-| Accueil | 0,00 | 92 ms | 16 ms |
-| Carte des juridictions | 0,00 | 84 ms | 16 ms |
-| Annuaire | 0,00 | 128 ms | 16 ms |
+| Accueil | 0,00 | 136 ms | 16 ms |
+| Carte des juridictions | 0,00 | 88 ms | 16 ms |
+| Annuaire | 0,00 | 124 ms | 16 ms |
 | Assister | 0,00 | 84 ms | 16 ms |
 
 ## Contrôle du graphe publié
