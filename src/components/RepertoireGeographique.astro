@@ -1,4 +1,5 @@
 ---
+import CarteNationale from './CarteNationale.astro';
 import { IMPLANTATIONS, TERRITOIRES, validerGeographie } from '../lib/geographie-judiciaire.mjs';
 validerGeographie();
 const regions = [...new Set(TERRITOIRES.map(t=>t.region))].sort((a,b)=>a.localeCompare(b,'fr'));
@@ -20,11 +21,12 @@ const normaliser = s=>s.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'');
     {regions.map(r=><button type="button" data-geo-region={r} aria-pressed="false">{r}<small>{villes.filter(v=>v.region===r).length} villes</small></button>)}
   </nav>
   <p class="geo-note">Les filtres de procédure portent uniquement sur les affaires déjà documentées par le journal. Une absence de résultat ne signifie pas que la juridiction n’existe pas. Les positions précises ne sont pas inventées : la carte des affaires documentées figure ci-dessous.</p>
+  <CarteNationale />
   <ul id="geo-list" class="geo-list">
     {villes.map(v=>{
       const ts=territoires.filter(t=>v.departements.includes(t.code));
       const types=[...new Set(v.jalons.flatMap(j=>[j.juridiction.includes('criminelle')?'criminelle':'assises',...(j.type==='Appel'?['appel']:[]),'dossier']))];
-      return <li data-geo-ville data-region={v.region} data-codes={v.departements.join(' ')} data-types={types.join(' ')} data-search={normaliser([v.ville,v.region,...ts.flatMap(t=>[t.code,t.departement])].join(' '))}>
+      return <li data-geo-ville data-geo-id={v.id} data-region={v.region} data-codes={v.departements.join(' ')} data-types={types.join(' ')} data-search={normaliser([v.ville,v.region,...ts.flatMap(t=>[t.code,t.departement])].join(' '))}>
         <h3>{v.ville}</h3><p>{ts.map(t=>t.code+' · '+t.departement).join(' / ')} · {v.region}</p>
         <span class="geo-status">{v.jalons.length?'Affaire documentée':'Ville-siège habituelle à confirmer'}</span>
         <div class="geo-links"><a href={'/juridictions/'+v.id+'/'}>Fiche territoriale</a><a href="/annuaire/#repertoire">Annuaire judiciaire</a>{v.jalons.map(j=><a href={'#lieu-'+j.id}>Voir la fiche documentée</a>)}</div>
