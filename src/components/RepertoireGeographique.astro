@@ -1,4 +1,5 @@
 ---
+import institutionnel from '../data/structures-justice.json';
 import CarteNationale from './CarteNationale.astro';
 import { IMPLANTATIONS, TERRITOIRES, validerGeographie } from '../lib/geographie-judiciaire.mjs';
 validerGeographie();
@@ -8,27 +9,28 @@ const villes = [...IMPLANTATIONS].sort((a,b)=>a.ville.localeCompare(b.ville,'fr'
 const normaliser = s=>s.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'');
 ---
 <section class="national" aria-labelledby="titre-national">
-  <header><p class="geo-kicker">LE JOURNAL DES COURS D’ASSISES / TERRITOIRES</p><h2 id="titre-national">Les assises près de chez vous</h2><p>{villes.length} villes-sièges habituelles, {territoires.length} départements, {regions.length} régions. Répertoire d’orientation : les lieux et dates des audiences doivent être confirmés auprès des institutions.</p></header>
+  <header><p class="geo-kicker">LE JOURNAL DES COURS D’ASSISES / TERRITOIRES</p><h2 id="titre-national">Les assises près de chez vous</h2><p>{villes.length} villes-sièges habituelles, {territoires.filter(t=>!t.collectivite).length} départements, {territoires.filter(t=>t.collectivite).length} collectivités ultramarines. Répertoire institutionnel et d’orientation : les lieux et dates des audiences doivent être confirmés auprès des institutions.</p></header>
   <div class="geo-controls" role="group" aria-label="Filtres du répertoire national">
-    <label>Région<select id="geo-region"><option value="">Toutes les régions</option>{regions.map(r=><option value={r}>{r}</option>)}</select></label>
-    <label>Département<select id="geo-departement"><option value="">Tous les départements</option>{territoires.map(t=><option value={t.code} data-region={t.region}>{t.code} · {t.departement}</option>)}</select></label>
+    <label>Région ou collectivité<select id="geo-region"><option value="">Toutes les régions et collectivités</option>{regions.map(r=><option value={r}>{r}</option>)}</select></label>
+    <label>Département ou territoire<select id="geo-departement"><option value="">Tous les territoires</option>{territoires.map(t=><option value={t.code} data-region={t.region}>{t.code} · {t.departement}</option>)}</select></label>
     <label>Ville ou département<input id="geo-recherche" type="search" placeholder="Paris, Rhône, 971…" /></label>
-    <label>Procédure documentée<select id="geo-type"><option value="">Toutes les implantations</option><option value="assises">Cour d’assises</option><option value="criminelle">Cour criminelle départementale</option><option value="appel">Assises en appel</option><option value="dossier">Dossier associé</option></select></label>
+    <label>Juridiction ou suivi éditorial<select id="geo-type"><option value="">Toutes les implantations</option><option value="assises">Cour d’assises</option><option value="criminelle">Cour criminelle départementale</option><option value="tribunal-criminel">Tribunal criminel</option><option value="appel">Assises en appel</option><option value="dossier">Dossier associé</option></select></label>
     <button id="geo-reset" type="button">Réinitialiser</button>
   </div>
   <p id="geo-count" role="status" aria-live="polite">{villes.length} implantations affichées</p>
   <nav class="geo-regions" aria-label="Accès rapide par région">
     {regions.map(r=><button type="button" data-geo-region={r} aria-pressed="false">{r}<small>{villes.filter(v=>v.region===r).length} villes</small></button>)}
   </nav>
-  <p class="geo-note">Les filtres de procédure portent uniquement sur les affaires déjà documentées par le journal. Une absence de résultat ne signifie pas que la juridiction n’existe pas. Les positions précises ne sont pas inventées : la carte des affaires documentées figure ci-dessous.</p>
+  <p class="geo-note">Les filtres de nature reposent sur les structures importées du ministère de la Justice. Les filtres appel et dossier portent sur les affaires documentées par le journal. Une absence de résultat ne signifie pas qu’une juridiction n’existe pas.</p>
   <CarteNationale />
   <ul id="geo-list" class="geo-list">
     {villes.map(v=>{
       const ts=territoires.filter(t=>v.departements.includes(t.code));
-      const types=[...new Set(v.jalons.flatMap(j=>[j.juridiction.includes('criminelle')?'criminelle':'assises',...(j.type==='Appel'?['appel']:[]),'dossier']))];
+      const structures=institutionnel.structures.filter(s=>s.implantation===v.id);
+      const types=[...new Set([...structures.map(s=>s.nature==='Tribunal criminel'?'tribunal-criminel':s.typeSRJ==='CCD'?'criminelle':'assises'),...v.jalons.flatMap(j=>[...(j.type==='Appel'?['appel']:[]),'dossier'])])];
       return <li data-geo-ville data-geo-id={v.id} data-region={v.region} data-codes={v.departements.join(' ')} data-types={types.join(' ')} data-search={normaliser([v.ville,v.region,...ts.flatMap(t=>[t.code,t.departement])].join(' '))}>
         <h3>{v.ville}</h3><p>{ts.map(t=>t.code+' · '+t.departement).join(' / ')} · {v.region}</p>
-        <span class="geo-status">{v.jalons.length?'Affaire documentée':'Ville-siège habituelle à confirmer'}</span>
+        <span class="geo-status">{structures.length?structures.length+' structure(s) institutionnelle(s) référencée(s)':'Ville-siège habituelle à confirmer'}{v.jalons.length?' · Affaire documentée':''}</span>
         <div class="geo-links"><a href={'/juridictions/'+v.id+'/'}>Fiche territoriale</a><a href="/annuaire/#repertoire">Annuaire judiciaire</a>{v.jalons.map(j=><a href={'#lieu-'+j.id}>Voir la fiche documentée</a>)}</div>
       </li>;
     })}
