@@ -12,6 +12,14 @@ const sujets = [
   ['requisitions', /\brequisitions\b/],
   ['plaidoiries', /\bplaidoiries?\b/],
   ['delibere', /\bdelibere\b/],
+  ['violences-sexuelles', /\b(?:viol|agression sexuelle|violences sexuelles|harcelement sexuel|inceste)\b/],
+  ['violences-conjugales', /\b(?:violences conjugales|violence conjugale|feminicide|meurtre conjugal)\b/],
+  ['protection-des-mineurs', /\b(?:mineur|mineure|enfant|adolescent|adolescente|nourrisson|bebe)\b/],
+  ['terrorisme', /\b(?:terrorisme|terroriste|attentat|djihadisme|djihadiste)\b/],
+  ['erreur-judiciaire', /\b(?:erreur judiciaire|revision du proces|acquitte a tort|innocente apres)\b/],
+  ['peine-de-mort', /\b(?:peine de mort|condamne a mort|execution capitale)\b/],
+  ['prescription', /\b(?:prescription penale|prescription des faits|delai de prescription|faits prescrits)\b/],
+  ['huis-clos', /\bhuis clos\b/],
 ];
 const piliers = new Map([
   ["cour d[’']assises", '/comprendre/#juridictions'],
@@ -29,7 +37,8 @@ const annee = 365 * 86400000;
 function fiche(article) {
   const d = article.data;
   const m = d.maillage ?? {};
-  const texte = normaliserTitre(d.titre + ' ' + d.extrait);
+  const corpsSansBalisage = String(d.html ?? '').replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]*>/g, ' ');
+  const texte = normaliserTitre([d.titre, d.extrait, corpsSansBalisage].join(' '));
   const champs = {
     affaire: m.affaire ?? (duchere.has(d.slug) ? 'duchere-fiston' : undefined),
     personne: m.personnes, juridiction: m.juridiction, territoire: m.territoire,
@@ -82,7 +91,7 @@ export function indexerMaillage(articles, maintenant = Date.now()) {
         exclus.add(candidat.data.chemin);
         reste--;
       }
-      if (articles.length) modules.push({ titre, articles, ...(titre === 'Les affaires à rapprocher' ? { description: 'Le rapprochement porte sur un enjeu documenté ; il ne signifie pas que les faits ou les personnes sont liés.' } : {}) });
+      if (articles.length) modules.push({ titre, articles, ...(titre === 'Même enjeu juridique, autres affaires' ? { description: 'Le rapprochement repose sur un thème juridique explicitement cité. Il ne signifie pas que les affaires, les faits ou les personnes sont liés.' } : {}) });
     }
     const selection = predicat => tries.filter(([a, s]) => predicat(a.data, s.types)).map(([a]) => a);
     ajouter('Les précédentes audiences', selection((a, t) => t.has('affaire') && a.date < d.date && a.maillage?.etape === 'audience'), 2);
@@ -91,7 +100,7 @@ export function indexerMaillage(articles, maintenant = Date.now()) {
     ajouter('Comprendre les enjeux juridiques', selection((a, t) => (t.has('jurisprudence') || t.has('enjeu')) && ['le-banc-des-jures', 'l-expose'].includes(a.rubrique)), 2);
     ajouter('Dans cette juridiction', selection((_, t) => t.has('juridiction')), 1);
     ajouter('Dans nos archives', selection((a, t) => maintenant - a.date > annee && (t.has('enjeu') || t.has('jurisprudence'))), 2);
-    ajouter('Les affaires à rapprocher', selection((a, t) => maintenant - a.date <= annee && (t.has('enjeu') || t.has('qualification') || t.has('personne'))), 2);
+    ajouter('Même enjeu juridique, autres affaires', selection((a, t) => maintenant - a.date <= annee && (t.has('enjeu') || t.has('qualification') || t.has('personne'))), 2);
     return modules;
   };
 }
