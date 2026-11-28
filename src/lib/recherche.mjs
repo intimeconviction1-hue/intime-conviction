@@ -8,7 +8,16 @@ export function normaliser(valeur = '') {
 }
 
 export function preparerIndex(articles) {
-  return articles.map((a, ordre) => ({
+  // Une même URL publiée ne doit jamais occuper deux emplacements
+  // dans les résultats. On conserve sa première occurrence, donc
+  // son ordre éditorial original.
+  const chemins = new Set();
+  return articles.filter(article => {
+    if (!article || typeof article.chemin !== 'string' || !article.chemin.startsWith('/')) return false;
+    if (chemins.has(article.chemin)) return false;
+    chemins.add(article.chemin);
+    return true;
+  }).map((a, ordre) => ({
     ...a,
     ordre,
     titreRecherche: normaliser(a.titre),
@@ -49,13 +58,19 @@ export function chercherArticles(index, { q = '', rubrique = '', annee = '' } = 
       else { trouve = false; break; }
     }
     if (!trouve) continue;
+    // Pour une affaire nommée, privilégier les articles dont tous les mots
+    // significatifs figurent dans le titre. Une simple mention dans le corps
+    // ne doit pas passer avant un article précisément consacré au sujet.
+    if (mots.every(mot => contientMot(titre, mot))) score += 80;
     if (titre === phrase) score += 500;
     else if (contientMot(titre, phrase)) score += 150;
     exacts.push({ article, score });
   }
 
   const classer = resultats => resultats
-    .sort((a, b) => b.score - a.score || b.article.annee - a.article.annee || a.article.ordre - b.article.ordre)
+    .sort((a, b) => b.score - a.score ||
+      (b.article.date ?? String(b.article.annee ?? '' )).localeCompare(a.article.date ?? String(a.article.annee ?? '')) ||
+      a.article.ordre - b.article.ordre)
     .map(({ article }) => article);
   if (exacts.length) return { articles: classer(exacts), approximatif: false };
 
@@ -86,10 +101,14 @@ export function filtrerPresse(references, {q = '', annee = ''} = {}) {
   const phrase = normaliserPresse(q.trim());
   if (phrase.length < 2) return [];
   const mots = phrase.split(/\s+/);
-  return references.filter(([titre, media, , date]) => {
+  const urls = new Set();
+  return references.filter(([titre, media, url, date]) => {
     if (annee && !date.startsWith(annee)) return false;
     const texte = normaliserPresse(titre + ' ' + media);
-    return mots.every(mot => texte.includes(mot));
+    if (!mots.every(mot => texte.includes(mot))) return false;
+    if (urls.has(url)) return false;
+    urls.add(url);
+    return true;
   });
 }
 

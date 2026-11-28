@@ -376,17 +376,9 @@ try {
   throw new Error('Attributions photographiques invalides : ' + erreur.message);
 }
 
-// Illustrations non documentaires, avec les crédits propres à chaque fichier.
-const photosAmbiance = [
-  photosArticles['/mons-falzone-indemnisation-solidarite-passager/11/2026/'],
-  photosArticles['/paris-emilie-konig-proces-assises/11/2026/'],
-].filter(photo => photo?.image.src.startsWith('/illustrations-articles/')).map(photo => ({
-  ...photo,
-  lieu: photo.lieu.split('Photographie d’illustration')[0] + 'Photographie d’illustration.',
-}));
-
+// Les photographies attribuées à un article restent réservées à celui-ci.
+// Le repli générique ne doit pas réutiliser une photographie éditoriale.
 const illustrationsArticle = [
-  ...photosAmbiance,
   {
     image: photoCodePenal1810,
     lieu: 'Page de titre du Code pénal de 1810, édition de Bruxelles · Illustration d’archives',

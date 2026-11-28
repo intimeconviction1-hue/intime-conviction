@@ -64,3 +64,43 @@ test('le nom dans le corps remonte même avec un mot introductif', async () => {
   assert.equal(resultat.articles[0].chemin, '/pastor/');
   assert.equal(resultat.approximatif, false);
 });
+
+test('un même article ne revient pas deux fois dans les résultats',()=>{
+  const repetitions=preparerIndex([
+    {titre:'Procès à Toulouse',extrait:'Assises',annee:2026,chemin:'/toulouse/'},
+    {titre:'Procès à Toulouse',extrait:'Réédition',annee:2026,chemin:'/toulouse/'},
+    {titre:'Audience à Toulouse',extrait:'Procès',annee:2025,chemin:'/audience/'}
+  ]);
+  assert.deepEqual(filtrerEtClasser(repetitions,{q:'toulouse'}).map(a=>a.chemin),['/toulouse/','/audience/']);
+});
+
+test('la presse ne répète pas un même article repéré plusieurs fois',()=>{
+  const references=[
+    ['Procès criminel à Lyon','Journal A','https://presse.example/article','2026-11-20'],
+    ['Procès criminel à Lyon','Journal A','https://presse.example/article','2026-11-21'],
+    ['Procès criminel à Lyon','Journal B','https://presse.example/autre','2026-11-20']
+  ];
+  assert.equal(filtrerPresse(references,{q:'procès lyon'}).length,2);
+  assert.equal(filtrerPresse(references,{q:'procès lyon',annee:'2025'}).length,0);
+});
+
+test('affaire nommée : les titres consacrés au procès passent avant une mention incidente',()=>{
+  const articles=preparerIndex([
+    {titre:'Panorama des assises',extrait:'Jubillar, procès en appel à Toulouse',annee:2026,date:'2026-11-28',chemin:'/panorama/'},
+    {titre:'Jubillar : l’appel devant les assises',extrait:'Le procès',annee:2026,date:'2026-11-24',chemin:'/jubillar-appel/'},
+    {titre:'Jubillar : les premières audiences',extrait:'Compte rendu',annee:2025,date:'2025-11-20',chemin:'/jubillar-archives/'},
+  ]);
+  assert.deepEqual(filtrerEtClasser(articles,{q:'Jubillar'}).map(a=>a.chemin),[
+    '/jubillar-appel/','/jubillar-archives/','/panorama/'
+  ]);
+});
+
+test('à pertinence égale les publications les plus récentes remontent à la date près',()=>{
+  const articles=preparerIndex([
+    {titre:'Procès à Lyon',extrait:'Assises',annee:2026,date:'2026-11-18',chemin:'/ancien-lyon/'},
+    {titre:'Procès à Lyon',extrait:'Assises',annee:2026,date:'2026-11-28',chemin:'/nouveau-lyon/'},
+  ]);
+  assert.deepEqual(filtrerEtClasser(articles,{q:'Lyon'}).map(a=>a.chemin),[
+    '/nouveau-lyon/','/ancien-lyon/'
+  ]);
+});
