@@ -12,6 +12,13 @@ import { articleVisible } from '../lib/article-visible.mjs';
 const articles = await tousLesArticles();
 const maintenant = Date.now();
 const articlesVerifies = articles.filter(({data}) => articleVisible(data, maintenant));
+// La une éditoriale privilégie les articles des sept derniers jours.
+// Les archives historiques restent dans leur bloc dédié plus bas.
+const dateParis = new Intl.DateTimeFormat('fr-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' });
+const debutSemaine = new Date(dateParis.format(new Date()) + 'T00:00:00Z');
+debutSemaine.setUTCDate(debutSemaine.getUTCDate() - 6);
+const limiteRecente = debutSemaine.toISOString().slice(0, 10);
+const articlesPourUne = articlesVerifies.filter(article => dateParis.format(article.data.date) >= limiteRecente);
 // Une même affaire ne doit pas occuper deux emplacements du carrousel.
 // Les chroniques transversales sont écartées si elles reprennent une affaire
 // déjà choisie. La sélection reste fondée sur des articles réellement publiés.
@@ -29,7 +36,7 @@ const selectionUne = [];
 const photosUne = new Map();
 const dejaUne = new Set();
 const imagesUne = new Set([photoSalle.src]);
-for (const article of articlesVerifies) {
+for (const article of articlesPourUne) {
   const etiquettes = etiquettesUne(article);
   if (etiquettes.some(mot => dejaUne.has(mot))) continue;
   const photo = photoPourArticle(article.data, imagesUne);
@@ -41,11 +48,6 @@ for (const article of articlesVerifies) {
   etiquettes.forEach(mot => dejaUne.add(mot));
   if (selectionUne.length === 3) break;
 }
-// Sept dates civiles, aujourd’hui compris, selon l’heure de Paris.
-const dateParis = new Intl.DateTimeFormat('fr-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' });
-const debutSemaine = new Date(dateParis.format(new Date()) + 'T00:00:00Z');
-debutSemaine.setUTCDate(debutSemaine.getUTCDate() - 6);
-const limiteRecente = debutSemaine.toISOString().slice(0, 10);
 const [articlesRecents, articlesArchives] = articlesVerifies.filter(article => !selectionUne.includes(article))
   .reduce(([recents, anciens], article) => {
     const groupe = dateParis.format(article.data.date) >= limiteRecente ? recents : anciens;
