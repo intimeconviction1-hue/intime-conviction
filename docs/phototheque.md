@@ -9,3 +9,7 @@ Le workflow `.github/workflows/publier.yml` exécute `scripts/preparer-illustrat
 Un article nouveau ne reçoit pas arbitrairement une image de la collection : l'attribution doit être ajoutée explicitement au dépôt privé après vérification du contenu. Les autres images ne sont jamais exposées aux lecteurs.
 
 Pour modifier une illustration, changer uniquement l'entrée correspondante dans le fichier d'attributions du dépôt privé puis reconstruire le site. Les photographies génériques ont une légende précisant qu'elles ne représentent pas l'audience en question. Les droits sont déclarés détenus par le média.
+
+## Manchette de l'accueil
+
+La photographie `photos_assises-img-5317-3964923-caebef1a3.webp` est réservée à l'identité visuelle du journal (photographie d'archives, trois magistrats). Elle est copiée uniquement dans l'artefact de publication sous `illustrations-articles/manchette-accueil.webp`, sans exposer la photothèque ni committer le fichier dans le dépôt public. Ne pas la réattribuer aux articles ou aux cartes de presse. En l'absence de dépôt privé, le fronton existant sert de repli visuel.

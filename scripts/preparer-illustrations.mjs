@@ -84,5 +84,11 @@ if (existsSync(selectionPresse)) {
 }
 await writeFile(resolve('.cache/photos-presse.json'), JSON.stringify(visuelsPresse, null, 2) + '\n');
 
+// Visuel institutionnel choisi dans la photothèque, indépendant des articles.
+const fichierManchette = 'photos_assises-img-5317-3964923-caebef1a3.webp';
+if (existsSync(join(dossier, 'images', fichierManchette))) {
+  await copyFile(join(dossier, 'images', fichierManchette), join(destination, 'manchette-accueil.webp'));
+}
+
 await writeFile(cache, JSON.stringify(resultat, null, 2) + '\n');
 console.log('Images retenues publiées : ' + Object.keys(resultat).length + ' ; autres images privées : non copiées.');
