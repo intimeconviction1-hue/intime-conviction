@@ -34,7 +34,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for fichier in tests/auditer-maillage.test.mjs tests/article-visible.test.mjs tests/auditer-production.test.mjs; do
+          for fichier in tests/auditer-maillage.test.mjs tests/article-visible.test.mjs tests/auditer-production.test.mjs tests/verifier-seuils-maillage.test.mjs; do
             if [[ -f "$fichier" ]]; then
               node --test "$fichier"
             fi
@@ -98,7 +98,10 @@ jobs:
         run: node scripts/auditer-maillage.mjs dist
         env:
           IC_AUDIT_MAILLAGE_OUTPUT: audit-maillage/rapport.json
+      - name: Refuser les anomalies non justifiées
+        run: node scripts/verifier-seuils-maillage.mjs audit-maillage/rapport.json
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: audit-maillage-complet
           path: audit-maillage/rapport.json
