@@ -8,7 +8,16 @@ export function normaliser(valeur = '') {
 }
 
 export function preparerIndex(articles) {
-  return articles.map((a, ordre) => ({
+  // Une même URL publiée ne doit jamais occuper deux emplacements
+  // dans les résultats. On conserve sa première occurrence, donc
+  // son ordre éditorial original.
+  const chemins = new Set();
+  return articles.filter(article => {
+    if (!article || typeof article.chemin !== 'string' || !article.chemin.startsWith('/')) return false;
+    if (chemins.has(article.chemin)) return false;
+    chemins.add(article.chemin);
+    return true;
+  }).map((a, ordre) => ({
     ...a,
     ordre,
     titreRecherche: normaliser(a.titre),
@@ -86,10 +95,14 @@ export function filtrerPresse(references, {q = '', annee = ''} = {}) {
   const phrase = normaliserPresse(q.trim());
   if (phrase.length < 2) return [];
   const mots = phrase.split(/\s+/);
-  return references.filter(([titre, media, , date]) => {
+  const urls = new Set();
+  return references.filter(([titre, media, url, date]) => {
     if (annee && !date.startsWith(annee)) return false;
     const texte = normaliserPresse(titre + ' ' + media);
-    return mots.every(mot => texte.includes(mot));
+    if (!mots.every(mot => texte.includes(mot))) return false;
+    if (urls.has(url)) return false;
+    urls.add(url);
+    return true;
   });
 }
 
