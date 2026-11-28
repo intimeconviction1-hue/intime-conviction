@@ -12,7 +12,7 @@ export async function GET() {
     return {
     titre: d.titre, chemin: d.chemin, rubrique: d.rubrique,
     rubriqueNom: trouverRubrique(d.rubrique).libelle,
-    annee: d.date.getFullYear(), extrait: d.extrait,
+    annee: d.date.getFullYear(), date: d.date.toISOString().slice(0,10), extrait: d.extrait,
     image: photo.image.src,
     };
   });
