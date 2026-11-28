@@ -21,14 +21,20 @@ const REGIONS = {
 };
 const parCode = new Map(Object.entries(REGIONS).flatMap(([region,codes])=>codes.split(' ').map(code=>[code,region])));
 export const slugGeographique = s=>s.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/œ/g,'oe').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-export const TERRITOIRES = Object.freeze(DEPARTEMENTS_ASSISES.map(d=>Object.freeze({...d,region:parCode.get(d.code),implantation:slugGeographique(d.ville),statut:'orientation',source:ANNUAIRE_OFFICIEL})));
+const COLLECTIVITES = [
+ {code:'975',departement:'Saint-Pierre-et-Miquelon',ville:'Saint-Pierre',outreMer:true},
+ {code:'986',departement:'Wallis-et-Futuna',ville:'Uvéa',outreMer:true},
+ {code:'987',departement:'Polynésie française',ville:'Papeete',outreMer:true},
+ {code:'988',departement:'Nouvelle-Calédonie',ville:'Nouméa',outreMer:true},
+];
+export const TERRITOIRES = Object.freeze([...DEPARTEMENTS_ASSISES,...COLLECTIVITES].map(d=>Object.freeze({...d,region:parCode.get(d.code)??d.departement,collectivite:!parCode.has(d.code),implantation:slugGeographique(d.ville),statut:'orientation',source:ANNUAIRE_OFFICIEL})));
 export const IMPLANTATIONS = Object.freeze([...new Set(TERRITOIRES.map(d=>d.implantation))].map(id=>{
  const territoires=TERRITOIRES.filter(d=>d.implantation===id);
  return Object.freeze({id,ville:territoires[0].ville,region:territoires[0].region,departements:territoires.map(d=>d.code),jalons:JURIDICTIONS.filter(j=>slugGeographique(j.ville)===id),statut:'orientation'});
 }));
 export function validerGeographie(){
- if(TERRITOIRES.length!==101 || parCode.size!==101 || TERRITOIRES.some(d=>!d.region)) throw Error('Couverture départementale incomplète');
- if(IMPLANTATIONS.length!==100 || IMPLANTATIONS.find(i=>i.id==='vesoul')?.departements.join(',')!=='70,90') throw Error('Implantations incohérentes');
+ if(TERRITOIRES.length!==105 || parCode.size!==101 || TERRITOIRES.some(d=>!d.region)) throw Error('Couverture départementale incomplète');
+ if(IMPLANTATIONS.length!==104 || IMPLANTATIONS.find(i=>i.id==='vesoul')?.departements.join(',')!=='70,90') throw Error('Implantations incohérentes');
  return true;
 }
 // Aucun rapprochement sur le titre, le lieu des faits ou la seule présence d'une ville.
