@@ -58,3 +58,16 @@ test('expose les pages qui dépassent trois clics', () => {
   assert.equal(r.pagesAuDelaDeTroisClics, 1);
   assert.deepEqual(r.echantillonPagesProfondes, [{ route: '/d/', profondeur: 4 }]);
 });
+
+ test('justifie uniquement les fiches territoriales du référentiel, pas les routes inconnues', () => {
+  const pages = new Map([
+    ['/', '<a href="/juridictions/paris/">Paris</a><a href="/juridictions/inconnue/">Inconnue</a>'],
+    ['/juridictions/paris/', '<meta name="robots" content="noindex,follow">'],
+    ['/juridictions/inconnue/', '<meta name="robots" content="noindex,follow">'],
+  ]);
+  const r = mesurerGraphe(pages);
+  const d = new Map(r.destinationsNonIndexablesUniques.map(x => [x.cible,x.statut]));
+  assert.equal(d.get('/juridictions/paris/'), 'exclusion légitime');
+  assert.equal(d.get('/juridictions/inconnue/'), 'à vérifier');
+  assert.equal(r.liensInternesCasses,0);
+});
