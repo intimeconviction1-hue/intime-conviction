@@ -12,6 +12,7 @@ on:
       - 'src/pages/index.astro'
       - 'src/pages/rubrique/[rubrique]/[...page].astro'
       - 'src/pages/archives/presse/[annee]/[...page].astro'
+      - 'src/pages/dossiers/[slug]/[...page].astro'
       - 'tests/auditer-maillage.test.mjs'
       - 'tests/auditer-production.test.mjs'
       - 'tests/article-visible.test.mjs'
