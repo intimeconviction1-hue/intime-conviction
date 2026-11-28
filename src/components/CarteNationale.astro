@@ -1,0 +1,75 @@
+---
+import {IMPLANTATIONS,TERRITOIRES} from '../lib/geographie-judiciaire.mjs';
+const villes=IMPLANTATIONS.map(v=>({id:v.id,ville:v.ville,code:v.departements[0],region:v.region,outreMer:v.departements[0].startsWith('97')}));
+---
+<section class="geo-map" aria-labelledby="geo-map-title">
+ <h3 id="geo-map-title">Carte nationale des villes d’audience</h3>
+ <p>Les points représentent les centres des communes, et non les palais de justice. Source : API Découpage administratif de l’État. Carte schématique, non destinée à la navigation.</p>
+ <button type="button" id="geo-map-load">Afficher la carte géographique</button>
+ <p id="geo-map-status" role="status" aria-live="polite">Le répertoire textuel reste disponible sans chargement de la carte.</p>
+ <div class="geo-map-panels" id="geo-map-panels" hidden>
+  <div><h4>France métropolitaine</h4><svg id="geo-metropole" viewBox="0 0 640 610" role="group" aria-label="Villes d’implantation en métropole"><rect width="640" height="610" fill="#f3f0eb"/><path d="M66 166L100 142 154 151 200 101 235 95 280 34 352 49 407 76 471 95 530 125 574 169 547 235 559 303 582 371 547 419 486 444 423 468 366 509 310 502 248 480 185 462 198 391 187 329 164 280 113 247 70 205Z" fill="#fff" stroke="#aaa" stroke-width="2"/><g id="geo-metropole-points"/></svg></div>
+  <div><h4>Outre-mer départemental</h4><div id="geo-overseas" class="geo-overseas"></div></div>
+ </div>
+ <script type="application/json" id="geo-map-data" set:html={JSON.stringify(villes)} />
+</section>
+<script>
+ type Ville={id:string;ville:string;code:string;region:string;outreMer:boolean};
+ type Commune={nom:string;code:string;centre?:{coordinates:number[]}};
+ const payload=document.querySelector('#geo-map-data');
+ const villes:Ville[]=JSON.parse(payload?.textContent||'[]');
+ const button=document.querySelector<HTMLButtonElement>('#geo-map-load');
+ const status=document.querySelector('#geo-map-status');
+ const panels=document.querySelector<HTMLElement>('#geo-map-panels');
+ const group=document.querySelector('#geo-metropole-points');
+ const overseas=document.querySelector('#geo-overseas');
+ const normalize=(s:string)=>s.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/[^a-z0-9]/g,'');
+ const ns='http://www.w3.org/2000/svg';
+ const points=new Map<string,Element>();
+ function sync(){
+  for(const [id,point] of points){
+   const card=document.querySelector<HTMLElement>('[data-geo-id="'+id+'"]');
+   point.toggleAttribute('data-masked',!!card?.hidden);
+  }
+ }
+ async function geocode(v:Ville){
+  const params=new URLSearchParams({nom:v.ville,codeDepartement:v.code,fields:'nom,code,centre',format:'json'});
+  const response=await fetch('https://geo.api.gouv.fr/communes?'+params,{signal:AbortSignal.timeout(12000),credentials:'omit'});
+  if(!response.ok)throw Error('API '+response.status);
+  const items:Commune[]=await response.json();
+  const exact=items.filter(c=>normalize(c.nom)===normalize(v.ville)&&c.centre?.coordinates?.length===2);
+  if(exact.length!==1)throw Error('Commune non résolue');
+  const [lon,lat]=exact[0].centre!.coordinates;
+  if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)throw Error('Coordonnées invalides');
+  return {lat,lon};
+ }
+ function draw(v:Ville,lat:number,lon:number){
+  const a=document.createElementNS(ns,'a');a.setAttribute('href','/juridictions/'+v.id+'/');a.setAttribute('aria-label',v.ville+' : fiche territoriale');a.setAttribute('tabindex','0');a.setAttribute('class','geo-pin');
+  const title=document.createElementNS(ns,'title');title.textContent=v.ville+' · centre communal';a.append(title);
+  const x=35+(lon+5.5)/15.4*570,y=25+(51.3-lat)/10.2*550;
+  const circle=document.createElementNS(ns,'circle');
+  circle.setAttribute('cx',String(v.outreMer?80:x));circle.setAttribute('cy',String(v.outreMer?45:y));circle.setAttribute('r','6');a.append(circle);
+  if(v.outreMer){
+   const box=document.createElement('div');box.className='geo-inset';
+   const label=document.createElement('p');label.textContent=v.region+' · '+v.ville;
+   const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 160 90');svg.setAttribute('role','group');svg.setAttribute('aria-label',v.ville);
+   svg.append(a);box.append(label,svg);
+   const coords=document.createElement('small');coords.textContent=lat.toFixed(3)+'°, '+lon.toFixed(3)+'° (centre communal)';box.append(coords);overseas?.append(box);points.set(v.id,box);
+  }else if(group){group.append(a);points.set(v.id,a);}
+ }
+ let pending=[...villes],running=false;
+ async function load(){
+  if(running)return;running=true;if(button)button.disabled=true;if(panels)panels.hidden=false;
+  const queue=[...pending];pending=[];
+  async function worker(){for(;;){const v=queue.shift();if(!v)return;try{const {lat,lon}=await geocode(v);draw(v,lat,lon);}catch{pending.push(v);}sync();if(status)status.textContent=points.size+' / '+villes.length+' centres communaux chargés.';}}
+  await Promise.all(Array.from({length:5},()=>worker()));
+  running=false;if(status)status.textContent=points.size+' / '+villes.length+' centres communaux chargés. '+pending.length+' non résolus ; consulter le répertoire textuel.';
+  if(button){button.disabled=pending.length===0;button.textContent=pending.length?'Réessayer les coordonnées manquantes':'Carte chargée';}
+ }
+ button?.addEventListener('click',load);
+ const list=document.querySelector('#geo-list');
+ if(list)new MutationObserver(sync).observe(list,{subtree:true,attributes:true,attributeFilter:['hidden']});
+</script>
+<style>
+.geo-map{border:1px solid #d7d1cb;padding:1rem;margin:1.5rem 0}.geo-map h3{font:650 2rem/1.1 var(--serif)}.geo-map p{font:450 .85rem/1.5 var(--sans)}.geo-map button{min-height:44px;background:var(--action);color:var(--sur-action);border:0;padding:.6rem 1rem;cursor:pointer}.geo-map-panels{display:grid;grid-template-columns:2fr 1fr;gap:1rem}.geo-map-panels[hidden],[data-masked]{display:none!important}.geo-map svg{width:100%;height:auto}.geo-overseas{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.5rem}.geo-map :global(.geo-inset){padding:.5rem;background:#f3f0eb;color:#202427}.geo-map :global(.geo-pin circle){fill:#a12c39;stroke:#fff;stroke-width:1.5}.geo-map :global(.geo-pin:hover circle),.geo-map :global(.geo-pin:focus circle){fill:#202427;stroke:#a12c39;stroke-width:3}.geo-map :global(.geo-inset small){font-size:.7rem}@media(max-width:700px){.geo-map-panels{grid-template-columns:1fr}}
+</style>
