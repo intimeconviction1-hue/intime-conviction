@@ -4,8 +4,8 @@ import institutionnel from '../data/structures-justice.json';
 const villes=IMPLANTATIONS.flatMap(v=>{
  const records=institutionnel.structures.filter(s=>s.implantation===v.id && Number.isFinite(s.lat) && Number.isFinite(s.lon));
  const j=v.jalons[0];
- const points=records.length?records:[...(j?[{lat:j.lat,lon:j.lon,precision:'centre communal approximatif',adresse:null,nature:null}]:[])];
- return points.map((p,i)=>({...p,id:v.id,pointId:v.id+'-'+i,ville:v.ville,region:v.region,outreMer:v.departements[0].startsWith('97')}));
+ const points=records.length?Array.from(new Map(records.map(s=>[s.lat+':'+s.lon,s])).values()).map(s=>({...s,nature:[...new Set(records.filter(t=>t.lat===s.lat&&t.lon===s.lon).map(t=>t.nature))].join(' / ')})):[...(j?[{lat:j.lat,lon:j.lon,precision:'centre communal approximatif',adresse:null,nature:null}]:[])];
+ return points.map((p,i)=>({...p,id:v.id,pointId:v.id+'-'+i,ville:v.ville,region:v.region,outreMer:/^(97|98)/.test(v.departements[0])}));
 });
 ---
 <section class="geo-map" aria-labelledby="geo-map-title">
@@ -14,7 +14,7 @@ const villes=IMPLANTATIONS.flatMap(v=>{
  <p id="geo-map-status" role="status" aria-live="polite">{new Set(villes.map(v=>v.id)).size} / {IMPLANTATIONS.length} implantations localisées. Les autres restent accessibles dans le répertoire textuel.</p>
  <div class="geo-map-panels" id="geo-map-panels">
   <div><h4>France métropolitaine</h4><svg id="geo-metropole" viewBox="0 0 640 610" role="group" aria-label="Villes d’implantation en métropole"><rect width="640" height="610" fill="#f3f0eb"/><path d="M66 166L100 142 154 151 200 101 235 95 280 34 352 49 407 76 471 95 530 125 574 169 547 235 559 303 582 371 547 419 486 444 423 468 366 509 310 502 248 480 185 462 198 391 187 329 164 280 113 247 70 205Z" fill="#fff" stroke="#aaa" stroke-width="2"/><g id="geo-metropole-points"/></svg></div>
-  <div><h4>Outre-mer départemental</h4><div id="geo-overseas" class="geo-overseas"></div></div>
+  <div><h4>Outre-mer</h4><div id="geo-overseas" class="geo-overseas"></div></div>
  </div>
  <script type="application/json" id="geo-map-data" set:html={JSON.stringify(villes)} />
 </section>
@@ -52,5 +52,5 @@ const villes=IMPLANTATIONS.flatMap(v=>{
  if(list)new MutationObserver(sync).observe(list,{subtree:true,attributes:true,attributeFilter:['hidden']});
 </script>
 <style>
-.geo-map{border:1px solid #d7d1cb;padding:1rem;margin:1.5rem 0}.geo-map h3{font:650 2rem/1.1 var(--serif)}.geo-map p{font:450 .85rem/1.5 var(--sans)}.geo-map button{min-height:44px;background:var(--action);color:var(--sur-action);border:0;padding:.6rem 1rem;cursor:pointer}.geo-map-panels{display:grid;grid-template-columns:2fr 1fr;gap:1rem}.geo-map-panels[hidden],[data-masked]{display:none!important}.geo-map svg{width:100%;height:auto}.geo-overseas{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.5rem}.geo-map :global(.geo-inset){padding:.5rem;background:#f3f0eb;color:#202427}.geo-map :global(.geo-pin circle){fill:#a12c39;stroke:#fff;stroke-width:1.5}.geo-map :global(.geo-pin:hover circle),.geo-map :global(.geo-pin:focus circle){fill:#202427;stroke:#a12c39;stroke-width:3}.geo-map :global(.geo-inset small){font-size:.7rem}@media(max-width:700px){.geo-map-panels{grid-template-columns:1fr}}
+.geo-map{border:1px solid #d7d1cb;padding:1rem;margin:1.5rem 0}.geo-map h3{font:650 2rem/1.1 var(--serif)}.geo-map p{font:450 .85rem/1.5 var(--sans)}.geo-map button{min-height:44px;background:var(--action);color:var(--sur-action);border:0;padding:.6rem 1rem;cursor:pointer}.geo-map-panels{display:grid;grid-template-columns:2fr 1fr;gap:1rem}.geo-map-panels[hidden],:global([data-masked]){display:none!important}.geo-map svg{width:100%;height:auto}.geo-overseas{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.5rem}.geo-map :global(.geo-inset){padding:.5rem;background:#f3f0eb;color:#202427}.geo-map :global(.geo-pin circle){fill:#a12c39;stroke:#fff;stroke-width:1.5}.geo-map :global(.geo-pin:hover circle),.geo-map :global(.geo-pin:focus circle){fill:#202427;stroke:#a12c39;stroke-width:3}.geo-map :global(.geo-inset small){font-size:.7rem}@media(max-width:700px){.geo-map-panels{grid-template-columns:1fr}}
 </style>
