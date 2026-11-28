@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import {IMPLANTATIONS,TERRITOIRES} from '../../lib/geographie-judiciaire.mjs';
+import {ANNUAIRE_OFFICIEL} from '../../lib/guide-assises.mjs';
+import {DOSSIERS} from '../../lib/dossiers.mjs';
+export function getStaticPaths(){
+ return IMPLANTATIONS.map(v=>({params:{ville:v.id},props:{v}}));
+}
+const {v}=Astro.props;
+const ts=TERRITOIRES.filter(t=>v.departements.includes(t.code));
+const titre='Les assises à '+v.ville;
+---
+<Base titre={titre} description={'Repères judiciaires à '+v.ville+' : territoire, sources officielles et accès aux audiences.'} noindex={true}>
+ <nav aria-label="Fil d’Ariane"><a href="/">Accueil</a> / <a href="/carte/">Carte judiciaire</a> / {v.ville}</nav>
+ <header class="geo-header"><p>{v.region} · {ts.map(t=>t.departement).join(' / ')}</p><h1>{titre}</h1><p>Ville-siège habituelle selon notre répertoire d’orientation. Le siège effectif, la juridiction compétente et les dates doivent être confirmés pour chaque affaire.</p></header>
+ <section><h2>Territoire</h2><ul>{ts.map(t=><li>{t.code} · {t.departement}</li>)}</ul><p>Ne pas confondre le lieu des faits et celui de l’audience.</p><a href={ANNUAIRE_OFFICIEL}>Consulter l’annuaire officiel du ministère de la Justice</a></section>
+ {v.jalons.length>0&&<section><h2>Affaires documentées par la rédaction</h2>{v.jalons.map(j=><article><h3>{j.juridiction}</h3><p>{j.type}</p><p>{j.adresse} (adresse issue du répertoire éditorial, à reconfirmer)</p><a href={j.urlInstitutionnelle}>Source institutionnelle</a><p><a href={'/dossiers/'+j.dossier+'/'}>{DOSSIERS.find(d=>d.slug===j.dossier)?.titre}</a></p></article>)}</section>}
+ <section><h2>Assister à une audience</h2><p>Consultez les informations pratiques et le calendrier documenté. La tenue d’une audience et son accès au public peuvent évoluer.</p><ul><li><a href="/agenda/">Agenda judiciaire</a></li><li><a href="/assister/">Préparer sa venue aux assises</a></li><li><a href="/carte/">Revenir à la carte nationale</a></li></ul></section>
+ <p class="geo-note">Intime Conviction est un média indépendant et ne représente pas les juridictions.</p>
+</Base>
+<style>
+.geo-header{margin:2rem 0;padding:clamp(1.2rem,4vw,3rem);background:#f5f2ed;border-top:3px solid var(--action);color:#202427}.geo-header h1{font:650 clamp(2.5rem,6vw,5rem)/1.08 var(--serif);margin:.6rem 0}.geo-header p,.geo-note{font:450 .9rem/1.6 var(--sans)}section{max-width:85ch;margin:2rem 0;border-top:1px solid #d7d1cb;padding-top:1rem}a{text-decoration:underline}article{padding:1rem 0;border-bottom:1px solid #d7d1cb}
+</style>
