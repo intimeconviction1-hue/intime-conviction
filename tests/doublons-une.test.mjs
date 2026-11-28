@@ -31,3 +31,22 @@ test('identifie le sujet de l’article Mediapart même sans nom de la victime d
   const references = [{titre:sujet,source:'Mediapart'}, {titre:'Un autre procès en appel devant les assises',source:'Autre média'}];
   assert.deepEqual(presseSansRedite(references,[article]),references.slice(1));
 });
+
+// Régression : un verdict couvert sort de la revue, pas les dossiers indépendants.
+test('la revue de presse retire les verdicts de Daubon, Sarah Sadani et du pasteur de Reims après publication',()=>{
+  const references = [
+    {titre:'Cour d’assises de Pau : 30 ans de réclusion confirmés en appel pour l’empoisonnement d’Enea'},
+    {titre:'Victime collatérale d’une fusillade à Marseille : trois jeunes écopent de 20 ans de réclusion'},
+    {titre:'Un prédicateur évangélique condamné à 12 ans de réclusion pour les viols de trois femmes'},
+    {titre:'À Pau, une autre affaire de violences devant la cour'},
+    {titre:'À Reims, un autre procès pour viol'},
+    {titre:'À Marseille, un procès distinct après une fusillade'}
+  ];
+  const publications = [
+    {data:{sujetsPresse:['empoisonnement d Enéa']}},
+    {data:{sujetsPresse:['Victime collatérale d une fusillade à Marseille trois jeunes écopent de 20 ans de réclusion']}},
+    {data:{sujetsPresse:['prédicateur évangélique condamné à 12 ans de réclusion pour les viols de trois femmes']}}
+  ];
+  assert.deepEqual(presseSansRedite(references,publications),references.slice(3));
+  assert.deepEqual(presseSansRedite(references,publications.slice(0,2)),references.slice(2));
+});
