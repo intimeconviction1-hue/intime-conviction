@@ -41,3 +41,26 @@ test('les autres parcours restent accessibles sans changer les URL',()=>{
   assert.match(layout,/href:'\/archives\/'/);
   assert.match(layout,/href:'\/revue-de-presse\/'/);
 });
+
+test('Dossiers ne répète pas son lien principal et sépare analyse, chronologie et carte',()=>{
+  const dossiers=categorie('Dossiers');
+  assert.equal((dossiers.match(/href:'\/dossiers\/'/g)||[]).length,1);
+  assert.match(dossiers,/titre:'Analyses des affaires',href:'\/rubrique\/l-expose\/'/);
+  assert.match(dossiers,/titre:'Chronologie des affaires',href:'\/chronologie\/'/);
+  assert.match(dossiers,/titre:'Carte des affaires',href:'\/carte\/'/);
+  assert.doesNotMatch(dossiers,/titre:'Archives judiciaires'/);
+});
+
+test('Comprendre distingue explications, débats et jurisprudence',()=>{
+  const comprendre=categorie('Comprendre');
+  assert.match(comprendre,/titre:'Les acteurs du procès',href:'\/rubrique\/le-banc-des-jures\/'/);
+  assert.match(comprendre,/titre:'Débats sur la justice',href:'\/rubrique\/delibere\/'/);
+  assert.match(comprendre,/titre:'Jurisprudence',href:'\/jurisprudence\/'/);
+});
+
+test('Culture est cohérent avec le titre de la page des vidéos',()=>{
+  const videos=readFileSync(fileURLToPath(new URL('../src/pages/culture/videos.astro',import.meta.url)),'utf8');
+  assert.match(header,/href="\/rubrique\/le-greffe\/">Livres, films et histoire/);
+  assert.match(header,/href="\/culture\/videos\/">Documentaires et vidéos/);
+  assert.match(videos,/<h1>Documentaires et vidéos<\/h1>/);
+});
