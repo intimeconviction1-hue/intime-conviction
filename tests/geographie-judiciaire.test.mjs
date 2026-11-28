@@ -3,8 +3,11 @@ import assert from 'node:assert/strict';
 import {IMPLANTATIONS,TERRITOIRES,validerGeographie,associationsVerifiees} from '../src/lib/geographie-judiciaire.mjs';
 test('couverture des 101 départements et 18 régions',()=>{
  assert.equal(validerGeographie(),true);
- assert.equal(new Set(TERRITOIRES.map(t=>t.region)).size,18);
- assert.equal(IMPLANTATIONS.length,100);
+ assert.equal(new Set(TERRITOIRES.filter(t=>!t.collectivite).map(t=>t.region)).size,18);
+ assert.equal(IMPLANTATIONS.length,104);
+ assert.equal(TERRITOIRES.filter(t=>!t.collectivite).length,101);
+ assert.equal(TERRITOIRES.filter(t=>t.collectivite).length,4);
+ assert.deepEqual(TERRITOIRES.filter(t=>t.collectivite).map(t=>t.code),['975','986','987','988']);
 });
 test('Vesoul est une implantation unique pour deux départements',()=>{
  assert.deepEqual(IMPLANTATIONS.find(i=>i.id==='vesoul').departements,['70','90']);
