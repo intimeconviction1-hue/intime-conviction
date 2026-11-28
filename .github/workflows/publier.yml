@@ -37,6 +37,10 @@ jobs:
           ssh-key: ${{ secrets.ARTICLES_DEPLOY_KEY }}
           path: articles-prives
 
+      - name: Identifier la version éditoriale publiée
+        run: |
+          printf '### Version du fonds éditorial\n\n`%s`\n' "$(git -C articles-prives rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+
       - uses: actions/setup-node@v7
         with:
           node-version: 24
