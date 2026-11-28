@@ -18,7 +18,7 @@ function categorie(nom){
 test('la revue de presse appartient à Actualité et non au bandeau autonome',()=>{
   const actualite=categorie('Actualité');
   assert.match(actualite,/titre:'Revue de presse',href:'\/revue-de-presse\/'/);
-  assert.equal((menu.match(/href:'\/revue-de-presse\/'/g)||[]).length,1);
+  assert.equal((menu.match(/href:\s*'\/revue-de-presse\/'/g)||[]).length,1);
   assert.doesNotMatch(header,/class="navigation-presse-menu"/);
   assert.doesNotMatch(header,/class="navigation-entree"[^>]*>\s*<a href="\/revue-de-presse\/" /);
 });
@@ -34,17 +34,17 @@ test('Agenda regroupe sessions, procès au rôle, rôles, juridictions et visite
 });
 
 test('les autres parcours restent accessibles sans changer les URL',()=>{
-  assert.match(categorie('Dossiers'),/href:'\/dossiers\/'/);
-  assert.match(categorie('Comprendre'),/href:'\/comprendre\/'/);
+  assert.match(categorie('Dossiers'),/href:\s*'\/dossiers\/'/);
+  assert.match(categorie('Comprendre'),/href:\s*'\/comprendre\/'/);
   assert.match(header,/href="\/rubrique\/le-greffe\/"/);
   assert.match(header,/href="\/agenda\/"/);
-  assert.match(layout,/href:'\/archives\/'/);
-  assert.match(layout,/href:'\/revue-de-presse\/'/);
+  assert.match(layout,/href:\s*'\/archives\/'/);
+  assert.match(layout,/href:\s*'\/revue-de-presse\/'/);
 });
 
 test('Dossiers ne répète pas son lien principal et sépare analyse, chronologie et carte',()=>{
   const dossiers=categorie('Dossiers');
-  assert.equal((dossiers.match(/href:'\/dossiers\/'/g)||[]).length,1);
+  assert.equal((dossiers.match(/href:\s*'\/dossiers\/'/g)||[]).length,1);
   assert.match(dossiers,/titre:'Analyses des affaires',href:'\/rubrique\/l-expose\/'/);
   assert.match(dossiers,/titre:'Chronologie des affaires',href:'\/chronologie\/'/);
   assert.match(dossiers,/titre:'Carte des affaires',href:'\/carte\/'/);
