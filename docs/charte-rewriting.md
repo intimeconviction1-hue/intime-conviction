@@ -28,3 +28,7 @@ Les chroniques d’Intime Conviction s’adressent au grand public. Elles privil
 - Dans les titres, préciser la portée exacte des condamnations et ne pas présenter comme établi un détail encore contesté, même si le verdict est connu.
 
 - Pour les chroniques de procédure, expliquer les conséquences concrètes du recours ou du désistement sur les audiences et les personnes concernées, sans anticiper une décision de culpabilité.
+
+## Bilan du 28 novembre 2026
+
+Première passe de relecture achevée sur les 72 fichiers du corpus rédactionnel 2026 recensés (69 initiaux et 3 nouveaux). Les archives historiques restent hors périmètre. Les fiches pédagogiques privilégient une question concrète et une réponse juridique sourcée. La relecture ne dispense pas de vérifier les nouveaux développements des affaires, d’enrichir les textes courts ni de contrôler la publication effective. Le registre détaillé demeure dans le dépôt éditorial privé.
