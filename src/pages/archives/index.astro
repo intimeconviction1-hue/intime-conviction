@@ -29,20 +29,30 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
     <div>
     <p class="etiquette">INTIME CONVICTION</p>
     <h1>ARCHIVES<br /><span>DU JOURNAL.</span></h1>
-    <p class="sous-titre">Retrouvez les articles et les archives de presse, année par année.</p>
+    <p class="sous-titre">Retrouvez les anciens procès racontés par le journal et les références de presse, par année ou par affaire.</p>
     </div>
     <VisuelAssises image={photoAssises} alt="Plaidoirie de Moro-Giafferi au procès Landru, assises de Versailles, novembre 1921" source="https://gallica.bnf.fr/ark:/12148/btv1b530737165" credit="Agence Rol / BnF, Gallica" prioritaire />
   </header>
 
+  <form class="recherche-archives" role="search" method="get" action="/recherche/">
+    <div>
+      <label for="recherche-archives-q">Retrouver un procès ou une affaire</label>
+      <p>Un nom, une ville, une juridiction : recherchez dans les articles, les dossiers et les références de presse.</p>
+    </div>
+    <div class="recherche-archives-champs">
+      <input id="recherche-archives-q" type="search" name="q" placeholder="Nom, affaire ou ville" autocomplete="off" enterkeyhint="search" />
+      <button type="submit">Rechercher</button>
+    </div>
+  </form>
   <div class="fonds-legende" aria-label="Comprendre les deux collections">
     <section class="fonds-original">
       <span class="fonds-chiffre">{totalArticles}</span>
-      <h2>ARTICLES DU JOURNAL</h2>
+      <h2>Les articles du journal</h2>
     </section>
     <section class="fonds-presse">
       <span class="fonds-chiffre">{totalPresse}</span>
-      <h2>REVUE DE PRESSE</h2>
-      <a href="/archives/presse/">PARCOURIR TOUTE LA REVUE DE PRESSE <span aria-hidden="true">→</span></a>
+      <h2>Les archives de presse</h2>
+      <a href="/archives/presse/">PARCOURIR LES ARCHIVES DE PRESSE <span aria-hidden="true">→</span></a>
     </section>
   </div>
 
@@ -139,4 +149,13 @@ const totalPresse = veille.articles.length.toLocaleString('fr-FR');
 
   .ouverture-illustree{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);align-items:center;gap:clamp(1rem,3vw,2.5rem)}
   @media(max-width:52rem){.ouverture-illustree{grid-template-columns:minmax(0,1fr)}}
+
+.recherche-archives{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:1rem 2rem;align-items:end;margin:1.6rem 0 2rem;padding:clamp(1rem,2.4vw,1.8rem);background:#f0eee9;border-top:3px solid #a12c39}
+.recherche-archives label{display:block;font:650 clamp(1.3rem,2.6vw,1.9rem)/1.2 var(--serif);color:#202529}
+.recherche-archives p{font:450 .87rem/1.6 var(--sans);margin:.5rem 0 0;color:#505457}
+.recherche-archives-champs{display:flex;gap:.45rem;min-width:0}
+.recherche-archives input{flex:1;min-width:0;padding:.75rem .85rem;background:#fff;border:1px solid #99918a;min-height:48px;font:500 .9rem var(--sans)}
+.recherche-archives button{background:#a12c39;color:#fff;border:0;padding:.75rem 1rem;min-height:48px;font:700 .83rem var(--sans);cursor:pointer}
+.recherche-archives button:hover,.recherche-archives button:focus-visible{background:#842631}
+@media(max-width:46rem){.recherche-archives{grid-template-columns:1fr}.recherche-archives-champs{flex-wrap:wrap}.recherche-archives input{flex-basis:100%}.recherche-archives button{width:100%}}
 </style>

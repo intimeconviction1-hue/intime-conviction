@@ -64,3 +64,15 @@ test('Culture est cohérent avec le titre de la page des vidéos',()=>{
   assert.match(header,/href="\/culture\/videos\/">Documentaires et vidéos/);
   assert.match(videos,/<h1>Documentaires et vidéos<\/h1>/);
 });
+
+test('Archives regroupe les années, la presse ancienne et la recherche sans les déplacer',()=>{
+  const archives=categorie('Archives');
+  assert.match(archives,/href:\s*'\/archives\/'/);
+  assert.match(archives,/titre:'Archives de presse',href:'\/archives\/presse\/'/);
+  assert.match(archives,/titre:'Rechercher une affaire',href:'\/recherche\/'/);
+  const archivesIndex=readFileSync(fileURLToPath(new URL('../src/pages/archives/index.astro',import.meta.url)),'utf8');
+  assert.match(archivesIndex,/action="\/recherche\/"/);
+  assert.match(archivesIndex,/name="q"/);
+  assert.match(archivesIndex,/href={`\/archives\/\$\{an\}\/`}/);
+  assert.match(archivesIndex,/href={`\/archives\/presse\/\$\{an\}\/`}/);
+});
