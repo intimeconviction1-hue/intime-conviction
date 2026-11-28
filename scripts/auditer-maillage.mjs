@@ -20,6 +20,7 @@ export function mesurerGraphe(pages, ressources = new Set()) {
   const graphe = new Map([...routes].map(route => [route, new Set()]));
   const liensCasses = [];
   const liensNonIndexables = [];
+  const nonIndexablesParCible = new Map();
   const liensVersSoi = [];
   let liensInternes = 0;
   let recommandations = 0;
@@ -62,7 +63,14 @@ export function mesurerGraphe(pages, ressources = new Set()) {
         continue;
       }
       if (!routes.has(cible)) {
-        if (toutesRoutes.has(cible)) liensNonIndexables.push({ route, href: raw, cible });
+        if (toutesRoutes.has(cible)) {
+          liensNonIndexables.push({ route, href: raw, cible });
+          let entree = nonIndexablesParCible.get(cible);
+          if (!entree) entree = { cible, occurrences: 0, sources: new Set(), echantillonHref: raw };
+          entree.occurrences++;
+          entree.sources.add(route);
+          nonIndexablesParCible.set(cible, entree);
+        }
         continue;
       }
       graphe.get(route).add(cible);
@@ -106,6 +114,7 @@ export function mesurerGraphe(pages, ressources = new Set()) {
     echantillonLiensCasses: liensCasses.slice(0, 100),
     liensVersPagesNonIndexables: liensNonIndexables.length,
     echantillonLiensVersPagesNonIndexables: liensNonIndexables.slice(0, 100),
+    destinationsNonIndexablesUniques: [...nonIndexablesParCible.values()].map(entree => ({ cible: entree.cible, occurrences: entree.occurrences, pagesSources: entree.sources.size, echantillonHref: entree.echantillonHref, echantillonPagesSources: [...entree.sources].slice(0, 8) })).sort((a, b) => b.occurrences - a.occurrences || a.cible.localeCompare(b.cible, 'fr')),
     liensVersSoi: liensVersSoi.length,
     echantillonLiensVersSoi: liensVersSoi.slice(0, 100),
     pagesOrphelines: orphelines.length,
