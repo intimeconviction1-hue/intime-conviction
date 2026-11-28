@@ -129,7 +129,7 @@ export function mesurerGraphe(pages, ressources = new Set()) {
     echantillonLiensCasses: liensCasses.slice(0, 100).map(lien => ({ ...lien, classe: 'erreur technique', raison: 'La destination n’existe ni dans les pages ni dans les ressources générées.' })),
     liensVersPagesNonIndexables: liensNonIndexables.length,
     echantillonLiensVersPagesNonIndexables: liensNonIndexables.slice(0, 100),
-    destinationsNonIndexablesUniques: [...nonIndexablesParCible.values()].map(entree => ({ cible: entree.cible, occurrences: entree.occurrences, pagesSources: entree.sources.size, echantillonHref: entree.echantillonHref, echantillonPagesSources: [...entree.sources].slice(0, 8) })).sort((a, b) => b.occurrences - a.occurrences || a.cible.localeCompare(b.cible, 'fr')),
+    destinationsNonIndexablesUniques: [...nonIndexablesParCible.values()].map(entree => ({ cible: entree.cible, occurrences: entree.occurrences, pagesSources: entree.sources.size, echantillonHref: entree.echantillonHref, echantillonPagesSources: [...entree.sources].slice(0, 8), ...classerDestinationNonIndexable(entree.cible, redirections) })).sort((a, b) => b.occurrences - a.occurrences || a.cible.localeCompare(b.cible, 'fr')),
     liensVersSoi: liensVersSoi.length,
     echantillonLiensVersSoi: liensVersSoi.slice(0, 100),
     pagesOrphelines: orphelines.length,
