@@ -10,6 +10,7 @@ on:
       - 'src/lib/articles.mjs'
       - 'src/lib/photos-articles.mjs'
       - 'src/pages/index.astro'
+      - 'src/layouts/Base.astro'
       - 'src/pages/rubrique/[rubrique]/[...page].astro'
       - 'src/pages/archives/presse/[annee]/[...page].astro'
       - 'src/pages/dossiers/[slug]/[...page].astro'
