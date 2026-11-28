@@ -107,32 +107,48 @@ try {
     if(c.nom.startsWith('recherche-')){
       const requete=page.locator('#requete');
       await requete.waitFor();
-      await page.waitForFunction(()=>document.querySelector('#compteur')?.textContent?.includes('article'),{timeout:25000});
+      await page.waitForFunction(()=>document.querySelector('#compteur')?.textContent?.includes('article'),null,{timeout:25000});
       if(await requete.inputValue()!=='Jubillar')throw Error('Requête préremplie perdue.');
       const resultat=page.locator('#resultats > li');
-      if(await resultat.count()===0)throw Error('Aucun article pour la requête Jubillar.');
+      if(await page.locator('#dossiers-recherche:not([hidden]) a[href="/dossiers/affaire-jubillar/"]').count()!==1)
+        throw Error('Fiche dossier Jubillar absente.');
+      // Le dossier peut exister sans article propre de la rédaction. Ne pas en inventer.
+      const indexReponse=await page.request.get(new URL('/index-recherche.json',base).href);
+      if(!indexReponse.ok())throw Error('Index du journal inaccessible.');
+      const entrees=await indexReponse.json();
+      const ancien=entrees.find(a=>a.annee<=2023 && a.annee>=2016 && a.titre?.length>=20 &&
+        a.titre.length<100 && typeof a.chemin==='string' && a.image);
+      if(!ancien)throw Error('Pas de référence historique pour tester la recherche.');
+      await requete.fill(ancien.titre);
+      await page.waitForFunction(q=>new URL(location.href).searchParams.get('q')===q,ancien.titre,{timeout:15000});
+      await page.waitForFunction(chemin=>[...document.querySelectorAll('#resultats h3 a')].some(a=>a.getAttribute('href')===chemin),ancien.chemin,{timeout:25000});
       const chemins=await resultat.locator('h3 a').evaluateAll(liens=>liens.map(a=>a.getAttribute('href')));
       if(new Set(chemins).size!==chemins.length)throw Error('Résultats du journal dupliqués.');
-      const photos=resultat.locator('img.photo-resultat');
-      if(await photos.count()===0)throw Error('Aucune illustration visible dans les résultats.');
-      await photos.first().scrollIntoViewIfNeeded();
-      await page.waitForFunction(()=>[...document.querySelectorAll('#resultats img.photo-resultat')].some(i=>i.complete&&i.naturalWidth>0),{timeout:20000});
-      if(await resultat.first().locator('.meta').count()!==1)throw Error('Date et rubrique absentes du premier résultat.');
-      if(await page.locator('#dossiers-recherche:not([hidden]) a[href="/dossiers/affaire-jubillar/"]').count()!==1)throw Error('Fiche dossier Jubillar absente.');
-      // Contrôle des filtres depuis la même recherche, sans redirection vers une autre page.
-      const rubrique=page.locator('#rubrique');
+      const article=page.locator('#resultats > li').filter({has:page.locator('h3 a[href="'+ancien.chemin+'"]')}).first();
+      if(await article.locator('.meta').count()!==1)throw Error('Date et rubrique absentes du résultat historique.');
+      const photo=article.locator('img.photo-resultat');
+      if(await photo.count()!==1)throw Error('Photographie non présentée pour un article qui possède une image.');
+      await photo.scrollIntoViewIfNeeded();
+      await page.waitForFunction(chemin=>{
+        const lien=[...document.querySelectorAll('#resultats h3 a')].find(a=>a.getAttribute('href')===chemin);
+        const img=lien?.closest('li')?.querySelector('img.photo-resultat');
+        return img?.complete && img.naturalWidth>0;
+      },ancien.chemin,{timeout:20000});
       const annee=page.locator('#annee');
-      await rubrique.selectOption('cours-du-jour');
-      await page.waitForFunction(()=>new URL(location.href).searchParams.get('rubrique')==='cours-du-jour');
-      if(await page.locator('#dossiers-recherche:not([hidden])').count())throw Error('Dossier hors filtre encore affiché.');
-      const resultatsFiltres=await resultat.count();
-      await annee.selectOption('2025');
-      await page.waitForFunction(()=>new URL(location.href).searchParams.get('annee')==='2025');
+      await annee.selectOption(String(ancien.annee));
+      await page.waitForFunction(y=>new URL(location.href).searchParams.get('annee')===y,String(ancien.annee));
+      await page.waitForFunction(chemin=>[...document.querySelectorAll('#resultats h3 a')].some(a=>a.getAttribute('href')===chemin),ancien.chemin,{timeout:15000});
       const metas=await resultat.locator('.meta').allTextContents();
-      if(metas.some(t=>!t.includes('2025')))throw Error('Année sélectionnée non respectée.');
+      if(metas.some(t=>!t.includes(String(ancien.annee))))throw Error('Année sélectionnée non respectée.');
+      const rubrique=page.locator('#rubrique');
+      await rubrique.selectOption(ancien.rubrique);
+      await page.waitForFunction(r=>new URL(location.href).searchParams.get('rubrique')===r,ancien.rubrique);
+      const urls=await resultat.locator('h3 a').evaluateAll(liens=>liens.map(a=>a.getAttribute('href')));
+      const autorises=new Set(entrees.filter(x=>x.annee===ancien.annee && x.rubrique===ancien.rubrique).map(x=>x.chemin));
+      if(urls.some(u=>!autorises.has(u)))throw Error('Filtres année et rubrique non respectés.');
       await page.locator('#effacer').click();
       await page.waitForFunction(()=>document.querySelector('#requete')?.value===''&&document.querySelector('#annee')?.value===''&&document.querySelector('#rubrique')?.value==='');
-      console.log('Recherche validée : '+c.nom+', '+chemins.length+' résultats Jubillar, '+resultatsFiltres+' après filtre rubrique, photos et dates contrôlées');
+      console.log('Recherche validée : '+c.nom+', dossier Jubillar, archive '+ancien.annee+', illustration, filtres et URLs uniques');
     }
     await page.screenshot({path:`${dossier}/${c.nom}.png`,fullPage:true});
     const okHttp=response?.ok()??false;
