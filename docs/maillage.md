@@ -25,19 +25,19 @@ recommandations sont calculés sur les 3 503 articles du fonds.
 | Mesure | Avant | Après |
 | --- | ---: | ---: |
 | Liens internes cassés | 77 occurrences sur 74 cibles / 47 pages | 0 |
-| Liens vers des pages noindex | 8 104 occurrences, non classées individuellement dans le rapport initial | 8 104 occurrences, 5 destinations uniques, 5 exclusions documentées, 0 à vérifier |
+| Liens vers des pages noindex | 8 104 occurrences, non classées individuellement dans le rapport initial | 8 114 occurrences, 5 destinations uniques, 5 exclusions documentées, 0 à vérifier |
 | Profondeur moyenne | 5,25 clics | 2,90 clics |
 | Profondeur médiane | 3 clics | 3 clics |
 | Profondeur maximale | 76 clics | 3 clics |
 | Pages au-delà de 3 clics | 359 | 0 |
 | Pages orphelines | 1 (/feed/) | 0 |
-| Articles avec recommandations | 126 / 3 503 (3,6 %) | 1 723 / 3 503 (49,2 %) |
-| Liens de recommandation | 646 | 9 938 |
+| Articles avec recommandations | 126 / 3 503 (3,6 %) | 1 731 / 3 503 (49,4 %) |
+| Liens de recommandation | 646 | 10 023 |
 | Images locales cassées | 0 | 0 |
 | Canoniques non conformes | 0 | 0 |
 
-Le rapport final recense 3 951 pages indexables, 279 053 liens internes,
-20 476 images locales et les cinq destinations noindex suivantes : les pages
+Le rapport final recense 3 956 pages indexables, 279 516 liens internes,
+20 576 images locales et les cinq destinations noindex suivantes : les pages
 utilitaires abonnement et connexion, les deux moteurs de recherche internes,
 et une notice d’archive en attente de vérification juridique. Aucune n’a été
 rendue indexable.
