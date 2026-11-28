@@ -20,3 +20,5 @@ Les chroniques d’Intime Conviction s’adressent au grand public. Elles privil
 - Regrouper en fin d’article les références des actualisations successives, sans supprimer leurs liens ni leurs dates.
 
 - Préférer une ouverture incarnée par une déposition, une pièce ou un fait concret attesté. Conserver en fin de texte les notes de vérification relatives aux divergences entre sources.
+
+- Harmoniser les chroniques portant sur une même affaire : vérifier la cohérence des étapes procédurales, tout en conservant un angle propre à chaque article.
