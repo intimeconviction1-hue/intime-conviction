@@ -105,7 +105,7 @@ export const photosArticles = {
   '/carine-charpentier-aisne-leroux-verdict-perles/11/2026/': { ...illustrationNeutre, lieu: 'Illustration judiciaire générique · Ne représente pas le procès de Laon' },
   '/eleonore-douai-verdict-neuville-saint-remy/11/2026/': { ...illustrationNeutre, image: croquisAudienceSarah, lieu: 'Croquis judiciaire d’illustration · Ne représente pas l’audience de Douai', source: croquisAudienceSarah.src, lienLicence: croquisAudienceSarah.src },
   '/grenoble-henry-duffourd-tentative-meurtre-quatre-condamnations/11/2026/': { ...illustrationNeutre, lieu: 'Illustration judiciaire générique · Ne représente pas le procès de Grenoble' },
-  '/roubaix-square-bousquet-tir-mehdi-proces-douai/11/2026/': { image: { src: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Douai_-_Palais_de_justice_-_1.jpg', width: 1824, height: 1208 }, lieu: 'Palais de justice de Douai · Photographie d’archives, hors audience', auteur: 'Peter Potrowl', source: 'https://commons.wikimedia.org/wiki/File:Douai_-_Palais_de_justice_-_1.jpg', licence: 'CC BY-SA 4.0', lienLicence: 'https://creativecommons.org/licenses/by-sa/4.0/' },
+  '/roubaix-square-bousquet-tir-mehdi-proces-douai/11/2026/': { ...illustrationNeutre, image: croquisCodeRosiers, source: croquisCodeRosiers.src, lienLicence: croquisCodeRosiers.src, lieu: 'Illustration judiciaire générique · Ne représente pas le procès de Douai' },
   '/samia-mimoun-maurepas-legitime-defense-verdict/11/2026/': {
     image: photoCodePenal1810,
     lieu: 'Page de titre du Code pénal de 1810, édition de Bruxelles · Illustration d’archives',
