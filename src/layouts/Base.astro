@@ -123,6 +123,7 @@ const reseaux = {
   x: 'https://x.com/IntimeConv',
   instagram: 'https://www.instagram.com/inti.meconviction/',
   facebook: 'https://www.facebook.com/profile.php?id=100062932463597',
+  linkedin: 'https://www.linkedin.com/company/147034529/',
 };
 const navigation = [
   { titre: 'Actualité', href: '/rubrique/cours-du-jour/#articles-redaction', liens: [
@@ -283,6 +284,7 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
               <a href={reseaux.x} aria-label="X (Twitter)" title="X"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-7.5L5.4 22H2.3l7.3-8.4L1.8 2h6.5l4.4 6.8L18.9 2ZM17.8 20h1.7L7.3 4H5.5l12.3 16Z"/></svg></a>
               <a href={reseaux.instagram} aria-label="Instagram" title="Instagram"><svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
               <a href={reseaux.facebook} aria-label="Facebook" title="Facebook"><svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M14 22v-9h3l.5-3H14V8c0-.9.3-1.5 1.6-1.5H18V3.8c-.4-.1-1.6-.3-3-.3-3 0-5 1.8-5 5V10H7v3h3v9z"/></svg></a>
+              <a href={reseaux.linkedin} aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M5.2 8.5H1.7V22h3.5V8.5ZM3.45 2a2.03 2.03 0 1 0 0 4.06 2.03 2.03 0 0 0 0-4.06ZM22.3 13.6c0-3.6-1.9-5.4-4.5-5.4-2.1 0-3.1 1.2-3.6 2V8.5h-3.5V22h3.5v-7.5c0-2 1-3.1 2.5-3.1s2.1 1.1 2.1 3.1V22h3.5v-8.4Z"/></svg></a>
             </nav>
             </div>
         <div class="liens-entete">
@@ -318,6 +320,7 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
               <a href={reseaux.x} aria-label="X (Twitter)" title="X"><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-7.5L5.4 22H2.3l7.3-8.4L1.8 2h6.5l4.4 6.8L18.9 2ZM17.8 20h1.7L7.3 4H5.5l12.3 16Z"/></svg></a>
               <a href={reseaux.instagram} aria-label="Instagram" title="Instagram"><svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
               <a href={reseaux.facebook} aria-label="Facebook" title="Facebook"><svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M14 22v-9h3l.5-3H14V8c0-.9.3-1.5 1.6-1.5H18V3.8c-.4-.1-1.6-.3-3-.3-3 0-5 1.8-5 5V10H7v3h3v9z"/></svg></a>
+              <a href={reseaux.linkedin} aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M5.2 8.5H1.7V22h3.5V8.5ZM3.45 2a2.03 2.03 0 1 0 0 4.06 2.03 2.03 0 0 0 0-4.06ZM22.3 13.6c0-3.6-1.9-5.4-4.5-5.4-2.1 0-3.1 1.2-3.6 2V8.5h-3.5V22h3.5v-7.5c0-2 1-3.1 2.5-3.1s2.1 1.1 2.1 3.1V22h3.5v-8.4Z"/></svg></a>
             </nav>
           </div>
         </div>
@@ -389,6 +392,9 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
           </a>
           <a class="pied-reseau" href={reseaux.facebook} aria-label="Intime Conviction sur Facebook">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M14 22v-9h3l.5-3H14V8c0-.9.3-1.5 1.6-1.5H18V3.8c-.4-.1-1.6-.3-3-.3-3 0-5 1.8-5 5V10H7v3h3v9z"/></svg>
+          </a>
+          <a class="pied-reseau" href={reseaux.linkedin} aria-label="Intime Conviction sur LinkedIn" title="LinkedIn">
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M5.2 8.5H1.7V22h3.5V8.5ZM3.45 2a2.03 2.03 0 1 0 0 4.06 2.03 2.03 0 0 0 0-4.06ZM22.3 13.6c0-3.6-1.9-5.4-4.5-5.4-2.1 0-3.1 1.2-3.6 2V8.5h-3.5V22h3.5v-7.5c0-2 1-3.1 2.5-3.1s2.1 1.1 2.1 3.1V22h3.5v-8.4Z"/></svg>
           </a>
           </nav><a href="#contenu">Retour au contenu <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
       </div>
