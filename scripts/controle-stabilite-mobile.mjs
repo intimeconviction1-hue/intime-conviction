@@ -81,6 +81,7 @@ try {
         ...window.__icStabilite,
       }));
       resultats.push({ route, ...mesure });
+      console.log('Mesure mobile ' + route + ': ' + JSON.stringify({ cls: Number(mesure.cls.toFixed(3)), lcp: mesure.lcp, interactionMaxMs: mesure.interactionMaxMs }));
       if (mesure.largeurDocument > 377) erreurs.push(route + ': débordement horizontal à 375 px (' + mesure.largeurDocument + ' px)');
       if (mesure.cls > 0.10) erreurs.push(route + ': CLS ' + mesure.cls.toFixed(3) + ' supérieur à 0,10');
       if (mesure.lcp === null || mesure.lcp > 2500) erreurs.push(route + ': LCP ' + (mesure.lcp ?? 'non mesuré') + ' ms, cible 2 500 ms');
