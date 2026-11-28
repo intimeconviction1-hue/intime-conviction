@@ -13,3 +13,7 @@ Pour modifier une illustration, changer uniquement l'entrée correspondante dans
 ## Manchette de l'accueil
 
 La photographie `photos_assises-img-5317-3964923-caebef1a3.webp` est réservée à l'identité visuelle du journal (photographie d'archives, trois magistrats). Elle est copiée uniquement dans l'artefact de publication sous `illustrations-articles/manchette-accueil.webp`, sans exposer la photothèque ni committer le fichier dans le dépôt public. Ne pas la réattribuer aux articles ou aux cartes de presse. En l'absence de dépôt privé, le fronton existant sert de repli visuel.
+
+## Priorité documentaire
+
+Lorsqu’une photographie du palais de justice concerné est déjà disponible, localisée et créditée dans la table du site, ne pas la remplacer par une photographie générique d’une autre juridiction. Les vues génériques ne doivent jamais être présentées comme des photographies de l’affaire ou de la juridiction concernée. Les attributions provisoires établies sur l’inventaire nécessitent un contrôle visuel avant validation définitive. Les images du site peuvent provenir de la photothèque privée, de la table des photographies créditées ou des illustrations neutres : compter les seules attributions privées ne mesure pas la couverture publique.
