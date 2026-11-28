@@ -11,7 +11,7 @@ def num(s):
     return float(s.strip().replace(',','.'))
 def dep(code):
     return code[:3] if code.startswith(('97','98')) else code[:2].upper()
-bounds={'971':(-62,-60,15,17),'972':(-62,-60,14,16),'973':(-55,-51,2,6),'974':(55,56,-22,-20),'976':(44,46,-14,-12)}
+bounds={'971':(-62,-60,15,17),'972':(-62,-60,14,16),'973':(-55,-51,2,6),'974':(55,56,-22,-20),'976':(44,46,-14,-12),'975':(-57,-55,46,48),'986':(-179,-175,-15,-12),'987':(-151,-148,-19,-16),'988':(165,168,-24,-20)}
 required={'TYPE','CODE_INSEE','CODE_ORIG','NUM','NOM_ETABLISSEMENT','NUMÉRO_ET_LIBELLÉ_VOIE','LIEU_DIT','CODE_POSTAL','LIGNE_D_ACHEMINEMENT','PAYS_OU_DÉNOMINATION_TOM_COM','COORDONNÉES_X','COORDONNÉES_Y'}
 records=[]; rejected=[]; seen=set(); candidates=0
 with src.open(encoding='utf-8-sig',newline='') as f:
@@ -26,7 +26,7 @@ with src.open(encoding='utf-8-sig',newline='') as f:
         city=row['LIGNE_D_ACHEMINEMENT'].strip()
         city=re.sub(r'\bCEDEX\b.*$','',city,flags=re.I).strip()
         city=re.sub(r'\s+\d+$','',city).strip()
-        aliases={'62765':('stomer','saintomer'),'22278':('stbrieuc','saintbrieuc'),'42218':('stetienne','saintetienne'),'91228':('evry','evrycourcouronnes'),'97411':('stdenis','saintdenis')}
+        aliases={'62765':('stomer','saintomer'),'22278':('stbrieuc','saintbrieuc'),'42218':('stetienne','saintetienne'),'91228':('evry','evrycourcouronnes'),'97411':('stdenis','saintdenis'),'97502':('stpierreetmiquelon','saintpierre')}
         city_key=norm(city)
         alias=aliases.get(code)
         if alias and city_key==alias[0]: city_key=alias[1]
@@ -42,7 +42,7 @@ with src.open(encoding='utf-8-sig',newline='') as f:
             street=row['NUMÉRO_ET_LIBELLÉ_VOIE'].strip()
             postal=row['CODE_POSTAL'].strip()
             if not street or not re.fullmatch(r'\d{5}',postal) or not name: raise ValueError('adresse ou nom incomplet')
-            record={'idSRJ':key,'implantation':matches[0]['implantation'],'codeINSEE':code,'nom':name,'nature':'Cour d’assises' if typ=='CASS' else 'Cour criminelle départementale','typeSRJ':typ,'adresse':', '.join(x for x in [street,row['LIEU_DIT'].strip(),postal+' '+row['LIGNE_D_ACHEMINEMENT'].strip()] if x),'lat':lat,'lon':lon,'precision':'coordonnées du référentiel institutionnel','source':source}
+            record={'idSRJ':key,'implantation':matches[0]['implantation'],'codeINSEE':code,'nom':name,'nature':'Tribunal criminel' if code=='97502' and typ=='CASS' else ('Cour d’assises' if typ=='CASS' else 'Cour criminelle départementale'),'typeSRJ':typ,'adresse':', '.join(x for x in [street,row['LIEU_DIT'].strip(),postal+' '+row['LIGNE_D_ACHEMINEMENT'].strip()] if x),'lat':lat,'lon':lon,'precision':'coordonnées du référentiel institutionnel','source':source}
             records.append(record);seen.add(key)
         except (ValueError,TypeError) as e:
             rejected.append({'idSRJ':key,'type':typ,'codeINSEE':code,'nom':name,'ville':city,'x':row['COORDONNÉES_X'],'y':row['COORDONNÉES_Y'],'motif':str(e)})
