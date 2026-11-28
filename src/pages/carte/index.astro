@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import RepertoireGeographique from '../../components/RepertoireGeographique.astro';
 import { DOSSIERS } from '../../lib/dossiers.mjs';
 import { JURIDICTIONS, coordonneesPlan, validerJuridictions } from '../../lib/juridictions.mjs';
 import { REPERES_JUDICIAIRES, reperesPourDossier } from '../../lib/chronologie-judiciaire.mjs';
@@ -21,16 +22,19 @@ const contours=limites.map(([lon,lat],i)=>{const p=coordonneesPlan(lat,lon);retu
 const cartouche="CARTE ÉDITORIALE / FRANCE MÉTROPOLITAINE";
 ---
 <Base
-  titre="Carte des affaires judiciaires"
-  description="Situer les juridictions des dossiers judiciaires d’Intime Conviction : Albi, Besançon, Avignon, Nîmes et Blois. Carte schématique, sources institutionnelles identifiées."
+  titre="Carte et annuaire des cours d’assises" 
+  titreSeo="Carte des cours d’assises en France | Intime Conviction" 
+  descriptionSeo="Explorez les villes des cours d’assises par région et département, ainsi que les juridictions des grandes affaires judiciaires documentées."
+  description="Répertoire national des villes-sièges habituelles et carte des affaires documentées par Intime Conviction."
   rubriqueActive="carte"
 >
   <header class="carte-intro">
     <p class="surtitre">INTIME CONVICTION / GÉOGRAPHIE JUDICIAIRE</p>
-    <h1>CARTE DES<br /><span>AFFAIRES.</span></h1>
-    <p>Quatre grandes affaires, cinq villes d’audience : explorez les juridictions et les étapes vérifiées de chaque procédure.</p>
+    <h1>Les cours d’assises<br /><span>en France.</span></h1>
+    <p>Explorez les implantations judiciaires par territoire et retrouvez les grandes affaires documentées, leurs villes d’audience et les étapes de chaque procédure.</p>
     <div class="intro-chiffres"><span><strong>{JURIDICTIONS.length}</strong> lieux d’audience associés</span><span><strong>{dossiers.length}</strong> affaires documentées</span><span><strong>{new Set(JURIDICTIONS.map(j=>j.departement)).size}</strong> départements</span></div>
   </header>
+  <RepertoireGeographique />
   <section class="methode-carte" aria-label="Comprendre la carte">
     <h2>Ce que montre la carte</h2>
     <div><p>Les points indiquent les <strong>villes des juridictions</strong> associées aux étapes judiciaires déjà documentées, pas le lieu où les faits se seraient déroulés. Le dessin est une <strong>carte schématique</strong> de la France métropolitaine. Les coordonnées sont celles des centres-villes, pas celles des salles d’audience. Les adresses institutionnelles et les liens officiels figurent sous la carte.</p>
