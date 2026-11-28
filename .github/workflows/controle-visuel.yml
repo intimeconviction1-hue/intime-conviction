@@ -1,23 +1,21 @@
 name: Contrôle visuel des dossiers
 
+# La recette se fait APRÈS le déploiement, et non en parallèle du push :
+# les tests navigateur consultent le site public. Tester avant la publication
+# produisait de faux échecs sur un HTML encore ancien.
 on:
   workflow_dispatch:
-  push:
+  workflow_run:
+    workflows: ["Publier le site"]
+    types: [completed]
     branches: [main]
-    paths:
-      - 'src/pages/dossiers/**'
-      - 'src/pages/agenda.astro'
-      - 'src/lib/agenda-sessions.mjs'
-      - 'src/layouts/Base.astro'
-      - 'src/styles/global.css'
-      - 'scripts/controle-visuel.mjs'
-      - '.github/workflows/controle-visuel.yml'
 
 permissions:
   contents: read
 
 jobs:
   navigateur:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
