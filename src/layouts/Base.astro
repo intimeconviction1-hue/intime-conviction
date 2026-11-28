@@ -159,7 +159,7 @@ const piedNavigation = [
   ] },
   { titre: 'À propos', liens: [
     {titre:'Ligne éditoriale',href:'/ligne-editoriale/'},
-    {titre:'Flux RSS',href:'/feed.xml'},
+    {titre:'Flux RSS',href:'/feed/'},
     {titre:'Boutique',href:'/boutique/'},
     {titre:'Confidentialité',href:'/confidentialite/'},
     {titre:'Mentions légales',href:'/mentions-legales/'},
@@ -353,7 +353,7 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
           <a class="pied-reseau" href={reseaux.facebook} aria-label="Intime Conviction sur Facebook">
             <svg aria-hidden="true" viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M14 22v-9h3l.5-3H14V8c0-.9.3-1.5 1.6-1.5H18V3.8c-.4-.1-1.6-.3-3-.3-3 0-5 1.8-5 5V10H7v3h3v9z"/></svg>
           </a>
-          </nav><a class="lien-flux" href="/feed/">Flux RSS</a><a href="#contenu">Retour au contenu <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
+          </nav><a href="#contenu">Retour au contenu <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a></div>
       </div>
     </footer>
     <ConsentementEditorial />
@@ -498,7 +498,6 @@ const courant = href => Astro.url.pathname === href.split('#')[0] ? 'page' : und
     .pied .pied-nom { font: 660 clamp(1.3rem, 2.25vw, 2rem)/1.04 var(--serif); letter-spacing: -.048em; }
     .pied-intro p { margin-top: .65rem; }
     .reseaux-pied { display: flex; gap: .4rem; }
-    .lien-flux { display: inline-flex; align-items: center; min-height: 44px; padding-inline: .3rem; color: var(--pied-texte); font: 650 .76rem/1.4 var(--sans); text-decoration: underline; text-underline-offset: .2em; }
     .gestion-confidentialite { background: transparent; border: 0; border-bottom: 1px solid currentColor; padding: .35rem .1rem; color: var(--pied-texte); font: 650 .78rem/1.5 var(--sans); }
     .gestion-confidentialite:is(:hover, :focus-visible) { color: #eeebe6; }
     .gestion-confidentialite:focus-visible, .pied-bas .pied-reseau:focus-visible { outline: 2px solid #eeebe6; outline-offset: 3px; }
