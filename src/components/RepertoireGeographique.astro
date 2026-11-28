@@ -27,7 +27,7 @@ const normaliser = s=>s.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'');
       return <li data-geo-ville data-region={v.region} data-codes={v.departements.join(' ')} data-types={types.join(' ')} data-search={normaliser([v.ville,v.region,...ts.flatMap(t=>[t.code,t.departement])].join(' '))}>
         <h3>{v.ville}</h3><p>{ts.map(t=>t.code+' · '+t.departement).join(' / ')} · {v.region}</p>
         <span class="geo-status">{v.jalons.length?'Affaire documentée':'Ville-siège habituelle à confirmer'}</span>
-        <div class="geo-links"><a href="/annuaire/#repertoire">Annuaire judiciaire</a>{v.jalons.map(j=><a href={'#lieu-'+j.id}>Voir la fiche documentée</a>)}</div>
+        <div class="geo-links"><a href={'/juridictions/'+v.id+'/'}>Fiche territoriale</a><a href="/annuaire/#repertoire">Annuaire judiciaire</a>{v.jalons.map(j=><a href={'#lieu-'+j.id}>Voir la fiche documentée</a>)}</div>
       </li>;
     })}
   </ul>
