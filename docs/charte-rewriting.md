@@ -18,3 +18,5 @@ Les chroniques d’Intime Conviction s’adressent au grand public. Elles privil
 
 - Lorsqu’un verdict est intervenu, intégrer les anciennes actualisations à une chronologie cohérente, sans conserver des annonces de verdict au futur comme si le procès était encore en cours. Ne pas anticiper les recours non confirmés.
 - Regrouper en fin d’article les références des actualisations successives, sans supprimer leurs liens ni leurs dates.
+
+- Préférer une ouverture incarnée par une déposition, une pièce ou un fait concret attesté. Conserver en fin de texte les notes de vérification relatives aux divergences entre sources.
