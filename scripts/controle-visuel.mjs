@@ -46,6 +46,16 @@ try {
         titre:document.querySelector('h1')?.textContent?.trim()??'',
         liensDossiers:[...document.querySelectorAll('a[href^="/dossiers/"]')].length};
     });
+    // Une seule entrée « Revue de presse », rattachée à Actualité.
+    const revue=page.locator('header .navigation-principale a[href="/revue-de-presse/"]');
+    if(await revue.count()!==1)throw Error('Revue de presse absente ou présente en doublon dans la navigation.');
+    if(await revue.locator('xpath=ancestor::li[contains(@class,"navigation-entree")]').count()!==1){
+      throw Error('Revue de presse non rattachée au sous-menu Actualité.');
+    }
+    const actualite=page.locator('header .navigation-entree').filter({has:page.locator('a[href="/rubrique/cours-du-jour/#articles-redaction"]')});
+    if(await actualite.locator('a[href="/revue-de-presse/"]').count()!==1){
+      throw Error('Revue de presse absente du menu Actualité.');
+    }
     if(c.nom.startsWith('agenda-')){
       if(await page.locator('header .navigation-acces').count()>0)throw Error('Ancien menu Infos pratiques en doublon.');
       for(const href of ['/agenda/#sessions-annoncees','/agenda/#audiences-a-verifier','/veille-roles/','/annuaire/#repertoire','/assister/']){
